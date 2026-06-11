@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>每日英语 · Sharry专用</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #FDF6F9;
+      --surface: #FFFFFF;
+      --border: #F0D9E8;
+      --text: #2D1F28;
+      --muted: #8B6B7D;
+      --dim: #C4A0B5;
+      --accent: #D4629A;
+      --accent-soft: rgba(212,98,154,0.08);
+      --green: #059669;
+      --green-soft: #ECFDF5;
+      --pink: #D4629A;
+      --pink-soft: #FDF2F8;
+      --purple: #7C3AED;
+      --purple-soft: #F5F3FF;
+      --orange: #D97706;
+      --orange-soft: #FFFBEB;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; min-height: 100vh; }
+
+    header {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 14px 20px; position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: var(--pink); }
+    .streak-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--pink-soft); border: 1px solid rgba(212,98,154,0.2);
+      padding: 5px 12px; border-radius: 100px;
+      font-size: 13px; font-weight: 600; color: var(--pink);
+    }
+
+    .tab-bar {
+      display: flex; background: var(--surface); border-bottom: 1px solid var(--border);
+      position: sticky; top: 53px; z-index: 90;
+    }
+    .tab {
+      flex: 1; padding: 14px 10px; font-size: 13px; font-weight: 500; color: var(--muted);
+      cursor: pointer; text-align: center; border-bottom: 2px solid transparent; transition: all .2s;
+    }
+    .tab.active-beauty { color: var(--pink); border-bottom-color: var(--pink); }
+    .tab.active-daily { color: var(--purple); border-bottom-color: var(--purple); }
+
+    .section { display: none; padding: 20px 16px 80px; max-width: 560px; margin: 0 auto; }
+    .section.active { display: block; }
+
+    .daily-progress {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 16px; margin-bottom: 20px;
+    }
+    .progress-title { font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 10px; }
+    .progress-dots { display: flex; gap: 6px; flex-wrap: wrap; }
+    .prog-dot {
+      width: 28px; height: 28px; border-radius: 8px;
+      border: 1.5px solid var(--border); display: flex; align-items: center;
+      justify-content: center; font-size: 11px; font-weight: 600; color: var(--dim);
+    }
+    .prog-dot.done { background: var(--pink); border-color: var(--pink); color: #fff; }
+    .prog-dot.today { border-color: var(--pink); color: var(--pink); font-weight: 700; }
+
+    .card-counter {
+      text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 10px;
+    }
+    .score-bar { display: flex; gap: 8px; justify-content: center; margin-top: 6px; }
+    .score-right { color: var(--green); font-weight: 600; }
+    .score-wrong { color: #DC2626; font-weight: 600; }
+
+    .mode-btn-wrap { display: flex; justify-content: flex-end; margin-bottom: 10px; }
+    .mode-btn {
+      font-size: 12px; font-weight: 600; padding: 6px 14px;
+      border-radius: 8px; border: 1.5px solid var(--border);
+      background: var(--surface); color: var(--muted); cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .flashcard-wrap { margin-bottom: 16px; }
+    .flashcard {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 32px 24px; text-align: center;
+      min-height: 210px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; cursor: pointer;
+      user-select: none; transition: transform .15s;
+    }
+    .flashcard:active { transform: scale(0.98); }
+    .card-category {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 14px;
+      padding: 4px 10px; border-radius: 6px; display: inline-block;
+    }
+    .card-word {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 30px; font-weight: 700; margin-bottom: 6px; line-height: 1.2;
+    }
+    .card-phonetic { font-size: 14px; color: var(--muted); margin-bottom: 14px; }
+    .card-meaning { font-size: 16px; color: var(--muted); line-height: 1.6; display: none; }
+    .card-example { font-size: 13px; color: var(--dim); font-style: italic; margin-top: 10px; line-height: 1.6; display: none; }
+    .flashcard.revealed .card-meaning { display: block; }
+    .flashcard.revealed .card-example { display: block; }
+    .tap-hint { font-size: 12px; color: var(--dim); margin-top: 12px; }
+    .flashcard.revealed .tap-hint { display: none; }
+
+    .weak-badge {
+      display: none; font-size: 11px; color: var(--orange);
+      background: var(--orange-soft); padding: 3px 8px;
+      border-radius: 6px; margin-bottom: 8px; font-weight: 600;
+    }
+
+    .card-controls { display: flex; gap: 10px; margin-bottom: 12px; }
+    .btn { flex: 1; padding: 13px; border-radius: 12px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: opacity .15s; }
+    .btn-wrong { background: #FEE2E2; color: #DC2626; }
+    .btn-right { background: var(--green-soft); color: var(--green); border: 1px solid rgba(5,150,105,0.2); }
+    .btn-skip { background: var(--bg); color: var(--muted); border: 1.5px solid var(--border); width: 100%; margin-bottom: 16px; }
+
+    .complete-box {
+      background: var(--pink-soft); border: 1px solid rgba(212,98,154,0.2);
+      border-radius: 20px; padding: 32px 24px; text-align: center;
+    }
+    .complete-icon { font-size: 48px; margin-bottom: 12px; }
+    .complete-title { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 8px; color: var(--pink); }
+    .complete-sub { font-size: 14px; color: var(--muted); line-height: 1.7; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">💄 Sharry英语</div>
+  <div class="streak-badge">🌸 <span id="streak-num">0</span> 天连续</div>
+</header>
+
+<div class="tab-bar">
+  <div class="tab active-beauty" onclick="showTab('beauty')" id="tab-beauty">💄 化妆品词汇</div>
+  <div class="tab" onclick="showTab('daily')" id="tab-daily">🛍️ 日常词组</div>
+</div>
+
+<!-- BEAUTY -->
+<div class="section active" id="sec-beauty">
+  <div class="daily-progress">
+    <div class="progress-title">本月打卡进度 💄</div>
+    <div class="progress-dots" id="beauty-progress"></div>
+  </div>
+  <div class="card-counter">
+    <span id="beauty-idx">1</span> / <span id="beauty-total">20</span>
+    <div class="score-bar">
+      <span class="score-right">✓ <span id="beauty-right">0</span></span>
+      <span style="color:var(--dim);">·</span>
+      <span class="score-wrong">✗ <span id="beauty-wrong">0</span></span>
+    </div>
+  </div>
+  <div class="mode-btn-wrap">
+    <button class="mode-btn" id="beauty-mode-btn" onclick="toggleMode('beauty')">✏️ 切换默写</button>
+  </div>
+  <div class="flashcard-wrap">
+    <div class="flashcard" id="beauty-card" onclick="revealCard('beauty')">
+      <div class="card-category" id="beauty-cat"></div>
+      <div class="weak-badge" id="beauty-weak-badge">🔄 复习词</div>
+      <div class="card-word" id="beauty-word"></div>
+      <div class="card-phonetic" id="beauty-phonetic"></div>
+      <div class="card-meaning" id="beauty-meaning"></div>
+      <div class="card-example" id="beauty-example"></div>
+      <div class="tap-hint">点击翻转查看中文</div>
+    </div>
+  </div>
+  <div class="card-controls" id="beauty-controls" style="display:none;">
+    <button class="btn btn-wrong" onclick="nextCard('beauty', false)">✗ 不熟</button>
+    <button class="btn btn-right" onclick="nextCard('beauty', true)">✓ 记住了</button>
+  </div>
+  <button class="btn btn-skip" onclick="skipCard('beauty')">跳过 →</button>
+</div>
+
+<!-- DAILY -->
+<div class="section" id="sec-daily">
+  <div class="daily-progress">
+    <div class="progress-title">本月打卡进度 🛍️</div>
+    <div class="progress-dots" id="daily-progress"></div>
+  </div>
+  <div class="card-counter">
+    <span id="daily-idx">1</span> / <span id="daily-total">20</span>
+    <div class="score-bar">
+      <span class="score-right">✓ <span id="daily-right">0</span></span>
+      <span style="color:var(--dim);">·</span>
+      <span class="score-wrong">✗ <span id="daily-wrong">0</span></span>
+    </div>
+  </div>
+  <div class="mode-btn-wrap">
+    <button class="mode-btn" id="daily-mode-btn" onclick="toggleMode('daily')">✏️ 切换默写</button>
+  </div>
+  <div class="flashcard-wrap">
+    <div class="flashcard" id="daily-card" onclick="revealCard('daily')">
+      <div class="card-category" id="daily-cat"></div>
+      <div class="weak-badge" id="daily-weak-badge">🔄 复习词</div>
+      <div class="card-word" id="daily-word"></div>
+      <div class="card-phonetic" id="daily-phonetic"></div>
+      <div class="card-meaning" id="daily-meaning"></div>
+      <div class="card-example" id="daily-example"></div>
+      <div class="tap-hint">点击翻转查看中文</div>
+    </div>
+  </div>
+  <div class="card-controls" id="daily-controls" style="display:none;">
+    <button class="btn btn-wrong" onclick="nextCard('daily', false)">✗ 不熟</button>
+    <button class="btn btn-right" onclick="nextCard('daily', true)">✓ 记住了</button>
+  </div>
+  <button class="btn btn-skip" onclick="skipCard('daily')">跳过 →</button>
+</div>
+
+<script>
+const BEAUTY_WORDS = [
+  { word: 'Moisturiser', phonetic: '/ˈmɔɪstʃəraɪzə/', meaning: '保湿霜；润肤乳', example: '涂保湿霜前先用爽肤水。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Sunscreen', phonetic: '/ˈsʌnskriːn/', meaning: '防晒霜', example: '出门前一定要涂防晒霜。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Foundation', phonetic: '/faʊnˈdeɪʃn/', meaning: '粉底液', example: '选一个和肤色相近的粉底液。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Concealer', phonetic: '/kənˈsiːlə/', meaning: '遮瑕膏', example: '遮瑕膏可以盖住黑眼圈。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Blush', phonetic: '/blʌʃ/', meaning: '腮红', example: '涂一点腮红让气色更好看。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Highlighter', phonetic: '/ˈhaɪlaɪtə/', meaning: '高光', example: '高光打在颧骨上显脸小。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Contour', phonetic: '/ˈkɒntʊə/', meaning: '修容；阴影', example: '修容粉可以让脸型更立体。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Eyeshadow', phonetic: '/ˈaɪʃædəʊ/', meaning: '眼影', example: '她用了棕色的眼影。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Eyeliner', phonetic: '/ˈaɪlaɪnə/', meaning: '眼线笔', example: '眼线笔让眼睛看起来更大。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Mascara', phonetic: '/məˈskɑːrə/', meaning: '睫毛膏', example: '睫毛膏让睫毛更浓密。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Lipstick', phonetic: '/ˈlɪpstɪk/', meaning: '口红', example: '她喜欢涂红色口红。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Lip gloss', phonetic: '/lɪp ɡlɒs/', meaning: '唇彩；唇蜜', example: '唇彩让嘴唇看起来更水润。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Setting spray', phonetic: '/ˈsetɪŋ spreɪ/', meaning: '定妆喷雾', example: '化妆后喷定妆喷雾更持久。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Serum', phonetic: '/ˈsɪərəm/', meaning: '精华液', example: '精华液要在保湿霜前用。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Toner', phonetic: '/ˈtəʊnə/', meaning: '爽肤水；化妆水', example: '洗脸后先用爽肤水。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Cleanser', phonetic: '/ˈklenzə/', meaning: '洁面乳；卸妆产品', example: '温和洁面乳适合敏感肌肤。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Primer', phonetic: '/ˈpraɪmə/', meaning: '妆前乳', example: '涂妆前乳让底妆更服帖。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Exfoliate', phonetic: '/ɪkˈsfəʊlɪeɪt/', meaning: '去角质', example: '每周去一次角质让皮肤更光滑。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'SPF', phonetic: '/es piː ef/', meaning: '防晒指数', example: 'SPF 50以上适合日常防晒。', color: '#D4629A', bg: '#FDF2F8' },
+  { word: 'Hyaluronic acid', phonetic: '/ˌhaɪəlʊˈrɒnɪk ˈæsɪd/', meaning: '玻尿酸；透明质酸', example: '玻尿酸有很好的补水效果。', color: '#D4629A', bg: '#FDF2F8' },
+];
+
+const DAILY_WORDS = [
+  { word: 'Receipt', phonetic: '/rɪˈsiːt/', meaning: '收据；小票', example: '请给我收据，谢谢。', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Refund', phonetic: '/ˈriːfʌnd/', meaning: '退款；退货', example: '我想申请退款。', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Discount', phonetic: '/ˈdɪskaʊnt/', meaning: '折扣', example: '这个有没有折扣？', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Size', phonetic: '/saɪz/', meaning: '尺码；大小', example: '请问有没有大一号的？', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Fitting room', phonetic: '/ˈfɪtɪŋ ruːm/', meaning: '试衣间', example: '试衣间在哪里？', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Checkout', phonetic: '/ˈtʃekaʊt/', meaning: '收银台；结账', example: '请到收银台结账。', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Exchange', phonetic: '/ɪksˈtʃeɪndʒ/', meaning: '换货；兑换', example: '我可以换一个颜色吗？', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Expiry date', phonetic: '/ɪkˈspaɪəri deɪt/', meaning: '有效期；到期日', example: '请检查一下有效期。', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Ingredient', phonetic: '/ɪnˈɡriːdiənt/', meaning: '成分；原料', example: '这个产品含什么成分？', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Sensitive', phonetic: '/ˈsensɪtɪv/', meaning: '敏感的', example: '我是敏感肌肤。', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Prescription', phonetic: '/prɪˈskrɪpʃn/', meaning: '处方；药方', example: '这个药需要处方吗？', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Appointment', phonetic: '/əˈpɔɪntmənt/', meaning: '预约；约定', example: '我想预约一个时间。', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Delivery', phonetic: '/dɪˈlɪvəri/', meaning: '快递；配送', example: '什么时候可以送到？', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Membership', phonetic: '/ˈmembəʃɪp/', meaning: '会员；会员资格', example: '办会员可以打折。', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Cash', phonetic: '/kæʃ/', meaning: '现金', example: '可以付现金吗？', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Card', phonetic: '/kɑːd/', meaning: '银行卡；信用卡', example: '我可以刷卡吗？', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Organic', phonetic: '/ɔːˈɡænɪk/', meaning: '有机的；纯天然的', example: '这个是有机产品。', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Fragrance-free', phonetic: '/ˈfreɪɡrəns friː/', meaning: '无香料；无香精', example: '敏感肌建议用无香料产品。', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Cruelty-free', phonetic: '/ˈkruːəlti friː/', meaning: '不动物测试的', example: '这个品牌是cruelty-free的。', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Best before', phonetic: '/best bɪˈfɔː/', meaning: '最佳使用日期', example: '看一下best before的日期。', color: '#7C3AED', bg: '#F5F3FF' },
+];
+
+// ============ 存储 ============
+const memStore = {};
+function storeGet(key) { try { return localStorage.getItem(key); } catch(e) { return memStore[key] || null; } }
+function storeSet(key, val) { try { localStorage.setItem(key, val); } catch(e) {} memStore[key] = val; }
+
+function buildDeck(type) {
+  const allWords = { beauty: BEAUTY_WORDS, daily: DAILY_WORDS }[type];
+  const weak = JSON.parse(storeGet(type + '-weak') || '[]');
+  const weakWords = allWords.filter(w => weak.includes(w.word));
+  const newWords = shuffle(allWords.filter(w => !weak.includes(w.word)));
+  return [...weakWords, ...newWords];
+}
+function markWeak(type, word) {
+  const weak = JSON.parse(storeGet(type + '-weak') || '[]');
+  if (!weak.includes(word)) { weak.push(word); storeSet(type + '-weak', JSON.stringify(weak)); }
+}
+function markStrong(type, word) {
+  const weak = JSON.parse(storeGet(type + '-weak') || '[]');
+  storeSet(type + '-weak', JSON.stringify(weak.filter(w => w !== word)));
+}
+function getWeakCount(type) { return JSON.parse(storeGet(type + '-weak') || '[]').length; }
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+const state = {
+  beauty: { deck: [], idx: 0, right: 0, wrong: 0, mode: 'flash' },
+  daily:  { deck: [], idx: 0, right: 0, wrong: 0, mode: 'flash' },
+};
+
+// ============ RENDER ============
+function renderCard(type) {
+  const s = state[type];
+  if (s.idx >= s.deck.length) { showComplete(type); return; }
+  if (s.mode === 'dictation') { renderDictation(type, s.deck[s.idx]); return; }
+
+  const w = s.deck[s.idx];
+  const card = document.getElementById(type + '-card');
+  if (!card) return;
+  card.classList.remove('revealed');
+  document.getElementById(type + '-controls').style.display = 'none';
+  const cat = document.getElementById(type + '-cat');
+  cat.textContent = type === 'beauty' ? '💄 化妆品' : '🛍️ 日常';
+  cat.style.cssText = `background:${w.bg};color:${w.color};font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:14px;`;
+  document.getElementById(type + '-word').textContent = w.word;
+  document.getElementById(type + '-phonetic').textContent = w.phonetic;
+  document.getElementById(type + '-meaning').textContent = w.meaning;
+  document.getElementById(type + '-example').textContent = w.example;
+  document.getElementById(type + '-idx').textContent = s.idx + 1;
+  document.getElementById(type + '-total').textContent = s.deck.length;
+  document.getElementById(type + '-right').textContent = s.right;
+  document.getElementById(type + '-wrong').textContent = s.wrong;
+
+  const weak = JSON.parse(storeGet(type + '-weak') || '[]');
+  const badge = document.getElementById(type + '-weak-badge');
+  if (badge) badge.style.display = weak.includes(w.word) ? 'inline-block' : 'none';
+}
+
+function revealCard(type) {
+  const card = document.getElementById(type + '-card');
+  if (!card || card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  document.getElementById(type + '-controls').style.display = 'flex';
+}
+
+function nextCard(type, correct) {
+  const w = state[type].deck[state[type].idx];
+  if (correct) { state[type].right++; markStrong(type, w.word); }
+  else { state[type].wrong++; markWeak(type, w.word); }
+  state[type].idx++;
+  renderCard(type);
+}
+
+function skipCard(type) { state[type].idx++; renderCard(type); }
+
+// ============ DICTATION ============
+function renderDictation(type, w) {
+  const s = state[type];
+  const section = document.getElementById('sec-' + type);
+  const fwrap = section.querySelector('.flashcard-wrap');
+  fwrap.innerHTML = `
+    <div class="flashcard" style="cursor:default;min-height:240px;gap:0;">
+      <div style="background:${w.bg};color:${w.color};font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:12px;">✏️ 默写模式</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">中文意思</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;margin-bottom:16px;line-height:1.3;">${w.meaning}</div>
+      <input id="dict-input-${type}" type="text" placeholder="输入英文单词..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+        style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:16px;font-family:'Inter',sans-serif;outline:none;background:var(--bg);color:var(--text);text-align:center;"/>
+      <button onclick="checkDictation('${type}')" style="margin-top:10px;width:100%;padding:12px;border-radius:12px;border:none;background:var(--pink);color:#fff;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;">确认 →</button>
+      <div id="dict-result-${type}" style="margin-top:10px;font-size:14px;min-height:20px;text-align:center;"></div>
+    </div>`;
+  document.getElementById(type + '-controls').style.display = 'none';
+  document.getElementById(type + '-idx').textContent = s.idx + 1;
+  document.getElementById(type + '-total').textContent = s.deck.length;
+  document.getElementById(type + '-right').textContent = s.right;
+  document.getElementById(type + '-wrong').textContent = s.wrong;
+  const inp = document.getElementById('dict-input-' + type);
+  if (inp) { inp.focus(); inp.addEventListener('keydown', e => { if (e.key === 'Enter') checkDictation(type); }); }
+}
+
+function checkDictation(type) {
+  const input = document.getElementById('dict-input-' + type);
+  const result = document.getElementById('dict-result-' + type);
+  if (!input || !result) return;
+  const s = state[type];
+  if (s.idx >= s.deck.length) return;
+  const w = s.deck[s.idx];
+  const answer = input.value.trim();
+  if (!answer) return;
+  const correct = answer.toLowerCase() === w.word.toLowerCase();
+  if (correct) {
+    result.innerHTML = `<span style="color:var(--green);font-weight:600;">✓ 正确！</span>`;
+    input.style.borderColor = 'var(--green)';
+    markStrong(type, w.word); s.right++;
+  } else {
+    result.innerHTML = `<span style="color:#DC2626;font-weight:600;">✗ 正确答案：<strong>${w.word}</strong></span>`;
+    input.style.borderColor = '#DC2626';
+    markWeak(type, w.word); s.wrong++;
+  }
+  input.disabled = true;
+  setTimeout(() => { s.idx++; s.idx >= s.deck.length ? showComplete(type) : renderDictation(type, s.deck[s.idx]); }, correct ? 900 : 1500);
+}
+
+// ============ MODE TOGGLE ============
+function toggleMode(type) {
+  const s = state[type];
+  s.mode = s.mode === 'flash' ? 'dictation' : 'flash';
+  s.idx = 0; s.right = 0; s.wrong = 0;
+  const btn = document.getElementById(type + '-mode-btn');
+  if (btn) btn.textContent = s.mode === 'flash' ? '✏️ 切换默写' : '🃏 切换闪卡';
+  if (s.mode === 'flash') {
+    const section = document.getElementById('sec-' + type);
+    section.querySelector('.flashcard-wrap').innerHTML = `
+      <div class="flashcard" id="${type}-card" onclick="revealCard('${type}')">
+        <div class="card-category" id="${type}-cat"></div>
+        <div class="weak-badge" id="${type}-weak-badge">🔄 复习词</div>
+        <div class="card-word" id="${type}-word"></div>
+        <div class="card-phonetic" id="${type}-phonetic"></div>
+        <div class="card-meaning" id="${type}-meaning"></div>
+        <div class="card-example" id="${type}-example"></div>
+        <div class="tap-hint">点击翻转查看中文</div>
+      </div>`;
+  }
+  renderCard(type);
+}
+
+// ============ COMPLETE ============
+function showComplete(type) {
+  const s = state[type];
+  const section = document.getElementById('sec-' + type);
+  section.querySelector('.flashcard-wrap').innerHTML = `
+    <div class="complete-box">
+      <div class="complete-icon">🌸</div>
+      <div class="complete-title">今日打卡完成！</div>
+      <div class="complete-sub">记住了 ${s.right} 个 · 需复习 ${s.wrong} 个<br/><span style="color:var(--orange);">🔄 ${getWeakCount(type)} 个词明天优先复习</span><br/><br/>Sharry你真棒！</div>
+    </div>`;
+  document.getElementById(type + '-controls').style.display = 'none';
+  markTodayDone(type); updateStreak();
+}
+
+// ============ PROGRESS ============
+function getToday() { return new Date().toISOString().split('T')[0]; }
+function buildProgress(type) {
+  const container = document.getElementById(type + '-progress');
+  const today = new Date();
+  const done = JSON.parse(storeGet(type + '-done') || '[]');
+  const todayDay = today.getDate();
+  container.innerHTML = Array.from({length:30},(_,i)=>i+1).map(d => {
+    const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isDone = done.includes(dateStr); const isToday = d === todayDay;
+    return `<div class="prog-dot ${isDone?'done':isToday?'today':''}">${isDone?'✓':d}</div>`;
+  }).join('');
+}
+function markTodayDone(type) {
+  const done = JSON.parse(storeGet(type+'-done')||'[]'); const today = getToday();
+  if (!done.includes(today)) { done.push(today); storeSet(type+'-done', JSON.stringify(done)); }
+  buildProgress(type);
+}
+function updateStreak() {
+  let streak = 0; const today = new Date();
+  for (let i = 0; i < 30; i++) {
+    const d = new Date(today); d.setDate(d.getDate()-i);
+    const str = d.toISOString().split('T')[0];
+    const allDone = ['beauty','daily'].every(t => JSON.parse(storeGet(t+'-done')||'[]').includes(str));
+    if (allDone) streak++; else if (i>0) break;
+  }
+  document.getElementById('streak-num').textContent = streak;
+}
+
+// ============ TABS ============
+function showTab(tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => { t.className = 'tab'; });
+  document.getElementById('sec-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active-'+tab);
+}
+
+// ============ INIT ============
+['beauty','daily'].forEach(t => { state[t].deck = buildDeck(t); buildProgress(t); renderCard(t); });
+updateStreak();
+</script>
+</body>
+</html>
