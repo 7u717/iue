@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全球快讯</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  ::-webkit-scrollbar { display: none; }
+  body {
+    background: #000;
+    color: #E7E9EA;
+    font-family: -apple-system, "PingFang SC", BlinkMacSystemFont, "Segoe UI", sans-serif;
+    min-height: 100vh;
+  }
+  #header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(0,0,0,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #2F3336;
+  }
+  #header-inner {
+    max-width: 600px; margin: 0 auto;
+    padding: 13px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  #logo { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+  #meta { font-size: 12px; color: #71767B; margin-left: 8px; }
+  #refresh-btn {
+    background: #1D9BF0; color: #fff; border: none;
+    border-radius: 20px; padding: 7px 18px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  #refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  #tabs {
+    max-width: 600px; margin: 0 auto;
+    display: flex; overflow-x: auto; scrollbar-width: none;
+  }
+  .tab {
+    flex: none; background: none; border: none;
+    border-bottom: 2px solid transparent;
+    color: #71767B; padding: 12px 16px;
+    font-size: 14px; font-weight: 400;
+    cursor: pointer; white-space: nowrap;
+    transition: color 0.15s;
+  }
+  .tab.active { color: #E7E9EA; font-weight: 700; border-bottom-color: #1D9BF0; }
+  .tab-count { font-size: 11px; color: #555; margin-left: 3px; }
+  #feed { max-width: 600px; margin: 0 auto; }
+  .item {
+    padding: 16px;
+    border-bottom: 1px solid #2F3336;
+    transition: background 0.15s;
+  }
+  .item:hover { background: #080808; }
+  .item-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 7px; flex-wrap: wrap; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+  .cat-label { font-size: 12px; font-weight: 600; }
+  .sep { color: #333; font-size: 11px; }
+  .region { font-size: 12px; color: #71767B; }
+  .time { font-size: 12px; color: #71767B; margin-left: auto; }
+  .headline { font-size: 15px; font-weight: 700; line-height: 1.45; margin-bottom: 6px; color: #E7E9EA; }
+  .summary { font-size: 13px; color: #71767B; line-height: 1.6; margin-bottom: 8px; }
+  .source { font-size: 12px; color: #3E4A5A; }
+  .skel-item { padding: 16px; border-bottom: 1px solid #2F3336; }
+  .skel { background: #111; border-radius: 4px; animation: shimmer 1.4s ease-in-out infinite; }
+  @keyframes shimmer { 0%,100%{opacity:.3} 50%{opacity:.65} }
+  #welcome { padding: 64px 16px; text-align: center; }
+  #welcome .big { font-size: 38px; margin-bottom: 16px; }
+  #welcome h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  #welcome p { color: #71767B; font-size: 14px; line-height: 1.7; margin-bottom: 28px; }
+  #start-btn {
+    background: #1D9BF0; color: #fff; border: none;
+    border-radius: 20px; padding: 12px 28px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+  }
+  #err-box { padding: 40px 16px; text-align: center; display: none; }
+  #err-box .big { font-size: 32px; margin-bottom: 12px; }
+  #err-box h3 { font-weight: 700; margin-bottom: 8px; }
+  #err-msg { color: #71767B; font-size: 12px; margin-bottom: 20px; font-family: monospace; word-break: break-all; max-width: 400px; margin-left: auto; margin-right: auto; }
+  #retry-btn {
+    background: transparent; color: #1D9BF0;
+    border: 1px solid #1D9BF0; border-radius: 20px;
+    padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div id="header-inner">
+    <div style="display:flex;align-items:center">
+      <span id="logo">全球快讯</span>
+      <span id="meta"></span>
+    </div>
+    <button id="refresh-btn" onclick="loadNews()">获取最新</button>
+  </div>
+  <div id="tabs"></div>
+</div>
+
+<div id="feed">
+  <div id="welcome">
+    <div class="big">🌐</div>
+    <h2>全球实时资讯</h2>
+    <p>AI 即时搜索全球最新动态<br>经济 · 政治 · 航天 · 娱乐 · 体育 · 游戏</p>
+    <button id="start-btn" onclick="loadNews()">获取最新资讯</button>
+  </div>
+  <div id="err-box">
+    <div class="big">⚠️</div>
+    <h3>加载失败</h3>
+    <div id="err-msg"></div>
+    <button id="retry-btn" onclick="loadNews()">重新加载</button>
+  </div>
+  <div id="skeleton" style="display:none"></div>
+  <div id="news-list"></div>
+  <div style="height:48px"></div>
+</div>
+
+<script>
+const CATS = [
+  { id:"all",           label:"推荐",    dot:"#E7E9EA" },
+  { id:"breaking",      label:"⚡ 突发", dot:"#FF4500" },
+  { id:"economy",       label:"经济",    dot:"#1D9BF0" },
+  { id:"politics",      label:"政治",    dot:"#FF6B6B" },
+  { id:"aerospace",     label:"航天",    dot:"#A78BFA" },
+  { id:"entertainment", label:"娱乐",    dot:"#F472B6" },
+  { id:"sports",        label:"体育",    dot:"#34D399" },
+  { id:"gaming",        label:"游戏",    dot:"#FBBF24" },
+];
+const DOT    = {breaking:"#FF4500",economy:"#1D9BF0",politics:"#FF6B6B",aerospace:"#A78BFA",entertainment:"#F472B6",sports:"#34D399",gaming:"#FBBF24"};
+const CLABEL = {breaking:"突发",economy:"经济",politics:"政治",aerospace:"航天",entertainment:"娱乐",sports:"体育",gaming:"游戏"};
+
+let allNews = [];
+let activeTab = "all";
+
+const SYSTEM = `You are a global news editor. Search the web for today's most important and viral news.
+
+IMPORTANT: Return ONLY a raw JSON array. No markdown, no backticks, no explanation. Start with [ end with ].
+
+15-18 items across: breaking, economy, politics, aerospace, entertainment, sports, gaming.
+
+Each object:
+{"category":"breaking|economy|politics|aerospace|entertainment|sports|gaming","title":"punchy headline in simplified Chinese","summary":"2 sentences in Chinese: what happened and why it matters","source":"outlet name","region":"flag + location","time":"X小时前 or 刚刚"}`;
+
+function buildTabs() {
+  document.getElementById("tabs").innerHTML = CATS.map(c => {
+    const n = c.id==="all" ? allNews.length : allNews.filter(x=>x.category===c.id).length;
+    return `<button class="tab ${activeTab===c.id?'active':''}" onclick="switchTab('${c.id}')">${c.label}${c.id!=="all"&&n>0?`<span class="tab-count">${n}</span>`:""}</button>`;
+  }).join("");
+}
+
+function switchTab(id){ activeTab=id; buildTabs(); renderNews(); }
+
+function renderNews(){
+  const list = document.getElementById("news-list");
+  const data = activeTab==="all" ? allNews : allNews.filter(x=>x.category===activeTab);
+  if(!data.length){ list.innerHTML=`<div style="padding:40px;text-align:center;color:#71767B">该分类暂无内容</div>`; return; }
+  list.innerHTML = data.map(item=>`
+    <div class="item">
+      <div class="item-meta">
+        <span class="dot" style="background:${DOT[item.category]||'#71767B'}"></span>
+        <span class="cat-label" style="color:${DOT[item.category]||'#71767B'}">${CLABEL[item.category]||item.category}</span>
+        <span class="sep">·</span>
+        <span class="region">${item.region||""}</span>
+        <span class="time">${item.time||""}</span>
+      </div>
+      <div class="headline">${item.title||""}</div>
+      <div class="summary">${item.summary||""}</div>
+      <div class="source">${item.source||""}</div>
+    </div>`).join("");
+}
+
+function showSkeleton(){
+  const sk = document.getElementById("skeleton");
+  sk.style.display="block";
+  sk.innerHTML = Array(7).fill(0).map(()=>`
+    <div class="skel-item">
+      <div class="skel" style="height:11px;width:28%;margin-bottom:10px"></div>
+      <div class="skel" style="height:17px;width:86%;margin-bottom:8px"></div>
+      <div class="skel" style="height:13px;width:100%;margin-bottom:5px"></div>
+      <div class="skel" style="height:13px;width:60%"></div>
+    </div>`).join("");
+}
+
+async function loadNews(){
+  document.getElementById("welcome").style.display="none";
+  document.getElementById("err-box").style.display="none";
+  document.getElementById("news-list").innerHTML="";
+  showSkeleton();
+  const btn = document.getElementById("refresh-btn");
+  btn.disabled=true; btn.textContent="加载中…";
+  document.getElementById("meta").textContent="";
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "anthropic-beta":"web-search-2025-03-05"
+      },
+      body: JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:4000,
+        tools:[{type:"web_search_20250305",name:"web_search"}],
+        system: SYSTEM,
+        messages:[{role:"user",content:"Search the web for today's top global news. Return ONLY the JSON array, nothing else."}]
+      })
+    });
+
+    const data = await res.json();
+
+    if(!res.ok){
+      throw new Error(`HTTP ${res.status}: ${data.error?.message || JSON.stringify(data)}`);
+    }
+
+    const text = (data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("");
+    const match = text.match(/\[[\s\S]*\]/);
+    if(!match) throw new Error(`No JSON array found. Response: ${text.slice(0,200)}`);
+
+    const parsed = JSON.parse(match[0].replace(/```json|```/g,"").trim());
+    if(!Array.isArray(parsed)||!parsed.length) throw new Error("Parsed empty array");
+
+    allNews = parsed;
+    document.getElementById("skeleton").style.display="none";
+    const now = new Date();
+    document.getElementById("meta").textContent = now.toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"})+" 更新";
+    buildTabs();
+    renderNews();
+    btn.textContent="刷新";
+
+  } catch(e) {
+    console.error(e);
+    document.getElementById("skeleton").style.display="none";
+    document.getElementById("err-msg").textContent = e.message;
+    document.getElementById("err-box").style.display="block";
+    btn.textContent = allNews.length?"刷新":"获取最新";
+    if(allNews.length){ buildTabs(); renderNews(); }
+  }
+  btn.disabled=false;
+}
+
+buildTabs();
+</script>
+</body>
+</html>
