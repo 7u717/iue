@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elon Musk · 精读指南</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0D0D0D;
+      --surface: #161616;
+      --surface2: #1E1E1E;
+      --border: #2A2A2A;
+      --text: #F0F0F0;
+      --muted: #888;
+      --dim: #555;
+      --accent: #E8E8E8;
+      --gold: #C9A84C;
+      --gold-soft: rgba(201,168,76,0.1);
+      --red: #E05252;
+      --red-soft: rgba(224,82,82,0.1);
+      --blue: #5B9CF6;
+      --blue-soft: rgba(91,156,246,0.1);
+      --green: #52B788;
+      --green-soft: rgba(82,183,136,0.1);
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.65; }
+
+    /* HERO */
+    .hero {
+      padding: 56px 20px 36px;
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -60px; right: -40px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
+    }
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(28px, 7vw, 40px); font-weight: 700;
+      line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 6px;
+    }
+    .hero-author { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+    .hero-desc { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 480px; margin-bottom: 24px; }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .hero-tag {
+      font-size: 12px; font-weight: 500; padding: 5px 12px;
+      border-radius: 100px; border: 1px solid var(--border); color: var(--muted);
+    }
+
+    /* NAV TABS */
+    .tab-bar {
+      display: flex; overflow-x: auto; background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      position: sticky; top: 0; z-index: 90;
+    }
+    .tab-bar::-webkit-scrollbar { display: none; }
+    .tab {
+      padding: 14px 18px; font-size: 13px; font-weight: 500;
+      color: var(--muted); cursor: pointer; white-space: nowrap;
+      border-bottom: 2px solid transparent; transition: all .2s; flex-shrink: 0;
+    }
+    .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    /* SECTIONS */
+    .section { display: none; padding: 20px 16px 60px; max-width: 640px; margin: 0 auto; }
+    .section.active { display: block; }
+
+    /* GROUP */
+    .group { margin-bottom: 28px; }
+    .group-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--dim); margin-bottom: 12px; padding-left: 2px;
+    }
+
+    /* CARDS */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; margin-bottom: 10px; overflow: hidden;
+    }
+    .card-header {
+      padding: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .card-left { display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0; }
+    .card-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0; margin-top: 1px;
+    }
+    .card-title { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+    .card-sub { font-size: 12px; color: var(--muted); line-height: 1.4; }
+    .chevron { color: var(--dim); font-size: 11px; transition: transform .2s; flex-shrink: 0; }
+    .card.open .chevron { transform: rotate(180deg); }
+    .card-body { display: none; padding: 0 16px 18px; }
+    .card.open .card-body { display: block; }
+
+    /* CONTENT */
+    .body-text { font-size: 14px; color: var(--muted); line-height: 1.75; margin-bottom: 14px; }
+    .body-text strong { color: var(--text); font-weight: 600; }
+
+    .insight-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .insight {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 10px 12px; background: var(--surface2); border-radius: 10px;
+    }
+    .insight-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+    .insight-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .insight-text strong { color: var(--text); }
+
+    /* QUOTE SEARCH LINK */
+    .read-original {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 13px; border: 1px solid var(--border);
+      border-radius: 10px; text-decoration: none; color: var(--text);
+      font-size: 13px; margin-top: 6px; transition: border-color .2s, background .2s;
+    }
+    .read-original:hover { border-color: var(--gold); background: var(--gold-soft); }
+    .read-icon { font-size: 16px; flex-shrink: 0; }
+    .read-text { flex: 1; }
+    .read-hint { font-size: 11px; color: var(--dim); display: block; margin-top: 1px; }
+    .read-arrow { color: var(--dim); font-size: 12px; }
+
+    /* TRAIT CARDS */
+    .trait-grid { display: flex; flex-direction: column; gap: 10px; }
+    .trait-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px;
+    }
+    .trait-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .trait-emoji { font-size: 22px; }
+    .trait-name { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; }
+    .trait-desc { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 10px; }
+    .trait-example {
+      font-size: 12px; color: var(--gold); background: var(--gold-soft);
+      border-radius: 8px; padding: 8px 10px; line-height: 1.6;
+    }
+
+    /* TIMELINE */
+    .timeline { position: relative; padding-left: 20px; }
+    .timeline::before {
+      content: ''; position: absolute; left: 6px; top: 8px; bottom: 8px;
+      width: 1px; background: var(--border);
+    }
+    .tl-item { position: relative; margin-bottom: 20px; }
+    .tl-dot {
+      position: absolute; left: -17px; top: 5px;
+      width: 10px; height: 10px; border-radius: 50%;
+      border: 2px solid var(--bg); flex-shrink: 0;
+    }
+    .tl-year { font-size: 11px; font-weight: 700; color: var(--gold); margin-bottom: 3px; letter-spacing: 0.05em; }
+    .tl-title { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .tl-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+    /* LESSON CARDS */
+    .lesson-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px; margin-bottom: 10px;
+    }
+    .lesson-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px; font-weight: 700; color: var(--gold);
+      letter-spacing: 0.08em; margin-bottom: 6px;
+    }
+    .lesson-title { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .lesson-body { font-size: 13px; color: var(--muted); line-height: 1.75; }
+    .lesson-body strong { color: var(--text); }
+
+    /* COLOR VARIANTS */
+    .gold-bg { background: var(--gold-soft); border-color: rgba(201,168,76,0.25); }
+    .red-bg { background: var(--red-soft); border-color: rgba(224,82,82,0.25); }
+    .blue-bg { background: var(--blue-soft); border-color: rgba(91,156,246,0.25); }
+    .green-bg { background: var(--green-soft); border-color: rgba(82,183,136,0.25); }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Walter Isaacson · 2023</div>
+  <div class="hero-title">Elon Musk</div>
+  <div class="hero-author">精读指南 · 688页压缩版</div>
+  <div class="hero-desc">不是励志鸡汤，而是一个极度复杂的人的真实剖析——他的天才、他的破坏力、以及他为什么能做到别人做不到的事。</div>
+  <div class="hero-tags">
+    <span class="hero-tag">传记</span>
+    <span class="hero-tag">创业思维</span>
+    <span class="hero-tag">领导力</span>
+    <span class="hero-tag">工程哲学</span>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tab-bar">
+  <div class="tab active" onclick="showTab('overview')" id="tab-overview">📖 全书脉络</div>
+  <div class="tab" onclick="showTab('traits')" id="tab-traits">🧠 核心特质</div>
+  <div class="tab" onclick="showTab('lessons')" id="tab-lessons">💡 学习要点</div>
+  <div class="tab" onclick="showTab('highlights')" id="tab-highlights">⭐ 经典章节</div>
+</div>
+
+<!-- ===== OVERVIEW ===== -->
+<div class="section active" id="sec-overview">
+
+  <div class="group">
+    <div class="group-label">这本书是什么</div>
+    <div class="card gold-bg" style="padding:18px;border-radius:14px;">
+      <div class="body-text">
+        Isaacson跟踪采访马斯克<strong>两年</strong>，获得他本人及家人、前员工、前女友的第一手访谈。这不是马斯克授权的公关稿——书里有很多让他显得非常不讨喜的内容他都没有删。
+      </div>
+      <div class="body-text" style="margin-bottom:0;">
+        全书按<strong>时间线</strong>推进，但核心是在回答一个问题：<strong>一个在南非受过创伤的孩子，怎么变成了同时改变汽车、航天、能源、AI四个行业的人？</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-label">人生时间线</div>
+    <div class="card" style="padding:18px 18px 8px;">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--muted);"></div>
+          <div class="tl-year">1971–1988 · 南非</div>
+          <div class="tl-title">童年创伤与早期编程</div>
+          <div class="tl-desc">父亲Errol极度控制且情感虐待，母亲Maye独自撑起家庭。马斯克12岁卖出自己写的第一个游戏代码。他的"恶魔模式"（demon mode）据信源于此阶段。</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--blue);"></div>
+          <div class="tl-year">1988–1995 · 加拿大 & 宾大</div>
+          <div class="tl-title">逃离与求学</div>
+          <div class="tl-desc">独自移民加拿大，打零工为生。后就读宾大，主修物理+经济。在校期间就研究如何改变人类文明的五件事，能源和太空在列。</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--green);"></div>
+          <div class="tl-year">1995–1999 · 硅谷</div>
+          <div class="tl-title">Zip2 & X.com</div>
+          <div class="tl-desc">斯坦福PhD只读了两天就退学创业。Zip2被康柏以3亿美元收购，马斯克获2200万。随后创立X.com，即后来的PayPal雏形。</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--gold);"></div>
+          <div class="tl-year">2002–2008 · 地狱模式</div>
+          <div class="tl-title">SpaceX + Tesla 同时濒死</div>
+          <div class="tl-desc">PayPal被eBay收购后，马斯克同时创立SpaceX和投资Tesla。2008年是最黑暗的一年：SpaceX前三枚火箭全部失败，Tesla资金耗尽，他个人离婚。第四枚火箭成功发射挽救了一切。</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--red);"></div>
+          <div class="tl-year">2010s · 颠覆期</div>
+          <div class="tl-title">Model S、猎鹰9号、可回收火箭</div>
+          <div class="tl-desc">Tesla Model S改变了汽车行业对电动车的认知。SpaceX实现火箭一级回收，将发射成本降低90%。马斯克成为全球最有影响力的科技人物。</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--muted);"></div>
+          <div class="tl-year">2022–2023 · Twitter收购</div>
+          <div class="tl-title">最具争议的决定</div>
+          <div class="tl-desc">440亿美元收购Twitter，裁员75%，改名X。书里对这段有大量描写，马斯克本人也承认很多决策是错误的。但他认为这是"文明层面的使命"。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-label">全书结构（共95章）</div>
+
+    <div class="card" id="part1">
+      <div class="card-header" onclick="toggleCard('part1')">
+        <div class="card-left">
+          <div class="card-icon" style="background:var(--gold-soft);">🌍</div>
+          <div>
+            <div class="card-title">Part 1 · 南非岁月（Ch.1–6）</div>
+            <div class="card-sub">创伤的根源，"恶魔"的诞生</div>
+          </div>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="body-text">这部分是理解马斯克一切行为的钥匙。他的父亲Errol是一个会在心理上彻底摧毁孩子的人，但马斯克拒绝用这个作为借口。</div>
+        <div class="insight-list">
+          <div class="insight"><div class="insight-dot" style="background:var(--gold);"></div><div class="insight-text"><strong>关键场景：</strong>父亲让他对着墙站两小时，告诉他一无是处。马斯克的回应是关掉情感开关，转向逻辑。</div></div>
+          <div class="insight"><div class="insight-dot" style="background:var(--gold);"></div><div class="insight-text"><strong>关键场景：</strong>12岁自学编程，卖出游戏《Blastar》，获500美元。这是他第一次用技术换取现实资源。</div></div>
+        </div>
+        <a class="read-original" href="https://www.google.com/search?q=Elon+Musk+Isaacson+Errol+Musk+childhood+demon+mode" target="_blank">
+          <span class="read-icon">🔍</span>
+          <span class="read-text">搜索原文相关内容<span class="read-hint">Google · "Errol Musk childhood demon mode Isaacson"</span></span>
+          <span class="read-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="card" id="part2">
+      <div class="card-header" onclick="toggleCard('part2')">
+        <div class="card-left">
+          <div class="card-icon" style="background:var(--blue-soft);">🚀</div>
+          <div>
+            <div class="card-title">Part 2 · 硅谷起步（Ch.7–15）</div>
+            <div class="card-sub">Zip2、PayPal、第一桶金</div>
+          </div>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="body-text">马斯克和弟弟Kimbal在硅谷创业，睡在办公室、用一台电脑白天做网页晚上写代码。这段描写非常真实，没有美化创业的艰难。</div>
+        <div class="insight-list">
+          <div class="insight"><div class="insight-dot" style="background:var(--blue);"></div><div class="insight-text"><strong>核心冲突：</strong>Zip2董事会把他从CEO位置上换掉——这是他第一次被自己创办的公司踢出局，也是他后来在Tesla、Twitter都坚持绝对控制权的原因。</div></div>
+          <div class="insight"><div class="insight-dot" style="background:var(--blue);"></div><div class="insight-text"><strong>PayPal：</strong>与Peter Thiel的关系是书中最有意思的商业关系之一，两个极度自我的人既合作又对抗。</div></div>
+        </div>
+        <a class="read-original" href="https://www.google.com/search?q=Elon+Musk+Isaacson+Zip2+PayPal+Peter+Thiel" target="_blank">
+          <span class="read-icon">🔍</span>
+          <span class="read-text">搜索原文相关内容<span class="read-hint">Google · "Musk Isaacson Zip2 PayPal Peter Thiel"</span></span>
+          <span class="read-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="card" id="part3">
+      <div class="card-header" onclick="toggleCard('part3')">
+        <div class="card-left">
+          <div class="card-icon" style="background:var(--red-soft);">🔥</div>
+          <div>
+            <div class="card-title">Part 3 · 地狱年份（Ch.16–35）</div>
+            <div class="card-sub">SpaceX & Tesla同时濒死，2008危机</div>
+          </div>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="body-text">这是全书最戏剧性的部分。2008年：三枚猎鹰1号火箭连续失败，Tesla几乎破产，马斯克离婚，个人账户快见底。他把最后的钱同时押进两家公司。</div>
+        <div class="insight-list">
+          <div class="insight"><div class="insight-dot" style="background:var(--red);"></div><div class="insight-text"><strong>经典时刻：</strong>第四枚猎鹰1号发射前，他在办公室对员工说："我们不会放弃，永远不会。"那次发射成功，NASA随即签下16亿美元合同。</div></div>
+          <div class="insight"><div class="insight-dot" style="background:var(--red);"></div><div class="insight-text"><strong>Tesla：</strong>马斯克在圣诞夜前几小时向朋友借了最后一笔钱来发工资。这段描写令人窒息。</div></div>
+        </div>
+        <a class="read-original" href="https://www.google.com/search?q=Elon+Musk+Isaacson+2008+SpaceX+Falcon+1+fourth+launch+Tesla+bankruptcy" target="_blank">
+          <span class="read-icon">🔍</span>
+          <span class="read-text">搜索原文相关内容<span class="read-hint">Google · "Musk 2008 Falcon 1 fourth launch Tesla bankruptcy"</span></span>
+          <span class="read-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="card" id="part4">
+      <div class="card-header" onclick="toggleCard('part4')">
+        <div class="card-left">
+          <div class="card-icon" style="background:var(--green-soft);">⚡</div>
+          <div>
+            <div class="card-title">Part 4 · 帝国扩张（Ch.36–65）</div>
+            <div class="card-sub">Model S、星链、Neuralink、无聊公司</div>
+          </div>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="body-text">马斯克进入"统治期"。这部分描写了他如何管理公司、如何与工程师互动，以及他的"算法"思维方式是怎么运作的。</div>
+        <div class="insight-list">
+          <div class="insight"><div class="insight-dot" style="background:var(--green);"></div><div class="insight-text"><strong>五步算法：</strong>质疑所有需求→删除所有不必要的步骤→优化→加速→自动化。顺序不能错，否则会把垃圾自动化。</div></div>
+          <div class="insight"><div class="insight-dot" style="background:var(--green);"></div><div class="insight-text"><strong>生产地狱：</strong>他在特斯拉工厂搭帐篷睡觉督战Model 3量产，连续数月不离开，把这称为"全力以赴的暴力行为"。</div></div>
+          <div class="insight"><div class="insight-dot" style="background:var(--green);"></div><div class="insight-text"><strong>第一性原理：</strong>书里有完整的火箭材料成本分析案例——他把每个零件的原材料成本算出来，倒逼供应商降价。</div></div>
+        </div>
+        <a class="read-original" href="https://www.google.com/search?q=Elon+Musk+Isaacson+algorithm+five+steps+first+principles+Model+3+production+hell" target="_blank">
+          <span class="read-icon">🔍</span>
+          <span class="read-text">搜索原文相关内容<span class="read-hint">Google · "Musk Isaacson algorithm five steps first principles"</span></span>
+          <span class="read-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="card" id="part5">
+      <div class="card-header" onclick="toggleCard('part5')">
+        <div class="card-left">
+          <div class="card-icon" style="background:var(--gold-soft);">🐦</div>
+          <div>
+            <div class="card-title">Part 5 · Twitter收购（Ch.66–95）</div>
+            <div class="card-sub">440亿的冲动决定</div>
+          </div>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="body-text">这部分是全书最有争议的。Isaacson近距离记录了收购过程中的每一个混乱决策，包括马斯克本人也后悔的那些。</div>
+        <div class="insight-list">
+          <div class="insight"><div class="insight-dot" style="background:var(--gold);"></div><div class="insight-text"><strong>关键洞察：</strong>马斯克收购Twitter部分原因是他相信AI将主导人类未来，他不能让这个重要的信息平台掌握在"觉醒文化"手中。</div></div>
+          <div class="insight"><div class="insight-dot" style="background:var(--gold);"></div><div class="insight-text"><strong>裁员75%：</strong>他要求员工签"极度hardcore"承诺书，拒签者直接走人。结果公司没有崩溃，说明组织臃肿问题确实存在。</div></div>
+          <div class="insight"><div class="insight-dot" style="background:var(--gold);"></div><div class="insight-text"><strong>Isaacson的结论：</strong>这段经历显示马斯克在没有工程目标约束时决策质量大幅下降——他最强大的地方是有明确的物理问题要解决。</div></div>
+        </div>
+        <a class="read-original" href="https://www.google.com/search?q=Elon+Musk+Isaacson+Twitter+acquisition+hardcore+pledge+layoffs" target="_blank">
+          <span class="read-icon">🔍</span>
+          <span class="read-text">搜索原文相关内容<span class="read-hint">Google · "Musk Isaacson Twitter acquisition hardcore pledge"</span></span>
+          <span class="read-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TRAITS ===== -->
+<div class="section" id="sec-traits">
+  <div class="group">
+    <div class="group-label">书中描绘的核心性格特质</div>
+    <div class="trait-grid">
+
+      <div class="trait-card gold-bg">
+        <div class="trait-header"><span class="trait-emoji">🎯</span><div class="trait-name">使命驱动，不是金钱驱动</div></div>
+        <div class="trait-desc">马斯克真正在意的是"让人类成为多星球物种"和"加速可持续能源转型"。书里记录他多次在公司快破产时拒绝套现，因为套现意味着放弃使命。</div>
+        <div class="trait-example">📌 2008年危机时，他把最后的钱押进SpaceX和Tesla，而不是留给自己——朋友都以为他疯了。</div>
+      </div>
+
+      <div class="trait-card red-bg">
+        <div class="trait-header"><span class="trait-emoji">😈</span><div class="trait-name">恶魔模式（Demon Mode）</div></div>
+        <div class="trait-desc">Isaacson用"demon mode"描述马斯克在极度压力下切换到的状态：情感关闭，只剩下解决问题的冷酷逻辑。他会在这种状态下做出普通人做不出来的决定，但也会伤害周围所有人。</div>
+        <div class="trait-example">📌 前女友Justine说：他不是不爱你，他只是会突然消失在某个任务里，回来的时候像换了一个人。</div>
+      </div>
+
+      <div class="trait-card blue-bg">
+        <div class="trait-header"><span class="trait-emoji">⚙️</span><div class="trait-name">工程师思维，不是管理者思维</div></div>
+        <div class="trait-desc">他不相信"管理流程"，相信"物理现实"。他会亲自去工厂地板上问工程师为什么一个零件要这么设计，如果答案是"一直这样做的"，他会要求删掉这个零件。</div>
+        <div class="trait-example">📌 SpaceX一个工程师说：他不会问你进度汇报，他会直接问你那颗螺丝为什么需要存在。</div>
+      </div>
+
+      <div class="trait-card green-bg">
+        <div class="trait-header"><span class="trait-emoji">🎲</span><div class="trait-name">极高风险承受力</div></div>
+        <div class="trait-desc">他的风险计算方式和普通人不同。他不问"这个能成功吗"，他问"如果失败了，最坏的结果是什么，我能不能承受"。承受得了就做。</div>
+        <div class="trait-example">📌 他告诉Isaacson：我不害怕失败，我害怕的是在本可以尝试的时候没有尝试。</div>
+      </div>
+
+      <div class="trait-card" style="border-color:var(--border);">
+        <div class="trait-header"><span class="trait-emoji">💔</span><div class="trait-name">情感上的盲区</div></div>
+        <div class="trait-desc">书里最难看的部分：他对孩子的态度、对前员工的无情、对Grimes关系的处理。Isaacson没有回避这些，并且认为这和他的成功是同一枚硬币的两面。</div>
+        <div class="trait-example">📌 他和Grimes的儿子X，马斯克说：他很聪明，但我不知道怎么和一个不懂工程的孩子相处。</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== LESSONS ===== -->
+<div class="section" id="sec-lessons">
+  <div class="group">
+    <div class="group-label">可以学习和借鉴的思维方式</div>
+
+    <div class="lesson-card gold-bg">
+      <div class="lesson-num">LESSON 01</div>
+      <div class="lesson-title">第一性原理：从物理现实出发</div>
+      <div class="lesson-body">
+        不要问"这东西多少钱"，要问<strong>"这东西的原材料成本是多少"</strong>。马斯克把火箭的每个零件拆解到原材料层面，发现市面价格是原材料成本的50倍。<br/><br/>
+        实际应用：每当你觉得某件事"不可能"时，问自己：这个"不可能"是物理定律决定的，还是行业惯例决定的？
+      </div>
+    </div>
+
+    <div class="lesson-card blue-bg">
+      <div class="lesson-num">LESSON 02</div>
+      <div class="lesson-title">五步算法：先删除，再优化</div>
+      <div class="lesson-body">
+        马斯克的工程哲学核心：<br/>
+        <strong>① 质疑所有需求</strong>（每个需求都要有人名负责，不能"公司规定"）<br/>
+        <strong>② 删除不必要的步骤</strong>（宁可删多了再加回来）<br/>
+        <strong>③ 简化和优化剩下的</strong><br/>
+        <strong>④ 加快执行速度</strong><br/>
+        <strong>⑤ 自动化</strong><br/><br/>
+        错误：很多人跳过前两步直接优化和自动化，结果把错误的流程做得更高效。
+      </div>
+    </div>
+
+    <div class="lesson-card green-bg">
+      <div class="lesson-num">LESSON 03</div>
+      <div class="lesson-title">设定"荒谬"的截止日期</div>
+      <div class="lesson-body">
+        他会把工程师认为需要18个月的工作设定为6个月完成。不是为了真的6个月完成，而是<strong>迫使团队重新思考哪些步骤是真正必要的</strong>。<br/><br/>
+        结果：往往12个月完成，比原计划快33%。对一般人来说可能适得其反，但对有能力的团队这是强制创新的工具。
+      </div>
+    </div>
+
+    <div class="lesson-card red-bg">
+      <div class="lesson-num">LESSON 04</div>
+      <div class="lesson-title">同时管理多个公司的方法</div>
+      <div class="lesson-body">
+        马斯克同时运营Tesla、SpaceX、Neuralink、The Boring Company、X。他的方法是：<strong>把自己定位为首席工程师而不是CEO</strong>。<br/><br/>
+        他参与的是每个公司最核心的技术决策，其他事情他授权出去。他不开例行会议，他在生产线上。
+      </div>
+    </div>
+
+    <div class="lesson-card" style="border-color:var(--border);">
+      <div class="lesson-num">LESSON 05</div>
+      <div class="lesson-title">接受"不舒适"是进步的代价</div>
+      <div class="lesson-body">
+        书里反复出现一个主题：马斯克会在最不舒服的地方待最长时间。工厂地板、发射台控制室、危机时的会议室。<br/><br/>
+        他说过：<strong>舒适是敌人。</strong>当你开始觉得轻松了，说明你已经在走下坡路了，只是还没意识到。
+      </div>
+    </div>
+
+    <div class="lesson-card" style="background:var(--surface2);border-color:var(--border);">
+      <div class="lesson-num" style="color:var(--muted);">WARNING</div>
+      <div class="lesson-title">哪些不值得学习</div>
+      <div class="lesson-body" style="color:var(--muted);">
+        Isaacson非常诚实地指出：马斯克的很多行为<strong>在他身上有效，是因为他的使命和能力的组合极其罕见</strong>。普通人模仿他的管理方式大概率只会伤害团队。<br/><br/>
+        不值得模仿：对员工的情感无视、用羞辱来激励、完全忽视个人健康、对亲密关系的破坏。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HIGHLIGHTS ===== -->
+<div class="section" id="sec-highlights">
+
+  <div class="group">
+    <div class="group-label">必读经典章节</div>
+
+    <div class="card" id="h1">
+      <div class="card-header" onclick="toggleCard('h1')">
+        <div class="card-left">
+          <div class="card-icon" style="background:var(--red-soft);">💥</div>
+          <div>
+            <div class="card-title">第四枚火箭</div>
+            <div class="card-sub">Ch.28 · 2008年最黑暗的夜晚</div>
+          </div>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="body-text">这可能是全书最令人屏息的场景。前三枚猎鹰1号全部失败，SpaceX的钱快烧完了，NASA的合同还没到手。第四枚是最后的机会。</div>
+        <div class="body-text">发射成功的那一刻，马斯克当着全体员工的面哭了——这是全书他极少数情感崩溃的时刻之一。</div>
+        <a class="read-original" href="https://www.google.com/search?q=Elon+Musk+Isaacson+Chapter+28+Falcon+1+fourth+launch+2008+success" target="_blank">
+          <span class="read-icon">🔍</span>
+          <span class="read-text">搜索原文<span class="read-hint">Google · "Musk Isaacson Falcon 1 fourth launch 2008 success chapter"</span></span>
+          <span class="read-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="card" id="h2">
+      <div class="card-header" onclick="toggleCard('h2')">
+        <div class="card-left">
+          <div class="card-icon" style="background:var(--green-soft);">🏭</div>
+          <div>
+            <div class="card-title">生产地狱</div>
+            <div class="card-sub">Ch.45 · Model 3量产危机</div>
+          </div>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="body-text">马斯克在弗里蒙特工厂的帐篷里住了数月，把Model 3的产量从每周100辆推到5000辆。这段是对他管理风格最直接的描写：既残酷又有效。</div>
+        <div class="body-text">他会在凌晨2点叫醒工程师讨论一颗螺丝的设计，也会在早上7点因为一个好主意当场给工程师发几十万奖金。</div>
+        <a class="read-original" href="https://www.google.com/search?q=Elon+Musk+Isaacson+production+hell+Model+3+Fremont+tent" target="_blank">
+          <span class="read-icon">🔍</span>
+          <span class="read-text">搜索原文<span class="read-hint">Google · "Musk Isaacson production hell Model 3 Fremont tent"</span></span>
+          <span class="read-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="card" id="h3">
+      <div class="card-header" onclick="toggleCard('h3')">
+        <div class="card-left">
+          <div class="card-icon" style="background:var(--gold-soft);">🧠</div>
+          <div>
+            <div class="card-title">AI的恐惧</div>
+            <div class="card-sub">Ch.70 · 为什么他离开OpenAI又创立xAI</div>
+          </div>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="body-text">马斯克是OpenAI联合创始人之一，但后来与Sam Altman决裂，认为OpenAI背离了"开放"的初衷。他创立xAI的动机是：<strong>不能让对AI最不谨慎的人控制最强大的AI</strong>。</div>
+        <div class="body-text">这章揭示了他关于AI的核心恐惧：不是机器人，而是被人类精英阶层控制的超级智能。</div>
+        <a class="read-original" href="https://www.google.com/search?q=Elon+Musk+Isaacson+OpenAI+Sam+Altman+xAI+artificial+intelligence+fear" target="_blank">
+          <span class="read-icon">🔍</span>
+          <span class="read-text">搜索原文<span class="read-hint">Google · "Musk Isaacson OpenAI Sam Altman xAI AI fear"</span></span>
+          <span class="read-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="card" id="h4">
+      <div class="card-header" onclick="toggleCard('h4')">
+        <div class="card-left">
+          <div class="card-icon" style="background:var(--blue-soft);">🌙</div>
+          <div>
+            <div class="card-title">Starship的意义</div>
+            <div class="card-sub">Ch.80 · 为什么他真的要去火星</div>
+          </div>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="body-text">Isaacson问马斯克：如果火星计划失败了，你这一生算成功吗？他的回答揭示了他对"成功"定义的本质——不是结果，而是<strong>是否全力以赴地尝试了重要的事</strong>。</div>
+        <div class="body-text">这章也包含他对人类文明脆弱性的深层思考，是理解他所有决策底层逻辑的钥匙。</div>
+        <a class="read-original" href="https://www.google.com/search?q=Elon+Musk+Isaacson+Starship+Mars+civilization+multiplanetary" target="_blank">
+          <span class="read-icon">🔍</span>
+          <span class="read-text">搜索原文<span class="read-hint">Google · "Musk Isaacson Starship Mars multiplanetary civilization"</span></span>
+          <span class="read-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="card" id="h5">
+      <div class="card-header" onclick="toggleCard('h5')">
+        <div class="card-left">
+          <div class="card-icon" style="background:var(--red-soft);">👤</div>
+          <div>
+            <div class="card-title">Isaacson的最终评价</div>
+            <div class="card-sub">结语 · 他究竟是好人还是坏人</div>
+          </div>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="body-text">Isaacson在结尾拒绝给出道德评判。他的结论是：马斯克的成功和他的破坏力来自同一个源头——他的大脑无法接受"现实不能被改变"这件事。</div>
+        <div class="body-text">这既让他建造了火箭，也让他买下Twitter。读者要自己判断这到底是祝福还是诅咒。</div>
+        <a class="read-original" href="https://www.google.com/search?q=Elon+Musk+Isaacson+conclusion+epilogue+assessment+judgment" target="_blank">
+          <span class="read-icon">🔍</span>
+          <span class="read-text">搜索原文<span class="read-hint">Google · "Musk Isaacson epilogue conclusion Isaacson assessment"</span></span>
+          <span class="read-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-label">如果只能读10页</div>
+    <div class="card" style="padding:18px;background:var(--gold-soft);border-color:rgba(201,168,76,0.3);">
+      <div class="insight-list" style="margin:0;">
+        <div class="insight"><div class="insight-dot" style="background:var(--gold);"></div><div class="insight-text"><strong>Ch.3</strong> · 父亲Errol的场景——理解"恶魔模式"的起源</div></div>
+        <div class="insight"><div class="insight-dot" style="background:var(--gold);"></div><div class="insight-text"><strong>Ch.28</strong> · 第四枚火箭发射——理解他面对失败的方式</div></div>
+        <div class="insight"><div class="insight-dot" style="background:var(--gold);"></div><div class="insight-text"><strong>Ch.40</strong> · 五步算法——理解他的工程哲学</div></div>
+        <div class="insight"><div class="insight-dot" style="background:var(--gold);"></div><div class="insight-text"><strong>Ch.45</strong> · 生产地狱——理解他的管理方式</div></div>
+        <div class="insight"><div class="insight-dot" style="background:var(--gold);"></div><div class="insight-text"><strong>结语</strong> · Isaacson的最终判断</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showTab(tab) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('sec-' + tab).classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+  }
+
+  function toggleCard(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+</script>
+</body>
+</html>

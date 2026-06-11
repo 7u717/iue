@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>每日英语打卡</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F7F8FA;
+      --surface: #FFFFFF;
+      --border: #E4E7EF;
+      --text: #111318;
+      --muted: #6B7280;
+      --dim: #9CA3AF;
+      --accent: #2D7FF9;
+      --accent-soft: rgba(45,127,249,0.08);
+      --green: #059669;
+      --green-soft: #ECFDF5;
+      --purple: #7C3AED;
+      --purple-soft: #F5F3FF;
+      --orange: #D97706;
+      --orange-soft: #FFFBEB;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; min-height: 100vh; }
+
+    /* HEADER */
+    header {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 14px 20px; position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; }
+    .streak-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--orange-soft); border: 1px solid rgba(217,119,6,0.2);
+      padding: 5px 12px; border-radius: 100px;
+      font-size: 13px; font-weight: 600; color: var(--orange);
+    }
+
+    /* TABS */
+    .tab-bar {
+      display: flex; background: var(--surface); border-bottom: 1px solid var(--border);
+      overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      position: sticky; top: 53px; z-index: 90;
+    }
+    .tab-bar::-webkit-scrollbar { display: none; }
+    .tab {
+      padding: 13px 18px; font-size: 13px; font-weight: 500; color: var(--muted);
+      cursor: pointer; white-space: nowrap; border-bottom: 2px solid transparent;
+      transition: all .2s; flex-shrink: 0;
+    }
+    .tab.active-ielts { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab.active-daily { color: var(--green); border-bottom-color: var(--green); }
+    .tab.active-eng { color: var(--purple); border-bottom-color: var(--purple); }
+    .tab.active-listen { color: var(--orange); border-bottom-color: var(--orange); }
+
+    /* SECTIONS */
+    .section { display: none; padding: 20px 16px 80px; max-width: 600px; margin: 0 auto; }
+    .section.active { display: block; }
+
+    /* PROGRESS BAR */
+    .daily-progress {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 16px; margin-bottom: 20px;
+    }
+    .progress-title { font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 10px; }
+    .progress-dots { display: flex; gap: 6px; flex-wrap: wrap; }
+    .prog-dot {
+      width: 28px; height: 28px; border-radius: 8px;
+      border: 1.5px solid var(--border); display: flex; align-items: center;
+      justify-content: center; font-size: 11px; font-weight: 600; color: var(--dim);
+      cursor: pointer; transition: all .15s;
+    }
+    .prog-dot.done { background: var(--green); border-color: var(--green); color: #fff; }
+    .prog-dot.today { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+
+    /* FLASHCARD */
+    .flashcard-wrap { perspective: 1000px; margin-bottom: 16px; }
+    .flashcard {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 32px 24px; text-align: center;
+      min-height: 200px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; cursor: pointer;
+      position: relative; transition: transform .2s;
+      user-select: none;
+    }
+    .flashcard:active { transform: scale(0.98); }
+    .card-category {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 16px;
+      padding: 4px 10px; border-radius: 6px;
+    }
+    .card-word {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px; font-weight: 700; margin-bottom: 8px; line-height: 1.2;
+    }
+    .card-phonetic { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+    .card-meaning {
+      font-size: 16px; color: var(--muted); line-height: 1.6;
+      display: none;
+    }
+    .card-example {
+      font-size: 13px; color: var(--dim); font-style: italic;
+      margin-top: 10px; line-height: 1.6; display: none;
+    }
+    .flashcard.revealed .card-meaning { display: block; }
+    .flashcard.revealed .card-example { display: block; }
+    .tap-hint { font-size: 12px; color: var(--dim); margin-top: 12px; }
+    .flashcard.revealed .tap-hint { display: none; }
+
+    /* CONTROLS */
+    .card-controls { display: flex; gap: 10px; margin-bottom: 16px; }
+    .btn {
+      flex: 1; padding: 13px; border-radius: 12px; border: none;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      font-family: 'Inter', sans-serif; transition: opacity .15s, transform .1s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-wrong { background: #FEE2E2; color: #DC2626; }
+    .btn-right { background: var(--green-soft); color: var(--green); border: 1px solid rgba(5,150,105,0.2); }
+    .btn-next { background: var(--text); color: #fff; }
+
+    /* COUNTER */
+    .card-counter {
+      text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 20px;
+    }
+    .score-bar {
+      display: flex; gap: 8px; justify-content: center; margin-top: 6px;
+    }
+    .score-item { font-size: 12px; }
+    .score-right { color: var(--green); font-weight: 600; }
+    .score-wrong { color: #DC2626; font-weight: 600; }
+
+    /* CATEGORY FILTER */
+    .cat-filter { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
+    .cat-filter::-webkit-scrollbar { display: none; }
+    .cat-chip {
+      padding: 6px 14px; border-radius: 100px; border: 1.5px solid var(--border);
+      font-size: 12px; font-weight: 500; color: var(--muted); cursor: pointer;
+      white-space: nowrap; flex-shrink: 0; transition: all .15s;
+    }
+    .cat-chip.active { background: var(--text); border-color: var(--text); color: #fff; }
+
+    /* COMPLETE STATE */
+    .complete-box {
+      background: var(--green-soft); border: 1px solid rgba(5,150,105,0.2);
+      border-radius: 20px; padding: 32px 24px; text-align: center; margin-bottom: 16px;
+    }
+    .complete-icon { font-size: 48px; margin-bottom: 12px; }
+    .complete-title { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+    .complete-sub { font-size: 14px; color: var(--muted); }
+
+    /* LISTENING */
+    .listen-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; margin-bottom: 12px; overflow: hidden;
+      text-decoration: none; color: var(--text); display: block;
+      transition: border-color .2s;
+    }
+    .listen-card:hover { border-color: var(--orange); }
+    .listen-thumb {
+      background: var(--orange-soft); padding: 16px 20px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .listen-play {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--orange); display: flex; align-items: center;
+      justify-content: center; font-size: 16px; flex-shrink: 0; color: #fff;
+    }
+    .listen-meta { flex: 1; }
+    .listen-label { font-size: 11px; font-weight: 600; color: var(--orange); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px; }
+    .listen-title { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; }
+    .listen-body { padding: 14px 20px; }
+    .listen-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 8px; }
+    .listen-tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 6px; }
+
+    /* SECTION LABEL */
+    .sec-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); margin-bottom: 12px; padding-left: 2px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">英语打卡 📚</div>
+  <div class="streak-badge">🔥 <span id="streak-num">0</span> 天连续</div>
+</header>
+
+<div class="tab-bar">
+  <div class="tab active-ielts" onclick="showTab('ielts')" id="tab-ielts">🎯 雅思词汇</div>
+  <div class="tab" onclick="showTab('daily')" id="tab-daily">💬 日常口语</div>
+  <div class="tab" onclick="showTab('eng')" id="tab-eng">⚙️ 工程英语</div>
+  <div class="tab" onclick="showTab('listen')" id="tab-listen">🎧 BBC听力</div>
+</div>
+
+<!-- ===== IELTS ===== -->
+<div class="section active" id="sec-ielts">
+  <div class="daily-progress">
+    <div class="progress-title">本月打卡进度</div>
+    <div class="progress-dots" id="ielts-progress"></div>
+  </div>
+  <div class="card-counter">
+    <span id="ielts-idx">1</span> / <span id="ielts-total">30</span>
+    <div class="score-bar">
+      <span class="score-item score-right">✓ <span id="ielts-right">0</span></span>
+      <span class="score-item" style="color:var(--dim);">·</span>
+      <span class="score-item score-wrong">✗ <span id="ielts-wrong">0</span></span>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+    <button id="ielts-mode-btn" onclick="toggleMode('ielts')" style="font-size:12px;font-weight:600;padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;">✏️ 切换默写</button>
+  </div>
+  <div class="flashcard-wrap">
+    <div class="flashcard" id="ielts-card" onclick="revealCard('ielts')">
+      <div class="card-category" id="ielts-cat"></div>
+      <div id="ielts-weak-badge" style="display:none;font-size:11px;color:var(--orange);background:var(--orange-soft);padding:3px 8px;border-radius:6px;margin-bottom:8px;font-weight:600;">🔄 复习词</div>
+      <div class="card-word" id="ielts-word"></div>
+      <div class="card-phonetic" id="ielts-phonetic"></div>
+      <div class="card-meaning" id="ielts-meaning"></div>
+      <div class="card-example" id="ielts-example"></div>
+      <div class="tap-hint">点击翻转查看释义</div>
+    </div>
+  </div>
+  <div class="card-controls" id="ielts-controls" style="display:none;">
+    <button class="btn btn-wrong" onclick="nextCard('ielts', false)">✗ 不熟</button>
+    <button class="btn btn-right" onclick="nextCard('ielts', true)">✓ 记住了</button>
+  </div>
+  <button class="btn btn-next" onclick="skipCard('ielts')" style="width:100%;margin-bottom:16px;">跳过 →</button>
+</div>
+
+<!-- ===== DAILY ===== -->
+<div class="section" id="sec-daily">
+  <div class="daily-progress">
+    <div class="progress-title">本月打卡进度</div>
+    <div class="progress-dots" id="daily-progress"></div>
+  </div>
+  <div class="card-counter">
+    <span id="daily-idx">1</span> / <span id="daily-total">30</span>
+    <div class="score-bar">
+      <span class="score-item score-right">✓ <span id="daily-right">0</span></span>
+      <span class="score-item" style="color:var(--dim);">·</span>
+      <span class="score-item score-wrong">✗ <span id="daily-wrong">0</span></span>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+    <button id="daily-mode-btn" onclick="toggleMode('daily')" style="font-size:12px;font-weight:600;padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;">✏️ 切换默写</button>
+  </div>
+  <div class="flashcard-wrap">
+    <div class="flashcard" id="daily-card" onclick="revealCard('daily')">
+      <div class="card-category" id="daily-cat"></div>
+      <div id="daily-weak-badge" style="display:none;font-size:11px;color:var(--orange);background:var(--orange-soft);padding:3px 8px;border-radius:6px;margin-bottom:8px;font-weight:600;">🔄 复习词</div>
+      <div class="card-word" id="daily-word"></div>
+      <div class="card-phonetic" id="daily-phonetic"></div>
+      <div class="card-meaning" id="daily-meaning"></div>
+      <div class="card-example" id="daily-example"></div>
+      <div class="tap-hint">点击翻转查看释义</div>
+    </div>
+  </div>
+  <div class="card-controls" id="daily-controls" style="display:none;">
+    <button class="btn btn-wrong" onclick="nextCard('daily', false)">✗ 不熟</button>
+    <button class="btn btn-right" onclick="nextCard('daily', true)">✓ 记住了</button>
+  </div>
+  <button class="btn btn-next" onclick="skipCard('daily')" style="width:100%;margin-bottom:16px;">跳过 →</button>
+</div>
+
+<!-- ===== ENGINEERING ===== -->
+<div class="section" id="sec-eng">
+  <div class="daily-progress">
+    <div class="progress-title">本月打卡进度</div>
+    <div class="progress-dots" id="eng-progress"></div>
+  </div>
+  <div class="card-counter">
+    <span id="eng-idx">1</span> / <span id="eng-total">30</span>
+    <div class="score-bar">
+      <span class="score-item score-right">✓ <span id="eng-right">0</span></span>
+      <span class="score-item" style="color:var(--dim);">·</span>
+      <span class="score-item score-wrong">✗ <span id="eng-wrong">0</span></span>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+    <button id="eng-mode-btn" onclick="toggleMode('eng')" style="font-size:12px;font-weight:600;padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;">✏️ 切换默写</button>
+  </div>
+  <div class="flashcard-wrap">
+    <div class="flashcard" id="eng-card" onclick="revealCard('eng')">
+      <div class="card-category" id="eng-cat"></div>
+      <div id="eng-weak-badge" style="display:none;font-size:11px;color:var(--orange);background:var(--orange-soft);padding:3px 8px;border-radius:6px;margin-bottom:8px;font-weight:600;">🔄 复习词</div>
+      <div class="card-word" id="eng-word"></div>
+      <div class="card-phonetic" id="eng-phonetic"></div>
+      <div class="card-meaning" id="eng-meaning"></div>
+      <div class="card-example" id="eng-example"></div>
+      <div class="tap-hint">点击翻转查看释义</div>
+    </div>
+  </div>
+  <div class="card-controls" id="eng-controls" style="display:none;">
+    <button class="btn btn-wrong" onclick="nextCard('eng', false)">✗ 不熟</button>
+    <button class="btn btn-right" onclick="nextCard('eng', true)">✓ 记住了</button>
+  </div>
+  <button class="btn btn-next" onclick="skipCard('eng')" style="width:100%;margin-bottom:16px;">跳过 →</button>
+</div>
+
+<!-- ===== LISTENING ===== -->
+<div class="section" id="sec-listen">
+  <div class="sec-label" style="margin-bottom:16px;">今日推荐</div>
+
+  <a class="listen-card" href="https://www.bbc.co.uk/learningenglish/english/features/6-minute-english" target="_blank">
+    <div class="listen-thumb">
+      <div class="listen-play">▶</div>
+      <div class="listen-meta">
+        <div class="listen-label">BBC · 每日更新</div>
+        <div class="listen-title">6 Minute English</div>
+      </div>
+    </div>
+    <div class="listen-body">
+      <div class="listen-desc">每集6分钟，两位主持人对话，话题涵盖科技、文化、环境。有文字稿可以对照，最适合你的水平。</div>
+      <span class="listen-tag" style="background:var(--orange-soft);color:var(--orange);">⭐ 强烈推荐</span>
+    </div>
+  </a>
+
+  <a class="listen-card" href="https://www.bbc.co.uk/learningenglish/english/features/news-report" target="_blank">
+    <div class="listen-thumb">
+      <div class="listen-play">▶</div>
+      <div class="listen-meta">
+        <div class="listen-label">BBC · 新闻英语</div>
+        <div class="listen-title">News Report</div>
+      </div>
+    </div>
+    <div class="listen-body">
+      <div class="listen-desc">真实新闻音频 + 慢速版对比，练习在真实语速下的听力理解。适合雅思听力提升。</div>
+      <span class="listen-tag" style="background:var(--accent-soft);color:var(--accent);">雅思备考</span>
+    </div>
+  </a>
+
+  <a class="listen-card" href="https://www.bbc.co.uk/learningenglish/english/features/english-at-work" target="_blank">
+    <div class="listen-thumb">
+      <div class="listen-play">▶</div>
+      <div class="listen-meta">
+        <div class="listen-label">BBC · 职场英语</div>
+        <div class="listen-title">English at Work</div>
+      </div>
+    </div>
+    <div class="listen-body">
+      <div class="listen-desc">连续剧形式，跟着主角Tom在职场中的对话学习。面试、开会、发邮件的表达全都有。</div>
+      <span class="listen-tag" style="background:var(--green-soft);color:var(--green);">职场实用</span>
+    </div>
+  </a>
+
+  <a class="listen-card" href="https://www.bbc.co.uk/learningenglish/english/features/pronunciation" target="_blank">
+    <div class="listen-thumb">
+      <div class="listen-play">▶</div>
+      <div class="listen-meta">
+        <div class="listen-label">BBC · 发音训练</div>
+        <div class="listen-title">Pronunciation</div>
+      </div>
+    </div>
+    <div class="listen-body">
+      <div class="listen-desc">专门练发音，配合口型视频，对提升口语自信很有帮助。</div>
+      <span class="listen-tag" style="background:var(--purple-soft);color:var(--purple);">口语自信</span>
+    </div>
+  </a>
+
+  <div class="sec-label" style="margin-top:24px;">YouTube 推荐频道</div>
+
+  <a class="listen-card" href="https://www.youtube.com/@EnglishwithLucy" target="_blank">
+    <div class="listen-thumb" style="background:var(--purple-soft);">
+      <div class="listen-play" style="background:var(--purple);">▶</div>
+      <div class="listen-meta">
+        <div class="listen-label" style="color:var(--purple);">YouTube</div>
+        <div class="listen-title">English with Lucy</div>
+      </div>
+    </div>
+    <div class="listen-body">
+      <div class="listen-desc">英国口音，内容清晰，专门讲日常表达和语法，适合留学生。</div>
+    </div>
+  </a>
+
+  <a class="listen-card" href="https://www.youtube.com/@AcademicEnglishHelp" target="_blank">
+    <div class="listen-thumb" style="background:var(--accent-soft);">
+      <div class="listen-play" style="background:var(--accent);">▶</div>
+      <div class="listen-meta">
+        <div class="listen-label" style="color:var(--accent);">YouTube</div>
+        <div class="listen-title">Academic English Help</div>
+      </div>
+    </div>
+    <div class="listen-body">
+      <div class="listen-desc">学术写作和口语，专门针对大学生，UNSW作业写作很有用。</div>
+    </div>
+  </a>
+</div>
+
+<script>
+// ============ WORD BANKS ============
+
+const IELTS_WORDS = [
+  { word: 'Ambiguous', phonetic: '/æmˈbɪɡjuəs/', meaning: '模糊的；不明确的', example: 'The question was ambiguous and confused many students.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Crucial', phonetic: '/ˈkruːʃl/', meaning: '至关重要的；关键的', example: 'Regular exercise is crucial for maintaining good health.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Inevitable', phonetic: '/ɪnˈevɪtəbl/', meaning: '不可避免的；必然的', example: 'Change is inevitable in a rapidly developing society.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Substantial', phonetic: '/səbˈstænʃl/', meaning: '大量的；实质性的', example: 'There has been a substantial increase in tuition fees.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Controversial', phonetic: '/ˌkɒntrəˈvɜːʃl/', meaning: '有争议的；引起争论的', example: 'The new policy is highly controversial among students.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Predominantly', phonetic: '/prɪˈdɒmɪnəntli/', meaning: '主要地；占主导地位地', example: 'The city is predominantly residential.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Consequently', phonetic: '/ˈkɒnsɪkwəntli/', meaning: '因此；结果', example: 'He didn\'t study. Consequently, he failed the exam.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Phenomenon', phonetic: '/fɪˈnɒmɪnən/', meaning: '现象', example: 'Climate change is a global phenomenon.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Undermine', phonetic: '/ˌʌndəˈmaɪn/', meaning: '削弱；破坏', example: 'Lack of sleep can undermine academic performance.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Advocate', phonetic: '/ˈædvəkeɪt/', meaning: '提倡；倡导者', example: 'Many scientists advocate for renewable energy.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Coherent', phonetic: '/kəʊˈhɪərənt/', meaning: '连贯的；条理清晰的', example: 'Your essay needs a more coherent structure.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Elaborate', phonetic: '/ɪˈlæbərət/', meaning: '详细阐述；精心制作的', example: 'Could you elaborate on your answer?', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Diminish', phonetic: '/dɪˈmɪnɪʃ/', meaning: '减少；降低', example: 'The impact of the policy diminished over time.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Feasible', phonetic: '/ˈfiːzɪbl/', meaning: '可行的；可实现的', example: 'Is it feasible to complete the project in one week?', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Anticipate', phonetic: '/ænˈtɪsɪpeɪt/', meaning: '预期；预料', example: 'We anticipate strong demand for the new product.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Diverse', phonetic: '/daɪˈvɜːs/', meaning: '多样的；不同的', example: 'UNSW has a very diverse international student body.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Implement', phonetic: '/ˈɪmplɪment/', meaning: '实施；执行', example: 'The university will implement new assessment policies.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Sustain', phonetic: '/səˈsteɪn/', meaning: '维持；支撑', example: 'How can we sustain economic growth?', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Acknowledge', phonetic: '/əkˈnɒlɪdʒ/', meaning: '承认；感谢', example: 'I acknowledge that my essay has some weaknesses.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Contradict', phonetic: '/ˌkɒntrəˈdɪkt/', meaning: '矛盾；反驳', example: 'The results contradict the original hypothesis.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Mitigate', phonetic: '/ˈmɪtɪɡeɪt/', meaning: '减轻；缓和', example: 'Green spaces can mitigate the effects of urban heat.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Exacerbate', phonetic: '/ɪɡˈzæsəbeɪt/', meaning: '加剧；使恶化', example: 'Pollution exacerbates respiratory problems.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Pragmatic', phonetic: '/præɡˈmætɪk/', meaning: '务实的；实用主义的', example: 'We need a pragmatic approach to solving this issue.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Autonomy', phonetic: '/ɔːˈtɒnəmi/', meaning: '自主权；自治', example: 'Students should have more autonomy in their learning.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Empirical', phonetic: '/ɪmˈpɪrɪkl/', meaning: '基于经验的；实证的', example: 'The theory is supported by empirical evidence.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Stringent', phonetic: '/ˈstrɪndʒənt/', meaning: '严格的；严厉的', example: 'Stringent safety standards must be maintained.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Paradox', phonetic: '/ˈpærədɒks/', meaning: '悖论；矛盾现象', example: 'It\'s a paradox that the more we travel, the more carbon we emit.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Proliferate', phonetic: '/prəˈlɪfəreɪt/', meaning: '激增；迅速扩散', example: 'Social media platforms have proliferated rapidly.', color: '#2D7FF9', bg: '#EFF6FF' },
+  { word: 'Scrutinise', phonetic: '/ˈskruːtɪnaɪz/', meaning: '仔细审查；详细检查', example: 'The data was carefully scrutinised by researchers.', color: '#2D7FF9', bg: '#EFF6FF' },
+];
+
+const DAILY_WORDS = [
+  { word: 'Reckon', phonetic: '/ˈrekən/', meaning: '认为；觉得（澳洲口语超常用）', example: 'I reckon we should grab dinner after class.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Heaps', phonetic: '/hiːps/', meaning: '很多；大量（澳洲俚语）', example: 'There\'s heaps of work to do this week.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Arvo', phonetic: '/ˈɑːvəʊ/', meaning: '下午（澳洲俚语 afternoon）', example: 'Let\'s meet up this arvo.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'No worries', phonetic: '/nəʊ ˈwʌriz/', meaning: '没问题；不客气（澳洲日常用语）', example: 'Can you help me? — No worries!', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Keen', phonetic: '/kiːn/', meaning: '渴望的；热衷的', example: 'Are you keen to join us for lunch?', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Catch up', phonetic: '/kætʃ ʌp/', meaning: '叙旧；更新近况', example: 'We should catch up sometime this week.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Fair enough', phonetic: '/feər ɪˈnʌf/', meaning: '好吧；说得过去', example: 'I can\'t make it tonight. — Fair enough.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Devo', phonetic: '/ˈdevəʊ/', meaning: '很失望（devastated的缩写）', example: 'I failed the test. I\'m so devo.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Chuck', phonetic: '/tʃʌk/', meaning: '扔；放（澳洲口语）', example: 'Just chuck your bag on the chair.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Flat out', phonetic: '/flæt aʊt/', meaning: '非常忙；全力以赴', example: 'I\'ve been flat out with assignments this week.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Hang on', phonetic: '/hæŋ ɒn/', meaning: '等一下；稍等', example: 'Hang on, let me check my notes.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Sorted', phonetic: '/ˈsɔːtɪd/', meaning: '搞定了；解决了', example: 'The enrolment issue is sorted now.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Mate', phonetic: '/meɪt/', meaning: '朋友；伙计（澳洲称呼）', example: 'Thanks for your help, mate.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Chuffed', phonetic: '/tʃʌft/', meaning: '很高兴；很得意', example: 'I\'m really chuffed about my exam results.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Grab', phonetic: '/ɡræb/', meaning: '去拿；去买（口语）', example: 'Let\'s grab a coffee after class.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Suss out', phonetic: '/sʌs aʊt/', meaning: '弄清楚；调查', example: 'Let me suss out the best route to campus.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Pitch in', phonetic: '/pɪtʃ ɪn/', meaning: '一起帮忙；参与', example: 'Everyone pitched in to finish the group project.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Bear with me', phonetic: '/beər wɪð miː/', meaning: '请稍等一下；耐心一点', example: 'Bear with me while I find the document.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Touch base', phonetic: '/tʌtʃ beɪs/', meaning: '联系一下；确认一下', example: 'Let\'s touch base before the submission deadline.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Loop in', phonetic: '/luːp ɪn/', meaning: '把某人纳入讨论；抄送', example: 'Can you loop in the professor on this email?', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Slash', phonetic: '/slæʃ/', meaning: '大幅削减；斜杠（兼职称呼）', example: 'They slashed the prices during the sale.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Wrap up', phonetic: '/ræp ʌp/', meaning: '结束；总结', example: 'Let\'s wrap up the meeting in 10 minutes.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Heads up', phonetic: '/hedz ʌp/', meaning: '提前告知；提醒', example: 'Just a heads up — the exam time has changed.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Flog', phonetic: '/flɒɡ/', meaning: '卖东西；拼命做（澳洲口语）', example: 'He\'s flogging his old textbooks on Facebook.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Reckon', phonetic: '/ˈrekən/', meaning: '认为；觉得（重要！）', example: 'I reckon the assignment is due Friday, not Thursday.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Nah', phonetic: '/nɑː/', meaning: '不；算了（口语否定）', example: 'Wanna come? — Nah, I\'m too tired.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Yeah nah', phonetic: '/jeə nɑː/', meaning: '表示不同意（澳洲特有）', example: 'Was it good? — Yeah nah, not really.', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Nah yeah', phonetic: '/nɑː jeə/', meaning: '表示同意（澳洲特有）', example: 'That\'s a good idea! — Nah yeah, totally!', color: '#059669', bg: '#ECFDF5' },
+  { word: 'Cut lunch', phonetic: '/kʌt lʌntʃ/', meaning: '午饭盒；自带餐（澳洲）', example: 'I brought cut lunch today to save money.', color: '#059669', bg: '#ECFDF5' },
+];
+
+const ENG_WORDS = [
+  { word: 'Statics', phonetic: '/ˈstætɪks/', meaning: '静力学——研究静止状态下力的平衡', example: 'Statics is the study of forces in equilibrium.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Dynamics', phonetic: '/daɪˈnæmɪks/', meaning: '动力学——研究运动和力的关系', example: 'We study particle dynamics in ENGG1300.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Equilibrium', phonetic: '/ˌiːkwɪˈlɪbriəm/', meaning: '平衡；平衡状态', example: 'The structure is in static equilibrium.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Resultant', phonetic: '/rɪˈzʌltənt/', meaning: '合力；合矢量', example: 'Calculate the resultant of these two forces.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Torque', phonetic: '/tɔːk/', meaning: '扭矩；力矩', example: 'Torque is the rotational equivalent of force.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Velocity', phonetic: '/vəˈlɒsɪti/', meaning: '速度（矢量）', example: 'The velocity of the particle changes direction.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Acceleration', phonetic: '/əkˌseləˈreɪʃn/', meaning: '加速度', example: 'Net force equals mass times acceleration (F=ma).', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Free Body Diagram', phonetic: '/friː ˈbɒdi ˈdaɪəɡræm/', meaning: '自由体图（FBD）', example: 'Always draw a free body diagram before solving.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Tolerance', phonetic: '/ˈtɒlərəns/', meaning: '公差；容差', example: 'The tolerance on this dimension is ±0.5mm.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Orthographic', phonetic: '/ˌɔːθəˈɡræfɪk/', meaning: '正交的；正投影的', example: 'Use orthographic projection for engineering drawings.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Eigenvalue', phonetic: '/ˈaɪɡənˌvæljuː/', meaning: '特征值', example: 'Find the eigenvalues of matrix A.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Vector Space', phonetic: '/ˈvektə speɪs/', meaning: '向量空间', example: 'R³ is a vector space with three dimensions.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Differential Equation', phonetic: '/ˌdɪfəˈrenʃl ɪˈkweɪʒn/', meaning: '微分方程', example: 'Solve the differential equation dy/dx = 2x.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Convergence', phonetic: '/kənˈvɜːdʒəns/', meaning: '收敛（数学）', example: 'Does this series converge or diverge?', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Machining', phonetic: '/məˈʃiːnɪŋ/', meaning: '机械加工', example: 'Machining includes turning, milling and drilling.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Compressive', phonetic: '/kəmˈpresɪv/', meaning: '压缩的；受压的', example: 'The column is under compressive load.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Tensile', phonetic: '/ˈtensaɪl/', meaning: '拉伸的；张力的', example: 'Steel has high tensile strength.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Momentum', phonetic: '/məˈmentəm/', meaning: '动量', example: 'Momentum equals mass times velocity.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Truss', phonetic: '/trʌs/', meaning: '桁架', example: 'Analyse the forces in each member of the truss.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Integration', phonetic: '/ˌɪntɪˈɡreɪʃn/', meaning: '积分', example: 'Use integration to find the area under the curve.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Shear Force', phonetic: '/ʃɪə fɔːs/', meaning: '剪切力', example: 'The shear force diagram shows internal forces in the beam.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Bending Moment', phonetic: '/ˈbendɪŋ ˈməʊmənt/', meaning: '弯矩', example: 'Draw the bending moment diagram for this beam.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Friction', phonetic: '/ˈfrɪkʃn/', meaning: '摩擦力', example: 'Friction opposes relative motion between surfaces.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Kinetic Energy', phonetic: '/kɪˈnetɪk ˈenədʒi/', meaning: '动能', example: 'Kinetic energy equals half times mass times velocity squared.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Potential Energy', phonetic: '/pəˈtenʃl ˈenədʒi/', meaning: '势能', example: 'The ball gains potential energy as it rises.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Linear Transformation', phonetic: '/ˈlɪniə ˌtrænsfəˈmeɪʃn/', meaning: '线性变换', example: 'T is a linear transformation from R² to R³.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Determinant', phonetic: '/dɪˈtɜːmɪnənt/', meaning: '行列式', example: 'The determinant of a 2x2 matrix is ad-bc.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'CNC', phonetic: '/siː en siː/', meaning: '数控加工（Computer Numerical Control）', example: 'The part was machined on a CNC milling machine.', color: '#7C3AED', bg: '#F5F3FF' },
+  { word: 'Yield Strength', phonetic: '/jiːld streŋθ/', meaning: '屈服强度', example: 'The applied stress must not exceed the yield strength.', color: '#7C3AED', bg: '#F5F3FF' },
+];
+
+// ============ STATE ============
+const state = {
+  ielts: { deck: [], idx: 0, right: 0, wrong: 0, mode: 'flash' },
+  daily: { deck: [], idx: 0, right: 0, wrong: 0, mode: 'flash' },
+  eng:   { deck: [], idx: 0, right: 0, wrong: 0, mode: 'flash' },
+};
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ============ 存储（内存+localStorage双保险）============
+const memStore = {};
+function storeGet(key) {
+  try { return localStorage.getItem(key); } catch(e) { return memStore[key] || null; }
+}
+function storeSet(key, val) {
+  try { localStorage.setItem(key, val); } catch(e) {}
+  memStore[key] = val;
+}
+
+// 获取今日牌组：不熟的词 + 新词
+function buildDeck(type) {
+  const allWords = { ielts: IELTS_WORDS, daily: DAILY_WORDS, eng: ENG_WORDS }[type];
+  const weakKey = type + '-weak';
+  const weak = JSON.parse(storeGet(weakKey) || '[]');
+  const weakWords = allWords.filter(w => weak.includes(w.word));
+  const newWords = shuffle(allWords.filter(w => !weak.includes(w.word)));
+  return [...weakWords, ...newWords];
+}
+
+function markWeak(type, word) {
+  const key = type + '-weak';
+  const weak = JSON.parse(storeGet(key) || '[]');
+  if (!weak.includes(word)) { weak.push(word); storeSet(key, JSON.stringify(weak)); }
+}
+
+function markStrong(type, word) {
+  const key = type + '-weak';
+  const weak = JSON.parse(storeGet(key) || '[]');
+  storeSet(key, JSON.stringify(weak.filter(w => w !== word)));
+}
+
+function getWeakCount(type) {
+  return JSON.parse(storeGet(type + '-weak') || '[]').length;
+}
+
+// ============ RENDER FLASHCARD ============
+function renderCard(type) {
+  const s = state[type];
+  if (s.idx >= s.deck.length) { showComplete(type); return; }
+  const w = s.deck[s.idx];
+
+  if (s.mode === 'dictation') {
+    renderDictation(type, w);
+    return;
+  }
+
+  const card = document.getElementById(type + '-card');
+  if (!card) return;
+  card.classList.remove('revealed');
+  document.getElementById(type + '-controls').style.display = 'none';
+  document.getElementById(type + '-cat').textContent = type === 'ielts' ? '雅思词汇' : type === 'daily' ? '日常口语' : '工程英语';
+  document.getElementById(type + '-cat').style.cssText = `background:${w.bg};color:${w.color};padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;`;
+  document.getElementById(type + '-word').textContent = w.word;
+  document.getElementById(type + '-phonetic').textContent = w.phonetic;
+  document.getElementById(type + '-meaning').textContent = w.meaning;
+  document.getElementById(type + '-example').textContent = '"' + w.example + '"';
+  document.getElementById(type + '-idx').textContent = s.idx + 1;
+  document.getElementById(type + '-total').textContent = s.deck.length;
+  document.getElementById(type + '-right').textContent = s.right;
+  document.getElementById(type + '-wrong').textContent = s.wrong;
+
+  // 弱词标记
+  const weak = JSON.parse(storeGet(type + '-weak') || '[]');
+  const badge = document.getElementById(type + '-weak-badge');
+  if (badge) badge.style.display = weak.includes(w.word) ? 'inline-block' : 'none';
+}
+
+// ============ DICTATION MODE ============
+function renderDictation(type, w) {
+  const s = state[type];
+  const section = document.getElementById('sec-' + type);
+  const fwrap = section.querySelector('.flashcard-wrap');
+
+  fwrap.innerHTML = `
+    <div class="flashcard" style="cursor:default;min-height:240px;gap:0;">
+      <div style="background:${w.bg};color:${w.color};padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">✏️ 默写模式</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">释义</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;margin-bottom:6px;line-height:1.3;">${w.meaning}</div>
+      <div style="font-size:12px;color:var(--dim);font-style:italic;margin-bottom:18px;line-height:1.5;">"${w.example.replace(new RegExp(w.word,'gi'), '______')}"</div>
+      <input id="dict-input-${type}" type="text" placeholder="输入英文单词..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+        style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:16px;font-family:'Inter',sans-serif;outline:none;background:var(--bg);color:var(--text);text-align:center;"/>
+      <button onclick="checkDictation('${type}')" style="margin-top:10px;width:100%;padding:12px;border-radius:12px;border:none;background:var(--text);color:#fff;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;">确认 →</button>
+      <div id="dict-result-${type}" style="margin-top:10px;font-size:14px;min-height:20px;text-align:center;"></div>
+    </div>`;
+
+  document.getElementById(type + '-controls').style.display = 'none';
+  document.getElementById(type + '-idx').textContent = s.idx + 1;
+  document.getElementById(type + '-total').textContent = s.deck.length;
+  document.getElementById(type + '-right').textContent = s.right;
+  document.getElementById(type + '-wrong').textContent = s.wrong;
+
+  const inp = document.getElementById('dict-input-' + type);
+  if (inp) {
+    inp.focus();
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') checkDictation(type); });
+  }
+}
+
+function checkDictation(type) {
+  const input = document.getElementById('dict-input-' + type);
+  const result = document.getElementById('dict-result-' + type);
+  if (!input || !result) return;
+
+  const s = state[type];
+  if (s.idx >= s.deck.length) return;
+  const w = s.deck[s.idx];
+  const answer = input.value.trim();
+  if (!answer) return;
+
+  const correct = answer.toLowerCase() === w.word.toLowerCase();
+
+  if (correct) {
+    result.innerHTML = `<span style="color:var(--green);font-weight:600;">✓ 正确！</span>`;
+    input.style.borderColor = 'var(--green)';
+    markStrong(type, w.word);
+    s.right++;
+  } else {
+    result.innerHTML = `<span style="color:#DC2626;font-weight:600;">✗ 正确答案：<strong>${w.word}</strong></span>`;
+    input.style.borderColor = '#DC2626';
+    markWeak(type, w.word);
+    s.wrong++;
+  }
+
+  input.disabled = true;
+  input.nextElementSibling.disabled = true; // 禁用确认按钮
+
+  setTimeout(() => {
+    s.idx++;
+    if (s.idx >= s.deck.length) {
+      showComplete(type);
+    } else {
+      renderDictation(type, s.deck[s.idx]);
+    }
+  }, correct ? 900 : 1500);
+}
+
+function rebuildDictArea(type) {
+  // 恢复原始flashcard结构
+  const wrap = document.getElementById(type + '-card');
+  if (wrap) return; // 已存在就不重建
+  const section = document.getElementById('sec-' + type);
+  const fwrap = section.querySelector('.flashcard-wrap');
+  fwrap.innerHTML = `
+    <div class="flashcard" id="${type}-card" onclick="revealCard('${type}')">
+      <div class="card-category" id="${type}-cat"></div>
+      <div id="${type}-weak-badge" style="display:none;font-size:11px;color:var(--orange);background:var(--orange-soft);padding:3px 8px;border-radius:6px;margin-bottom:8px;font-weight:600;">🔄 复习词</div>
+      <div class="card-word" id="${type}-word"></div>
+      <div class="card-phonetic" id="${type}-phonetic"></div>
+      <div class="card-meaning" id="${type}-meaning"></div>
+      <div class="card-example" id="${type}-example"></div>
+      <div class="tap-hint">点击翻转查看释义</div>
+    </div>`;
+}
+
+// ============ CONTROLS ============
+function revealCard(type) {
+  const card = document.getElementById(type + '-card');
+  if (!card || card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  document.getElementById(type + '-controls').style.display = 'flex';
+}
+
+function nextCard(type, correct) {
+  const w = state[type].deck[state[type].idx];
+  if (correct) { state[type].right++; markStrong(type, w.word); }
+  else { state[type].wrong++; markWeak(type, w.word); }
+  state[type].idx++;
+  renderCard(type);
+}
+
+function skipCard(type) {
+  state[type].idx++;
+  renderCard(type);
+}
+
+function toggleMode(type) {
+  const s = state[type];
+  s.mode = s.mode === 'flash' ? 'dictation' : 'flash';
+  s.idx = 0; s.right = 0; s.wrong = 0;
+  const btn = document.getElementById(type + '-mode-btn');
+  if (btn) btn.textContent = s.mode === 'flash' ? '✏️ 切换默写' : '🃏 切换闪卡';
+
+  if (s.mode === 'dictation') {
+    // 确保flashcard wrap存在
+    const section = document.getElementById('sec-' + type);
+    const fwrap = section.querySelector('.flashcard-wrap');
+    fwrap.innerHTML = `
+      <div class="flashcard" id="${type}-card" onclick="">
+        <div class="card-category" id="${type}-cat"></div>
+        <div id="${type}-weak-badge" style="display:none;"></div>
+        <div class="card-word" id="${type}-word"></div>
+        <div class="card-phonetic" id="${type}-phonetic"></div>
+        <div class="card-meaning" id="${type}-meaning"></div>
+        <div class="card-example" id="${type}-example"></div>
+        <div class="tap-hint"></div>
+      </div>`;
+  } else {
+    rebuildDictArea(type);
+  }
+  renderCard(type);
+}
+
+function showComplete(type) {
+  const s = state[type];
+  const section = document.getElementById('sec-' + type);
+  const fwrap = section.querySelector('.flashcard-wrap');
+  fwrap.innerHTML = `
+    <div class="complete-box">
+      <div class="complete-icon">🎉</div>
+      <div class="complete-title">今日打卡完成！</div>
+      <div class="complete-sub">记住了 ${s.right} 个 · 需复习 ${s.wrong} 个<br/><span style="color:var(--orange);">🔄 ${getWeakCount(type)} 个词明天优先复习</span></div>
+    </div>`;
+  document.getElementById(type + '-controls').style.display = 'none';
+  markTodayDone(type);
+  updateStreak();
+}
+
+// ============ PROGRESS ============
+function getToday() { return new Date().toISOString().split('T')[0]; }
+
+function buildProgress(type) {
+  const container = document.getElementById(type + '-progress');
+  const today = new Date();
+  const days = [];
+  for (let i = 1; i <= 30; i++) days.push(i);
+  const done = JSON.parse(storeGet(type + '-done') || '[]');
+  const todayDay = today.getDate();
+  container.innerHTML = days.map(d => {
+    const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isDone = done.includes(dateStr);
+    const isToday = d === todayDay;
+    return `<div class="prog-dot ${isDone ? 'done' : isToday ? 'today' : ''}">${isDone ? '✓' : d}</div>`;
+  }).join('');
+}
+
+function markTodayDone(type) {
+  const done = JSON.parse(storeGet(type + '-done') || '[]');
+  const today = getToday();
+  if (!done.includes(today)) { done.push(today); storeSet(type + '-done', JSON.stringify(done)); }
+  buildProgress(type);
+}
+
+function updateStreak() {
+  const types = ['ielts', 'daily', 'eng'];
+  let streak = 0;
+  const today = new Date();
+  for (let i = 0; i < 30; i++) {
+    const d = new Date(today); d.setDate(d.getDate() - i);
+    const str = d.toISOString().split('T')[0];
+    const allDone = types.every(t => {
+      const done = JSON.parse(storeGet(t + '-done') || '[]');
+      return done.includes(str);
+    });
+    if (allDone) streak++; else if (i > 0) break;
+  }
+  document.getElementById('streak-num').textContent = streak;
+}
+
+// ============ TABS ============
+function showTab(tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => { t.className = 'tab'; });
+  document.getElementById('sec-' + tab).classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active-' + tab);
+}
+
+// ============ INIT ============
+['ielts', 'daily', 'eng'].forEach(t => {
+  state[t].deck = buildDeck(t);
+  buildProgress(t);
+  renderCard(t);
+});
+updateStreak();
+</script>
+</body>
+</html>

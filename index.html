@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UNSW T2 2026 · 复习资料</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F7F8FA;
+      --surface: #FFFFFF;
+      --border: #E4E7EF;
+      --text: #111318;
+      --muted: #6B7280;
+      --dim: #9CA3AF;
+
+      --math-color: #2563EB;
+      --math-soft: #EFF6FF;
+      --mman-color: #059669;
+      --mman-soft: #ECFDF5;
+      --engg-color: #D97706;
+      --engg-soft: #FFFBEB;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.6; }
+
+    /* HEADER */
+    header {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 14px 20px; position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; }
+    .logo span { color: var(--muted); font-weight: 500; }
+    .term-badge {
+      font-size: 12px; font-weight: 600; background: var(--text); color: #fff;
+      padding: 4px 10px; border-radius: 6px; letter-spacing: 0.04em;
+    }
+
+    /* COURSE TABS */
+    .tab-bar {
+      display: flex; gap: 0; background: var(--surface);
+      border-bottom: 1px solid var(--border); overflow-x: auto;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      position: sticky; top: 53px; z-index: 90;
+    }
+    .tab-bar::-webkit-scrollbar { display: none; }
+    .tab {
+      padding: 14px 20px; font-size: 14px; font-weight: 500;
+      color: var(--muted); cursor: pointer; white-space: nowrap;
+      border-bottom: 2px solid transparent; transition: all .2s;
+      flex-shrink: 0;
+    }
+    .tab.active-math { color: var(--math-color); border-bottom-color: var(--math-color); }
+    .tab.active-mman { color: var(--mman-color); border-bottom-color: var(--mman-color); }
+    .tab.active-engg { color: var(--engg-color); border-bottom-color: var(--engg-color); }
+
+    /* CONTENT */
+    .course-section { display: none; padding: 20px 16px 60px; max-width: 680px; margin: 0 auto; }
+    .course-section.active { display: block; }
+
+    /* COURSE HEADER */
+    .course-header {
+      border-radius: 16px; padding: 20px; margin-bottom: 24px;
+      display: flex; align-items: flex-start; gap: 16px;
+    }
+    .course-header.math { background: var(--math-soft); }
+    .course-header.mman { background: var(--mman-soft); }
+    .course-header.engg { background: var(--engg-soft); }
+    .course-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .math .course-icon { background: var(--math-color); }
+    .mman .course-icon { background: var(--mman-color); }
+    .engg .course-icon { background: var(--engg-color); }
+    .course-meta { flex: 1; }
+    .course-code { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 2px; }
+    .course-name { font-size: 14px; color: var(--muted); }
+
+    /* TOPIC GROUPS */
+    .topic-group { margin-bottom: 24px; }
+    .group-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 10px; padding-left: 4px;
+    }
+    .topic-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; margin-bottom: 8px; overflow: hidden;
+    }
+    .topic-header {
+      padding: 14px 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px;
+    }
+    .topic-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+    .topic-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .math-dot { background: var(--math-color); }
+    .mman-dot { background: var(--mman-color); }
+    .engg-dot { background: var(--engg-color); }
+    .topic-title { font-size: 15px; font-weight: 500; }
+    .topic-chevron { color: var(--dim); font-size: 12px; transition: transform .2s; flex-shrink: 0; }
+    .topic-card.open .topic-chevron { transform: rotate(180deg); }
+
+    .topic-body { display: none; padding: 0 16px 16px; }
+    .topic-card.open .topic-body { display: block; }
+
+    .subtopics { margin-bottom: 14px; }
+    .subtopic {
+      font-size: 14px; color: var(--muted); padding: 4px 0;
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .subtopic::before { content: "·"; color: var(--dim); flex-shrink: 0; margin-top: 1px; }
+
+    /* LINKS */
+    .links-label { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 8px; letter-spacing: 0.03em; }
+    .link-row { display: flex; flex-direction: column; gap: 6px; }
+    .resource-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
+      text-decoration: none; color: var(--text); font-size: 13px;
+      transition: border-color .2s, background .2s;
+    }
+    .resource-link:hover { background: var(--bg); border-color: var(--text); }
+    .link-icon {
+      width: 28px; height: 28px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .yt { background: #FEE2E2; }
+    .bili { background: #EDE9FE; }
+    .doc { background: #E0F2FE; }
+    .link-text { flex: 1; line-height: 1.4; }
+    .link-src { font-size: 11px; color: var(--dim); display: block; }
+    .link-arrow { color: var(--dim); font-size: 12px; }
+
+    /* PROGRESS */
+    .progress-bar-wrap { margin-bottom: 6px; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+    .progress-track { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 2px; transition: width .4s; }
+    .math-fill { background: var(--math-color); }
+    .mman-fill { background: var(--mman-color); }
+    .engg-fill { background: var(--engg-color); }
+
+    /* ASSESSMENT CARD */
+    .assessment-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px; margin-bottom: 8px;
+    }
+    .assessment-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0; border-bottom: 1px solid var(--border); gap: 10px;
+    }
+    .assessment-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .assessment-row:first-child { padding-top: 0; }
+    .assess-left { flex: 1; min-width: 0; }
+    .assess-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+    .assess-date { font-size: 12px; color: var(--muted); }
+    .assess-weight {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px; font-weight: 700; flex-shrink: 0;
+    }
+    .assess-weight.math-w { color: var(--math-color); }
+    .assess-weight.engg-w { color: var(--engg-color); }
+    .assess-weight.mman-w { color: var(--mman-color); }
+    .exam-alert {
+      background: #FEF3C7; border: 1px solid #FCD34D;
+      border-radius: 10px; padding: 10px 12px;
+      font-size: 13px; color: #92400E; margin-top: 8px;
+      display: flex; gap: 8px; align-items: flex-start;
+    }
+
+    /* CHECKLIST */
+    .checklist-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid var(--border); cursor: pointer;
+    }
+    .checklist-item:last-child { border-bottom: none; }
+    .check-box {
+      width: 20px; height: 20px; border-radius: 6px;
+      border: 1.5px solid var(--border); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; transition: all .15s;
+    }
+    .checklist-item.checked .check-box {
+      background: var(--text); border-color: var(--text); color: #fff;
+    }
+    .checklist-item.checked .check-label { color: var(--dim); text-decoration: line-through; }
+    .check-label { font-size: 14px; }
+
+    /* TIMETABLE */
+    .timetable { display: flex; flex-direction: column; gap: 6px; }
+    .tt-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; background: var(--bg); border-radius: 10px;
+    }
+    .tt-day {
+      font-size: 11px; font-weight: 700; width: 28px; text-align: center;
+      color: var(--muted); flex-shrink: 0;
+    }
+    .tt-time { font-size: 12px; color: var(--muted); width: 90px; flex-shrink: 0; }
+    .tt-info { flex: 1; min-width: 0; }
+    .tt-name { font-size: 13px; font-weight: 500; }
+    .tt-loc { font-size: 11px; color: var(--dim); }
+    .tt-type {
+      font-size: 11px; font-weight: 600; padding: 2px 8px;
+      border-radius: 6px; flex-shrink: 0;
+    }
+    .tt-lec { background: #EFF6FF; color: var(--math-color); }
+    .tt-tut { background: #ECFDF5; color: var(--mman-color); }
+    .tt-wks { background: #FFFBEB; color: var(--engg-color); }
+    .tt-exam { background: #FEE2E2; color: #DC2626; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">UNSW <span>复习</span></div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="https://moodle.telt.unsw.edu.au/course" target="_blank" style="font-size:12px;font-weight:600;padding:6px 12px;border-radius:8px;background:var(--math-soft);color:var(--math-color);text-decoration:none;border:1px solid rgba(37,99,235,0.2);">Moodle</a>
+    <a href="https://my.unsw.edu.au" target="_blank" style="font-size:12px;font-weight:600;padding:6px 12px;border-radius:8px;background:var(--surface2);color:var(--text);text-decoration:none;border:1px solid var(--border);">myUNSW</a>
+  </div>
+</header>
+
+<div class="tab-bar">
+  <div class="tab active-math" onclick="showCourse('timetable')" id="tab-timetable">📅 课表</div>
+  <div class="tab" onclick="showCourse('math')" id="tab-math">📐 MATH1231</div>
+  <div class="tab" onclick="showCourse('mman')" id="tab-mman">🔧 MMAN1130</div>
+  <div class="tab" onclick="showCourse('engg')" id="tab-engg">⚙️ ENGG1300</div>
+</div>
+
+<!-- ===== TIMETABLE ===== -->
+<div class="course-section active" id="sec-timetable">
+  <div style="padding-top:4px;">
+    <div class="topic-group">
+      <div class="group-label">每周固定课表</div>
+      <div class="topic-card" style="padding:16px;">
+        <div class="timetable">
+          <div class="tt-row">
+            <div class="tt-day">TUE</div>
+            <div class="tt-time">9:00–11:00</div>
+            <div class="tt-info"><div class="tt-name">ENGG1300 Lecture</div><div class="tt-loc">Sir John Clancy Auditorium</div></div>
+            <div class="tt-type tt-lec">讲座</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">TUE</div>
+            <div class="tt-time">11:00–13:00</div>
+            <div class="tt-info"><div class="tt-name">MATH1231 Lecture</div><div class="tt-loc">Online</div></div>
+            <div class="tt-type tt-lec">讲座</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">TUE</div>
+            <div class="tt-time">16:00–17:00</div>
+            <div class="tt-info"><div class="tt-name">MATH1231 Tutorial</div><div class="tt-loc">H13 Lawrence East 2060</div></div>
+            <div class="tt-type tt-tut">辅导课</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">WED</div>
+            <div class="tt-time">13:00–14:00</div>
+            <div class="tt-info"><div class="tt-name">MATH1231 Lecture</div><div class="tt-loc">Online</div></div>
+            <div class="tt-type tt-lec">讲座</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">WED</div>
+            <div class="tt-time">14:00–16:00</div>
+            <div class="tt-info"><div class="tt-name">ENGG1300 Lecture</div><div class="tt-loc">Sir John Clancy Auditorium</div></div>
+            <div class="tt-type tt-lec">讲座</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">THU</div>
+            <div class="tt-time">9:00–11:00</div>
+            <div class="tt-info"><div class="tt-name">ENGG1300 Workshop</div><div class="tt-loc">Squarehouse 114</div></div>
+            <div class="tt-type tt-wks">Workshop</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">FRI</div>
+            <div class="tt-time">14:00–16:00</div>
+            <div class="tt-info"><div class="tt-name">MATH1231 Lecture</div><div class="tt-loc">Online</div></div>
+            <div class="tt-type tt-lec">讲座</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-group">
+      <div class="group-label">考试时间表</div>
+      <div class="topic-card" style="padding:16px;">
+        <div class="timetable">
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">SAT</div>
+            <div class="tt-time">10:30–11:30</div>
+            <div class="tt-info"><div class="tt-name">ENGG1300 Test 1 <span style="color:var(--engg-color);font-weight:600;">20%</span></div><div class="tt-loc">6月20日 · E19 Patricia O'Shane 103</div></div>
+            <div class="tt-type tt-exam">考试</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">MON</div>
+            <div class="tt-time">15:00–16:00</div>
+            <div class="tt-info"><div class="tt-name">MATH1231 Lab Test 1 <span style="color:var(--math-color);font-weight:600;">15%</span></div><div class="tt-loc">6月29日 · H13 Lawrence East M020</div></div>
+            <div class="tt-type tt-exam">考试</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">SAT</div>
+            <div class="tt-time">10:30–11:30</div>
+            <div class="tt-info"><div class="tt-name">ENGG1300 Test 2 <span style="color:var(--engg-color);font-weight:600;">30%</span></div><div class="tt-loc">7月18日 · E19 Patricia O'Shane 103</div></div>
+            <div class="tt-type tt-exam">考试</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">MON</div>
+            <div class="tt-time">15:00–16:00</div>
+            <div class="tt-info"><div class="tt-name">MATH1231 Lab Test 2 <span style="color:var(--math-color);font-weight:600;">15%</span></div><div class="tt-loc">7月27日 · H13 Lawrence East M020</div></div>
+            <div class="tt-type tt-exam">考试</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">SAT</div>
+            <div class="tt-time">10:30–11:30</div>
+            <div class="tt-info"><div class="tt-name">ENGG1300 Test 3 <span style="color:var(--engg-color);font-weight:600;">20%</span></div><div class="tt-loc">8月8日 · E19 Patricia O'Shane 103</div></div>
+            <div class="tt-type tt-exam">考试</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">FRI</div>
+            <div class="tt-time">20:00</div>
+            <div class="tt-info"><div class="tt-name">ENGG1300 Mini-design Project <span style="color:var(--engg-color);font-weight:600;">30%</span></div><div class="tt-loc">8月14日截止</div></div>
+            <div class="tt-type tt-exam">作业</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">—</div>
+            <div class="tt-time">2小时</div>
+            <div class="tt-info"><div class="tt-name">MATH1231 Final Exam <span style="color:var(--math-color);font-weight:600;">50%</span></div><div class="tt-loc">考试周 · 地点待定</div></div>
+            <div class="tt-type tt-exam">期末</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-group">
+      <div class="group-label">MMAN1130</div>
+      <div class="assessment-card" style="background:#FEF3C7;border-color:#FCD34D;">
+        <div style="font-size:14px;color:#92400E;line-height:1.6;">
+          ⚠️ 课程已被误drop，正在联系学生中心重新加回。<br/>
+          <span style="font-size:12px;color:#B45309;">电话：+61 2 9385 8500 · 周一至周五 9am–5pm</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MATH1231 ===== -->
+<div class="course-section active" id="sec-math">
+  <div class="course-header math">
+    <div class="course-icon">📐</div>
+    <div class="course-meta">
+      <div class="course-code">MATH1231</div>
+      <div class="course-name">Mathematics 1B · 微积分 + 线性代数</div>
+    </div>
+  </div>
+
+  <!-- Assessment -->
+  <div class="topic-group">
+    <div class="group-label">成绩占比 & 考试时间</div>
+    <div class="assessment-card">
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">📝 Weekly Möbius Lessons</div>
+          <div class="assess-date">每周二 5pm截止 · Week 2–5, 7–11（最好6周）</div>
+        </div>
+        <div class="assess-weight math-w">10%</div>
+      </div>
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">🧪 Lab Test 1</div>
+          <div class="assess-date">Week 5结束前 · 40分钟</div>
+        </div>
+        <div class="assess-weight math-w">15%</div>
+      </div>
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">📄 Assignment</div>
+          <div class="assess-date">Week 8周二 11:59pm截止</div>
+        </div>
+        <div class="assess-weight math-w">10%</div>
+      </div>
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">🧪 Lab Test 2</div>
+          <div class="assess-date">Week 9 · 40分钟</div>
+        </div>
+        <div class="assess-weight math-w">15%</div>
+      </div>
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">📋 Final Exam</div>
+          <div class="assess-date">考试周 · 2小时</div>
+        </div>
+        <div class="assess-weight math-w">50%</div>
+      </div>
+    </div>
+    <div class="exam-alert">⚠️ Lab Test 1在日历中显示为 6月29日 & 7月27日 3–4pm（H13 Lawrence East M020）</div>
+  </div>
+
+  <!-- Progress -->
+  <div class="topic-group">
+    <div class="group-label">学习进度</div>
+    <div class="topic-card" style="padding:16px;">
+      <div class="progress-bar-wrap">
+        <div class="progress-label"><span>微积分</span><span id="calc-pct">0%</span></div>
+        <div class="progress-track"><div class="progress-fill math-fill" id="calc-bar" style="width:0%"></div></div>
+      </div>
+      <div style="height:10px;"></div>
+      <div class="progress-bar-wrap">
+        <div class="progress-label"><span>线性代数</span><span id="alg-pct">0%</span></div>
+        <div class="progress-track"><div class="progress-fill math-fill" id="alg-bar" style="width:0%"></div></div>
+      </div>
+      <div style="height:14px;font-size:12px;color:var(--dim);margin-top:10px;">点击各知识点勾选完成状态</div>
+    </div>
+  </div>
+
+  <!-- Calculus -->
+  <div class="topic-group">
+    <div class="group-label">微积分 Calculus</div>
+
+    <div class="topic-card" id="tc-inttech">
+      <div class="topic-header" onclick="toggleTopic('tc-inttech')">
+        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">积分技巧 Integration Techniques</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">换元法 Substitution</div>
+          <div class="subtopic">分部积分 Integration by Parts</div>
+          <div class="subtopic">三角换元 Trig Substitution</div>
+          <div class="subtopic">部分分数分解 Partial Fractions</div>
+          <div class="subtopic">反常积分 Improper Integrals</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=b76wePnIBcU" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Integration Techniques Full Review<span class="link-src">YouTube · Professor Leonard</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://www.bilibili.com/video/BV1Eb411u7Fw" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">高等数学 积分方法精讲<span class="link-src">Bilibili · 宋浩老师</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-ode">
+      <div class="topic-header" onclick="toggleTopic('tc-ode')">
+        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">常微分方程 ODEs</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">可分离变量 Separable Equations</div>
+          <div class="subtopic">一阶线性方程 First Order Linear</div>
+          <div class="subtopic">二阶常系数 Second Order Constant Coeff</div>
+          <div class="subtopic">初始值问题 Initial Value Problems</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=p_di4Zn4wz4" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Differential Equations Full Course<span class="link-src">YouTube · 3Blue1Brown</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://www.bilibili.com/video/BV1Zb411e7nN" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">微分方程从入门到精通<span class="link-src">Bilibili · 宋浩老师</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-series">
+      <div class="topic-header" onclick="toggleTopic('tc-series')">
+        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">数列与级数 Sequences & Series</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">数列收敛与发散</div>
+          <div class="subtopic">级数收敛判别法（比值法、积分法）</div>
+          <div class="subtopic">幂级数 Power Series</div>
+          <div class="subtopic">Taylor & Maclaurin 展开</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=7gigNsz4Oe8" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Sequences and Series Complete Guide<span class="link-src">YouTube · Professor Leonard</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://www.bilibili.com/video/BV1BW41187Hn" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">无穷级数 Taylor展开详解<span class="link-src">Bilibili · 宋浩老师</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-partial">
+      <div class="topic-header" onclick="toggleTopic('tc-partial')">
+        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">多元函数微分 Partial Derivatives</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">偏导数的定义与计算</div>
+          <div class="subtopic">多元链式法则 Multivariable Chain Rule</div>
+          <div class="subtopic">梯度与方向导数</div>
+          <div class="subtopic">极值与拉格朗日乘数法</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=AXqhWeUEtQU" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Partial Derivatives – Khan Academy<span class="link-src">YouTube · Khan Academy</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Linear Algebra -->
+  <div class="topic-group">
+    <div class="group-label">线性代数 Linear Algebra</div>
+
+    <div class="topic-card" id="tc-vecspace">
+      <div class="topic-header" onclick="toggleTopic('tc-vecspace')">
+        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">向量空间 Vector Spaces</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">向量空间的定义与公理</div>
+          <div class="subtopic">子空间 Subspaces</div>
+          <div class="subtopic">线性相关/无关 Linear Independence</div>
+          <div class="subtopic">基与维数 Basis & Dimension</div>
+          <div class="subtopic">列空间、零空间 Column/Null Space</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=TgKwz5Ikpc8" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Essence of Linear Algebra<span class="link-src">YouTube · 3Blue1Brown</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://www.bilibili.com/video/BV1ys411472E" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">线性代数 向量空间精讲<span class="link-src">Bilibili · 宋浩老师</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-lintrans">
+      <div class="topic-header" onclick="toggleTopic('tc-lintrans')">
+        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">线性变换 Linear Transformations</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">定义：线性变换 T: Rⁿ → Rᵐ</div>
+          <div class="subtopic">变换矩阵 Matrix of a Transformation</div>
+          <div class="subtopic">核与像 Kernel & Image</div>
+          <div class="subtopic">秩-零化度定理 Rank-Nullity Theorem</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=kYB8IZa5AuE" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Linear Transformations – 3B1B<span class="link-src">YouTube · 3Blue1Brown</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-eigen">
+      <div class="topic-header" onclick="toggleTopic('tc-eigen')">
+        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">特征值与特征向量 Eigenvalues</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">特征方程 det(A - λI) = 0</div>
+          <div class="subtopic">特征空间 Eigenspace</div>
+          <div class="subtopic">对角化 Diagonalization</div>
+          <div class="subtopic">应用：矩阵的幂次计算</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=PFDu9oVAE-g" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Eigenvalues & Eigenvectors<span class="link-src">YouTube · 3Blue1Brown</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://www.bilibili.com/video/BV1aW411Q7x1" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">特征值特征向量 对角化<span class="link-src">Bilibili · 宋浩老师</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobius Checklist -->
+  <div class="topic-group">
+    <div class="group-label">Möbius 作业追踪</div>
+    <div class="topic-card" style="padding:16px;">
+      <div id="mobius-list">
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 1 · 积分换元法</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 2 · 分部积分 + 三角换元</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 3 · 部分分数分解</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 4 · 常微分方程</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 5 · 数列与级数</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 6 · Taylor 展开</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 7 · 向量空间</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 8 · 线性变换</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 9 · 特征值特征向量</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 10 · 综合复习</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MMAN1130 ===== -->
+<div class="course-section" id="sec-mman">
+  <div class="course-header mman">
+    <div class="course-icon">🔧</div>
+    <div class="course-meta">
+      <div class="course-code">MMAN1130</div>
+      <div class="course-name">Design & Manufacturing · CAD + 制造工艺</div>
+    </div>
+  </div>
+
+  <div class="topic-group">
+    <div class="group-label">工程图纸 Engineering Drawing</div>
+
+    <div class="topic-card" id="tc-drawing">
+      <div class="topic-header" onclick="toggleTopic('tc-drawing')">
+        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">工程图规范 AS 1100 Standards</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">澳大利亚工程制图标准 AS 1100</div>
+          <div class="subtopic">正交投影 Orthographic Projection（第一/第三角法）</div>
+          <div class="subtopic">尺寸标注规范 Dimensioning</div>
+          <div class="subtopic">剖面图 Section Views</div>
+          <div class="subtopic">公差标注 Tolerances</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=7KEcMFt5bsA" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Engineering Drawing Basics<span class="link-src">YouTube · The Efficient Engineer</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://www.bilibili.com/video/BV1ME411x7GN" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">工程图学 正投影与三视图<span class="link-src">Bilibili</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-group">
+    <div class="group-label">SolidWorks CAD</div>
+
+    <div class="topic-card" id="tc-sw-sketch">
+      <div class="topic-header" onclick="toggleTopic('tc-sw-sketch')">
+        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">草图与3D建模 Sketching & Modeling</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">2D草图约束与尺寸驱动</div>
+          <div class="subtopic">拉伸 Extrude / 切除 Cut</div>
+          <div class="subtopic">旋转体 Revolve</div>
+          <div class="subtopic">圆角/倒角 Fillet / Chamfer</div>
+          <div class="subtopic">装配体 Assembly</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=qtj0UNSW4kQ" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">SolidWorks for Beginners – Full Course<span class="link-src">YouTube · Tutorials Point</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://www.bilibili.com/video/BV1cJ411p7Gw" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">SolidWorks 零基础入门到精通<span class="link-src">Bilibili</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-sw-drawing">
+      <div class="topic-header" onclick="toggleTopic('tc-sw-drawing')">
+        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">工程图输出 SW Drawing</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">从3D模型生成标准工程图</div>
+          <div class="subtopic">标题栏 Title Block 填写</div>
+          <div class="subtopic">视图摆放与比例</div>
+          <div class="subtopic">自动标注与手动修改</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=9dNFlNFxAcw" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">SolidWorks Drawing Tutorial<span class="link-src">YouTube · SolidWorks</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-group">
+    <div class="group-label">制造工艺 Manufacturing</div>
+
+    <div class="topic-card" id="tc-turning">
+      <div class="topic-header" onclick="toggleTopic('tc-turning')">
+        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">车削 Turning</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">车床工作原理与结构</div>
+          <div class="subtopic">切削速度、进给量、切削深度</div>
+          <div class="subtopic">外圆车削、端面车削、镗孔</div>
+          <div class="subtopic">CNC车削 G代码基础</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=Zv5jSivUFlo" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Lathe Turning – How it Works<span class="link-src">YouTube · The Efficient Engineer</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-milling">
+      <div class="topic-header" onclick="toggleTopic('tc-milling')">
+        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">铣削 Milling</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">立式/卧式铣床</div>
+          <div class="subtopic">顺铣与逆铣 Climb vs Conventional</div>
+          <div class="subtopic">CNC铣削 G代码 M代码</div>
+          <div class="subtopic">CAM软件工具路径生成</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=kNBK8iblIKs" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">CNC Milling Explained<span class="link-src">YouTube · NYC CNC</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ENGG1300 ===== -->
+<div class="course-section" id="sec-engg">
+  <div class="course-header engg">
+    <div class="course-icon">⚙️</div>
+    <div class="course-meta">
+      <div class="course-code">ENGG1300</div>
+      <div class="course-name">Engineering Mechanics · 静力学 + 动力学</div>
+    </div>
+  </div>
+
+  <!-- Assessment -->
+  <div class="topic-group">
+    <div class="group-label">成绩占比 & 考试时间</div>
+    <div class="assessment-card">
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">📋 Test 1</div>
+          <div class="assess-date">周六 6月20日 10:30–11:30 · E19 Patricia O'Shane 103</div>
+        </div>
+        <div class="assess-weight engg-w">20%</div>
+      </div>
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">📋 Test 2</div>
+          <div class="assess-date">周六 7月18日 10:30–11:30 · E19 Patricia O'Shane 103</div>
+        </div>
+        <div class="assess-weight engg-w">30%</div>
+      </div>
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">📋 Test 3</div>
+          <div class="assess-date">周六 8月8日 10:30–11:30 · E19 Patricia O'Shane 103</div>
+        </div>
+        <div class="assess-weight engg-w">20%</div>
+      </div>
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">🛠️ Mini-design Project</div>
+          <div class="assess-date">8月14日（周五）8:00pm截止</div>
+        </div>
+        <div class="assess-weight engg-w">30%</div>
+      </div>
+    </div>
+    <div class="exam-alert">⚠️ 三次考试都是周六早上，记得提前到场 · 地点 E19 Patricia O'Shane 103</div>
+  </div>
+
+  <div class="topic-group">
+    <div class="group-label">静力学 Statics (Week 1–5)</div>
+
+    <div class="topic-card" id="tc-vectors">
+      <div class="topic-header" onclick="toggleTopic('tc-vectors')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">向量与力 Vectors & Forces</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">力的分解与合成（2D & 3D）</div>
+          <div class="subtopic">单位向量 Unit Vectors</div>
+          <div class="subtopic">点积 Dot Product & 叉积 Cross Product</div>
+          <div class="subtopic">力矩 Moment of a Force</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=mFujkbznnQ8" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Statics – Forces & Vectors<span class="link-src">YouTube · The Efficient Engineer</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://www.bilibili.com/video/BV1Et411N7PP" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">工程力学 静力学入门<span class="link-src">Bilibili</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-equilibrium">
+      <div class="topic-header" onclick="toggleTopic('tc-equilibrium')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">平衡 Equilibrium & FBD</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">自由体图 Free Body Diagram (FBD)</div>
+          <div class="subtopic">平衡方程 ΣF=0, ΣM=0</div>
+          <div class="subtopic">支座类型与反力</div>
+          <div class="subtopic">2D & 3D 刚体平衡</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=SFqKfOFPMBY" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Equilibrium of a Rigid Body<span class="link-src">YouTube · Engineer4Free</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-truss">
+      <div class="topic-header" onclick="toggleTopic('tc-truss')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">桁架 Trusses</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">节点法 Method of Joints</div>
+          <div class="subtopic">截面法 Method of Sections</div>
+          <div class="subtopic">零力杆 Zero-Force Members</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=rK29qLHC2Ug" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Truss Analysis – Method of Joints<span class="link-src">YouTube · Engineer4Free</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-group">
+    <div class="group-label">动力学 Dynamics (Week 6–10)</div>
+
+    <div class="topic-card" id="tc-kinematics">
+      <div class="topic-header" onclick="toggleTopic('tc-kinematics')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">运动学 Kinematics</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">位移、速度、加速度关系</div>
+          <div class="subtopic">直线运动 Rectilinear Motion</div>
+          <div class="subtopic">抛体运动 Projectile Motion</div>
+          <div class="subtopic">圆周运动 Circular Motion</div>
+          <div class="subtopic">相对运动 Relative Motion</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=ZM8ECpBuQYE" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Kinematics – Engineering Dynamics<span class="link-src">YouTube · The Efficient Engineer</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://www.bilibili.com/video/BV1kZ4y1r75h" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">动力学 运动学基础<span class="link-src">Bilibili</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-kinetics">
+      <div class="topic-header" onclick="toggleTopic('tc-kinetics')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">动力学（力与运动）Kinetics</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">牛顿第二定律 F = ma</div>
+          <div class="subtopic">功能定理 Work-Energy Theorem</div>
+          <div class="subtopic">冲量与动量 Impulse-Momentum</div>
+          <div class="subtopic">碰撞 Impact（弹性/非弹性）</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=wMbvQW7gFRQ" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Newton's Laws in Engineering Dynamics<span class="link-src">YouTube · Engineer4Free</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Tab switching
+  function showCourse(course) {
+    document.querySelectorAll('.course-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => { t.className = 'tab'; });
+    document.getElementById('sec-' + course).classList.add('active');
+    const tab = document.getElementById('tab-' + course);
+    const colorMap = { timetable: 'active-math', math: 'active-math', mman: 'active-mman', engg: 'active-engg' };
+    tab.classList.add(colorMap[course] || 'active-math');
+  }
+
+  // Topic accordion
+  function toggleTopic(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('open');
+  }
+
+  // Checklist
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    el.querySelector('.check-box').textContent = el.classList.contains('checked') ? '✓' : '';
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('#mobius-list .checklist-item');
+    const half = Math.ceil(items.length / 2);
+    let calcDone = 0, algDone = 0;
+    items.forEach((item, i) => {
+      if (item.classList.contains('checked')) {
+        if (i < half) calcDone++; else algDone++;
+      }
+    });
+    const calcPct = Math.round(calcDone / half * 100);
+    const algPct = Math.round(algDone / (items.length - half) * 100);
+    document.getElementById('calc-bar').style.width = calcPct + '%';
+    document.getElementById('calc-pct').textContent = calcPct + '%';
+    document.getElementById('alg-bar').style.width = algPct + '%';
+    document.getElementById('alg-pct').textContent = algPct + '%';
+  }
+</script>
+</body>
+</html>
