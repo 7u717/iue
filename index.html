@@ -167,6 +167,21 @@
     .assess-weight.math-w { color: var(--math-color); }
     .assess-weight.engg-w { color: var(--engg-color); }
     .assess-weight.mman-w { color: var(--mman-color); }
+
+    /* COUNTDOWN CARDS */
+    .cd-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 14px 16px; margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .cd-card.cd-urgent { border-color: #FCA5A5; background: #FEF2F2; }
+    .cd-left { flex: 1; min-width: 0; }
+    .cd-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+    .cd-meta { font-size: 12px; color: var(--muted); }
+    .cd-right { text-align: right; flex-shrink: 0; }
+    .cd-days { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; line-height: 1; }
+    .cd-days.cd-days-urgent { color: #DC2626; }
+    .cd-unit { font-size: 11px; color: var(--muted); margin-top: 2px; }
     .exam-alert {
       background: #FEF3C7; border: 1px solid #FCD34D;
       border-radius: 10px; padding: 10px 12px;
@@ -228,6 +243,7 @@
 
 <div class="tab-bar">
   <div class="tab active-math" onclick="showCourse('timetable')" id="tab-timetable">📅 课表</div>
+  <div class="tab" onclick="showCourse('countdown')" id="tab-countdown">⏰ 倒计时</div>
   <div class="tab" onclick="showCourse('math')" id="tab-math">📐 MATH1231</div>
   <div class="tab" onclick="showCourse('mman')" id="tab-mman">🔧 MMAN1130</div>
   <div class="tab" onclick="showCourse('engg')" id="tab-engg">⚙️ ENGG1300</div>
@@ -240,6 +256,12 @@
       <div class="group-label">每周固定课表</div>
       <div class="topic-card" style="padding:16px;">
         <div class="timetable">
+          <div class="tt-row">
+            <div class="tt-day">MON</div>
+            <div class="tt-time">16:00–18:00</div>
+            <div class="tt-info"><div class="tt-name">MMAN1130 Lecture</div><div class="tt-loc">Online</div></div>
+            <div class="tt-type tt-lec">讲座</div>
+          </div>
           <div class="tt-row">
             <div class="tt-day">TUE</div>
             <div class="tt-time">9:00–11:00</div>
@@ -257,6 +279,12 @@
             <div class="tt-time">16:00–17:00</div>
             <div class="tt-info"><div class="tt-name">MATH1231 Tutorial</div><div class="tt-loc">H13 Lawrence East 2060</div></div>
             <div class="tt-type tt-tut">辅导课</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">TUE</div>
+            <div class="tt-time">18:00–19:00</div>
+            <div class="tt-info"><div class="tt-name">MMAN1130 Project</div><div class="tt-loc">本周 Willis Annexe UTL 214N North</div></div>
+            <div class="tt-type tt-wks">Project</div>
           </div>
           <div class="tt-row">
             <div class="tt-day">WED</div>
@@ -277,9 +305,21 @@
             <div class="tt-type tt-wks">Workshop</div>
           </div>
           <div class="tt-row">
+            <div class="tt-day">THU</div>
+            <div class="tt-time">11:00–12:30</div>
+            <div class="tt-info"><div class="tt-name">MMAN1130 Tut-Lab</div><div class="tt-loc">Ainsworth 204</div></div>
+            <div class="tt-type tt-wks">Tut-Lab</div>
+          </div>
+          <div class="tt-row">
             <div class="tt-day">FRI</div>
             <div class="tt-time">14:00–16:00</div>
             <div class="tt-info"><div class="tt-name">MATH1231 Lecture</div><div class="tt-loc">Online</div></div>
+            <div class="tt-type tt-lec">讲座</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">FRI</div>
+            <div class="tt-time">16:00–18:00</div>
+            <div class="tt-info"><div class="tt-name">MMAN1130 Lecture</div><div class="tt-loc">Online</div></div>
             <div class="tt-type tt-lec">讲座</div>
           </div>
         </div>
@@ -337,13 +377,63 @@
     </div>
 
     <div class="topic-group">
-      <div class="group-label">MMAN1130</div>
-      <div class="assessment-card" style="background:#FEF3C7;border-color:#FCD34D;">
-        <div style="font-size:14px;color:#92400E;line-height:1.6;">
-          ⚠️ 课程已被误drop，正在联系学生中心重新加回。<br/>
-          <span style="font-size:12px;color:#B45309;">电话：+61 2 9385 8500 · 周一至周五 9am–5pm</span>
+      <div class="group-label">MMAN1130 重要日期</div>
+      <div class="topic-card" style="padding:16px;">
+        <div class="timetable">
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">FRI</div>
+            <div class="tt-time">11:55pm</div>
+            <div class="tt-info"><div class="tt-name">TOOLS1 测验 <span style="color:var(--mman-color);font-weight:600;">5%</span></div><div class="tt-loc">Week 3</div></div>
+            <div class="tt-type tt-exam">考核</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">FRI</div>
+            <div class="tt-time">11:55pm</div>
+            <div class="tt-info"><div class="tt-name">DSIGN1 零件CAD <span style="color:var(--mman-color);font-weight:600;">10%</span></div><div class="tt-loc">Week 4</div></div>
+            <div class="tt-type tt-exam">考核</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">FRI</div>
+            <div class="tt-time">11:55pm / PRJ课</div>
+            <div class="tt-info"><div class="tt-name">DSIGN2 装配CAD + TOOLS2 <span style="color:var(--mman-color);font-weight:600;">15%</span></div><div class="tt-loc">Week 5</div></div>
+            <div class="tt-type tt-exam">考核</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">FRI</div>
+            <div class="tt-time">11:55pm</div>
+            <div class="tt-info"><div class="tt-name">MANUF1 图纸 <span style="color:var(--mman-color);font-weight:600;">15%</span></div><div class="tt-loc">Week 7</div></div>
+            <div class="tt-type tt-exam">考核</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">FRI</div>
+            <div class="tt-time">11:55pm</div>
+            <div class="tt-info"><div class="tt-name">MANUF2 工艺单 + MANUF3 CAM <span style="color:var(--mman-color);font-weight:600;">20%</span></div><div class="tt-loc">Week 9</div></div>
+            <div class="tt-type tt-exam">考核</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">—</div>
+            <div class="tt-time">PRJ课</div>
+            <div class="tt-info"><div class="tt-name">TOOLS3 装配 <span style="color:var(--mman-color);font-weight:600;">5%</span></div><div class="tt-loc">Week 10</div></div>
+            <div class="tt-type tt-exam">考核</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">—</div>
+            <div class="tt-time">2小时</div>
+            <div class="tt-info"><div class="tt-name">MMAN1130 Final Exam <span style="color:var(--mman-color);font-weight:600;">30%</span></div><div class="tt-loc">考试周</div></div>
+            <div class="tt-type tt-exam">期末</div>
+          </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== COUNTDOWN ===== -->
+<div class="course-section" id="sec-countdown">
+  <div style="padding-top:4px;">
+    <div class="topic-group">
+      <div class="group-label">⏰ 距离重要日期</div>
+      <div id="countdown-list"></div>
     </div>
   </div>
 </div>
@@ -643,6 +733,72 @@
     <div class="course-meta">
       <div class="course-code">MMAN1130</div>
       <div class="course-name">Design & Manufacturing · CAD + 制造工艺</div>
+    </div>
+  </div>
+
+  <div class="assessment-card">
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">🧪 TOOLS1: Measurement Quiz</div>
+        <div class="assess-date">Week 3 周五 11:55pm截止 · 30分钟 · 个人</div>
+      </div>
+      <div class="assess-weight mman-w">5%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">🔧 TOOLS2: Hand Tools</div>
+        <div class="assess-date">Week 5 PRJ Class · 1个工件 · 个人</div>
+      </div>
+      <div class="assess-weight mman-w">10%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">🔩 TOOLS3: Assembly</div>
+        <div class="assess-date">Week 10 PRJ Class · 1个装配体 · 小组</div>
+      </div>
+      <div class="assess-weight mman-w">5%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">📐 DSIGN1: Component CAD</div>
+        <div class="assess-date">Week 4 周五 11:55pm截止 · 9个SLDPRT文件 · 个人</div>
+      </div>
+      <div class="assess-weight mman-w">10%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">📐 DSIGN2: Assembly CAD</div>
+        <div class="assess-date">Week 5 周五 11:55pm截止 · 1个装配体zip · 个人</div>
+      </div>
+      <div class="assess-weight mman-w">5%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">📄 MANUF1: Drawings</div>
+        <div class="assess-date">Week 7 周五 11:55pm截止 · 3个PDF文件 · 个人</div>
+      </div>
+      <div class="assess-weight mman-w">15%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">📋 MANUF2: Work-Method Sheet</div>
+        <div class="assess-date">Week 9 周五 11:55pm截止 · 1个PDF · 小组</div>
+      </div>
+      <div class="assess-weight mman-w">10%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">💻 MANUF3: CAM</div>
+        <div class="assess-date">Week 9 周五 11:55pm截止 · 1个F3D文件 · 个人</div>
+      </div>
+      <div class="assess-weight mman-w">10%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">📋 Final Exam</div>
+        <div class="assess-date">考试周 · 2小时</div>
+      </div>
+      <div class="assess-weight mman-w">30%</div>
     </div>
   </div>
 
@@ -973,7 +1129,7 @@
     document.querySelectorAll('.tab').forEach(t => { t.className = 'tab'; });
     document.getElementById('sec-' + course).classList.add('active');
     const tab = document.getElementById('tab-' + course);
-    const colorMap = { timetable: 'active-math', math: 'active-math', mman: 'active-mman', engg: 'active-engg' };
+    const colorMap = { timetable: 'active-math', countdown: 'active-engg', math: 'active-math', mman: 'active-mman', engg: 'active-engg' };
     tab.classList.add(colorMap[course] || 'active-math');
   }
 
@@ -1006,6 +1162,65 @@
     document.getElementById('alg-bar').style.width = algPct + '%';
     document.getElementById('alg-pct').textContent = algPct + '%';
   }
+
+  // ===== COUNTDOWN =====
+  const deadlines = [
+    { name: '🧪 ENGG1300 Test 1', date: '2026-06-20T10:30:00+10:00', tag: '20%', color: 'var(--engg-color)' },
+    { name: '📝 MMAN1130 TOOLS1 测验', date: '2026-07-03T23:55:00+10:00', tag: '5%', color: 'var(--mman-color)' },
+    { name: '🧪 MATH1231 Lab Test 1', date: '2026-06-29T15:00:00+10:00', tag: '15%', color: 'var(--math-color)' },
+    { name: '📐 MMAN1130 DSIGN1 零件CAD', date: '2026-07-10T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)' },
+    { name: '🧪 ENGG1300 Test 2', date: '2026-07-18T10:30:00+10:00', tag: '30%', color: 'var(--engg-color)' },
+    { name: '📐 MMAN1130 DSIGN2 + TOOLS2', date: '2026-07-17T23:55:00+10:00', tag: '15%', color: 'var(--mman-color)' },
+    { name: '🧪 MATH1231 Lab Test 2', date: '2026-07-27T15:00:00+10:00', tag: '15%', color: 'var(--math-color)' },
+    { name: '📄 MATH1231 Assignment', date: '2026-08-04T23:59:00+10:00', tag: '10%', color: 'var(--math-color)' },
+    { name: '🧪 ENGG1300 Test 3', date: '2026-08-08T10:30:00+10:00', tag: '20%', color: 'var(--engg-color)' },
+    { name: '📄 MMAN1130 MANUF1 图纸', date: '2026-08-07T23:55:00+10:00', tag: '15%', color: 'var(--mman-color)' },
+    { name: '🛠️ ENGG1300 Mini-design Project', date: '2026-08-14T20:00:00+10:00', tag: '30%', color: 'var(--engg-color)' },
+    { name: '📋 MMAN1130 MANUF2+3', date: '2026-08-21T23:55:00+10:00', tag: '20%', color: 'var(--mman-color)' },
+  ];
+
+  function renderCountdown() {
+    const now = new Date();
+    const list = document.getElementById('countdown-list');
+    const upcoming = deadlines
+      .map(d => ({ ...d, diff: new Date(d.date) - now }))
+      .filter(d => d.diff > 0)
+      .sort((a, b) => a.diff - b.diff);
+
+    if (!upcoming.length) {
+      list.innerHTML = '<div style="text-align:center;color:var(--muted);padding:40px 0;">暂无即将到期的考核 🎉</div>';
+      return;
+    }
+
+    list.innerHTML = upcoming.map(d => {
+      const totalHours = d.diff / (1000 * 60 * 60);
+      const days = Math.floor(totalHours / 24);
+      const hours = Math.floor(totalHours % 24);
+      const urgent = totalHours <= 72;
+      const dateObj = new Date(d.date);
+      const dateStr = dateObj.toLocaleString('zh-CN', { month: 'long', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' });
+      let bigNum, unit;
+      if (days >= 1) {
+        bigNum = days;
+        unit = `天 ${hours}小时后`;
+      } else {
+        bigNum = hours;
+        unit = `小时后`;
+      }
+      return `
+        <div class="cd-card ${urgent ? 'cd-urgent' : ''}">
+          <div class="cd-left">
+            <div class="cd-name">${d.name} <span style="color:${d.color};font-weight:700;">${d.tag}</span></div>
+            <div class="cd-meta">${dateStr}</div>
+          </div>
+          <div class="cd-right">
+            <div class="cd-days ${urgent ? 'cd-days-urgent' : ''}">${bigNum}</div>
+            <div class="cd-unit">${unit}</div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+  renderCountdown();
 </script>
 </body>
 </html>
