@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UNSW T2 2026 · 复习资料</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F7F8FA;
+      --surface: #FFFFFF;
+      --border: #E4E7EF;
+      --text: #111318;
+      --muted: #6B7280;
+      --dim: #9CA3AF;
+
+      --math-color: #2563EB;
+      --math-soft: #EFF6FF;
+      --mman-color: #059669;
+      --mman-soft: #ECFDF5;
+      --engg-color: #D97706;
+      --engg-soft: #FFFBEB;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.6; }
+
+    /* HEADER */
+    header {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 14px 20px; position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; }
+    .logo span { color: var(--muted); font-weight: 500; }
+    .term-badge {
+      font-size: 12px; font-weight: 600; background: var(--text); color: #fff;
+      padding: 4px 10px; border-radius: 6px; letter-spacing: 0.04em;
+    }
+
+    /* COURSE TABS */
+    .tab-bar {
+      display: flex; gap: 0; background: var(--surface);
+      border-bottom: 1px solid var(--border); overflow-x: auto;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      position: sticky; top: 53px; z-index: 90;
+    }
+    .tab-bar::-webkit-scrollbar { display: none; }
+    .tab {
+      padding: 14px 20px; font-size: 14px; font-weight: 500;
+      color: var(--muted); cursor: pointer; white-space: nowrap;
+      border-bottom: 2px solid transparent; transition: all .2s;
+      flex-shrink: 0;
+    }
+    .tab.active-math { color: var(--math-color); border-bottom-color: var(--math-color); }
+    .tab.active-mman { color: var(--mman-color); border-bottom-color: var(--mman-color); }
+    .tab.active-engg { color: var(--engg-color); border-bottom-color: var(--engg-color); }
+
+    /* CONTENT */
+    .course-section { display: none; padding: 20px 16px 60px; max-width: 680px; margin: 0 auto; }
+    .course-section.active { display: block; }
+
+    /* COURSE HEADER */
+    .course-header {
+      border-radius: 16px; padding: 20px; margin-bottom: 24px;
+      display: flex; align-items: flex-start; gap: 16px;
+    }
+    .course-header.math { background: var(--math-soft); }
+    .course-header.mman { background: var(--mman-soft); }
+    .course-header.engg { background: var(--engg-soft); }
+    .course-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .math .course-icon { background: var(--math-color); }
+    .mman .course-icon { background: var(--mman-color); }
+    .engg .course-icon { background: var(--engg-color); }
+    .course-meta { flex: 1; }
+    .course-code { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 2px; }
+    .course-name { font-size: 14px; color: var(--muted); }
+
+    /* TOPIC GROUPS */
+    .topic-group { margin-bottom: 24px; }
+    .group-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 10px; padding-left: 4px;
+    }
+    .topic-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; margin-bottom: 8px; overflow: hidden;
+    }
+    .topic-header {
+      padding: 14px 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px;
+    }
+    .topic-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+    .topic-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .math-dot { background: var(--math-color); }
+    .mman-dot { background: var(--mman-color); }
+    .engg-dot { background: var(--engg-color); }
+    .topic-title { font-size: 15px; font-weight: 500; }
+    .topic-chevron { color: var(--dim); font-size: 12px; transition: transform .2s; flex-shrink: 0; }
+    .topic-card.open .topic-chevron { transform: rotate(180deg); }
+
+    .topic-body { display: none; padding: 0 16px 16px; }
+    .topic-card.open .topic-body { display: block; }
+
+    .subtopics { margin-bottom: 14px; }
+    .subtopic {
+      font-size: 14px; color: var(--muted); padding: 4px 0;
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .subtopic::before { content: "·"; color: var(--dim); flex-shrink: 0; margin-top: 1px; }
+
+    .topic-tag {
+      font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700;
+      color: var(--math-color); background: var(--math-soft);
+      border-radius: 6px; padding: 2px 7px; margin-right: 8px; flex-shrink: 0;
+    }
+    .pdf-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; color: var(--math-color);
+      background: var(--math-soft); border-radius: 8px;
+      padding: 6px 12px; text-decoration: none; margin: 4px 6px 0 0;
+    }
+
+    /* LINKS */
+    .links-label { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 8px; letter-spacing: 0.03em; }
+    .link-row { display: flex; flex-direction: column; gap: 6px; }
+    .resource-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
+      text-decoration: none; color: var(--text); font-size: 13px;
+      transition: border-color .2s, background .2s;
+    }
+    .resource-link:hover { background: var(--bg); border-color: var(--text); }
+    .link-icon {
+      width: 28px; height: 28px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .yt { background: #FEE2E2; }
+    .bili { background: #EDE9FE; }
+    .doc { background: #E0F2FE; }
+    .link-text { flex: 1; line-height: 1.4; }
+    .link-src { font-size: 11px; color: var(--dim); display: block; }
+    .link-arrow { color: var(--dim); font-size: 12px; }
+
+    /* PROGRESS */
+    .progress-bar-wrap { margin-bottom: 6px; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+    .progress-track { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 2px; transition: width .4s; }
+    .math-fill { background: var(--math-color); }
+    .mman-fill { background: var(--mman-color); }
+    .engg-fill { background: var(--engg-color); }
+
+    /* ASSESSMENT CARD */
+    .assessment-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px; margin-bottom: 8px;
+    }
+    .assessment-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0; border-bottom: 1px solid var(--border); gap: 10px;
+    }
+    .assessment-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .assessment-row:first-child { padding-top: 0; }
+    .assess-left { flex: 1; min-width: 0; }
+    .assess-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+    .assess-date { font-size: 12px; color: var(--muted); }
+    .assess-weight {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px; font-weight: 700; flex-shrink: 0;
+    }
+    .assess-weight.math-w { color: var(--math-color); }
+    .assess-weight.engg-w { color: var(--engg-color); }
+    .assess-weight.mman-w { color: var(--mman-color); }
+
+    /* COUNTDOWN CARDS */
+    .cd-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 14px 16px; margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .cd-card.cd-urgent { border-color: #FCA5A5; background: #FEF2F2; }
+    .cd-left { flex: 1; min-width: 0; }
+    .cd-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+    .cd-meta { font-size: 12px; color: var(--muted); }
+    .cd-right { text-align: right; flex-shrink: 0; }
+    .cd-days { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; line-height: 1; }
+    .cd-days.cd-days-urgent { color: #DC2626; }
+    .cd-unit { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .exam-alert {
+      background: #FEF3C7; border: 1px solid #FCD34D;
+      border-radius: 10px; padding: 10px 12px;
+      font-size: 13px; color: #92400E; margin-top: 8px;
+      display: flex; gap: 8px; align-items: flex-start;
+    }
+
+    /* CHECKLIST */
+    .checklist-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid var(--border); cursor: pointer;
+    }
+    .checklist-item:last-child { border-bottom: none; }
+    .check-box {
+      width: 20px; height: 20px; border-radius: 6px;
+      border: 1.5px solid var(--border); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; transition: all .15s;
+    }
+    .checklist-item.checked .check-box {
+      background: var(--text); border-color: var(--text); color: #fff;
+    }
+    .checklist-item.checked .check-label { color: var(--dim); text-decoration: line-through; }
+    .check-label { font-size: 14px; }
+
+    /* TIMETABLE */
+    .timetable { display: flex; flex-direction: column; gap: 6px; }
+    .tt-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; background: var(--bg); border-radius: 10px;
+    }
+    .tt-day {
+      font-size: 11px; font-weight: 700; width: 28px; text-align: center;
+      color: var(--muted); flex-shrink: 0;
+    }
+    .tt-time { font-size: 12px; color: var(--muted); width: 90px; flex-shrink: 0; }
+    .tt-info { flex: 1; min-width: 0; }
+    .tt-name { font-size: 13px; font-weight: 500; }
+    .tt-loc { font-size: 11px; color: var(--dim); }
+    .tt-type {
+      font-size: 11px; font-weight: 600; padding: 2px 8px;
+      border-radius: 6px; flex-shrink: 0;
+    }
+    .tt-lec { background: #EFF6FF; color: var(--math-color); }
+    .tt-tut { background: #ECFDF5; color: var(--mman-color); }
+    .tt-wks { background: #FFFBEB; color: var(--engg-color); }
+    .tt-exam { background: #FEE2E2; color: #DC2626; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">UNSW <span>复习</span></div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="https://moodle.telt.unsw.edu.au/course" target="_blank" style="font-size:12px;font-weight:600;padding:6px 12px;border-radius:8px;background:var(--math-soft);color:var(--math-color);text-decoration:none;border:1px solid rgba(37,99,235,0.2);">Moodle</a>
+    <a href="https://my.unsw.edu.au" target="_blank" style="font-size:12px;font-weight:600;padding:6px 12px;border-radius:8px;background:var(--surface2);color:var(--text);text-decoration:none;border:1px solid var(--border);">myUNSW</a>
+  </div>
+</header>
+
+<div class="tab-bar">
+  <div class="tab active-math" onclick="showCourse('timetable')" id="tab-timetable">📅 课表</div>
+  <div class="tab" onclick="showCourse('countdown')" id="tab-countdown">⏰ 倒计时</div>
+  <div class="tab" onclick="showCourse('math')" id="tab-math">📐 MATH1231</div>
+  <div class="tab" onclick="showCourse('mman')" id="tab-mman">🔧 MMAN1130</div>
+  <div class="tab" onclick="showCourse('engg')" id="tab-engg">⚙️ ENGG1300</div>
+</div>
+
+<!-- ===== TIMETABLE ===== -->
+<div class="course-section active" id="sec-timetable">
+  <div style="padding-top:4px;">
+    <div class="topic-group">
+      <div class="group-label">每周固定课表</div>
+      <div class="topic-card" style="padding:16px;">
+        <div class="timetable">
+          <div class="tt-row">
+            <div class="tt-day">MON</div>
+            <div class="tt-time">16:00–18:00</div>
+            <div class="tt-info"><div class="tt-name">MMAN1130 Lecture</div><div class="tt-loc">Online</div></div>
+            <div class="tt-type tt-lec">讲座</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">TUE</div>
+            <div class="tt-time">9:00–11:00</div>
+            <div class="tt-info"><div class="tt-name">ENGG1300 Lecture</div><div class="tt-loc">Sir John Clancy Auditorium</div></div>
+            <div class="tt-type tt-lec">讲座</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">TUE</div>
+            <div class="tt-time">11:00–13:00</div>
+            <div class="tt-info"><div class="tt-name">MATH1231 Lecture</div><div class="tt-loc">Online</div></div>
+            <div class="tt-type tt-lec">讲座</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">TUE</div>
+            <div class="tt-time">16:00–17:00</div>
+            <div class="tt-info"><div class="tt-name">MATH1231 Tutorial</div><div class="tt-loc">H13 Lawrence East 2060</div></div>
+            <div class="tt-type tt-tut">辅导课</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">TUE</div>
+            <div class="tt-time">18:00–19:00</div>
+            <div class="tt-info"><div class="tt-name">MMAN1130 Project</div><div class="tt-loc">本周 Willis Annexe UTL 214N North</div></div>
+            <div class="tt-type tt-wks">Project</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">WED</div>
+            <div class="tt-time">13:00–14:00</div>
+            <div class="tt-info"><div class="tt-name">MATH1231 Lecture</div><div class="tt-loc">Online</div></div>
+            <div class="tt-type tt-lec">讲座</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">WED</div>
+            <div class="tt-time">14:00–16:00</div>
+            <div class="tt-info"><div class="tt-name">ENGG1300 Lecture</div><div class="tt-loc">Sir John Clancy Auditorium</div></div>
+            <div class="tt-type tt-lec">讲座</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">THU</div>
+            <div class="tt-time">9:00–11:00</div>
+            <div class="tt-info"><div class="tt-name">ENGG1300 Workshop</div><div class="tt-loc">Squarehouse 114</div></div>
+            <div class="tt-type tt-wks">Workshop</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">THU</div>
+            <div class="tt-time">11:00–12:30</div>
+            <div class="tt-info"><div class="tt-name">MMAN1130 Tut-Lab</div><div class="tt-loc">Ainsworth 204</div></div>
+            <div class="tt-type tt-wks">Tut-Lab</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">FRI</div>
+            <div class="tt-time">14:00–16:00</div>
+            <div class="tt-info"><div class="tt-name">MATH1231 Lecture</div><div class="tt-loc">Online</div></div>
+            <div class="tt-type tt-lec">讲座</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day">FRI</div>
+            <div class="tt-time">16:00–18:00</div>
+            <div class="tt-info"><div class="tt-name">MMAN1130 Lecture</div><div class="tt-loc">Online</div></div>
+            <div class="tt-type tt-lec">讲座</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-group">
+      <div class="group-label">考试时间表</div>
+      <div class="topic-card" style="padding:16px;">
+        <div class="timetable">
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">SAT</div>
+            <div class="tt-time">10:30–11:30</div>
+            <div class="tt-info"><div class="tt-name">ENGG1300 Test 1 <span style="color:var(--engg-color);font-weight:600;">20%</span></div><div class="tt-loc">6月20日 · E19 Patricia O'Shane 103</div></div>
+            <div class="tt-type tt-exam">考试</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">MON</div>
+            <div class="tt-time">15:00–16:00</div>
+            <div class="tt-info"><div class="tt-name">MATH1231 Lab Test 1 <span style="color:var(--math-color);font-weight:600;">15%</span></div><div class="tt-loc">6月29日 · H13 Lawrence East M020</div></div>
+            <div class="tt-type tt-exam">考试</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">SAT</div>
+            <div class="tt-time">10:30–11:30</div>
+            <div class="tt-info"><div class="tt-name">ENGG1300 Test 2 <span style="color:var(--engg-color);font-weight:600;">30%</span></div><div class="tt-loc">7月18日 · E19 Patricia O'Shane 103</div></div>
+            <div class="tt-type tt-exam">考试</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">MON</div>
+            <div class="tt-time">15:00–16:00</div>
+            <div class="tt-info"><div class="tt-name">MATH1231 Lab Test 2 <span style="color:var(--math-color);font-weight:600;">15%</span></div><div class="tt-loc">7月27日 · H13 Lawrence East M020</div></div>
+            <div class="tt-type tt-exam">考试</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">SAT</div>
+            <div class="tt-time">10:30–11:30</div>
+            <div class="tt-info"><div class="tt-name">ENGG1300 Test 3 <span style="color:var(--engg-color);font-weight:600;">20%</span></div><div class="tt-loc">8月8日 · E19 Patricia O'Shane 103</div></div>
+            <div class="tt-type tt-exam">考试</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">FRI</div>
+            <div class="tt-time">20:00</div>
+            <div class="tt-info"><div class="tt-name">ENGG1300 Mini-design Project <span style="color:var(--engg-color);font-weight:600;">30%</span></div><div class="tt-loc">8月14日截止</div></div>
+            <div class="tt-type tt-exam">作业</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">—</div>
+            <div class="tt-time">2小时</div>
+            <div class="tt-info"><div class="tt-name">MATH1231 Final Exam <span style="color:var(--math-color);font-weight:600;">50%</span></div><div class="tt-loc">考试周 · 地点待定</div></div>
+            <div class="tt-type tt-exam">期末</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-group">
+      <div class="group-label">MMAN1130 重要日期</div>
+      <div class="topic-card" style="padding:16px;">
+        <div class="timetable">
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">FRI</div>
+            <div class="tt-time">11:55pm</div>
+            <div class="tt-info"><div class="tt-name">TOOLS1 测验 <span style="color:var(--mman-color);font-weight:600;">5%</span></div><div class="tt-loc">Week 3</div></div>
+            <div class="tt-type tt-exam">考核</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">FRI</div>
+            <div class="tt-time">11:55pm</div>
+            <div class="tt-info"><div class="tt-name">DSIGN1 零件CAD <span style="color:var(--mman-color);font-weight:600;">10%</span></div><div class="tt-loc">Week 4</div></div>
+            <div class="tt-type tt-exam">考核</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">FRI</div>
+            <div class="tt-time">11:55pm / PRJ课</div>
+            <div class="tt-info"><div class="tt-name">DSIGN2 装配CAD + TOOLS2 <span style="color:var(--mman-color);font-weight:600;">15%</span></div><div class="tt-loc">Week 5</div></div>
+            <div class="tt-type tt-exam">考核</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">FRI</div>
+            <div class="tt-time">11:55pm</div>
+            <div class="tt-info"><div class="tt-name">MANUF1 图纸 <span style="color:var(--mman-color);font-weight:600;">15%</span></div><div class="tt-loc">Week 7</div></div>
+            <div class="tt-type tt-exam">考核</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">FRI</div>
+            <div class="tt-time">11:55pm</div>
+            <div class="tt-info"><div class="tt-name">MANUF2 工艺单 + MANUF3 CAM <span style="color:var(--mman-color);font-weight:600;">20%</span></div><div class="tt-loc">Week 9</div></div>
+            <div class="tt-type tt-exam">考核</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">—</div>
+            <div class="tt-time">PRJ课</div>
+            <div class="tt-info"><div class="tt-name">TOOLS3 装配 <span style="color:var(--mman-color);font-weight:600;">5%</span></div><div class="tt-loc">Week 10</div></div>
+            <div class="tt-type tt-exam">考核</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-day" style="color:#DC2626;">—</div>
+            <div class="tt-time">2小时</div>
+            <div class="tt-info"><div class="tt-name">MMAN1130 Final Exam <span style="color:var(--mman-color);font-weight:600;">30%</span></div><div class="tt-loc">考试周</div></div>
+            <div class="tt-type tt-exam">期末</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== COUNTDOWN ===== -->
+<div class="course-section" id="sec-countdown">
+  <div style="padding-top:4px;">
+    <div class="topic-group">
+      <div class="group-label">⏰ 距离重要日期</div>
+      <div id="countdown-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MATH1231 ===== -->
+<div class="course-section" id="sec-math">
+  <div class="course-header math">
+    <div class="course-icon">📐</div>
+    <div class="course-meta">
+      <div class="course-code">MATH1231</div>
+      <div class="course-name">Mathematics 1B · 微积分 + 线性代数</div>
+    </div>
+  </div>
+
+  <!-- Assessment -->
+  <div class="topic-group">
+    <div class="group-label">成绩占比 & 考试时间</div>
+    <div class="assessment-card">
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">📝 Weekly Möbius Lessons</div>
+          <div class="assess-date">每周二 5pm截止 · Week 2–5, 7–11（最好6周）</div>
+        </div>
+        <div class="assess-weight math-w">10%</div>
+      </div>
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">🧪 Lab Test 1</div>
+          <div class="assess-date">Week 5结束前 · 40分钟</div>
+        </div>
+        <div class="assess-weight math-w">15%</div>
+      </div>
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">📄 Assignment</div>
+          <div class="assess-date">Week 8周二 11:59pm截止</div>
+        </div>
+        <div class="assess-weight math-w">10%</div>
+      </div>
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">🧪 Lab Test 2</div>
+          <div class="assess-date">Week 9 · 40分钟</div>
+        </div>
+        <div class="assess-weight math-w">15%</div>
+      </div>
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">📋 Final Exam</div>
+          <div class="assess-date">考试周 · 2小时</div>
+        </div>
+        <div class="assess-weight math-w">50%</div>
+      </div>
+    </div>
+    <div class="exam-alert">⚠️ Lab Test 1在日历中显示为 6月29日 & 7月27日 3–4pm（H13 Lawrence East M020）</div>
+  </div>
+
+  <!-- Progress -->
+  <div class="topic-group">
+    <div class="group-label">学习进度</div>
+    <div class="topic-card" style="padding:16px;">
+      <div class="progress-bar-wrap">
+        <div class="progress-label"><span>微积分</span><span id="calc-pct">0%</span></div>
+        <div class="progress-track"><div class="progress-fill math-fill" id="calc-bar" style="width:0%"></div></div>
+      </div>
+      <div style="height:10px;"></div>
+      <div class="progress-bar-wrap">
+        <div class="progress-label"><span>线性代数</span><span id="alg-pct">0%</span></div>
+        <div class="progress-track"><div class="progress-fill math-fill" id="alg-bar" style="width:0%"></div></div>
+      </div>
+      <div style="height:14px;font-size:12px;color:var(--dim);margin-top:10px;">点击各知识点勾选完成状态</div>
+    </div>
+  </div>
+
+  <!-- Calculus -->
+  <div class="topic-group">
+    <div class="group-label">微积分 Calculus</div>
+    <div id="calc-topics"></div>
+  </div>
+
+  <!-- Linear Algebra -->
+  <div class="topic-group">
+    <div class="group-label">线性代数 Linear Algebra</div>
+    <div id="alg-topics"></div>
+  </div>
+
+  <!-- Probability -->
+  <div class="topic-group">
+    <div class="group-label">概率统计 Probability</div>
+    <div id="prob-topics"></div>
+  </div>
+
+  <!-- Mobius Checklist -->
+  <div class="topic-group">
+    <div class="group-label">Möbius 作业追踪</div>
+    <div class="topic-card" style="padding:16px;">
+      <div id="mobius-list">
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 1 · 积分换元法</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 2 · 分部积分 + 三角换元</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 3 · 部分分数分解</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 4 · 常微分方程</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 5 · 数列与级数</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 6 · Taylor 展开</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 7 · 向量空间</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 8 · 线性变换</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 9 · 特征值特征向量</span></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 10 · 综合复习</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MMAN1130 ===== -->
+<div class="course-section" id="sec-mman">
+  <div class="course-header mman">
+    <div class="course-icon">🔧</div>
+    <div class="course-meta">
+      <div class="course-code">MMAN1130</div>
+      <div class="course-name">Design & Manufacturing · CAD + 制造工艺</div>
+    </div>
+  </div>
+
+  <div class="assessment-card">
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">🧪 TOOLS1: Measurement Quiz</div>
+        <div class="assess-date">Week 3 周五 11:55pm截止 · 30分钟 · 个人</div>
+      </div>
+      <div class="assess-weight mman-w">5%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">🔧 TOOLS2: Hand Tools</div>
+        <div class="assess-date">Week 5 PRJ Class · 1个工件 · 个人</div>
+      </div>
+      <div class="assess-weight mman-w">10%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">🔩 TOOLS3: Assembly</div>
+        <div class="assess-date">Week 10 PRJ Class · 1个装配体 · 小组</div>
+      </div>
+      <div class="assess-weight mman-w">5%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">📐 DSIGN1: Component CAD</div>
+        <div class="assess-date">Week 4 周五 11:55pm截止 · 9个SLDPRT文件 · 个人</div>
+      </div>
+      <div class="assess-weight mman-w">10%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">📐 DSIGN2: Assembly CAD</div>
+        <div class="assess-date">Week 5 周五 11:55pm截止 · 1个装配体zip · 个人</div>
+      </div>
+      <div class="assess-weight mman-w">5%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">📄 MANUF1: Drawings</div>
+        <div class="assess-date">Week 7 周五 11:55pm截止 · 3个PDF文件 · 个人</div>
+      </div>
+      <div class="assess-weight mman-w">15%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">📋 MANUF2: Work-Method Sheet</div>
+        <div class="assess-date">Week 9 周五 11:55pm截止 · 1个PDF · 小组</div>
+      </div>
+      <div class="assess-weight mman-w">10%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">💻 MANUF3: CAM</div>
+        <div class="assess-date">Week 9 周五 11:55pm截止 · 1个F3D文件 · 个人</div>
+      </div>
+      <div class="assess-weight mman-w">10%</div>
+    </div>
+    <div class="assessment-row">
+      <div class="assess-left">
+        <div class="assess-name">📋 Final Exam</div>
+        <div class="assess-date">考试周 · 2小时</div>
+      </div>
+      <div class="assess-weight mman-w">30%</div>
+    </div>
+  </div>
+
+  <div class="topic-group">
+    <div class="group-label">工程图纸 Engineering Drawing</div>
+
+    <div class="topic-card" id="tc-drawing">
+      <div class="topic-header" onclick="toggleTopic('tc-drawing')">
+        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">工程图规范 AS 1100 Standards</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">澳大利亚工程制图标准 AS 1100</div>
+          <div class="subtopic">正交投影 Orthographic Projection（第一/第三角法）</div>
+          <div class="subtopic">尺寸标注规范 Dimensioning</div>
+          <div class="subtopic">剖面图 Section Views</div>
+          <div class="subtopic">公差标注 Tolerances</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=7KEcMFt5bsA" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Engineering Drawing Basics<span class="link-src">YouTube · The Efficient Engineer</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://www.bilibili.com/video/BV1ME411x7GN" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">工程图学 正投影与三视图<span class="link-src">Bilibili</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-group">
+    <div class="group-label">SolidWorks CAD</div>
+
+    <div class="topic-card" id="tc-sw-sketch">
+      <div class="topic-header" onclick="toggleTopic('tc-sw-sketch')">
+        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">草图与3D建模 Sketching & Modeling</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">2D草图约束与尺寸驱动</div>
+          <div class="subtopic">拉伸 Extrude / 切除 Cut</div>
+          <div class="subtopic">旋转体 Revolve</div>
+          <div class="subtopic">圆角/倒角 Fillet / Chamfer</div>
+          <div class="subtopic">装配体 Assembly</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=qtj0UNSW4kQ" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">SolidWorks for Beginners – Full Course<span class="link-src">YouTube · Tutorials Point</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://www.bilibili.com/video/BV1cJ411p7Gw" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">SolidWorks 零基础入门到精通<span class="link-src">Bilibili</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-sw-drawing">
+      <div class="topic-header" onclick="toggleTopic('tc-sw-drawing')">
+        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">工程图输出 SW Drawing</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">从3D模型生成标准工程图</div>
+          <div class="subtopic">标题栏 Title Block 填写</div>
+          <div class="subtopic">视图摆放与比例</div>
+          <div class="subtopic">自动标注与手动修改</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=9dNFlNFxAcw" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">SolidWorks Drawing Tutorial<span class="link-src">YouTube · SolidWorks</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-group">
+    <div class="group-label">制造工艺 Manufacturing</div>
+
+    <div class="topic-card" id="tc-turning">
+      <div class="topic-header" onclick="toggleTopic('tc-turning')">
+        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">车削 Turning</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">车床工作原理与结构</div>
+          <div class="subtopic">切削速度、进给量、切削深度</div>
+          <div class="subtopic">外圆车削、端面车削、镗孔</div>
+          <div class="subtopic">CNC车削 G代码基础</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=Zv5jSivUFlo" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Lathe Turning – How it Works<span class="link-src">YouTube · The Efficient Engineer</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-milling">
+      <div class="topic-header" onclick="toggleTopic('tc-milling')">
+        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">铣削 Milling</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">立式/卧式铣床</div>
+          <div class="subtopic">顺铣与逆铣 Climb vs Conventional</div>
+          <div class="subtopic">CNC铣削 G代码 M代码</div>
+          <div class="subtopic">CAM软件工具路径生成</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=kNBK8iblIKs" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">CNC Milling Explained<span class="link-src">YouTube · NYC CNC</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ENGG1300 ===== -->
+<div class="course-section" id="sec-engg">
+  <div class="course-header engg">
+    <div class="course-icon">⚙️</div>
+    <div class="course-meta">
+      <div class="course-code">ENGG1300</div>
+      <div class="course-name">Engineering Mechanics · 静力学 + 动力学</div>
+    </div>
+  </div>
+
+  <!-- Assessment -->
+  <div class="topic-group">
+    <div class="group-label">成绩占比 & 考试时间</div>
+    <div class="assessment-card">
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">📋 Test 1</div>
+          <div class="assess-date">周六 6月20日 10:30–11:30 · E19 Patricia O'Shane 103</div>
+        </div>
+        <div class="assess-weight engg-w">20%</div>
+      </div>
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">📋 Test 2</div>
+          <div class="assess-date">周六 7月18日 10:30–11:30 · E19 Patricia O'Shane 103</div>
+        </div>
+        <div class="assess-weight engg-w">30%</div>
+      </div>
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">📋 Test 3</div>
+          <div class="assess-date">周六 8月8日 10:30–11:30 · E19 Patricia O'Shane 103</div>
+        </div>
+        <div class="assess-weight engg-w">20%</div>
+      </div>
+      <div class="assessment-row">
+        <div class="assess-left">
+          <div class="assess-name">🛠️ Mini-design Project</div>
+          <div class="assess-date">8月14日（周五）8:00pm截止</div>
+        </div>
+        <div class="assess-weight engg-w">30%</div>
+      </div>
+    </div>
+    <div class="exam-alert">⚠️ 三次考试都是周六早上，记得提前到场 · 地点 E19 Patricia O'Shane 103</div>
+  </div>
+
+  <div class="topic-group">
+    <div class="group-label">静力学 Statics (Week 1–5)</div>
+
+    <div class="topic-card" id="tc-vectors">
+      <div class="topic-header" onclick="toggleTopic('tc-vectors')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">向量与力 Vectors & Forces</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">力的分解与合成（2D & 3D）</div>
+          <div class="subtopic">单位向量 Unit Vectors</div>
+          <div class="subtopic">点积 Dot Product & 叉积 Cross Product</div>
+          <div class="subtopic">力矩 Moment of a Force</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=mFujkbznnQ8" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Statics – Forces & Vectors<span class="link-src">YouTube · The Efficient Engineer</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://www.bilibili.com/video/BV1Et411N7PP" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">工程力学 静力学入门<span class="link-src">Bilibili</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-equilibrium">
+      <div class="topic-header" onclick="toggleTopic('tc-equilibrium')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">平衡 Equilibrium & FBD</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">自由体图 Free Body Diagram (FBD)</div>
+          <div class="subtopic">平衡方程 ΣF=0, ΣM=0</div>
+          <div class="subtopic">支座类型与反力</div>
+          <div class="subtopic">2D & 3D 刚体平衡</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=SFqKfOFPMBY" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Equilibrium of a Rigid Body<span class="link-src">YouTube · Engineer4Free</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-truss">
+      <div class="topic-header" onclick="toggleTopic('tc-truss')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">桁架 Trusses</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">节点法 Method of Joints</div>
+          <div class="subtopic">截面法 Method of Sections</div>
+          <div class="subtopic">零力杆 Zero-Force Members</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=rK29qLHC2Ug" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Truss Analysis – Method of Joints<span class="link-src">YouTube · Engineer4Free</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-group">
+    <div class="group-label">动力学 Dynamics (Week 6–10)</div>
+
+    <div class="topic-card" id="tc-kinematics">
+      <div class="topic-header" onclick="toggleTopic('tc-kinematics')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">运动学 Kinematics</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">位移、速度、加速度关系</div>
+          <div class="subtopic">直线运动 Rectilinear Motion</div>
+          <div class="subtopic">抛体运动 Projectile Motion</div>
+          <div class="subtopic">圆周运动 Circular Motion</div>
+          <div class="subtopic">相对运动 Relative Motion</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=ZM8ECpBuQYE" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Kinematics – Engineering Dynamics<span class="link-src">YouTube · The Efficient Engineer</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://www.bilibili.com/video/BV1kZ4y1r75h" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">动力学 运动学基础<span class="link-src">Bilibili</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-kinetics">
+      <div class="topic-header" onclick="toggleTopic('tc-kinetics')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">动力学（力与运动）Kinetics</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">牛顿第二定律 F = ma</div>
+          <div class="subtopic">功能定理 Work-Energy Theorem</div>
+          <div class="subtopic">冲量与动量 Impulse-Momentum</div>
+          <div class="subtopic">碰撞 Impact（弹性/非弹性）</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/watch?v=wMbvQW7gFRQ" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Newton's Laws in Engineering Dynamics<span class="link-src">YouTube · Engineer4Free</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mini-design Project -->
+  <div class="topic-group">
+    <div class="group-label">🛠️ Mini-design Project（30%）</div>
+
+    <div class="topic-card" style="padding:16px;">
+      <div style="font-size:14px; line-height:1.7; color:var(--text);">
+        <strong>项目简介：</strong>从4种结构中选1个（脚手架 Scaffolding / 直升机停机坪 Helipad / 起重机支撑 Crane Support / 工作平台 Work Platform），完成静力分析（恒载 Wdl = 11 kN）和动力冲击分析（按你的姓氏分组 P–T，冲击质量 m = 70 kg）。
+      </div>
+      <div style="height:10px;"></div>
+      <a class="pdf-link" href="engg1300/pdfs/ENGG1300_Mini-design_Project.pdf" target="_blank" rel="noopener">📄 项目说明 PDF 原件</a>
+    </div>
+
+    <div class="topic-card" id="tc-mdp-prep">
+      <div class="topic-header" onclick="toggleTopic('tc-mdp-prep')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">准备步骤 & 时间规划</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic"><strong>Week 5：</strong>选定一种结构，画出几何简图（标注尺寸、节点编号、支座类型）</div>
+          <div class="subtopic"><strong>Week 5：</strong>静力分析 — 求整体支座反力，再用节点法/截面法求各杆件内力（Wdl=11kN）</div>
+          <div class="subtopic"><strong>Week 8：</strong>动力冲击分析 — 计算冲击物体（m=70kg）下落产生的冲击力，与静载情况对比</div>
+          <div class="subtopic"><strong>Week 8：</strong>找出关键杆件（受力最大），计算其应力 σ=N/A</div>
+          <div class="subtopic"><strong>Week 10：</strong>应力校核 — 确定临界杆件所需的最小直径/截面尺寸</div>
+          <div class="subtopic"><strong>Week 10：</strong>两种方法（静力 vs 动力）结果对比分析</div>
+          <div class="subtopic"><strong>最终：</strong>撰写150–250字反思总结，整理报告（最多20页PDF）</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-mdp-joints">
+      <div class="topic-header" onclick="toggleTopic('tc-mdp-joints')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">桁架分析：节点法 & 截面法</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">先画整体FBD，用 ΣF=0、ΣM=0 求支座反力</div>
+          <div class="subtopic">节点法 Method of Joints：逐个节点列 ΣFx=0、ΣFy=0，从只有2个未知力的节点开始</div>
+          <div class="subtopic">截面法 Method of Sections：切割桁架，对截面整体取矩，适合求单个杆件内力</div>
+          <div class="subtopic">受拉为正（Tension）、受压为负（Compression），结果符号要标清楚</div>
+          <div class="subtopic">零力杆判断：可简化计算量</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/results?search_query=truss+method+of+joints+method+of+sections+tutorial" target="_blank" rel="noopener">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Truss Analysis：节点法 & 截面法<span class="link-src">YouTube · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://search.bilibili.com/all?keyword=桁架结构分析%20节点法%20截面法" target="_blank" rel="noopener">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">桁架结构分析 节点法截面法<span class="link-src">Bilibili · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-mdp-impact">
+      <div class="topic-header" onclick="toggleTopic('tc-mdp-impact')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">动力冲击载荷分析</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">冲击前速度：自由落体 v²=2as（s为下落高度）</div>
+          <div class="subtopic">冲击力估算：F = m·v² / (2×停止距离)，或用能量法 mgh = F·d</div>
+          <div class="subtopic">动态放大系数 Dynamic Load Factor (DLF)：冲击载荷 / 静载荷</div>
+          <div class="subtopic">将等效冲击力代入桁架，重新做节点法/截面法分析</div>
+          <div class="subtopic">对比静力与动力情况下临界杆件的内力差异</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/results?search_query=impact+load+dynamic+load+factor+structure+engineering" target="_blank" rel="noopener">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Impact Load & Dynamic Load Factor<span class="link-src">YouTube · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://search.bilibili.com/all?keyword=冲击载荷%20动态放大系数%20结构分析" target="_blank" rel="noopener">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">冲击载荷 动态放大系数<span class="link-src">Bilibili · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-mdp-stress">
+      <div class="topic-header" onclick="toggleTopic('tc-mdp-stress')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">应力校核 & 截面尺寸设计</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">轴向应力公式：σ = N/A（N为杆件内力，A为截面积）</div>
+          <div class="subtopic">已知材料许用应力 σ_allow，反求所需最小截面积 A_min = N/σ_allow</div>
+          <div class="subtopic">圆形截面：A=πd²/4，反推最小直径 d</div>
+          <div class="subtopic">找出受力最大的杆件（critical member）作为设计依据</div>
+          <div class="subtopic">安全系数 Factor of Safety 的概念与应用</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/results?search_query=axial+stress+allowable+stress+minimum+diameter+design" target="_blank" rel="noopener">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Axial Stress & Allowable Stress Design<span class="link-src">YouTube · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://search.bilibili.com/all?keyword=轴向应力%20截面设计" target="_blank" rel="noopener">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">轴向应力 截面尺寸设计<span class="link-src">Bilibili · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Tab switching
+  function showCourse(course) {
+    document.querySelectorAll('.course-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => { t.className = 'tab'; });
+    document.getElementById('sec-' + course).classList.add('active');
+    const tab = document.getElementById('tab-' + course);
+    const colorMap = { timetable: 'active-math', countdown: 'active-engg', math: 'active-math', mman: 'active-mman', engg: 'active-engg' };
+    tab.classList.add(colorMap[course] || 'active-math');
+  }
+
+  // Topic accordion
+  function toggleTopic(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('open');
+  }
+
+  // ===== MATH1231 DETAILED TOPICS =====
+  const MATH_TOPICS = {
+    calc: [
+      { tag:"Ch1A", title:"多元函数 Functions of Several Variables", file:"Holzer_chap1A_1231_Calculus_2026.pdf",
+        yt:"multivariable functions level curves partial derivatives", bili:"多元函数 偏导数 等高线",
+        points:["z = f(x,y) 表示 R³ 中的曲面，常见曲面（椭球面、抛物面、鞍面等）要会草图","等高线 level curve：F(x,y)=C 在 xy 平面上的曲线；剖面 profile：固定一个变量看 z 随另一变量变化","偏导数定义：固定其他变量，对单一变量求导，记号 ∂f/∂x、∂f/∂y","偏导数的几何意义：曲面沿坐标轴方向切线的斜率","高阶/混合偏导数：fxy、fyx，连续条件下两者相等","判断连续性的定理：F(x,y) 在 (a,b) 连续 ⇔ 沿任意路径趋近时极限相同"] },
+      { tag:"Ch1B", title:"全微分近似与链式法则", file:"Holzer_chap1B_1231_Calculus_2026.pdf",
+        yt:"multivariable chain rule total differential", bili:"多元函数 全微分 链式法则",
+        points:["全微分近似：Δz ≈ fx·Δx + fy·Δy，用于估计函数值的微小变化/误差传播","链式法则（单参数）：z=z(x,y), x=x(t), y=y(t) ⇒ dz/dt = ∂z/∂x·dx/dt + ∂z/∂y·dy/dt","链式法则（多参数）：z=z(x,y), x=x(s,t), y=y(s,t) ⇒ ∂z/∂s、∂z/∂t 同理用树状图展开","注意：偏导数符号 ∂ 不能像普通分数一样约分/相除","三元及以上函数的偏导数与全微分推广（fx, fy, fz）","Maple Notes：用软件验证偏导数与近似计算结果"] },
+      { tag:"Ch2A", title:"积分技巧 I：三角积分与还原公式", file:"Holzer_chap2A_1231_Calculus_2026.pdf",
+        yt:"trigonometric integrals reduction formula trig substitution", bili:"三角函数积分 还原公式 三角换元",
+        points:["∫sinᵏx cosⁿx dx：根据 k、n 的奇偶性选择 u=cosx 或 u=sinx 换元","∫tanⁿx, ∫secⁿx 等的处理思路：用恒等式 1+tan²=sec² 拆分","还原公式 reduction formula：将 ∫fⁿ dx 用 ∫fⁿ⁻¹ 或 ∫fⁿ⁻² 表示，递推求解","双参数还原公式：形如 ∫sinᵃx cosᵇx dx 的递推关系","三角替换：x=a sinθ（处理√(a²−x²)）、x=a tanθ（处理 a²+x²）、x=a secθ（处理 x²−a²）","双曲替换：用 sinh、cosh 处理含 √(x²+a²) 或 √(x²−a²) 的积分"] },
+      { tag:"Ch2B", title:"积分技巧 II：有理函数与部分分式", file:"Holzer_chap2B_1231_Calculus_2026.pdf",
+        yt:"partial fractions integration rational functions", bili:"部分分式分解 有理函数积分",
+        points:["处理假分式：分子次数 ≥ 分母次数时先做多项式长除法","部分分式分解三种情形：不同线性因子、重复线性因子、不可约二次因子","Cover-Up Rule：针对不同线性因子，快速求出对应系数","重复因子 (x−a)ⁿ 需展开成 A₁/(x−a)+A₂/(x−a)²+...+Aₙ/(x−a)ⁿ","不可约二次因子 (x²+bx+c) 对应项形式为 (Ax+B)/(x²+bx+c)，配方后用反三角/对数积分","Further Substitution：Weierstrass 替换 t=tan(x/2) 处理三角函数有理式","Sample Class Test 例题：综合练习选择合适技巧的顺序"] },
+      { tag:"Ch3A", title:"常微分方程入门 ODE Basics", file:"Holzer_chap3A_1231_Calculus_2026.pdf",
+        yt:"first order differential equations separable linear exact", bili:"一阶微分方程 可分离变量 线性方程",
+        points:["ODE 基本概念：阶（order）= 方程中最高阶导数的阶数","解的类型：通解（general solution，含任意常数）、特解（particular solution）、解析解","初值问题 IVP：给定初始条件 y(x₀)=y₀，确定通解中的常数","一阶可分离变量方程：dy/dx=g(x)h(y) ⇒ ∫dy/h(y) = ∫g(x)dx","一阶线性 ODE：y'+P(x)y=Q(x)，用积分因子 μ=e^∫P dx 求解","一阶精确方程 exact ODE：M dx+N dy=0，检验条件 ∂M/∂y=∂N/∂x，再求势函数","结合微积分基本定理（FTC）将隐式解写成显式形式"] },
+      { tag:"Ch3B", title:"一阶 ODE 建模 Modelling", file:"Holzer_chap3B_1231_Calculus_2026.pdf",
+        yt:"differential equations modelling population growth mixing problems", bili:"微分方程建模 应用题",
+        points:["建模三步：用文字描述变化率 → 写出一阶 ODE → 求解并解释结果的实际意义","常见模型：人口/细菌增长（指数增长 dy/dt=ky）、冷却/加热（牛顿冷却定律）","混合问题 mixing problems：浓度随时间变化的微分方程建立","疾病传播等模型：dx/dt 表示某变量随时间的变化率，结合实际条件写边界/初始条件","Modelling Example：完整例题，注意单位与变量含义的对应"] },
+      { tag:"Ch3C", title:"二阶线性常系数 ODE、振动与共振", file:"Holzer_chap3C_1231_Calculus_2026.pdf",
+        yt:"second order linear differential equations resonance vibration", bili:"二阶常系数微分方程 振动 共振",
+        points:["二阶线性常系数齐次方程 ay''+by'+cy=0：写出特征方程 ar²+br+c=0","三种根的情形：两个不同实根 → y=Ae^(r₁x)+Be^(r₂x)；重根 → y=(A+Bx)e^(rx)；复根 α±iβ → y=e^(αx)(Acos βx+Bsin βx)","非齐次方程的特解：待定系数法（Undetermined Coefficients），根据 RHS 形式猜测特解","若猜测特解与齐次解重复，需乘以 x（共振情形）","振动模型：质量-弹簧-阻尼系统，方程 mx''+cx'+kx=F(t)","阻尼分类：欠阻尼（振荡衰减）、临界阻尼（最快无振荡回到平衡）、过阻尼（缓慢无振荡）","共振 resonance：外力频率接近自然频率时振幅急剧增大"] },
+      { tag:"Ch4A", title:"泰勒多项式与误差估计", file:"Holzer_chap4A_1231_Calculus_2026.pdf",
+        yt:"Taylor polynomial remainder error estimation", bili:"泰勒多项式 拉格朗日余项 误差估计",
+        points:["n 阶泰勒多项式定义：Pₙ(x)=Σₖ₌₀ⁿ f⁽ᵏ⁾(a)/k! · (x−a)ᵏ","Pₙ(x) 与 f(x) 在 x=a 处共享前 n 阶导数","泰勒定理与拉格朗日余项：f(x)=Pₙ(x)+Rₙ₊₁(x)，Rₙ₊₁(x)=f⁽ⁿ⁺¹⁾(c)/(n+1)!·(x−a)ⁿ⁺¹，c 在 a、x 之间","与中值定理 MVT 的关系：n=0 时泰勒定理退化为 MVT","误差估计：求 |f⁽ⁿ⁺¹⁾(c)| 在区间内的最大值 M，得到 |Rₙ₊₁(x)|≤M·|x−a|ⁿ⁺¹/(n+1)!","驻点分类定理：f'(a)=0，找到第一个非零的高阶导数 f⁽ᵏ⁾(a)：k 为偶数且 f⁽ᵏ⁾(a)>0 → 极小值；<0 → 极大值；k 为奇数 → 拐点"] },
+      { tag:"Ch4B", title:"数列 Sequences", file:"Holzer_chap4B_1231_Calculus_2026.pdf",
+        yt:"sequences convergence squeeze theorem limits", bili:"数列极限 夹逼定理 收敛",
+        points:["数列收敛定义：当 n→∞，aₙ→L","极限运算法则：和、积、商的极限（注意 ∞−∞、0·∞、0/0 等不定式不能直接套用）","夹逼定理 Pinching/Squeeze Theorem：若 bₙ≤aₙ≤cₙ 且 bₙ,cₙ→L，则 aₙ→L","连续函数定理：若 aₙ=f(n) 且 f(x)→L（x→∞），则数列 aₙ→L，可借助连续变量求极限","L'Hôpital 法则：处理 0/0 或 ∞/∞ 型极限，对分子分母分别求导","单调有界数列必收敛（Monotone Convergence）的思想"] },
+      { tag:"Ch4C", title:"级数收敛性判别 Series Tests", file:"Holzer_chap4C_1231_Calculus_2026.pdf",
+        yt:"series convergence tests ratio comparison integral test", bili:"级数收敛判别法 比值审敛法 积分判别法",
+        points:["第 n 项判别法 nth-term test：若 aₙ↛0，则 Σaₙ 一定发散（不能反过来证明收敛）","比较判别法 comparison test：用已知收敛/发散的级数（如 p-级数）比较","极限比较判别法 limit comparison test：lim aₙ/bₙ=L>0 时两级数同收敛/发散","积分判别法 integral test：an=f(n)，f 正、连续、递减时，Σaₙ 与 ∫f(x)dx 同收敛/发散","比值判别法 ratio test：r=lim|aₙ₊₁/aₙ|，r<1 收敛，r>1 发散，r=1 不确定，对含阶乘的级数效果好","交错级数判别法 Leibniz/Alternating Series Test：项绝对值单调减且→0，则交错级数收敛","绝对收敛 ⇒ 收敛；条件收敛：级数收敛但绝对值级数发散"] },
+      { tag:"Ch4D", title:"泰勒级数与幂级数", file:"Holzer_chap4D_1231_Calculus_2026.pdf",
+        yt:"Taylor series power series radius of convergence", bili:"泰勒级数 幂级数 收敛半径",
+        points:["泰勒级数：当 Rₙ₊₁(x)→0（n→∞）时，f(x)=Σₖ₌₀^∞ f⁽ᵏ⁾(a)/k!·(x−a)ᵏ","幂级数 Σcₙ(x−a)ⁿ 的收敛半径 R：常用比值判别法求 R，端点 x=a±R 需单独检验","区间端点收敛性需用比较/积分/交错级数判别法逐一检验","幂级数的运算：在收敛区间内可逐项求导、逐项积分，结果仍是幂级数（收敛半径不变，端点可能改变）","常见函数的麦克劳林级数：e^x, sinx, cosx, ln(1+x), 1/(1−x) 等，要能熟记并代换变形","用幂级数运算（代入、相加、求导积分）推导新函数的级数展开"] },
+      { tag:"Ch5", title:"平均值、弧长与旋转曲面面积", file:"Holzer_chap5_1231_Calculus_2026.pdf",
+        yt:"arc length surface of revolution mean value theorem integral", bili:"弧长公式 旋转曲面面积 积分中值定理",
+        points:["函数在 [a,b] 上的平均值：f̄ = 1/(b−a) · ∫ₐᵇ f(x) dx","积分中值定理 Mean Value Theorem for Integrals：存在 c∈[a,b] 使 f(c)=f̄","回顾微积分基本定理 FTC：F(x)=∫ₐˣ f(t)dt ⇒ F'(x)=f(x)","平面曲线弧长公式：L=∫√(1+(dy/dx)²)dx（或参数式 L=∫√((dx/dt)²+(dy/dt)²)dt）","沿平面曲线运动的质点速度 speed = |v| = √((dx/dt)²+(dy/dt)²)","旋转曲面（绕 x 轴或 y 轴）的表面积公式：S=∫2πy·√(1+(y')²)dx（绕 x 轴）"] }
+    ],
+    alg: [
+      { tag:"Sect1", title:"向量空间的定义", file:"MATH1231_ALG_2026T2-Sect1-DefnOfVectorSpace.pdf",
+        yt:"vector space axioms definition linear algebra", bili:"向量空间 定义 公理 线性代数",
+        points:["向量空间 V 的定义：非空集合 V，配有向量加法与标量乘法（标量取自域 F，通常是 ℝ）","8 条公理：加法交换律/结合律、零向量存在、逆元（负向量）存在、标量乘法的分配律（对向量、对标量）、标量乘法结合律、1·v=v","常见向量空间例子：ℝⁿ、矩阵空间 Mₘ,ₙ、多项式空间（次数 ≤n 的多项式）、函数空间","通过具体例子（向量加法 vs 矩阵加法 vs 多项式加法）观察它们满足相同的代数结构","判断一个集合配上某种运算是否构成向量空间，需逐条检验公理"] },
+      { tag:"Sect2", title:"向量运算的性质", file:"MATH1231_ALG_2026T2-Sect2-PropertiesVectorArithmetic.pdf",
+        yt:"vector space properties proofs linear algebra", bili:"向量空间 性质 证明",
+        points:["Fact（向量加法的性质）：交换律、结合律、零元唯一、负元唯一等可从公理推导出的性质","Fact（标量乘法的性质）：0·v=0、(-1)·v=-v、c·0=0 等推导结果","强调：这些性质不是额外公理，而是由向量空间 8 条公理推导出来的定理","训练严谨的代数证明写法：每一步指明用到哪条公理/已证性质","为后续子空间、线性组合等概念打基础"] },
+      { tag:"Sect3", title:"子空间 Subspaces", file:"MATH1231_ALG_2026T2-Sect3-Subspaces.pdf",
+        yt:"subspace theorem linear algebra", bili:"子空间 判定定理 线性代数",
+        points:["子空间定义：V 的非空子集 W，且 W 在向量加法和标量乘法下封闭","子空间判定定理（The Subspace Theorem）：要证明 W 是子空间，只需验证 (1) 0∈W (2) ∀u,v∈W, u+v∈W (3) ∀v∈W,c∈F, cv∈W","常见子空间例子：过原点的直线/平面、齐次线性方程组 Ax=0 的解集（即矩阵的零空间）、对称矩阵集合等","反例训练：不过原点的直线/平面不是子空间（不含零向量或加法不封闭）","子空间本身也是一个向量空间（继承 V 的运算）"] },
+      { tag:"Sect4", title:"线性组合与张成 Linear Combinations & Spans", file:"MATH1231_ALG_2026T2-Sect4-LinearCombosAndSpans.pdf",
+        yt:"linear combinations span column space", bili:"线性组合 张成 列空间",
+        points:["线性组合定义：c₁v₁+c₂v₂+...+cₖvₖ，其中 cᵢ 为标量","张成 span(v₁,...,vₖ) 定义：这些向量所有线性组合构成的集合","Fact：span(v₁,...,vₖ) 一定是 V 的子空间","矩阵的列空间 column space：矩阵各列向量的张成，col(A)=span(列向量)","判断向量 b 是否在 span(v₁,...,vₖ) 中 ⇔ 方程组 [v₁ ... vₖ | b] 有解（增广矩阵行简化后无矛盾行）","生成集 spanning set：若 span(集合)=V，则该集合是 V 的一个生成集","Fact：矩阵、线性组合与 ℝᵐ 中张成之间的对应关系（Ax=线性组合 of columns of A）"] },
+      { tag:"Sect5", title:"线性独立 Linear Independence", file:"MATH1231_ALG_2026T2-Sect5-LinearIndependence.pdf",
+        yt:"linear independence linear algebra", bili:"线性相关 线性无关 判定",
+        points:["线性独立定义：c₁v₁+...+cₖvₖ=0 只有零解 c₁=...=cₖ=0","线性相关定义：存在不全为零的 cᵢ 使线性组合等于 0","判定方法：把向量按列排成矩阵 A，齐次方程 Ax=0 只有零解 ⇔ 向量组线性独立（化简到行阶梯形看是否每列都是主元列）","Theorem（线性相关）：一组向量线性相关 ⇔ 至少有一个向量可以写成其余向量的线性组合","Theorem（唯一性）：若 v₁,...,vₖ 线性独立，则任意向量在 span 中的表示方式唯一","Theorem（线性独立）：超过 n 个 ℝⁿ 中的向量一定线性相关"] },
+      { tag:"Sect6", title:"基与维数 Basis & Dimension", file:"MATH1231_ALG_2026T2-Sect6-BasisAndDimension.pdf",
+        yt:"basis and dimension vector space", bili:"基与维数 向量空间",
+        points:["基 basis 定义：V 的一组向量，既线性独立又张成 V","维数 dimension 定义：基中向量的个数，记作 dim(V)","Theorem（基的大小固定）：同一向量空间的所有基都含有相同数量的向量，因此维数定义合理","Theorem（从张成集合构造基）：若一组向量张成 V，可去掉多余（线性相关）的向量得到一组基","Theorem（独立集合不会比张成集合大）：若 S 线性独立、T 张成 V，则 |S|≤|T|","Theorem（维数 vs 张成/独立）：若 dim(V)=n，则 n 个独立向量自动构成基；n 个张成向量也自动构成基","正交集 orthonormal set 与正交基 orthonormal basis：两两正交且单位长度的（基）向量集合，便于计算坐标"] },
+      { tag:"Sect7", title:"线性变换 Linear Transformations", file:"MATH1231_ALG_2026T2-Sect7-LinearTransformations.pdf",
+        yt:"linear transformations definition properties", bili:"线性变换 定义",
+        points:["线性变换 T:V→W 定义：T(u+v)=T(u)+T(v) 且 T(cv)=cT(v)（对所有 u,v∈V, 标量 c）","Fact：线性映射把零向量映到零向量，把 -v 映到 -T(v)","Theorem：线性映射保持线性组合，即 T(c₁v₁+...+cₖvₖ)=c₁T(v₁)+...+cₖT(vₖ)","Theorem：一个线性变换完全由它在一组基向量上的取值确定（知道 T(基) 就知道 T 在整个空间的作用）","判断给定映射是否为线性映射：验证加法和标量乘法两条性质（常见反例：含常数项、绝对值、平方等的映射不是线性的）"] },
+      { tag:"Sect8", title:"矩阵与几何 Matrices & Geometry", file:"MATH1231_ALG_2026T2-Sect8-MatricesAndGeometry.pdf",
+        yt:"matrix transformations geometry rotation reflection", bili:"矩阵 几何变换 旋转 反射",
+        points:["Theorem（线性映射的矩阵表示）：T:ℝⁿ→ℝᵘ 关于标准基的矩阵 A，其第 i 列 = T(eᵢ)，且 T(x)=Ax","Fact：线性变换把直线映射为直线（或退化为一点）","常见几何变换矩阵：旋转（rotation，含 cosθ, sinθ）、反射（reflection）、缩放（scaling）、投影（projection）、剪切（shear）","组合变换：先做 T₁ 再做 T₂ 对应矩阵乘法 A₂A₁（注意先后顺序）","几何例子的可视化：通过画出基向量及其像，理解矩阵对平面/空间的作用"] },
+      { tag:"Sect9", title:"像、核与秩-零度定理", file:"MATH1231_ALG_2026T2-Sect9-ImageKernelRNT.pdf",
+        yt:"kernel image rank nullity theorem", bili:"核 像 秩-零度定理",
+        points:["核 kernel 定义：ker(T)={v∈V : T(v)=0}；矩阵的核 = Ax=0 的解集","像 image 定义：im(T)={T(v) : v∈V}，即 T 的值域","Theorem：ker(T) 和 im(T) 都是子空间","秩 rank：im(T) 的维数 = 矩阵行简化后主元（leading）列的个数","零度 nullity：ker(T) 的维数 = 自由变量的个数（行简化后非主元列数）","Rank-Nullity Theorem（矩阵版）：rank(A)+nullity(A)=n（A 的列数）","Rank-Nullity Theorem（一般线性变换版）：dim(ker T)+dim(im T)=dim(V)","应用：用 rank/nullity 判断 Ax=b 解的存在性与唯一性（解唯一 ⇔ nullity=0）"] },
+      { tag:"Sect10", title:"特征值与特征向量 Eigenstuff", file:"MATH1231_ALG_2026T2-Sect10-Eigenstuff.pdf",
+        yt:"eigenvalues eigenvectors diagonalization", bili:"特征值 特征向量 对角化",
+        points:["定义（矩阵版）：Av=λv（v≠0）时，λ 为特征值，v 为对应的特征向量","特征多项式：det(A−λI)=0，求解得到所有特征值 λ","求特征向量：将每个 λ 代入 (A−λI)v=0，解齐次方程组","Fact（特征值存在性）：在复数域上，n×n 矩阵至少有一个特征值（n 个，计重数）","Fact（特征向量独立性）：对应不同特征值的特征向量线性独立","对角化 Diagonalisation：若 A 有 n 个线性独立的特征向量，则 A=PDP⁻¹，其中 P 的列是特征向量，D 是以特征值为对角元的对角矩阵","对角化步骤：求特征值 → 求各特征值对应的特征向量（基） → 检查特征向量总数是否等于 n","应用：用特征值/特征向量求解一阶线性微分方程组 x'=Ax"] }
+    ],
+    prob: [
+      { tag:"Sect11", title:"集合论、概率、条件概率与独立性", file:"MATH1231_ALG_2026T2-Sect11-SetsProbabilityCondProbIndep.pdf",
+        yt:"probability conditional probability independence sets", bili:"概率 条件概率 独立事件 集合论",
+        points:["集合基本运算：并 ∪、交 ∩、补 '、差，以及 De Morgan 定律：(A∪B)'=A'∩B'，(A∩B)'=A'∪B'","样本空间 sample space Ω 与事件 event：Ω 的子集","概率公理：P(Ω)=1，P(A)≥0，互斥事件的概率可加性","Fact（概率基本性质）：P(A')=1−P(A)，P(∅)=0，A⊆B ⇒ P(A)≤P(B)","Fact（概率进一步性质）：P(A∪B)=P(A)+P(B)−P(A∩B)（容斥原理）","等可能结果 equally likely outcomes：P(A)=|A|/|Ω|，结合排列组合计数","条件概率定义：P(A|B)=P(A∩B)/P(B)（P(B)>0）","乘法法则 multiplication rule：P(A∩B)=P(A|B)·P(B)，可推广到多个事件的链式乘法","独立事件定义：P(A∩B)=P(A)P(B)，等价于 P(A|B)=P(A)","Theorem（独立性的组合）：若 A、B 独立，则 A'、B 也独立；A'、B' 也独立等","可数 countable / 基数 cardinality 等集合论术语的定义"] },
+      { tag:"Sect12", title:"离散随机变量", file:"MATH1231_ALG_2026T2-Sect12-DiscreteRandomVariables.pdf",
+        yt:"discrete random variables binomial geometric distribution", bili:"离散随机变量 二项分布 几何分布",
+        points:["随机变量 random variable 定义：从样本空间到实数的函数 X:Ω→ℝ","概率分布 probability distribution：列出 X 取每个值的概率 P(X=x)","累积分布函数 CDF：F(x)=P(X≤x)，Fact（CDF性质）：单调不减、右极限为1、左极限为0","期望值定义：E(X)=Σ x·P(X=x)","Theorem（函数的期望）：E(g(X))=Σ g(x)·P(X=x)","方差与标准差定义：Var(X)=E[(X−μ)²]，σ=√Var(X)","Theorem（方差的另一公式）：Var(X)=E(X²)−[E(X)]²，计算更方便","Theorem（线性变换）：E(aX+b)=aE(X)+b，Var(aX+b)=a²Var(X)","伯努利试验 Bernoulli trial（成功概率 p）与伯努利过程 Bernoulli process（独立重复试验）","二项分布 X~Bin(n,p)：P(X=k)=C(n,k)pᵏ(1−p)ⁿ⁻ᵏ，E(X)=np，Var(X)=np(1−p)","几何分布 X~Geo(p)：表示第一次成功所需的试验次数，P(X=k)=(1−p)ᵏ⁻¹p，E(X)=1/p，Var(X)=(1−p)/p²","Theorem（首次成功）：几何分布描述 Bernoulli process 中首次成功出现的位置"] }
+    ]
+  };
+
+  function renderMathTopics() {
+    ['calc', 'alg', 'prob'].forEach(group => {
+      const container = document.getElementById(group + '-topics');
+      if (!container) return;
+      container.innerHTML = MATH_TOPICS[group].map(t => {
+        const id = 'tc-' + group + '-' + t.tag.toLowerCase();
+        const pointsHtml = t.points.map(p => `<div class="subtopic">${p}</div>`).join('');
+        const ytUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(t.yt || t.title);
+        const biliUrl = 'https://search.bilibili.com/all?keyword=' + encodeURIComponent(t.bili || t.title);
+        return `
+          <div class="topic-card" id="${id}">
+            <div class="topic-header" onclick="toggleTopic('${id}')">
+              <div class="topic-left"><div class="topic-dot math-dot"></div><span class="topic-tag">${t.tag}</span><div class="topic-title">${t.title}</div></div>
+              <span class="topic-chevron">▼</span>
+            </div>
+            <div class="topic-body">
+              <div class="subtopics">${pointsHtml}</div>
+              <div class="links-label">学习资源</div>
+              <div class="link-row">
+                <a class="resource-link" href="${ytUrl}" target="_blank" rel="noopener">
+                  <div class="link-icon yt">▶</div>
+                  <div class="link-text">YouTube 相关讲解搜索<span class="link-src">英文 · 点击查看搜索结果</span></div>
+                  <span class="link-arrow">↗</span>
+                </a>
+                <a class="resource-link" href="${biliUrl}" target="_blank" rel="noopener">
+                  <div class="link-icon bili">B</div>
+                  <div class="link-text">Bilibili 相关讲解搜索<span class="link-src">中文 · 点击查看搜索结果</span></div>
+                  <span class="link-arrow">↗</span>
+                </a>
+              </div>
+              <a class="pdf-link" href="math1231/pdfs/${t.file}" target="_blank" rel="noopener">📄 PDF 原件</a>
+            </div>
+          </div>`;
+      }).join('');
+    });
+  }
+  renderMathTopics();
+
+
+  // Checklist
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    el.querySelector('.check-box').textContent = el.classList.contains('checked') ? '✓' : '';
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('#mobius-list .checklist-item');
+    const half = Math.ceil(items.length / 2);
+    let calcDone = 0, algDone = 0;
+    items.forEach((item, i) => {
+      if (item.classList.contains('checked')) {
+        if (i < half) calcDone++; else algDone++;
+      }
+    });
+    const calcPct = Math.round(calcDone / half * 100);
+    const algPct = Math.round(algDone / (items.length - half) * 100);
+    document.getElementById('calc-bar').style.width = calcPct + '%';
+    document.getElementById('calc-pct').textContent = calcPct + '%';
+    document.getElementById('alg-bar').style.width = algPct + '%';
+    document.getElementById('alg-pct').textContent = algPct + '%';
+  }
+
+  // ===== COUNTDOWN =====
+  const deadlines = [
+    { name: '🧪 ENGG1300 Test 1', date: '2026-06-20T10:30:00+10:00', tag: '20%', color: 'var(--engg-color)' },
+    { name: '📝 MMAN1130 TOOLS1 测验', date: '2026-07-03T23:55:00+10:00', tag: '5%', color: 'var(--mman-color)' },
+    { name: '🧪 MATH1231 Lab Test 1', date: '2026-06-29T15:00:00+10:00', tag: '15%', color: 'var(--math-color)' },
+    { name: '📐 MMAN1130 DSIGN1 零件CAD', date: '2026-07-10T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)' },
+    { name: '🧪 ENGG1300 Test 2', date: '2026-07-18T10:30:00+10:00', tag: '30%', color: 'var(--engg-color)' },
+    { name: '📐 MMAN1130 DSIGN2 + TOOLS2', date: '2026-07-17T23:55:00+10:00', tag: '15%', color: 'var(--mman-color)' },
+    { name: '🧪 MATH1231 Lab Test 2', date: '2026-07-27T15:00:00+10:00', tag: '15%', color: 'var(--math-color)' },
+    { name: '📄 MATH1231 Assignment', date: '2026-08-04T23:59:00+10:00', tag: '10%', color: 'var(--math-color)' },
+    { name: '🧪 ENGG1300 Test 3', date: '2026-08-08T10:30:00+10:00', tag: '20%', color: 'var(--engg-color)' },
+    { name: '📄 MMAN1130 MANUF1 图纸', date: '2026-08-07T23:55:00+10:00', tag: '15%', color: 'var(--mman-color)' },
+    { name: '🛠️ ENGG1300 Mini-design Project', date: '2026-08-14T20:00:00+10:00', tag: '30%', color: 'var(--engg-color)' },
+    { name: '📋 MMAN1130 MANUF2+3', date: '2026-08-21T23:55:00+10:00', tag: '20%', color: 'var(--mman-color)' },
+  ];
+
+  function renderCountdown() {
+    const now = new Date();
+    const list = document.getElementById('countdown-list');
+    const upcoming = deadlines
+      .map(d => ({ ...d, diff: new Date(d.date) - now }))
+      .filter(d => d.diff > 0)
+      .sort((a, b) => a.diff - b.diff);
+
+    if (!upcoming.length) {
+      list.innerHTML = '<div style="text-align:center;color:var(--muted);padding:40px 0;">暂无即将到期的考核 🎉</div>';
+      return;
+    }
+
+    list.innerHTML = upcoming.map(d => {
+      const totalHours = d.diff / (1000 * 60 * 60);
+      const days = Math.floor(totalHours / 24);
+      const hours = Math.floor(totalHours % 24);
+      const urgent = totalHours <= 72;
+      const dateObj = new Date(d.date);
+      const dateStr = dateObj.toLocaleString('zh-CN', { month: 'long', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' });
+      let bigNum, unit;
+      if (days >= 1) {
+        bigNum = days;
+        unit = `天 ${hours}小时后`;
+      } else {
+        bigNum = hours;
+        unit = `小时后`;
+      }
+      return `
+        <div class="cd-card ${urgent ? 'cd-urgent' : ''}">
+          <div class="cd-left">
+            <div class="cd-name">${d.name} <span style="color:${d.color};font-weight:700;">${d.tag}</span></div>
+            <div class="cd-meta">${dateStr}</div>
+          </div>
+          <div class="cd-right">
+            <div class="cd-days ${urgent ? 'cd-days-urgent' : ''}">${bigNum}</div>
+            <div class="cd-unit">${unit}</div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+  renderCountdown();
+</script>
+</body>
+</html>
