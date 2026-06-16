@@ -539,6 +539,12 @@
   </div>
 
 
+  <!-- Maple -->
+  <div class="topic-group">
+    <div class="group-label">🍁 Maple 专题</div>
+    <div id="maple-topics"></div>
+  </div>
+
   <!-- Mobius Checklist -->
   <div class="topic-group">
     <div class="group-label">Möbius 作业追踪</div>
@@ -661,6 +667,259 @@
           <a class="resource-link" href="https://www.bilibili.com/video/BV1ME411x7GN" target="_blank">
             <div class="link-icon bili">B</div>
             <div class="link-text">工程图学 正投影与三视图<span class="link-src">Bilibili</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-tools1">
+      <div class="topic-header" onclick="toggleTopic('tc-tools1')">
+        <div class="topic-left">
+          <div class="topic-dot mman-dot"></div>
+          <div class="topic-title">TOOLS1 · 工程图读图与标注</div>
+          <span style="font-size:11px;font-weight:600;background:#F3F4F6;color:#6B7280;border-radius:6px;padding:2px 8px;margin-left:6px;flex-shrink:0;">📝 TOOLS1 Quiz</span>
+        </div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">名义尺寸（Nominal Dimension）= 图纸上标注的理论值，不含公差；未标出的尺寸用总长减去已知段求得，如 D1 = 总长 − 已知段</div>
+          <div class="subtopic">通孔标注格式：Ø[直径] THRU — Ø 表示直径，THRU 表示贯穿整个零件，例 Ø10 THRU = 直径10mm通孔</div>
+          <div class="subtopic">沉头孔 ⌴（Counterbore）两行标注：上行 Ø[底孔直径] THRU，下行 ⌴ Ø[沉头直径] ▼[沉头深度]；⌴ = 平底扩孔，▼ = 深度</div>
+          <div class="subtopic">螺纹孔两行标注：上行 Ø[底孔直径] ▼[钻孔深度]，下行 M[尺寸]×[螺距] ▼[螺纹深度]；螺纹深度必须小于钻孔深度（底部留空间防止断刀）</div>
+          <div class="subtopic">ISO 公制螺纹格式：M[公称直径]×[螺距]，公称直径 = 螺纹外径，螺距 = 相邻牙距（mm），例 M5×0.8</div>
+          <div class="subtopic">📌 底孔与螺纹对照（必记）：Ø3.30 → M4×0.7；Ø4.20 → M5×0.8；Ø5.00 → M6×1.0；Ø6.80 → M8×1.25；规律：底孔直径 ≈ 公称直径 − 螺距</div>
+          <div class="subtopic">倒角标注：C[尺寸]×45 = 45°倒角，如 C1×45 表示1mm宽的45°倒角</div>
+          <div class="subtopic">锥度标注：C[尺寸]×45 TAPER = 外锥面，每边收缩该尺寸，如 C2×45 TAPER</div>
+          <div class="subtopic">多孔前缀：2×、4× 表示该特征重复数量，如 4×Ø6.2 THRU = 四个直径6.2mm通孔</div>
+          <div class="subtopic">📌 符号速查：Ø=直径；▼=深度；THRU=通孔；⌴=平底沉头孔；⌵=锥形锪孔；M=公制螺纹；C=倒角/锥度</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/results?search_query=engineering+drawing+hole+callout+counterbore+thread" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Hole Callouts & Thread Notation<span class="link-src">YouTube · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://search.bilibili.com/all?keyword=工程图纸孔标注螺纹" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">工程图纸孔标注与螺纹规范<span class="link-src">Bilibili · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-tools1-measure">
+      <div class="topic-header" onclick="toggleTopic('tc-tools1-measure')">
+        <div class="topic-left">
+          <div class="topic-dot mman-dot"></div>
+          <div class="topic-title">TOOLS1 · 游标卡尺测量方法</div>
+          <span style="font-size:11px;font-weight:600;background:#F3F4F6;color:#6B7280;border-radius:6px;padding:2px 8px;margin-left:6px;flex-shrink:0;">📝 TOOLS1 Quiz</span>
+        </div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">游标卡尺（Vernier Caliper）三部位：外爪（outer jaws）量外径/厚度/总长；内爪（inner jaws）量孔径/内径；深度杆（depth rod）量孔深/槽深；主尺精度1mm，游标尺精度0.02mm</div>
+          <div class="subtopic">读数三步：① 主尺——游标0线左侧整数mm值 ② 游标——找与主尺对齐的格数 × 精度（如第12格对齐 = 12×0.02 = 0.24mm）③ 两者相加 = 最终读数</div>
+          <div class="subtopic">量厚度/总长（T1、L4）用外爪：夹住零件外表面两侧，轻轻锁紧后读数</div>
+          <div class="subtopic">量孔径/沉头孔直径用内爪：将内爪伸入孔中撑开至刚好接触孔壁两侧，内爪必须垂直孔轴线，找最大值读数</div>
+          <div class="subtopic">量钻孔深/沉头深度用深度杆：卡尺端面完全平贴零件表面，深度杆插入孔中顶到底，读数即为深度</div>
+          <div class="subtopic">量螺纹深度用深度杆：插入螺纹孔，感觉到阻力停止（螺纹终止处），该位置读数为螺纹有效深度</div>
+          <div class="subtopic">沉头深度技巧：深度杆直接测表面到沉头底面距离；或总孔深 − 底孔深 = 沉头深度</div>
+          <div class="subtopic">❌ 常见错误：内爪未垂直孔轴（读数偏大）；深度杆未顶到底就读；读数时卡尺滑动了；游标读错对齐线</div>
+          <div class="subtopic">📌 测量规范：同一尺寸量3次取平均；量孔径时在不同方向各量一次确认圆度；深度杆端面必须完全贴合表面</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/results?search_query=how+to+use+vernier+caliper+measure+holes+depth" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">How to Use a Vernier Caliper<span class="link-src">YouTube · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://search.bilibili.com/all?keyword=游标卡尺使用方法测量" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">游标卡尺使用方法与读数<span class="link-src">Bilibili · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-tools1-inclass">
+      <div class="topic-header" onclick="toggleTopic('tc-tools1-inclass')">
+        <div class="topic-left">
+          <div class="topic-dot mman-dot"></div>
+          <div class="topic-title">TOOLS1 · 课堂测量任务单</div>
+          <span style="font-size:11px;font-weight:600;background:#FEF3C7;color:#92400E;border-radius:6px;padding:2px 8px;margin-left:6px;flex-shrink:0;">🏫 Week 2–3 课堂</span>
+        </div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">截止时间：Week 3 周五 11:59pm 提交 Moodle（只有一次机会，量完再提交）</div>
+          <div class="subtopic">Week 2 用具：Engineering rule、Vernier caliper、Height gauge、Micrometre</div>
+          <div class="subtopic">Week 3 用具：Radius gauge、Thread gauge、Feeler gauge、Surface finish comparator</div>
+          <div class="subtopic">Drop-in：Week 2 & 3 周五 4–6pm，Ainsworth 504</div>
+          <div class="subtopic">⚠️ 每人单独记录，可小组合量但答案要自己填；测量准确度影响分数</div>
+        </div>
+        <div style="margin:12px 0 6px;font-size:12px;font-weight:600;color:var(--text);letter-spacing:0.03em;">📋 需要现场量的尺寸（红框部分）</div>
+        <div style="background:var(--bg);border-radius:10px;padding:12px;font-size:13px;">
+          <div style="font-weight:600;color:var(--mman-color);margin-bottom:6px;">Component 100 · Base Plate</div>
+          <div style="color:var(--muted);padding:3px 0;">· T1 板厚 → 外爪</div>
+          <div style="font-weight:600;color:var(--mman-color);margin:10px 0 6px;">Component 101 · Lower Stamp（103 Upper Stamp 同尺寸）</div>
+          <div style="color:var(--muted);padding:3px 0;">· T2 厚度 → 外爪</div>
+          <div style="color:var(--muted);padding:3px 0;">· M螺纹规格（size × pitch）→ 螺距规确认螺距 + 卡尺量外径</div>
+          <div style="color:var(--muted);padding:3px 0;">· 螺纹深度 ▼ → 深度杆</div>
+          <div style="color:var(--muted);padding:3px 0;">· D1 = 70 − 50 = <strong style="color:var(--mman-color)">20mm</strong> ✅（计算得出，无需量）</div>
+          <div style="font-weight:600;color:var(--mman-color);margin:10px 0 6px;">Component 102 · Side Panel</div>
+          <div style="color:var(--muted);padding:3px 0;">· 小孔直径 Ø THRU → 内爪</div>
+          <div style="color:var(--muted);padding:3px 0;">· 沉头孔直径 ⌴Ø → 内爪（量沉头那层大孔）</div>
+          <div style="color:var(--muted);padding:3px 0;">· 沉头深度 ⌴▼ → 深度杆</div>
+          <div style="font-weight:600;color:var(--mman-color);margin:10px 0 6px;">Component 104 · Cam</div>
+          <div style="color:var(--muted);padding:3px 0;">· ØH1 大内孔直径 → 内爪</div>
+          <div style="font-weight:600;color:var(--mman-color);margin:10px 0 6px;">Component 105 · Lever</div>
+          <div style="color:var(--muted);padding:3px 0;">· L4 总长 → 外爪（或钢尺）</div>
+          <div style="color:var(--muted);padding:3px 0;">· ØS 轴径 → 外爪 / 千分尺</div>
+          <div style="color:var(--muted);padding:3px 0;">· 孔径 Ø THRU → 内爪</div>
+          <div style="color:var(--muted);padding:3px 0;">· 沉头孔径 ⌴Ø → 内爪</div>
+          <div style="color:var(--muted);padding:3px 0;">· 沉头深度 ⌴▼ → 深度杆</div>
+          <div style="font-weight:600;color:var(--mman-color);margin:10px 0 6px;">Component 106 · Axle</div>
+          <div style="color:var(--muted);padding:3px 0;">· ØH1 孔径 → 内爪</div>
+          <div style="color:var(--muted);padding:3px 0;">· L3 总长 → 外爪</div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--muted);">📌 每个尺寸量3次取平均；101和103同尺寸只需量一个；量完立刻记录，不要靠记忆</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-group">
+    <div class="group-label">测量工具与技术 Measurement Tools</div>
+
+    <div class="topic-card" id="tc-micrometer">
+      <div class="topic-header" onclick="toggleTopic('tc-micrometer')">
+        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">外径千分尺 Outside Micrometer</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">外径千分尺用于测外径/厚度/轴径，精度0.01mm，比游标卡尺（0.02mm）更高，但每把量程只有25mm（如0-25mm、25-50mm）</div>
+          <div class="subtopic">结构六部件：砧座（anvil）固定；测微螺杆（spindle）活动；套筒（sleeve）刻主刻度；套管（thimble）旋转刻25格；锁紧螺母（lock nut）；棘轮（ratchet）控制力度防过压</div>
+          <div class="subtopic">读数三步（0.01mm精度）：① 读套筒——水平线上方整数mm，再看水平线下方是否露出0.5mm格 ② 读套管——对齐水平线的格数 × 0.01mm ③ 相加。例：套筒7.5mm + 套管12格×0.01 = 7.62mm</div>
+          <div class="subtopic">使用步骤：① 棘轮打开比零件稍大 ② 零件放入砧座和螺杆之间 ③ 转棘轮（不转thimble）直到听到"咔"声停 ④ 锁紧读数</div>
+          <div class="subtopic">📌 归零检查（Zero Check）：两端闭合后读数应为0.00mm，不为零要调零或记录偏差后修正结果</div>
+          <div class="subtopic">❌ 常见错误：直接转thimble施力过大导致读数偏小；没归零检查；漏看套筒0.5mm刻线；零件倾斜放置</div>
+          <div class="subtopic">外径用千分尺（精度高），孔径/深度用游标卡尺内爪/深度杆，两者互补使用</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/results?search_query=how+to+read+micrometer+metric" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">How to Read a Micrometer (Metric)<span class="link-src">YouTube · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://search.bilibili.com/all?keyword=外径千分尺读数使用方法" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">外径千分尺使用与读数<span class="link-src">Bilibili · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-tolerance">
+      <div class="topic-header" onclick="toggleTopic('tc-tolerance')">
+        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">公差与配合 Tolerances & Fits</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">公差（Tolerance）= 允许的尺寸变动量，因为加工不可能绝对精确。公差 = 上偏差 − 下偏差，永远为正值</div>
+          <div class="subtopic">基本术语：公称尺寸（Nominal）= 图纸标注理论值；上偏差 = 最大允许值 − 公称值；下偏差 = 最小允许值 − 公称值。例：25⁺⁰·⁰²₋₀.₀₁ → 最大25.02，最小24.99，公差0.03mm</div>
+          <div class="subtopic">IT公差等级：IT1最精密 → IT18最粗糙；IT6/IT7用于精密配合面；IT11/IT12用于一般配合；IT14用于自由公差（粗加工）；等级数字越小公差带越窄要求越高</div>
+          <div class="subtopic">三种配合类型：间隙配合（Clearance fit）轴 < 孔，总有间隙，如 H7/g6；过渡配合（Transition fit）可能间隙可能过盈，如 H7/k6；过盈配合（Interference fit）轴 > 孔，需压入，如 H7/p6</div>
+          <div class="subtopic">基孔制（Hole basis）最常用：孔的下偏差固定为0（字母H），通过改变轴的公差带位置得到不同配合。读法 H7/g6：H7=基准孔（IT7级），g6=轴（负偏差，IT6级）→ 间隙配合</div>
+          <div class="subtopic">📌 常见配合速记：H7/f7 宽松间隙；H7/g6 小间隙精密滑动；H7/h6 最小间隙定位；H7/k6 过渡轻压；H7/p6 小过盈压配；H7/s6 大过盈紧压</div>
+          <div class="subtopic">自由公差（General Tolerance）：图纸标题栏注明 ISO 2768-f/m/c，未单独标注的尺寸自动套用。f=fine精，m=medium中，c=coarse粗</div>
+          <div class="subtopic">❌ 易混淆：公差永远是正数（范围大小）；偏差可正可负（偏移方向）；"公差0.02mm"不是指尺寸是0.02，而是上下限相差0.02mm</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/results?search_query=engineering+tolerances+fits+clearance+interference+ISO" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Tolerances & Fits Explained<span class="link-src">YouTube · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://search.bilibili.com/all?keyword=公差与配合 间隙配合 过盈配合" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">公差与配合详解<span class="link-src">Bilibili · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-measurement-concepts">
+      <div class="topic-header" onclick="toggleTopic('tc-measurement-concepts')">
+        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">测量概念与误差 Measurement Concepts</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">准确度（Accuracy）= 测量值与真实值的接近程度；精密度（Precision）= 多次测量结果的重复性。可以精密但不准确（系统偏差），也可以准确但不精密（每次结果不同）</div>
+          <div class="subtopic">分辨率（Resolution）= 仪器能读出的最小单位：钢尺 1mm；游标卡尺 0.02mm；数显卡尺/千分尺 0.01mm；分辨率越小仪器越精细</div>
+          <div class="subtopic">系统误差（Systematic Error）：方向固定、有规律，如仪器未归零、温度导致膨胀。可通过校准/归零消除</div>
+          <div class="subtopic">随机误差（Random Error）：每次测量随机波动，如读数判断不同、握力不稳。通过多次测量取平均值减小</div>
+          <div class="subtopic">视差误差（Parallax Error）：眼睛不垂直刻度线时产生。读游标卡尺时眼睛正对刻度线，不能斜看</div>
+          <div class="subtopic">Abbe 原理：测量轴线与被测尺寸应在同一直线，否则角度误差会放大。千分尺符合此原理；游标卡尺量程较大时略有偏差</div>
+          <div class="subtopic">标准测量温度为20°C，金属受热膨胀。精密测量前零件和量具需在同温环境放置一段时间使温度均匀</div>
+          <div class="subtopic">测量不确定度（Uncertainty）表示可信范围，如 25.34 ± 0.02mm；不确定度 ≥ 仪器分辨率的一半</div>
+          <div class="subtopic">📌 操作规范：测前清洁接触面；同位置量3次取平均；同时记录环境温度；量具用完归零存放</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/results?search_query=measurement accuracy precision error engineering" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Accuracy vs Precision & Measurement Error<span class="link-src">YouTube · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://search.bilibili.com/all?keyword=测量误差 准确度 精密度 工程测量" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">测量误差与精度概念<span class="link-src">Bilibili · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-surface-finish">
+      <div class="topic-header" onclick="toggleTopic('tc-surface-finish')">
+        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">表面粗糙度与螺纹测量 Surface Finish & Threads</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">表面粗糙度（Surface Roughness）用 Ra（算术平均粗糙度）表示，单位 μm（微米），Ra越小越光滑，加工成本越高</div>
+          <div class="subtopic">Ra 值范围参考：Ra 0.1–0.4μm 磨削研磨（镜面）；Ra 0.8–1.6μm 精车精铣（配合面）；Ra 3.2–6.3μm 普通车削（一般面）；Ra 12.5–25μm 粗加工/铸造面</div>
+          <div class="subtopic">图纸粗糙度符号：√ 旁标 Ra 值，如 √Ra 1.6；带圆圈的 √ 表示所有面统一粗糙度；括号里的是未标注面的默认值</div>
+          <div class="subtopic">螺距规（Thread Pitch Gauge）：一组刻有不同齿距的薄片，逐片插入螺纹，完全咬合无间隙的那片数值就是该螺纹的螺距</div>
+          <div class="subtopic">螺纹识别四步：① 螺距规确认螺距 ② 游标卡尺量外径（公称直径）③ 查对照表得完整规格 M直径×螺距 ④ 用标准螺栓/螺母试配最终确认</div>
+          <div class="subtopic">通止规（Go/No-Go Gauge）：检验孔/轴是否在公差范围的专用量具。Go端（通端）必须能通过；No-Go端（止端）不能通过。两个条件同时满足 = 合格</div>
+          <div class="subtopic">其他量具：钢直尺精度1mm量长度；组合角尺量90°/45°；量角器量任意角；百分表（Dial indicator）测圆度/平面度/跳动量</div>
+          <div class="subtopic">📌 量具保养：用后擦干净防锈；卡尺存放时两爪留微小间隙；千分尺两端留0.5mm间隙防热胀卡死；避免摔落碰撞</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/results?search_query=surface+roughness+Ra+engineering+drawing+thread+pitch+gauge" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Surface Finish & Thread Measurement<span class="link-src">YouTube · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://search.bilibili.com/all?keyword=表面粗糙度Ra 螺纹测量 通止规" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">表面粗糙度与螺纹测量<span class="link-src">Bilibili · 搜索结果</span></div>
             <span class="link-arrow">↗</span>
           </a>
         </div>
@@ -1095,13 +1354,16 @@
     calc: [
       { tag:"Ch1A", title:"多元函数 Functions of Several Variables", file:"Holzer_chap1A_1231_Calculus_2026.pdf",
         yt:"multivariable functions level curves partial derivatives", bili:"多元函数 偏导数 等高线",
-        points:["z = f(x,y) 表示 R³ 中的曲面，常见曲面（椭球面、抛物面、鞍面等）要会草图","等高线 level curve：F(x,y)=C 在 xy 平面上的曲线；剖面 profile：固定一个变量看 z 随另一变量变化","偏导数定义：固定其他变量，对单一变量求导，记号 ∂f/∂x、∂f/∂y","偏导数的几何意义：曲面沿坐标轴方向切线的斜率","高阶/混合偏导数：fxy、fyx，连续条件下两者相等","判断连续性的定理：F(x,y) 在 (a,b) 连续 ⇔ 沿任意路径趋近时极限相同"] },
+        mobius: true,
+        points:["偏导数定义：∂f/∂x 表示固定 y（及其他变量），仅对 x 求普通导数；∂f/∂y 同理固定 x 对 y 求导","偏导数几何意义：∂f/∂x 是曲面 z=f(x,y) 在该点沿 x 轴方向切线的斜率","Fact（线性函数速算）：F=ax+by+cz 的偏导数就是对应系数，∂F/∂x=a, ∂F/∂y=b, ∂F/∂z=c，直接读取，不需要计算","Fact（高阶混合偏导）：fxy = fyx，在函数连续可微的条件下混合偏导顺序可交换（Clairaut定理）","梯度定义：∇F = (∂F/∂x, ∂F/∂y, ∂F/∂z)，将各偏导排成向量","📌 核心考点：∇F 是隐曲面 F(x,y,z)=C 在该点的法向量（normal vector to the surface）","✅ 平面的法向量：ax+by+cz=d 的 ∇F=(a,b,c) 是常向量，在平面上每一点都相同","❌ 易错：一般曲面 G(x,y,z)=C（如 4x²+4z²=14）的 ∇G 含有 x,z，随点变化，不是常数","等高线 level curve：z=f(x,y) 中固定 z=C，得到 xy 平面上的曲线 f(x,y)=C","判断极限/连续性：F(x,y) 在某点连续 ⇔ 沿任意路径趋近时极限相同（不同路径极限不同 → 极限不存在）"] },
       { tag:"Ch1B", title:"全微分近似与链式法则", file:"Holzer_chap1B_1231_Calculus_2026.pdf",
         yt:"multivariable chain rule total differential", bili:"多元函数 全微分 链式法则",
-        points:["全微分近似：Δz ≈ fx·Δx + fy·Δy，用于估计函数值的微小变化/误差传播","链式法则（单参数）：z=z(x,y), x=x(t), y=y(t) ⇒ dz/dt = ∂z/∂x·dx/dt + ∂z/∂y·dy/dt","链式法则（多参数）：z=z(x,y), x=x(s,t), y=y(s,t) ⇒ ∂z/∂s、∂z/∂t 同理用树状图展开","注意：偏导数符号 ∂ 不能像普通分数一样约分/相除","三元及以上函数的偏导数与全微分推广（fx, fy, fz）","Maple Notes：用软件验证偏导数与近似计算结果"] },
+        mobius: true,
+        points:["全微分近似：Δz ≈ ∂z/∂x·Δx + ∂z/∂y·Δy，用于估计函数值变化量或误差传播","【链式法则公式（二元单参数）】dz/dt = ∂z/∂x · dx/dt + ∂z/∂y · dy/dt","【链式法则公式（三元单参数）】dF/dt = ∂F/∂x·dx/dt + ∂F/∂y·dy/dt + ∂F/∂z·dz/dt = ∇F · (dx/dt)","📌 解题三步：① 对 z=f(x,y,…) 求各偏导数 ② 对参数方程 x(t), y(t) 直接普通求导得 dx/dt, dy/dt ③ 代入链式法则公式展开，再把 x=x(t), y=y(t) 代入化简","📌 隐函数反解技巧：F(x,y,z)=C（C 为常数）两边对 t 求导 → dF/dt=0，展开后 dz/dt 是唯一未知量，可直接解出","📌 反解已知量技巧：已知曲面方程与各速度分量，代入链式法则展开式，可反解出未知坐标或导数","几何直觉：∇F 是曲面法向量，dx/dt 是曲面上运动曲线的切向量，两者垂直 → 点积 dF/dt=0","❌ 易错（符号）：d 用于单变量（如 dx/dt），∂ 用于多变量（如 ∂z/∂x），不可混用，考试中写错符号会扣分","❌ 易错（代入顺序）：先展开链式法则公式，再把 x(t), y(t) 代入化简，不能在代入前约分","📌 化简技巧：cos²t − sin²t = cos(2t)；出现 sin²t+cos²t 时整体等于 1；展开后优先尝试二倍角公式","链式法则（多参数）：z=z(x,y), x=x(s,t), y=y(s,t) ⇒ ∂z/∂s 和 ∂z/∂t 各用树状图展开，加上对应乘积"] },
       { tag:"Ch2A", title:"积分技巧 I：三角积分与还原公式", file:"Holzer_chap2A_1231_Calculus_2026.pdf",
         yt:"trigonometric integrals reduction formula trig substitution", bili:"三角函数积分 还原公式 三角换元",
-        points:["∫sinᵏx cosⁿx dx：根据 k、n 的奇偶性选择 u=cosx 或 u=sinx 换元","∫tanⁿx, ∫secⁿx 等的处理思路：用恒等式 1+tan²=sec² 拆分","还原公式 reduction formula：将 ∫fⁿ dx 用 ∫fⁿ⁻¹ 或 ∫fⁿ⁻² 表示，递推求解","双参数还原公式：形如 ∫sinᵃx cosᵇx dx 的递推关系","三角替换：x=a sinθ（处理√(a²−x²)）、x=a tanθ（处理 a²+x²）、x=a secθ（处理 x²−a²）","双曲替换：用 sinh、cosh 处理含 √(x²+a²) 或 √(x²−a²) 的积分"] },
+        mobius: true,
+        points:["【换元选择速查表】含 √(a²+x²) → x=a tan(u) 或 x=a sinh(u)；含 √(a²−x²) → x=a sin(u) 或 x=a tanh(u)；含 √(x²−a²) → x=a sec(u) 或 x=a cosh(u)","📌 圆三角换元四步：① 令 x=a·trig(u)，求 dx ② 代入被积式，用恒等式消根号（关键）③ 对 u 积分得结果 ④ 用直角三角形将 u 的结果回代成 x","📌 直角三角形回代法（以 x=a tan(u) 为例）：画直角三角形，对边=x, 邻边=a, 斜边=√(a²+x²)，由此直接读出 tan(u)=x/a, sec(u)=√(a²+x²)/a, sin(u)=x/√(a²+x²)","✅ 圆三角恒等式速查：1+tan²u = sec²u（消 √(a²+x²)）；1−sin²u = cos²u（消 √(a²−x²)）；sec²u−1 = tan²u（消 √(x²−a²)）","📌 双曲换元四步：① 令 x=a·sinh(u)（或 tanh/cosh），求 dx ② 用双曲恒等式消根号 ③ 对 u 积分 ④ 用反双曲函数回代","✅ 双曲恒等式速查：cosh²u − sinh²u = 1 → 1+sinh²u=cosh²u（消 √(a²+x²)）；1−tanh²u = sech²u（消 √(a²−x²)）","∫sech(u)du 方法①：令 t=eᵘ，sech(u)=2/(eᵘ+e⁻ᵘ)=2t/(t²+1)，化为 2∫1/(1+t²)dt = 2arctan(eᵘ)+C","∫sech(u)du 方法②：令 t=sinh(u)，dt=cosh(u)du，cosh²=1+t²，化为 ∫1/(1+t²)dt = arctan(sinh u)+C","❌ 易错（根号正负）：化简 √(cosh²u) = cosh(u)（cosh 恒正，直接取正）；√(cos²u) = |cos u|，需确认 u 范围使 cos u > 0","❌ 易错（回代遗漏）：用 u 表示的积分结果一定要回代成 x 的表达式，否则答题不完整","📌 Maple 语法速查：arcsinh(x), arctan(x), arcsin(x), arctanh(x), ln(abs(x)), sqrt(x), exp(x)；tan²(x) 写作 tan(x)^2","还原公式 reduction formula：∫sinⁿx dx 或 ∫secⁿx dx 等用递推式降次，常见于高次三角积分"] },
       { tag:"Ch2B", title:"积分技巧 II：有理函数与部分分式", file:"Holzer_chap2B_1231_Calculus_2026.pdf",
         yt:"partial fractions integration rational functions", bili:"部分分式分解 有理函数积分",
         points:["处理假分式：分子次数 ≥ 分母次数时先做多项式长除法","部分分式分解三种情形：不同线性因子、重复线性因子、不可约二次因子","Cover-Up Rule：针对不同线性因子，快速求出对应系数","重复因子 (x−a)ⁿ 需展开成 A₁/(x−a)+A₂/(x−a)²+...+Aₙ/(x−a)ⁿ","不可约二次因子 (x²+bx+c) 对应项形式为 (Ax+B)/(x²+bx+c)，配方后用反三角/对数积分","Further Substitution：Weierstrass 替换 t=tan(x/2) 处理三角函数有理式","Sample Class Test 例题：综合练习选择合适技巧的顺序"] },
@@ -1167,6 +1429,45 @@
         yt:"eigenvalues eigenvectors diagonalization", bili:"特征值 特征向量 对角化",
         points:["定义（矩阵版）：Av=λv（v≠0）时，λ 为特征值，v 为对应的特征向量","特征多项式：det(A−λI)=0，求解得到所有特征值 λ","求特征向量：将每个 λ 代入 (A−λI)v=0，解齐次方程组","Fact（特征值存在性）：在复数域上，n×n 矩阵至少有一个特征值（n 个，计重数）","Fact（特征向量独立性）：对应不同特征值的特征向量线性独立","对角化 Diagonalisation：若 A 有 n 个线性独立的特征向量，则 A=PDP⁻¹，其中 P 的列是特征向量，D 是以特征值为对角元的对角矩阵","对角化步骤：求特征值 → 求各特征值对应的特征向量（基） → 检查特征向量总数是否等于 n","应用：用特征值/特征向量求解一阶线性微分方程组 x'=Ax"] }
     ],
+    maple: [
+      { tag:"MapleW2-A", title:"函数定义与偏导数计算", file:"Holzer_chap1A_1231_Calculus_2026.pdf",
+        yt:"maple partial derivatives diff multivariable", bili:"Maple 偏导数 多元函数 diff",
+        mobius: true,
+        points:[
+          "【定义多元函数】用箭头算子 -> 定义，格式：(变量1, 变量2) -> 表达式（不写 f:= 开头，不写 ; 结尾）",
+          "🖥️ 指令：(x, y) -> 6*x^5*y^3*sin(9*x - y)",
+          "❌ 易错：乘法必须写 *，幂次必须写 ^，函数内部参数之间也要用 *，不可省略",
+          "【求符号偏导数】用 diff，变量顺序从右到左对应求导顺序（先写先求）",
+          "🖥️ 指令：diff(f(x,y), x, x, y)　　← 先对 x 求2次，再对 y 求1次（即 ∂³f/∂y∂x²）",
+          "🖥️ 简写：diff(f(x,y), x$2, y)　　← x$2 表示对 x 求2次，等价写法",
+          "📌 读题技巧：∂³f/∂y∂x² 分母从右往左读 → 先 x²（求2次x），再 y（求1次y）→ diff(..., x$2, y)",
+          "【求数值偏导数并指定精度】用 D 算子 + evalf，适合复杂函数在某点的高阶导数数值",
+          "🖥️ 指令：evalf(D[1$4, 2$3](f)(-2, -1), 10)",
+          "🖥️ 拆解：D[1$4, 2$3] = 对第1个变量(x)求4次、第2个变量(y)求3次；f(-2,-1) = 代入点；10 = 保留10位有效数字",
+          "📌 考点：10 significant figures 题型必须从 Maple 复制答案，Python 等工具最后1-2位可能不准确",
+          "❌ 易错：evalf 第二个参数是有效数字位数（significant figures），不是小数点后位数"
+        ]
+      },
+      { tag:"MapleW2-B", title:"最优化与三维图形识别", file:"Holzer_chap1A_1231_Calculus_2026.pdf",
+        yt:"maple plot3d 3d surface optimization multivariable", bili:"Maple 三维画图 plot3d 曲面识别 最优化",
+        mobius: true,
+        points:[
+          "【有界域求最值】给定各变量范围，分析每一项的单调性，在边界（角点）取极端值",
+          "📌 技巧：奇次幂（如 (x-y)⁷）符号由底数决定 → 最大化让底数最大，令 x 取最大值、y 取最小值",
+          "✅ 例：max of (x-y)⁷+z，x∈[0,5], y∈[0,5], z∈[0,18] → 令 x=5, y=0, z=18 → 5⁷+18 = 78143",
+          "【画三维曲面】用 plot3d，区间用两个点 .. 表示",
+          "🖥️ 指令：plot3d(x^2 + y^2, x=-3..3, y=-3..3)",
+          "❌ 易错：区间写 .. 不是 : 或 ,；函数里乘法要写 *",
+          "【五种曲面识别口诀】",
+          "📌 z=x²+y²（碗形 paraboloid）：全部≥0，原点最低，等高线是圆，光滑无尖角",
+          "📌 z=√(x²+y²)（锥形 cone）：原点有尖角不可微，z 轴截面是 V 形，等高线是圆",
+          "📌 z=x²-y²（马鞍形 saddle）：沿 x 方向向上抛物线，沿 y 方向向下抛物线，有正有负",
+          "📌 z=cos(x²+y²)（涟漪形）：z 在 [-1,1] 振荡，等高线是同心圆，图像有高低波浪",
+          "📌 z=x²y²（四角形）：坐标轴上 z=0，四个象限角高高翘起，z 全部≥0",
+          "❌ 易错：√ 和碗形等高线都是圆，区别在于 √ 原点有尖角，x²+y² 原点光滑且可微"
+        ]
+      }
+    ],
     prob: [
       { tag:"Sect11", title:"集合论、概率、条件概率与独立性", file:"MATH1231_ALG_2026T2-Sect11-SetsProbabilityCondProbIndep.pdf",
         yt:"probability conditional probability independence sets", bili:"概率 条件概率 独立事件 集合论",
@@ -1178,7 +1479,7 @@
   };
 
   function renderMathTopics() {
-    ['calc', 'alg', 'prob'].forEach(group => {
+    ['calc', 'alg', 'prob', 'maple'].forEach(group => {
       const container = document.getElementById(group + '-topics');
       if (!container) return;
       container.innerHTML = MATH_TOPICS[group].map(t => {
@@ -1215,6 +1516,8 @@
     });
   }
   renderMathTopics();
+  // Re-run after dynamic render
+  setTimeout(colorSubtopics, 0);
 
 
   // Checklist
@@ -1304,6 +1607,29 @@
     }).join('');
   }
   renderCountdown();
+
+  // Two-color subtopics: label on top line in course color, explanation below in muted
+  function colorSubtopics() {
+    const sections = [
+      { id: 'sec-math', color: 'var(--math-color)' },
+      { id: 'sec-mman', color: 'var(--mman-color)' },
+      { id: 'sec-engg', color: 'var(--engg-color)' }
+    ];
+    sections.forEach(({ id, color }) => {
+      document.querySelectorAll(`#${id} .subtopic`).forEach(el => {
+        if (el.dataset.colored) return;
+        el.dataset.colored = '1';
+        const html = el.innerHTML;
+        const idx = html.indexOf('：');
+        if (idx > 0 && idx < 80) {
+          el.innerHTML =
+            `<div><div style="color:${color};font-weight:600;margin-bottom:1px">${html.slice(0, idx + 1)}</div>` +
+            `<div style="color:var(--muted)">${html.slice(idx + 1)}</div></div>`;
+        }
+      });
+    });
+  }
+  colorSubtopics();
 </script>
 </body>
 </html>
