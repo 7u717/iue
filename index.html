@@ -185,11 +185,13 @@
     .math-dot { background: var(--math-color); }
     .mman-dot { background: var(--mman-color); }
     .engg-dot { background: var(--engg-color); }
-    .topic-title { font-size: 15px; font-weight: 600; min-width: 0; }
+    .topic-title { font-size: 15px; font-weight: 600; min-width: 0; flex: 1; }
+    .topic-side-tag,
     .mman-topic-tag {
       font-size:11px;font-weight:600;background:rgba(110,231,183,0.12);color:#6EE7B7;
       border-radius:6px;padding:2px 8px;margin-left:auto;flex-shrink:0;
     }
+    .topic-side-tag { background:#102538;color:#93a8ba; }
     .topic-chevron { color: var(--dim); font-size: 11px; transition: transform .2s; flex-shrink: 0; }
     .topic-card.open .topic-chevron { transform: rotate(180deg); }
     .topic-body { display: none; padding: 0 18px 18px; }
@@ -1766,17 +1768,17 @@
     if (nextIndex < 0 || nextIndex >= COURSE_SWIPE_ORDER.length) return;
     suppressNextSwipeClick = true;
     if (swipeActiveSection) {
-      swipeActiveSection.style.transition = 'transform .14s ease, opacity .14s ease';
-      swipeActiveSection.style.transform = 'translateX(calc(-50% + ' + (direction < 0 ? 70 : -70) + 'px))';
-      swipeActiveSection.style.opacity = '.82';
+      swipeActiveSection.style.transition = 'transform .22s cubic-bezier(.2,.8,.2,1), opacity .22s ease';
+      swipeActiveSection.style.transform = 'translateX(calc(-50% + ' + (direction < 0 ? 92 : -92) + 'px))';
+      swipeActiveSection.style.opacity = '.78';
     }
-    setTimeout(function(){ showCourse(COURSE_SWIPE_ORDER[nextIndex]); }, 90);
-    setTimeout(function(){ suppressNextSwipeClick = false; }, 450);
+    setTimeout(function(){ showCourse(COURSE_SWIPE_ORDER[nextIndex]); }, 120);
+    setTimeout(function(){ suppressNextSwipeClick = false; }, 380);
   }
 
   function resetSwipeVisual() {
     if (!swipeActiveSection) return;
-    swipeActiveSection.style.transition = 'transform .16s ease, opacity .16s ease';
+    swipeActiveSection.style.transition = 'transform .22s cubic-bezier(.2,.8,.2,1), opacity .18s ease';
     swipeActiveSection.style.transform = '';
     swipeActiveSection.style.opacity = '';
     swipeActiveSection = null;
@@ -1802,10 +1804,10 @@
     if (!swipeStartCourse || !swipeActiveSection || !e.touches || e.touches.length !== 1) return;
     var dx = e.touches[0].clientX - swipeStartX;
     var dy = e.touches[0].clientY - swipeStartY;
-    if (!swipeHorizontal && Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.15) swipeHorizontal = true;
+    if (!swipeHorizontal && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.08) swipeHorizontal = true;
     if (!swipeHorizontal) return;
     e.preventDefault();
-    var limited = Math.max(-54, Math.min(54, dx * 0.28));
+    var limited = Math.max(-78, Math.min(78, dx * 0.42));
     swipeActiveSection.style.transition = 'none';
     swipeActiveSection.style.transform = 'translateX(calc(-50% + ' + limited.toFixed(1) + 'px))';
   }, { passive: false });
@@ -1814,7 +1816,7 @@
     if (!swipeStartCourse || !e.changedTouches || e.changedTouches.length !== 1) return;
     var dx = e.changedTouches[0].clientX - swipeStartX;
     var dy = e.changedTouches[0].clientY - swipeStartY;
-    var shouldSwipe = Math.abs(dx) >= 48 && Math.abs(dx) > Math.abs(dy) * 1.18;
+    var shouldSwipe = Math.abs(dx) >= 42 && Math.abs(dx) > Math.abs(dy) * 1.08;
     if (shouldSwipe) showSwipeCourse(dx < 0 ? 1 : -1);
     else resetSwipeVisual();
     swipeStartCourse = null;
@@ -1833,7 +1835,7 @@
     if (!swipeStartCourse) return;
     var dx = e.clientX - swipeStartX;
     var dy = e.clientY - swipeStartY;
-    var shouldSwipe = Math.abs(dx) >= 48 && Math.abs(dx) > Math.abs(dy) * 1.18;
+    var shouldSwipe = Math.abs(dx) >= 42 && Math.abs(dx) > Math.abs(dy) * 1.08;
     if (shouldSwipe) showSwipeCourse(dx < 0 ? 1 : -1);
     else resetSwipeVisual();
     swipeStartCourse = null;
@@ -1985,7 +1987,7 @@
         t.points.forEach(function(p){ pointsHtml += '<div class="subtopic">' + p + '</div>'; });
         var ytUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(t.yt || t.title);
         var biliUrl = 'https://search.bilibili.com/all?keyword=' + encodeURIComponent(t.bili || t.title);
-        var mobiusTag = t.mobius ? '<span style="font-size:11px;font-weight:600;background:#1a2a3a;color:#71767b;border-radius:6px;padding:2px 8px;margin-left:6px;flex-shrink:0;">📝 Möbius Week 2</span>' : '';
+        var mobiusTag = t.mobius ? '<span class="topic-side-tag">📝 Möbius Week 2</span>' : '';
         html += '<div class="topic-card" id="' + id + '">';
         html += '<div class="topic-header" onclick="toggleTopic(\'' + id + '\')">';
         html += '<div class="topic-left"><div class="topic-dot math-dot"></div><span class="topic-tag">' + t.tag + '</span><div class="topic-title">' + t.title + '</div>' + mobiusTag + '</div>';
