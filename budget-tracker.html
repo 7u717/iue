@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>💳 Budget Tracker</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#000;--surface:#16181C;--surface2:#1C1F23;
+  --border:#2F3336;--border2:#3E4347;
+  --text:#E7E9EA;--text2:#71767B;
+  --blue:#1D9BF0;--green:#00BA7C;--red:#F4212E;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}
+#app{max-width:600px;margin:0 auto;min-height:100vh}
+.page{display:none;padding:16px 16px 100px}
+.page.active{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+
+/* ── Header ── */
+.header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 0}
+.logo{font-size:18px;font-weight:700}
+.hcycle{text-align:right;font-size:12px;color:var(--text2)}
+.hdays{color:var(--blue);font-weight:600;font-size:13px;margin-top:1px}
+
+/* ── Cards ── */
+.card{background:var(--surface);border:.5px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px}
+.label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.big{font-size:44px;font-weight:500;letter-spacing:-1.5px;line-height:1;margin-bottom:16px}
+.pbg{background:var(--border);border-radius:99px;height:5px}
+.pfill{height:5px;border-radius:99px;transition:width .5s}
+.meta{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-top:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+
+/* ── SMS paste area ── */
+.sms-card{
+  background:var(--surface);border:.5px solid var(--border2);border-radius:16px;
+  padding:16px;margin-bottom:16px;position:relative;
+}
+.sms-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sms-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);
+  box-shadow:0 0 6px var(--blue);flex-shrink:0}
+.sms-title{font-size:14px;font-weight:600}
+.sms-badge{margin-left:auto;background:rgba(29,155,240,.12);border:.5px solid rgba(29,155,240,.3);
+  border-radius:99px;padding:2px 9px;font-size:11px;color:var(--blue);font-weight:500}
+.sms-textarea{
+  width:100%;background:var(--surface2);border:.5px solid var(--border2);border-radius:12px;
+  padding:12px;color:var(--text);font-size:13px;font-family:inherit;
+  resize:none;outline:none;line-height:1.5;min-height:80px;
+  -webkit-appearance:none;
+}
+.sms-textarea::placeholder{color:var(--text2)}
+.sms-textarea:focus{border-color:var(--green)}
+
+/* Parsed result pill */
+.parsed-result{
+  display:none;margin-top:10px;background:rgba(0,186,124,.08);
+  border:.5px solid rgba(0,186,124,.25);border-radius:12px;
+  padding:12px 14px;animation:slideDown .2s ease;
+}
+.parsed-result.show{display:block}
+.parsed-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:3px 0}
+.parsed-key{color:var(--text2)}
+.parsed-val{font-weight:500;color:var(--green)}
+.parsed-use-btn{
+  width:100%;margin-top:10px;padding:10px;border-radius:99px;border:none;
+  background:var(--green);color:#fff;font-size:14px;font-weight:700;
+  cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;
+  animation:pop .3s ease;
+}
+
+/* Divider */
+.divider{display:flex;align-items:center;gap:10px;margin:18px 0 14px;color:var(--text2);font-size:12px}
+.divider::before,.divider::after{content:'';flex:1;height:.5px;background:var(--border)}
+
+/* ── Form ── */
+.ptitle{font-size:20px;font-weight:700;margin-bottom:18px}
+.fg{margin-bottom:14px}
+.fl{font-size:13px;color:var(--text2);display:block;margin-bottom:6px}
+.field{width:100%;background:var(--surface);border:.5px solid var(--border2);border-radius:12px;
+  padding:12px 14px;color:var(--text);font-size:14px;font-family:inherit;
+  outline:none;-webkit-appearance:none;appearance:none}
+.field:focus{border-color:var(--blue)}
+.awrap{position:relative}
+.asign{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:18px;pointer-events:none}
+input[type=number].field{padding-left:26px;font-size:24px;font-weight:500}
+input[type=date]{color-scheme:dark}
+
+/* Category grid */
+.catgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.catitem{text-align:center;padding:10px 4px;border-radius:12px;cursor:pointer;
+  border:.5px solid var(--border);background:var(--surface);
+  -webkit-tap-highlight-color:transparent;transition:all .15s}
+
+/* Add button */
+.addbtn{width:100%;padding:15px;border-radius:99px;border:none;font-size:16px;
+  font-weight:700;cursor:pointer;font-family:inherit;color:#fff;background:var(--blue);
+  -webkit-tap-highlight-color:transparent;margin-top:6px}
+.addbtn:disabled{background:var(--surface);color:var(--text2)}
+
+/* Savings */
+.sgrow{background:var(--surface);border:.5px solid var(--border);border-radius:12px;
+  padding:13px 16px;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sginput{width:80px;background:var(--surface2);border:.5px solid var(--border2);border-radius:8px;
+  padding:6px 10px;color:var(--text);font-size:15px;font-weight:500;text-align:right;
+  font-family:inherit;outline:none;-webkit-appearance:none}
+.sginput:focus{border-color:var(--green)}
+
+/* Transactions */
+.txrow{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:.5px solid var(--border)}
+.txicon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.txname{font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.txsub{font-size:12px;color:var(--text2);margin-top:2px}
+.txamt{font-size:14px;font-weight:500;color:var(--red);flex-shrink:0}
+.delbtn{background:none;border:none;font-size:17px;cursor:pointer;padding:4px 6px;flex-shrink:0;opacity:.4;-webkit-tap-highlight-color:transparent}
+.empty{color:var(--text2);text-align:center;padding:40px 0;font-size:14px}
+.stitle{font-size:15px;font-weight:600;margin-bottom:10px;margin-top:4px}
+.leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px}
+.legi{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text2)}
+.legdot{width:8px;height:8px;border-radius:2px;display:inline-block;flex-shrink:0}
+
+/* ── Bottom nav — Home | FAB | Stats ── */
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:600px;
+  background:rgba(0,0,0,.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-top:.5px solid var(--border);display:flex;align-items:center;z-index:100;
+  padding-bottom:env(safe-area-inset-bottom,0);height:68px}
+.nbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:10px 8px;background:none;border:none;cursor:pointer;
+  color:var(--text2);font-family:inherit;-webkit-tap-highlight-color:transparent}
+.nbtn.active .nlbl{color:var(--blue);font-weight:600}
+.nicon{font-size:22px}.nlbl{font-size:10px}
+.fab-wrap{flex:1;display:flex;justify-content:center;align-items:center}
+.fab{width:58px;height:58px;border-radius:50%;background:var(--blue);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:30px;color:#fff;font-weight:300;
+  margin-top:-22px;line-height:1;
+  box-shadow:0 0 0 5px rgba(0,0,0,.92),0 4px 16px rgba(29,155,240,.45);
+  -webkit-tap-highlight-color:transparent;transition:transform .1s}
+.fab:active{transform:scale(.92)}
+
+::-webkit-scrollbar{display:none}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div class="logo">💳 Budget</div>
+    <div class="hcycle">
+      <div id="cy-range">—</div>
+      <div class="hdays" id="cy-days">—</div>
+    </div>
+  </div>
+
+  <!-- ══ HOME ══ -->
+  <div class="page active" id="page-home">
+    <div class="card">
+      <div class="label">Remaining budget</div>
+      <div class="big" id="h-rem">$0.00</div>
+      <div class="pbg"><div class="pfill" id="h-prog" style="width:0%"></div></div>
+      <div class="meta">
+        <span>Spent <span id="h-spent">$0.00</span></span>
+        <span id="h-pct">0%</span>
+        <span>Limit $2,500</span>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0;border-radius:14px">
+        <div class="label">Daily free</div>
+        <div class="big" style="font-size:28px;margin-bottom:4px" id="h-dfr">$0.00</div>
+        <div style="font-size:11px;color:var(--text2)">no savings target</div>
+      </div>
+      <div class="card" style="margin-bottom:0;border-radius:14px">
+        <div class="label" id="h-slbl">Save $1000</div>
+        <div class="big" style="font-size:28px;margin-bottom:4px" id="h-dsv">$0.00</div>
+        <div style="font-size:11px;color:var(--text2)" id="h-snote">per day to hit goal</div>
+      </div>
+    </div>
+    <div class="sgrow">
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:500;margin-bottom:2px">Savings goal</div>
+        <div style="font-size:12px;color:var(--text2)">Target for this cycle</div>
+      </div>
+      <span style="font-size:15px;color:var(--text2)">$</span>
+      <input type="number" class="sginput" id="sg-in" value="1000" oninput="onSg(this.value)">
+    </div>
+    <div class="stitle">Recent transactions</div>
+    <div id="h-txs"></div>
+  </div>
+
+  <!-- ══ ADD ══ -->
+  <div class="page" id="page-add">
+    <div class="ptitle">Add expense</div>
+
+    <!-- SMS paste card -->
+    <div class="sms-card">
+      <div class="sms-header">
+        <div class="sms-dot"></div>
+        <div class="sms-title">95566 短信解析</div>
+        <div class="sms-badge">自动识别</div>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:10px">
+        收到招商银行扣款短信后，长按复制 → 粘贴到这里，自动填写金额和商家
+      </div>
+      <textarea class="sms-textarea" id="sms-input" placeholder="粘贴 95566 短信内容到这里…" oninput="onSmsInput(this.value)" onpaste="setTimeout(()=>onSmsInput(this.value),50)"></textarea>
+      <div class="parsed-result" id="parsed-result">
+        <div class="parsed-row"><span class="parsed-key">💰 金额</span><span class="parsed-val" id="pr-amt">—</span></div>
+        <div class="parsed-row"><span class="parsed-key">🏪 商家</span><span class="parsed-val" id="pr-merchant">—</span></div>
+        <div class="parsed-row"><span class="parsed-key">📅 日期</span><span class="parsed-val" id="pr-date">—</span></div>
+        <div class="parsed-row"><span class="parsed-key">🏷️ 分类</span><span class="parsed-val" id="pr-cat">—</span></div>
+        <button class="parsed-use-btn" onclick="applyParsed()">✓ 确认添加这笔消费</button>
+      </div>
+    </div>
+
+    <div class="divider">或者手动填写</div>
+
+    <div class="fg">
+      <label class="fl">Amount (AUD / RMB)</label>
+      <div class="awrap">
+        <span class="asign" id="cur-sign">$</span>
+        <input type="number" class="field" id="f-amt" placeholder="0.00" step="0.01" min="0">
+      </div>
+    </div>
+    <div class="fg">
+      <label class="fl">Description</label>
+      <input type="text" class="field" id="f-dsc" placeholder="e.g. Woolworths groceries">
+    </div>
+    <div class="fg">
+      <label class="fl">Category</label>
+      <div class="catgrid" id="catgrid"></div>
+    </div>
+    <div class="fg">
+      <label class="fl">Date</label>
+      <input type="date" class="field" id="f-dt">
+    </div>
+    <button class="addbtn" id="addbtn" onclick="doAdd()">Add expense</button>
+
+    <div style="margin-top:28px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:15px;font-weight:600">All transactions</div>
+        <div style="font-size:13px;color:var(--text2)" id="hist-cnt">0 total</div>
+      </div>
+      <div id="hist-list"></div>
+    </div>
+  </div>
+
+  <!-- ══ STATS ══ -->
+  <div class="page" id="page-stats">
+    <div class="ptitle">Statistics</div>
+    <div class="grid3" id="s-cards"></div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:13px;font-weight:500">Cycle progress</span>
+        <span style="font-size:13px;font-weight:600" id="s-pct">0%</span>
+      </div>
+      <div class="pbg" style="height:8px"><div class="pfill" id="s-prog" style="height:8px;width:0%"></div></div>
+      <div class="meta" id="s-meta"></div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:12px">Daily spending</div>
+      <div style="position:relative;height:180px">
+        <canvas id="ch-daily" role="img" aria-label="Daily spending bar chart">Daily spending.</canvas>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:20px">
+      <div style="font-size:13px;font-weight:500;margin-bottom:10px">By category</div>
+      <div id="ch-cat-wrap">
+        <div style="position:relative;height:160px">
+          <canvas id="ch-cat" role="img" aria-label="Category donut chart">Category breakdown.</canvas>
+        </div>
+        <div class="leg" id="ch-leg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ NAV ══ -->
+  <nav>
+    <button class="nbtn active" id="nb-home" onclick="goTab('home')">
+      <span class="nicon">🏠</span><span class="nlbl">Home</span>
+    </button>
+    <div class="fab-wrap">
+      <button class="fab" onclick="goTab('add')" aria-label="Add expense">+</button>
+    </div>
+    <button class="nbtn" id="nb-stats" onclick="goTab('stats')">
+      <span class="nicon">📊</span><span class="nlbl">Stats</span>
+    </button>
+  </nav>
+</div>
+
+<script>
+const BUDGET=2500,CDAY=28;
+const CATS=[
+  {name:"Food",      icon:"🍔",color:"#FF6B35"},
+  {name:"Transport", icon:"🚗",color:"#4ECDC4"},
+  {name:"Shopping",  icon:"🛍️",color:"#A855F7"},
+  {name:"Entertain", icon:"🎮",color:"#F59E0B"},
+  {name:"Health",    icon:"💊",color:"#10B981"},
+  {name:"Education", icon:"📚",color:"#3B82F6"},
+  {name:"Bills",     icon:"📱",color:"#EF4444"},
+  {name:"Other",     icon:"💰",color:"#6B7280"},
+];
+
+let txs=[],sg=1000,selCat="Food";
+let chDaily=null,chCat=null,parsedData=null;
+
+try{txs=JSON.parse(localStorage.getItem("bt_txs")||"[]");}catch{}
+try{sg=parseFloat(localStorage.getItem("bt_sg")||"1000");}catch{}
+
+const save=()=>localStorage.setItem("bt_txs",JSON.stringify(txs));
+const savesg=v=>localStorage.setItem("bt_sg",v);
+const fmt=n=>Math.abs(parseFloat(n)).toFixed(2);
+const fmtD=s=>new Date(s+"T00:00:00").toLocaleDateString("en-AU",{month:"short",day:"numeric"});
+const today=()=>new Date().toISOString().split("T")[0];
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+// ── 95566 招行短信解析 ──────────────────────────────────
+function parseSMS(text) {
+  const result = { amount: null, description: '', date: null, category: 'Other', currency: 'AUD' };
+  if (!text || text.length < 10) return null;
+
+  // ① AUD / foreign currency amount (优先，因为用户在澳洲)
+  let m = text.match(/AUD\s*([\d,]+\.?\d*)/i)
+           || text.match(/澳[元币]\s*([\d,]+\.?\d*)/);
+  if (m) {
+    result.amount = parseFloat(m[1].replace(/,/g,''));
+    result.currency = 'AUD';
+  }
+
+  // ② RMB / 人民币 amount (fallback)
+  if (!result.amount) {
+    m = text.match(/人民币([\d,]+\.?\d*)[元]/)
+      || text.match(/RMB\s*([\d,]+\.?\d*)/i)
+      || text.match(/¥\s*([\d,]+\.?\d*)/)
+      || text.match(/金额[为：:\s]*([\d,]+\.?\d*)/)
+      || text.match(/消费\s*([\d,]+\.?\d*)\s*元/)
+      || text.match(/扣款\s*([\d,]+\.?\d*)/);
+    if (m) { result.amount = parseFloat(m[1].replace(/,/g,'')); result.currency = 'RMB'; }
+  }
+
+  if (!result.amount || result.amount <= 0) return null;
+
+  // ③ Merchant / 商家
+  m = text.match(/在([^，,。\n]{1,40}?)消费/)
+    || text.match(/于.{0,30}?在([^，,。\n]{1,40}?)完成/)
+    || text.match(/商户[名称]*[：:]\s*([^，,。\n]{1,40})/)
+    || text.match(/POS机[^，]*?([A-Za-z0-9\u4e00-\u9fa5 ]{2,30})/);
+  if (m) result.description = m[1].trim().replace(/^\s+|\s+$/g,'');
+
+  // ④ Date 日期
+  const now = new Date();
+  m = text.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/)
+    || text.match(/(\d{1,2})月(\d{1,2})日/)
+    || text.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+  if (m) {
+    let y = now.getFullYear(), mo, day;
+    if (m.length === 4 && m[1].length === 4) { y=parseInt(m[1]); mo=m[2]; day=m[3]; }
+    else if (m.length === 4) { mo=m[1]; day=m[2]; }  // could be DD/MM/YYYY
+    else { mo=m[1]; day=m[2]; }
+    result.date = `${y}-${String(mo).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+  } else {
+    result.date = today();
+  }
+
+  // ⑤ Auto-categorise based on merchant
+  const ml = result.description.toLowerCase();
+  if (/woolworth|coles|aldi|iga|kfc|mcd|burger|pizza|cafe|restaurant|sushi|noodle|food|超市|餐|饭|奶茶|外卖|麦当劳|肯德基|subway|hungry|uber.eat|doordash/.test(ml))
+    result.category='Food';
+  else if (/uber|taxi|ola|didi|bus|train|ferry|metro|opal|transit|petrol|bp|shell|caltex|transport|地铁|出租|滴滴|加油/.test(ml))
+    result.category='Transport';
+  else if (/amazon|taobao|tmall|jd\.|ebay|cotton|zara|h&m|uniqlo|target|kmart|david|myer|shopping|shop|mall|store/.test(ml))
+    result.category='Shopping';
+  else if (/cinema|hoyts|village|netflix|spotify|steam|game|entertainment|ktv|娱乐|电影/.test(ml))
+    result.category='Entertain';
+  else if (/hospital|clinic|chemist|pharmacy|doctor|health|医院|药/.test(ml))
+    result.category='Health';
+  else if (/unsw|university|tafe|school|tuition|education|学|书/.test(ml))
+    result.category='Education';
+  else if (/water|electric|gas|internet|phone|telstra|optus|vodafone|utility|bill|账单/.test(ml))
+    result.category='Bills';
+
+  return result;
+}
+
+// ── SMS input handler ─────────────────────────────────────
+function onSmsInput(val) {
+  const resultEl = document.getElementById('parsed-result');
+  if (!val.trim()) { resultEl.classList.remove('show'); parsedData=null; return; }
+
+  const p = parseSMS(val);
+  if (!p) { resultEl.classList.remove('show'); parsedData=null; return; }
+
+  parsedData = p;
+  const sign = p.currency==='AUD'?'AUD $':'RMB ¥';
+  document.getElementById('pr-amt').textContent = sign + fmt(p.amount);
+  document.getElementById('pr-merchant').textContent = p.description || '（未识别）';
+  document.getElementById('pr-date').textContent = p.date ? fmtD(p.date) : '今天';
+  document.getElementById('pr-cat').textContent = CATS.find(c=>c.name===p.category)?.icon + ' ' + p.category;
+  resultEl.classList.add('show');
+}
+
+// Apply parsed SMS data → add transaction directly
+function applyParsed() {
+  if (!parsedData || !parsedData.amount) return;
+  txs.unshift({
+    id: Date.now(),
+    amount: parsedData.amount,
+    description: parsedData.description || '招行扣款',
+    category: parsedData.category,
+    date: parsedData.date || today(),
+    currency: parsedData.currency
+  });
+  save();
+  // Clear SMS field
+  document.getElementById('sms-input').value='';
+  document.getElementById('parsed-result').classList.remove('show');
+  parsedData=null;
+  renderHistInline();
+  renderHome();
+  // Quick feedback
+  const btn=document.querySelector('.parsed-use-btn');
+  if(btn){btn.textContent='✓ Added!';setTimeout(()=>{btn.textContent='✓ 确认添加这笔消费';},1200);}
+}
+
+// ── Cycle ─────────────────────────────────────────────────
+function cycle(){
+  const now=new Date();now.setHours(0,0,0,0);
+  const d=now.getDate(),y=now.getFullYear(),m=now.getMonth();
+  const start=d>=CDAY?new Date(y,m,CDAY):new Date(y,m-1,CDAY);
+  const end=new Date(start);end.setMonth(end.getMonth()+1);
+  const total=Math.round((end-start)/864e5);
+  const left=Math.round((end-now)/864e5);
+  return{start,end,total,left,passed:total-left};
+}
+function updateHeader(cy){
+  const f=d=>d.toLocaleDateString("en-AU",{month:"short",day:"numeric"});
+  document.getElementById("cy-range").textContent=f(cy.start)+" – "+f(cy.end);
+  document.getElementById("cy-days").textContent=cy.left+" days left";
+}
+
+// ── Category grid ─────────────────────────────────────────
+function renderCats(){
+  document.getElementById("catgrid").innerHTML=CATS.map(c=>`
+    <div class="catitem" onclick="pickCat('${c.name}')"
+      style="${selCat===c.name?`background:${c.color}22;border:.5px solid ${c.color}88`:""}">
+      <div style="font-size:22px">${c.icon}</div>
+      <div style="font-size:10px;margin-top:3px;color:${selCat===c.name?c.color:"var(--text2)"}">${c.name}</div>
+    </div>`).join("");
+}
+function pickCat(n){selCat=n;renderCats();}
+
+// ── Tab nav ───────────────────────────────────────────────
+function goTab(name){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nbtn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("page-"+name).classList.add("active");
+  if(document.getElementById("nb-"+name)) document.getElementById("nb-"+name).classList.add("active");
+  if(name==="home")renderHome();
+  if(name==="stats")renderStats();
+  if(name==="add")initAdd();
+  window.scrollTo(0,0);
+}
+function initAdd(){
+  document.getElementById("f-amt").value="";
+  document.getElementById("f-dsc").value="";
+  document.getElementById("f-dt").value=today();
+  document.getElementById("addbtn").disabled=false;
+  document.getElementById("addbtn").textContent="Add expense";
+  selCat="Food";renderCats();renderHistInline();
+}
+
+// ── Home ──────────────────────────────────────────────────
+function renderHome(){
+  const cy=cycle();updateHeader(cy);
+  const ctxs=txs.filter(t=>{const d=new Date(t.date+"T00:00:00");return d>=cy.start&&d<cy.end;});
+  const spent=ctxs.reduce((s,t)=>s+t.amount,0);
+  const rem=BUDGET-spent,dl=Math.max(cy.left,1);
+  const dfr=rem/dl,dsv=(rem-sg)/dl;
+  const pct=Math.min((spent/BUDGET)*100,100);
+  const pc=pct>90?"#F4212E":pct>70?"#F59E0B":"#1D9BF0";
+
+  const rEl=document.getElementById("h-rem");
+  rEl.textContent=(rem<0?"-":"")+"$"+fmt(rem);
+  rEl.style.color=rem<0?"#F4212E":"#E7E9EA";
+  document.getElementById("h-prog").style.cssText=`width:${pct}%;background:${pc}`;
+  document.getElementById("h-spent").textContent="$"+fmt(spent);
+  document.getElementById("h-pct").textContent=pct.toFixed(0)+"%";
+
+  const frEl=document.getElementById("h-dfr");
+  frEl.textContent="$"+fmt(Math.max(dfr,0));frEl.style.color=dfr<0?"#F4212E":"#1D9BF0";
+  const svEl=document.getElementById("h-dsv");
+  svEl.textContent="$"+fmt(Math.max(dsv,0));svEl.style.color=dsv<0?"#F4212E":"#00BA7C";
+  document.getElementById("h-slbl").textContent="Save $"+(sg|0);
+  document.getElementById("h-snote").textContent=dsv<0?"⚠ goal unreachable":"per day to hit goal";
+  document.getElementById("sg-in").value=sg;
+
+  const el=document.getElementById("h-txs");
+  el.innerHTML=ctxs.length===0
+    ?'<div class="empty">No expenses yet this cycle 🎉</div>'
+    :ctxs.slice(0,8).map(t=>{
+        const c=CATS.find(x=>x.name===t.category)||CATS[7];
+        const cur=t.currency==='RMB'?'¥':'$';
+        return`<div class="txrow">
+          <div class="txicon" style="background:${c.color}22">${c.icon}</div>
+          <div style="flex:1;min-width:0">
+            <div class="txname">${esc(t.description)}</div>
+            <div class="txsub">${t.category} · ${fmtD(t.date)}</div>
+          </div>
+          <span class="txamt">-${cur}${fmt(t.amount)}</span>
+        </div>`;
+      }).join("");
+}
+function onSg(v){sg=parseFloat(v)||0;savesg(sg);renderHome();}
+
+// ── History inline ────────────────────────────────────────
+function renderHistInline(){
+  const cy=cycle();
+  const inCy=new Set(txs.filter(t=>{const d=new Date(t.date+"T00:00:00");return d>=cy.start&&d<cy.end;}).map(t=>t.id));
+  document.getElementById("hist-cnt").textContent=txs.length+" total";
+  const el=document.getElementById("hist-list");
+  el.innerHTML=txs.length===0
+    ?'<div class="empty">No transactions yet</div>'
+    :txs.map(t=>{
+        const c=CATS.find(x=>x.name===t.category)||CATS[7];
+        const cur=t.currency==='RMB'?'¥':'$';
+        return`<div class="txrow">
+          <div class="txicon" style="background:${c.color}22">${c.icon}</div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:6px;min-width:0">
+              <div class="txname">${esc(t.description)}</div>
+              ${!inCy.has(t.id)?'<span style="font-size:10px;background:var(--surface2);color:var(--text2);border-radius:4px;padding:1px 5px;flex-shrink:0">prev</span>':''}
+            </div>
+            <div class="txsub">${t.category} · ${fmtD(t.date)}</div>
+          </div>
+          <span class="txamt">-${cur}${fmt(t.amount)}</span>
+          <button class="delbtn" onclick="delTx(${t.id})">🗑</button>
+        </div>`;
+      }).join("");
+}
+function delTx(id){txs=txs.filter(t=>t.id!==id);save();renderHistInline();renderHome();}
+
+// ── Manual add ────────────────────────────────────────────
+function doAdd(){
+  const a=parseFloat(document.getElementById("f-amt").value);
+  if(!a||a<=0)return;
+  txs.unshift({id:Date.now(),amount:a,
+    description:document.getElementById("f-dsc").value||"Expense",
+    category:selCat,date:document.getElementById("f-dt").value||today()});
+  save();
+  document.getElementById("f-amt").value="";
+  document.getElementById("f-dsc").value="";
+  document.getElementById("f-dt").value=today();
+  selCat="Food";renderCats();renderHistInline();renderHome();
+  window.scrollTo(0,0);
+}
+
+// ── Stats ─────────────────────────────────────────────────
+function renderStats(){
+  const cy=cycle();updateHeader(cy);
+  const ctxs=txs.filter(t=>{const d=new Date(t.date+"T00:00:00");return d>=cy.start&&d<cy.end;});
+  const spent=ctxs.reduce((s,t)=>s+t.amount,0);
+  const rem=BUDGET-spent;
+  const pct=Math.min((spent/BUDGET)*100,100);
+  const pc=pct>90?"#F4212E":pct>70?"#F59E0B":"#1D9BF0";
+
+  document.getElementById("s-cards").innerHTML=[
+    {l:"Spent",v:"$"+fmt(spent),c:"#F4212E"},
+    {l:"Left",v:"$"+fmt(Math.max(rem,0)),c:"#1D9BF0"},
+    {l:"Count",v:ctxs.length,c:"#A855F7"},
+  ].map(s=>`<div class="card" style="margin-bottom:0;border-radius:14px;text-align:center">
+    <div style="font-size:22px;font-weight:500;margin-bottom:3px;color:${s.c}">${s.v}</div>
+    <div style="font-size:11px;color:var(--text2)">${s.l}</div>
+  </div>`).join("");
+
+  const spEl=document.getElementById("s-pct");
+  spEl.textContent=pct.toFixed(1)+"%";spEl.style.color=pc;
+  document.getElementById("s-prog").style.cssText=`height:8px;width:${pct}%;background:${pc}`;
+  document.getElementById("s-meta").innerHTML=
+    `<span>${cy.passed} days in</span><span>${cy.total} day cycle</span><span>${cy.left} days left</span>`;
+
+  const now2=new Date();now2.setHours(0,0,0,0);
+  const labels=[],amounts=[];
+  for(let i=0;i<=cy.passed;i++){
+    const d=new Date(cy.start);d.setDate(d.getDate()+i);
+    if(d>now2)break;
+    const ds=d.toISOString().split("T")[0];
+    labels.push(`${d.getMonth()+1}/${d.getDate()}`);
+    amounts.push(parseFloat(ctxs.filter(t=>t.date===ds).reduce((s,t)=>s+t.amount,0).toFixed(2)));
+  }
+
+  if(chDaily){chDaily.destroy();chDaily=null;}
+  const dc=document.getElementById("ch-daily");
+  if(amounts.length>0){
+    chDaily=new Chart(dc,{type:"bar",
+      data:{labels,datasets:[{data:amounts,backgroundColor:"#1D9BF0",borderRadius:4}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>"$"+c.parsed.y.toFixed(2)}}},
+        scales:{
+          x:{ticks:{color:"#71767B",font:{size:9},maxTicksLimit:8},grid:{display:false},border:{display:false}},
+          y:{ticks:{color:"#71767B",font:{size:9}},grid:{color:"rgba(47,51,54,.8)"},border:{display:false}}
+        }}
+    });
+  }else{dc.parentElement.innerHTML='<div class="empty" style="padding:20px 0">No data yet</div>';}
+
+  const catd=CATS.map(c=>({
+    name:c.name,value:ctxs.filter(t=>t.category===c.name).reduce((s,t)=>s+t.amount,0),color:c.color
+  })).filter(c=>c.value>0);
+
+  if(chCat){chCat.destroy();chCat=null;}
+  const wrap=document.getElementById("ch-cat-wrap");
+  if(catd.length>0){
+    wrap.innerHTML=`
+      <div style="position:relative;height:160px">
+        <canvas id="ch-cat" role="img" aria-label="Category donut chart">Category breakdown.</canvas>
+      </div><div class="leg" id="ch-leg"></div>`;
+    chCat=new Chart(document.getElementById("ch-cat"),{type:"doughnut",
+      data:{labels:catd.map(c=>c.name),datasets:[{data:catd.map(c=>c.value),backgroundColor:catd.map(c=>c.color),borderWidth:0}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:"60%",
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>"$"+c.parsed.toFixed(2)}}}}
+    });
+    document.getElementById("ch-leg").innerHTML=catd.map(c=>
+      `<div class="legi"><span class="legdot" style="background:${c.color}"></span>${c.name} $${c.value.toFixed(0)}</div>`
+    ).join("");
+  }else{wrap.innerHTML='<div class="empty" style="padding:20px 0">No data yet</div>';}
+}
+
+// ── Init ──────────────────────────────────────────────────
+document.getElementById("f-dt").value=today();
+renderCats();renderHome();
+</script>
+</body>
+</html>
