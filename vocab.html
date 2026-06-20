@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>iue words</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
+    :root {
+      --bg:#000;
+      --surface:#101010;
+      --surface2:#151515;
+      --surface3:#1c1c1f;
+      --border:rgba(255,255,255,.075);
+      --text:#e7e9ea;
+      --muted:#71767b;
+      --dim:#3f444a;
+      --blue:#93c5fd;
+      --blue-soft:#0d1f3c;
+      --blue2:#60a5fa;
+      --blue2-soft:#071a2f;
+      --ink:#a7b7c8;
+      --ink-soft:#12161b;
+      --red:#ff453a;
+      --phone-width:420px;
+      --header-h:66px;
+      --nav-h:56px;
+      --radius:16px;
+      --shadow:0 0 0 1px var(--border);
+    }
+    html { background:#000; }
+    body {
+      width:100%;
+      max-width:var(--phone-width);
+      height:100dvh;
+      min-height:100vh;
+      margin:0 auto;
+      overflow:hidden;
+      position:relative;
+      background:var(--bg);
+      color:var(--text);
+      border-left:1px solid var(--border);
+      border-right:1px solid var(--border);
+      font-family:'Inter',sans-serif;
+      font-size:15px;
+      line-height:1.55;
+    }
+    header {
+      position:fixed;
+      z-index:100;
+      top:0;
+      left:50%;
+      transform:translateX(-50%);
+      width:100%;
+      max-width:var(--phone-width);
+      height:var(--header-h);
+      padding:14px 20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      background:#000;
+      border-bottom:1px solid var(--border);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+    }
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .avatar {
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      display:block;
+      overflow:hidden;
+      background:#061423;
+      flex-shrink:0;
+    }
+    .avatar img { width:100%;height:100%;object-fit:cover;display:block; }
+    .header-actions {
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .mini-btn {
+      border:1px solid var(--border);
+      background:var(--surface2);
+      color:var(--text);
+      border-radius:10px;
+      padding:6px 9px;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .mini-btn.primary {
+      background:var(--blue-soft);
+      color:var(--blue);
+      border-color:rgba(147,197,253,.18);
+    }
+    .screen {
+      display:none;
+      position:fixed;
+      top:var(--header-h);
+      bottom:var(--nav-h);
+      left:50%;
+      transform:translateX(-50%);
+      width:100%;
+      max-width:var(--phone-width);
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      overscroll-behavior:contain;
+      padding:16px;
+    }
+    .screen.active { display:block; }
+    .screen::-webkit-scrollbar { width:3px; }
+    .screen::-webkit-scrollbar-thumb { background:rgba(255,255,255,.22);border-radius:999px; }
+    .hero {
+      background:linear-gradient(180deg,#101010,#0b0b0b);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      margin-bottom:14px;
+    }
+    .hero-top {
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .eyebrow {
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+    .hero-title {
+      margin-top:5px;
+      font-family:'Space Grotesk',sans-serif;
+      font-size:28px;
+      font-weight:800;
+      line-height:1.05;
+      letter-spacing:0;
+    }
+    .hero-quote-cn {
+      margin-top:8px;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:700;
+      line-height:1.35;
+    }
+    .streak {
+      min-width:66px;
+      text-align:right;
+      font-family:'Space Grotesk',sans-serif;
+      color:var(--blue);
+      font-size:30px;
+      font-weight:800;
+      line-height:.95;
+    }
+    .streak span {
+      display:block;
+      margin-top:5px;
+      color:var(--muted);
+      font-family:'Inter',sans-serif;
+      font-size:11px;
+      font-weight:700;
+    }
+    .progress-track {
+      height:7px;
+      border-radius:999px;
+      background:var(--surface3);
+      overflow:hidden;
+      margin:10px 0 7px;
+    }
+    .progress-fill {
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:var(--blue);
+      transition:width .35s ease;
+    }
+    .hero-meta {
+      display:flex;
+      justify-content:space-between;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:650;
+    }
+    .stats-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+      margin-bottom:16px;
+    }
+    .stat {
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+      min-width:0;
+    }
+    .stat-value {
+      font-family:'Space Grotesk',sans-serif;
+      font-size:24px;
+      font-weight:800;
+      line-height:1;
+    }
+    .stat-label {
+      margin-top:6px;
+      color:var(--muted);
+      font-size:11px;
+      font-weight:700;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .section-label {
+      margin:18px 2px 10px;
+      color:var(--muted);
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .deck-grid {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+    .deck-card {
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:15px;
+      cursor:pointer;
+      box-shadow:var(--shadow);
+      -webkit-tap-highlight-color:transparent;
+    }
+    .deck-head {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .deck-left {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+    .deck-icon {
+      width:38px;
+      height:38px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      font-size:19px;
+    }
+    .deck-title {
+      font-size:16px;
+      font-weight:800;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .deck-note {
+      margin-top:2px;
+      color:var(--muted);
+      font-size:12px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .deck-count {
+      font-family:'Space Grotesk',sans-serif;
+      color:var(--text);
+      font-weight:800;
+      font-size:19px;
+      flex-shrink:0;
+    }
+    .deck-bar {
+      height:5px;
+      border-radius:999px;
+      background:var(--surface3);
+      overflow:hidden;
+      margin-top:12px;
+    }
+    .deck-bar > div {
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      transition:width .3s ease;
+    }
+    .quick-list {
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .quick-item {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:14px;
+      cursor:pointer;
+    }
+    .quick-item.brief {
+      align-items:flex-start;
+      color:var(--text);
+      text-decoration:none;
+    }
+    .brief-title {
+      color:var(--text);
+      font-size:15px;
+      font-weight:800;
+      line-height:1.3;
+    }
+    .brief-cn {
+      margin-top:8px;
+      color:#b9c2cc;
+      font-size:13px;
+      font-weight:750;
+      line-height:1.35;
+    }
+    .brief-meta {
+      margin-top:7px;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:700;
+      line-height:1.35;
+    }
+    .brief-cat {
+      color:var(--blue);
+      background:var(--blue-soft);
+      border:1px solid rgba(147,197,253,.16);
+      border-radius:999px;
+      padding:4px 9px;
+      font-size:11px;
+      font-weight:900;
+      white-space:nowrap;
+      flex-shrink:0;
+    }
+    .quick-word {
+      font-size:15px;
+      font-weight:800;
+    }
+    .quick-meaning {
+      margin-top:2px;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .quick-tag {
+      color:var(--blue);
+      background:var(--blue-soft);
+      border-radius:999px;
+      padding:4px 9px;
+      font-size:11px;
+      font-weight:800;
+      flex-shrink:0;
+    }
+    .filter-row {
+      position:sticky;
+      top:-16px;
+      z-index:10;
+      display:flex;
+      gap:8px;
+      padding:12px 0;
+      background:#000;
+      overflow-x:auto;
+      border-bottom:1px solid rgba(255,255,255,.04);
+      margin:-16px -16px 12px;
+      padding-left:16px;
+      padding-right:16px;
+    }
+    .filter-row::-webkit-scrollbar { display:none; }
+    .chip {
+      border:1px solid var(--border);
+      color:var(--muted);
+      background:var(--surface);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:800;
+      white-space:nowrap;
+      cursor:pointer;
+    }
+    .chip.active {
+      color:#000;
+      background:var(--text);
+      border-color:var(--text);
+    }
+    .word-list {
+      display:flex;
+      flex-direction:column;
+      gap:9px;
+      padding-bottom:14px;
+    }
+    .word-card {
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+    .word-top {
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      padding:15px;
+      cursor:pointer;
+    }
+    .word-main { min-width:0; }
+    .word {
+      font-family:'Space Grotesk',sans-serif;
+      font-size:21px;
+      font-weight:800;
+      line-height:1;
+    }
+    .phonetic {
+      margin-top:5px;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:650;
+    }
+    .meaning {
+      margin-top:9px;
+      color:var(--text);
+      font-size:14px;
+      font-weight:700;
+    }
+    .word-actions {
+      display:flex;
+      align-items:center;
+      gap:7px;
+      flex-shrink:0;
+    }
+    .icon-btn {
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      border:1px solid var(--border);
+      background:var(--surface2);
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      font-size:15px;
+    }
+    .icon-btn.done {
+      background:var(--blue-soft);
+      color:var(--blue);
+      border-color:rgba(147,197,253,.25);
+    }
+    .word-body {
+      display:none;
+      padding:0 15px 15px;
+      border-top:1px solid var(--border);
+    }
+    .word-card.open .word-body { display:block; }
+    .example {
+      margin-top:12px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+    }
+    .example strong { color:var(--text); }
+    .word-meta {
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+      margin-top:12px;
+    }
+    .pill {
+      color:var(--muted);
+      background:var(--surface2);
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:4px 9px;
+      font-size:11px;
+      font-weight:800;
+    }
+    .practice-card {
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      min-height:330px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+    .flash-word-card {
+      min-height:220px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background:linear-gradient(180deg,#151515,#101010);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:26px 20px;
+      cursor:pointer;
+      user-select:none;
+      transition:transform .16s,border-color .16s;
+    }
+    .flash-word-card:active { transform:scale(.985); }
+    .practice-kind {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--blue);
+      background:var(--blue-soft);
+      border-radius:999px;
+      padding:4px 10px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+    .prompt {
+      margin-top:16px;
+      font-family:'Space Grotesk',sans-serif;
+      font-size:32px;
+      font-weight:800;
+      line-height:1.05;
+    }
+    .prompt-sub {
+      margin-top:9px;
+      color:var(--muted);
+      font-size:14px;
+      min-height:43px;
+    }
+    .card-answer {
+      display:none;
+      margin-top:16px;
+      color:var(--text);
+      font-size:15px;
+      line-height:1.55;
+    }
+    .card-answer.show { display:block; }
+    .card-example {
+      margin-top:8px;
+      color:var(--dim);
+      font-size:12px;
+      font-style:italic;
+      line-height:1.45;
+    }
+    .tap-hint {
+      margin-top:14px;
+      color:var(--dim);
+      font-size:12px;
+      font-weight:650;
+    }
+    .answer-box {
+      width:100%;
+      margin-top:18px;
+      border:1px solid var(--border);
+      background:var(--surface2);
+      color:var(--text);
+      border-radius:14px;
+      padding:14px 15px;
+      font-family:'Space Grotesk',sans-serif;
+      font-size:20px;
+      font-weight:750;
+      outline:none;
+    }
+    .answer-box:focus { border-color:rgba(147,197,253,.45); }
+    .practice-actions {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:9px;
+      margin-top:12px;
+    }
+    .big-btn {
+      border:1px solid var(--border);
+      background:var(--surface2);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px 10px;
+      font-size:14px;
+      font-weight:800;
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .big-btn.primary {
+      background:var(--blue);
+      border-color:var(--blue);
+      color:#06101c;
+    }
+    .feedback {
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      background:var(--surface2);
+      border:1px solid var(--border);
+      color:var(--muted);
+      font-size:13px;
+      display:none;
+    }
+    .feedback.show { display:block; }
+    .feedback.good { color:var(--blue);background:var(--blue-soft);border-color:rgba(147,197,253,.18); }
+    .feedback.bad { color:#fda4af;background:#26090d;border-color:rgba(253,164,175,.18); }
+    .mode-row {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      margin-bottom:12px;
+    }
+    .deck-mode-row {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+      margin-bottom:10px;
+    }
+    .mode-btn {
+      border:1px solid var(--border);
+      background:var(--surface);
+      color:var(--muted);
+      border-radius:13px;
+      padding:10px 8px;
+      font-size:12px;
+      font-weight:800;
+      cursor:pointer;
+    }
+    .mode-btn.active {
+      color:#000;
+      background:var(--text);
+      border-color:var(--text);
+    }
+    .add-card {
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:16px;
+      margin-top:14px;
+    }
+    .add-grid {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:9px;
+      margin-top:10px;
+    }
+    .field {
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:13px;
+      background:var(--surface2);
+      color:var(--text);
+      padding:11px 12px;
+      font-size:14px;
+      outline:none;
+      font-family:'Inter',sans-serif;
+    }
+    .field:focus { border-color:rgba(147,197,253,.45); }
+    .tab-bar {
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:90;
+      max-width:var(--phone-width);
+      min-height:var(--nav-h);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      align-items:center;
+      padding:6px 30px calc(5px + env(safe-area-inset-bottom));
+      background:rgba(0,0,0,.96);
+      border-top:1px solid var(--border);
+      box-shadow:0 -8px 24px rgba(0,0,0,.62);
+      backdrop-filter:blur(24px);
+      -webkit-backdrop-filter:blur(24px);
+    }
+    .tab {
+      position:relative;
+      top:3px;
+      min-height:40px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:0;
+      background:transparent;
+      color:rgba(231,233,234,.62);
+      cursor:pointer;
+      transition:color .18s,transform .18s,filter .18s;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .tab:active { transform:translateY(1px) scale(.98); }
+    .tab.active {
+      color:#1d9bf0;
+      filter:drop-shadow(0 0 12px rgba(29,155,240,.55));
+    }
+    .tab-main {
+      width:44px;
+      height:44px;
+      min-height:44px;
+      margin:0 auto;
+      border-radius:50%;
+      background:rgba(29,155,240,.12);
+      box-shadow:inset 0 0 0 1px rgba(29,155,240,.24);
+    }
+    .tab-main.active {
+      background:rgba(29,155,240,.16);
+      color:#1d9bf0;
+      box-shadow:inset 0 0 0 1px rgba(29,155,240,.38),0 0 18px rgba(29,155,240,.22);
+    }
+    .nav-icon {
+      width:29px;
+      height:29px;
+      stroke:currentColor;
+      fill:none;
+      stroke-width:1.85;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      opacity:.92;
+    }
+    .tab-main .nav-icon { width:25px;height:25px; }
+    .badge {
+      position:absolute;
+      top:1px;
+      right:calc(50% - 18px);
+      min-width:17px;
+      height:17px;
+      padding:0 4px;
+      border-radius:999px;
+      background:var(--red);
+      color:#fff;
+      border:2px solid #000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:'Space Grotesk',sans-serif;
+      font-size:10px;
+      font-weight:800;
+      line-height:1;
+      box-shadow:0 0 10px rgba(255,69,58,.45);
+    }
+    .toast {
+      position:fixed;
+      left:50%;
+      bottom:calc(var(--nav-h) + 14px);
+      transform:translateX(-50%) translateY(10px);
+      z-index:200;
+      width:calc(100% - 32px);
+      max-width:388px;
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px 14px;
+      color:var(--text);
+      font-size:13px;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .2s,transform .2s;
+      box-shadow:0 10px 28px rgba(0,0,0,.5);
+    }
+    .toast.show {
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+    @media (max-width:520px) {
+      :root {
+        --header-h:calc(58px + env(safe-area-inset-top));
+        --nav-h:calc(56px + env(safe-area-inset-bottom));
+      }
+      header { padding:calc(10px + env(safe-area-inset-top)) 18px 10px; }
+      .screen { padding:14px; }
+      .filter-row { margin:-14px -14px 12px;padding-left:14px;padding-right:14px; }
+      .hero-title { font-size:26px; }
+      .prompt { font-size:30px; }
+      .tab-bar { max-width:none;padding:6px 30px calc(5px + env(safe-area-inset-bottom)); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="avatar"><img id="avatar-img" alt="avatar"/></div>
+    </div>
+    <div class="header-actions">
+      <button class="mini-btn primary" onclick="checkIn()">检查打卡</button>
+      <button class="mini-btn" onclick="resetToday()">重置</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="screen active" id="screen-home">
+      <div class="hero">
+        <div class="hero-top">
+          <div>
+            <div class="eyebrow">TODAY</div>
+            <div class="hero-title" id="daily-proverb">Practice makes progress.</div>
+            <div class="hero-quote-cn" id="daily-proverb-cn">练习带来推进</div>
+          </div>
+          <div class="streak"><span id="streak-num">0</span><span>days streak</span></div>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="today-fill"></div></div>
+        <div class="hero-meta">
+          <span id="today-label">今日 0 / 180 · 90词</span>
+          <span id="checkin-label">未打卡</span>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-value" id="known-count">0</div>
+          <div class="stat-label">已掌握</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="write-count">0</div>
+          <div class="stat-label">默写正确</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="due-count">0</div>
+          <div class="stat-label">待复习</div>
+        </div>
+      </div>
+
+      <div class="section-label">三个板块</div>
+      <div class="deck-grid" id="deck-grid"></div>
+
+      <div class="section-label">Today Radar</div>
+      <div class="quick-list" id="daily-list"></div>
+    </section>
+
+    <section class="screen" id="screen-library">
+      <div class="filter-row" id="filter-row"></div>
+      <div class="word-list" id="word-list"></div>
+    </section>
+
+    <section class="screen" id="screen-practice">
+      <div class="deck-mode-row">
+        <button class="mode-btn" data-practice-deck="ielts" onclick="setPracticeDeck('ielts')">雅思</button>
+        <button class="mode-btn" data-practice-deck="aussie" onclick="setPracticeDeck('aussie')">口语</button>
+        <button class="mode-btn active" data-practice-deck="engineering" onclick="setPracticeDeck('engineering')">工程</button>
+      </div>
+      <div class="mode-row">
+        <button class="mode-btn active" data-mode="translation" onclick="setMode('translation')">看中文写英</button>
+        <button class="mode-btn" data-mode="listening" onclick="setMode('listening')">听音默写</button>
+      </div>
+      <div class="practice-card">
+        <div class="flash-word-card" id="flash-card" onclick="flipCurrentCard()">
+          <div class="practice-kind" id="practice-kind">Daily Card</div>
+          <div class="prompt" id="practice-prompt">dimension</div>
+          <div class="prompt-sub" id="practice-sub">每板块30词，一共90词</div>
+          <div class="card-answer" id="card-answer"></div>
+          <div class="tap-hint" id="tap-hint">点卡片翻开</div>
+        </div>
+        <div id="answer-panel">
+          <input class="answer-box" id="answer-box" placeholder="在这里输入答案" autocomplete="off" autocapitalize="none"/>
+          <div class="feedback" id="feedback"></div>
+        </div>
+        <div>
+          <div class="practice-actions">
+            <button class="big-btn" onclick="speakCurrent()">发音</button>
+            <button class="big-btn primary" id="check-btn" onclick="checkAnswer()">检查</button>
+          </div>
+          <div class="practice-actions">
+            <button class="big-btn" id="prev-btn" onclick="previousPractice()">上一题</button>
+            <button class="big-btn" onclick="nextPractice()">下一题</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tab-bar" aria-label="底部导航">
+    <button class="tab active" data-tab="home" onclick="showScreen('home')" aria-label="总览">
+      <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5v8a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 18.5z"/></svg>
+      <span class="badge" id="home-badge">0</span>
+    </button>
+    <button class="tab tab-main" data-tab="library" onclick="showScreen('library')" aria-label="词库">
+      <svg class="nav-icon" viewBox="0 0 24 24"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H20v16H7.5A2.5 2.5 0 0 0 5 21z"/><path d="M5 5.5V21"/><path d="M9 7h7"/><path d="M9 11h6"/></svg>
+    </button>
+    <button class="tab" data-tab="practice" onclick="showScreen('practice')" aria-label="默写">
+      <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 19.5V5a2 2 0 0 1 2-2h12"/><path d="M8 7h8"/><path d="M8 11h7"/><path d="M8 15h4"/><path d="m17 14 3 3-3 3"/><path d="M14 17h6"/></svg>
+      <span class="badge" id="practice-badge">0</span>
+    </button>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    var DECKS = {
+      ielts: { label:'雅思词汇', icon:'I', color:'var(--blue)', soft:'var(--blue-soft)', note:'写作阅读高频，顺手练拼写' },
+      aussie: { label:'日常口语', icon:'AU', color:'var(--blue2)', soft:'var(--blue2-soft)', note:'同学老师常说，先听懂再接话' },
+      engineering: { label:'工程英语', icon:'CAD', color:'var(--ink)', soft:'var(--ink-soft)', note:'MMAN project / CAD / workshop 高频' }
+    };
+    var WORDS = [
+      { id:"iel-allocate", deck:"ielts", word:"allocate", phon:"/ˈæləkeɪt/", meaning:"分配；划拨", cn:"分配", example:"The team should allocate enough time for revision.", tags:["writing","verb"] },
+      { id:"iel-constraint", deck:"ielts", word:"constraint", phon:"/kənˈstreɪnt/", meaning:"限制；约束条件", cn:"限制", example:"Time is the biggest constraint before the test.", tags:["academic","noun"] },
+      { id:"iel-consistent", deck:"ielts", word:"consistent", phon:"/kənˈsɪstənt/", meaning:"一致的；稳定的", cn:"一致的", example:"Consistent practice is better than one long session.", tags:["writing","adj"] },
+      { id:"iel-derive", deck:"ielts", word:"derive", phon:"/dɪˈraɪv/", meaning:"获得；推导出", cn:"推导", example:"We can derive the formula from Newton’s second law.", tags:["academic","verb"] },
+      { id:"iel-implement", deck:"ielts", word:"implement", phon:"/ˈɪmplɪment/", meaning:"实施；执行", cn:"实施", example:"The university implemented a new assessment policy.", tags:["writing","verb"] },
+      { id:"iel-interpret", deck:"ielts", word:"interpret", phon:"/ɪnˈtɜːprət/", meaning:"解释；理解", cn:"解释", example:"You need to interpret the graph before writing.", tags:["reading","verb"] },
+      { id:"iel-significant", deck:"ielts", word:"significant", phon:"/sɪɡˈnɪfɪkənt/", meaning:"显著的；重要的", cn:"显著的", example:"There is a significant difference between the two results.", tags:["writing","adj"] },
+      { id:"iel-assumption", deck:"ielts", word:"assumption", phon:"/əˈsʌmpʃən/", meaning:"假设；前提", cn:"假设", example:"State every assumption before solving the problem.", tags:["academic","noun"] },
+      { id:"iel-evaluate", deck:"ielts", word:"evaluate", phon:"/ɪˈvæljueɪt/", meaning:"评估；求值", cn:"评估", example:"Evaluate the method and explain its limitation.", tags:["task","verb"] },
+      { id:"iel-approximately", deck:"ielts", word:"approximately", phon:"/əˈprɒksɪmətli/", meaning:"大约；近似地", cn:"大约", example:"The beam is approximately two metres long.", tags:["academic","adv"] },
+      { id:"aus-no-worries", deck:"aussie", word:"no worries", phon:"phrase", meaning:"没事；不用谢；没问题", cn:"没事", example:"No worries, I’ll send you the file later.", tags:["daily","phrase"] },
+      { id:"aus-arvo", deck:"aussie", word:"arvo", phon:"/ˈɑːvəʊ/", meaning:"下午 afternoon", cn:"下午", example:"We have the workshop this arvo.", tags:["slang","time"] },
+      { id:"aus-reckon", deck:"aussie", word:"reckon", phon:"/ˈrekən/", meaning:"觉得；认为", cn:"觉得", example:"I reckon this part needs another constraint.", tags:["daily","verb"] },
+      { id:"aus-keen", deck:"aussie", word:"keen", phon:"/kiːn/", meaning:"有兴趣；愿意", cn:"愿意", example:"Are you keen to join our group meeting?", tags:["daily","adj"] },
+      { id:"aus-heaps", deck:"aussie", word:"heaps", phon:"/hiːps/", meaning:"很多；非常", cn:"很多", example:"Thanks heaps for helping with the CAD model.", tags:["slang","adv"] },
+      { id:"aus-dodgy", deck:"aussie", word:"dodgy", phon:"/ˈdɒdʒi/", meaning:"不靠谱的；有点坏的", cn:"不靠谱", example:"This measurement looks a bit dodgy.", tags:["daily","adj"] },
+      { id:"aus-mate", deck:"aussie", word:"mate", phon:"/meɪt/", meaning:"朋友；同学；哥们", cn:"朋友", example:"Cheers, mate.", tags:["daily","noun"] },
+      { id:"aus-sorted", deck:"aussie", word:"sorted", phon:"/ˈsɔːtɪd/", meaning:"搞定了；安排好了", cn:"搞定", example:"The group report is sorted.", tags:["daily","adj"] },
+      { id:"aus-fair-enough", deck:"aussie", word:"fair enough", phon:"phrase", meaning:"有道理；可以理解", cn:"有道理", example:"Fair enough, we can change the design.", tags:["daily","phrase"] },
+      { id:"aus-give-it-a-go", deck:"aussie", word:"give it a go", phon:"phrase", meaning:"试试看", cn:"试试看", example:"Give it a go before asking the tutor.", tags:["daily","phrase"] },
+      { id:"eng-dimension", deck:"engineering", word:"dimension", phon:"/daɪˈmenʃən/", meaning:"尺寸；维度", cn:"尺寸", example:"Add the missing dimension to the drawing.", tags:["CAD","drawing"] },
+      { id:"eng-tolerance", deck:"engineering", word:"tolerance", phon:"/ˈtɒlərəns/", meaning:"公差；允许误差", cn:"公差", example:"The hole diameter must stay within tolerance.", tags:["CAD","manufacturing"] },
+      { id:"eng-assembly", deck:"engineering", word:"assembly", phon:"/əˈsembli/", meaning:"装配体；组装", cn:"装配体", example:"Open the assembly file and check the mates.", tags:["CAD","project"] },
+      { id:"eng-constraint", deck:"engineering", word:"constraint", phon:"/kənˈstreɪnt/", meaning:"约束；限制条件", cn:"约束", example:"Apply a horizontal constraint to this sketch line.", tags:["CAD","sketch"] },
+      { id:"eng-fixture", deck:"engineering", word:"fixture", phon:"/ˈfɪkstʃə/", meaning:"夹具；固定装置", cn:"夹具", example:"The fixture keeps the component aligned during machining.", tags:["workshop","manufacturing"] },
+      { id:"eng-chamfer", deck:"engineering", word:"chamfer", phon:"/ˈtʃæmfə/", meaning:"倒角", cn:"倒角", example:"Add a small chamfer to remove the sharp edge.", tags:["CAD","feature"] },
+      { id:"eng-fillet", deck:"engineering", word:"fillet", phon:"/ˈfɪlɪt/", meaning:"圆角；倒圆", cn:"圆角", example:"Use a fillet to reduce stress concentration.", tags:["CAD","feature"] },
+      { id:"eng-extrude", deck:"engineering", word:"extrude", phon:"/ɪkˈstruːd/", meaning:"拉伸；挤出成型", cn:"拉伸", example:"Extrude the sketch by 20 millimetres.", tags:["CAD","feature"] },
+      { id:"eng-revolve", deck:"engineering", word:"revolve", phon:"/rɪˈvɒlv/", meaning:"旋转生成", cn:"旋转生成", example:"Use revolve for axisymmetric parts.", tags:["CAD","feature"] },
+      { id:"eng-datum", deck:"engineering", word:"datum", phon:"/ˈdeɪtəm/", meaning:"基准；参考面", cn:"基准", example:"Use the top plane as the datum.", tags:["drawing","CAD"] },
+      { id:"eng-orthographic", deck:"engineering", word:"orthographic", phon:"/ˌɔːθəˈɡræfɪk/", meaning:"正投影的", cn:"正投影", example:"Create an orthographic drawing with front, top and side views.", tags:["drawing"] },
+      { id:"eng-isometric", deck:"engineering", word:"isometric", phon:"/ˌaɪsəˈmetrɪk/", meaning:"等轴测的", cn:"等轴测", example:"Add an isometric view to make the part easier to read.", tags:["drawing"] },
+      { id:"eng-section-view", deck:"engineering", word:"section view", phon:"phrase", meaning:"剖视图", cn:"剖视图", example:"Use a section view to show the internal hole.", tags:["drawing"] },
+      { id:"eng-fastener", deck:"engineering", word:"fastener", phon:"/ˈfɑːsənə/", meaning:"紧固件；螺栓螺钉类", cn:"紧固件", example:"Select the correct fastener size for the assembly.", tags:["assembly"] },
+      { id:"eng-clearance", deck:"engineering", word:"clearance", phon:"/ˈklɪərəns/", meaning:"间隙；净空", cn:"间隙", example:"Leave enough clearance between moving parts.", tags:["assembly","design"] },
+      { id:"eng-interference", deck:"engineering", word:"interference", phon:"/ˌɪntəˈfɪərəns/", meaning:"干涉；碰撞重叠", cn:"干涉", example:"Run an interference check before submitting.", tags:["assembly","CAD"] },
+      { id:"eng-load", deck:"engineering", word:"load", phon:"/ləʊd/", meaning:"载荷；负载", cn:"载荷", example:"Mark the direction of the applied load.", tags:["mechanics"] },
+      { id:"eng-reaction-force", deck:"engineering", word:"reaction force", phon:"phrase", meaning:"支座反力；反作用力", cn:"支座反力", example:"Calculate the reaction force at the pin support.", tags:["mechanics"] },
+      { id:"eng-stress-concentration", deck:"engineering", word:"stress concentration", phon:"phrase", meaning:"应力集中", cn:"应力集中", example:"Sharp corners can cause stress concentration.", tags:["design","mechanics"] },
+      { id:"eng-workshop-drawing", deck:"engineering", word:"workshop drawing", phon:"phrase", meaning:"加工图；车间图纸", cn:"加工图", example:"The workshop drawing must include dimensions and tolerances.", tags:["MMAN","drawing"] },
+      { id:"iel-ambiguous", deck:"ielts", word:"Ambiguous", phon:"/æmˈbɪɡjuəs/", meaning:"模糊的；不明确的", cn:"模糊的", example:"The question was ambiguous and confused many students.", tags:["english-daily"] },
+      { id:"iel-crucial", deck:"ielts", word:"Crucial", phon:"/ˈkruːʃl/", meaning:"至关重要的；关键的", cn:"至关重要的", example:"Regular exercise is crucial for maintaining good health.", tags:["english-daily"] },
+      { id:"iel-inevitable", deck:"ielts", word:"Inevitable", phon:"/ɪnˈevɪtəbl/", meaning:"不可避免的；必然的", cn:"不可避免的", example:"Change is inevitable in a rapidly developing society.", tags:["english-daily"] },
+      { id:"iel-substantial", deck:"ielts", word:"Substantial", phon:"/səbˈstænʃl/", meaning:"大量的；实质性的", cn:"大量的", example:"There has been a substantial increase in tuition fees.", tags:["english-daily"] },
+      { id:"iel-controversial", deck:"ielts", word:"Controversial", phon:"/ˌkɒntrəˈvɜːʃl/", meaning:"有争议的；引起争论的", cn:"有争议的", example:"The new policy is highly controversial among students.", tags:["english-daily"] },
+      { id:"iel-predominantly", deck:"ielts", word:"Predominantly", phon:"/prɪˈdɒmɪnəntli/", meaning:"主要地；占主导地位地", cn:"主要地", example:"The city is predominantly residential.", tags:["english-daily"] },
+      { id:"iel-consequently", deck:"ielts", word:"Consequently", phon:"/ˈkɒnsɪkwəntli/", meaning:"因此；结果", cn:"因此", example:"He didn't study. Consequently, he failed the exam.", tags:["english-daily"] },
+      { id:"iel-phenomenon", deck:"ielts", word:"Phenomenon", phon:"/fɪˈnɒmɪnən/", meaning:"现象", cn:"现象", example:"Climate change is a global phenomenon.", tags:["english-daily"] },
+      { id:"iel-undermine", deck:"ielts", word:"Undermine", phon:"/ˌʌndəˈmaɪn/", meaning:"削弱；破坏", cn:"削弱", example:"Lack of sleep can undermine academic performance.", tags:["english-daily"] },
+      { id:"iel-advocate", deck:"ielts", word:"Advocate", phon:"/ˈædvəkeɪt/", meaning:"提倡；倡导者", cn:"提倡", example:"Many scientists advocate for renewable energy.", tags:["english-daily"] },
+      { id:"iel-coherent", deck:"ielts", word:"Coherent", phon:"/kəʊˈhɪərənt/", meaning:"连贯的；条理清晰的", cn:"连贯的", example:"Your essay needs a more coherent structure.", tags:["english-daily"] },
+      { id:"iel-elaborate", deck:"ielts", word:"Elaborate", phon:"/ɪˈlæbərət/", meaning:"详细阐述；精心制作的", cn:"详细阐述", example:"Could you elaborate on your answer?", tags:["english-daily"] },
+      { id:"iel-diminish", deck:"ielts", word:"Diminish", phon:"/dɪˈmɪnɪʃ/", meaning:"减少；降低", cn:"减少", example:"The impact of the policy diminished over time.", tags:["english-daily"] },
+      { id:"iel-feasible", deck:"ielts", word:"Feasible", phon:"/ˈfiːzɪbl/", meaning:"可行的；可实现的", cn:"可行的", example:"Is it feasible to complete the project in one week?", tags:["english-daily"] },
+      { id:"iel-anticipate", deck:"ielts", word:"Anticipate", phon:"/ænˈtɪsɪpeɪt/", meaning:"预期；预料", cn:"预期", example:"We anticipate strong demand for the new product.", tags:["english-daily"] },
+      { id:"iel-diverse", deck:"ielts", word:"Diverse", phon:"/daɪˈvɜːs/", meaning:"多样的；不同的", cn:"多样的", example:"UNSW has a very diverse international student body.", tags:["english-daily"] },
+      { id:"iel-sustain", deck:"ielts", word:"Sustain", phon:"/səˈsteɪn/", meaning:"维持；支撑", cn:"维持", example:"How can we sustain economic growth?", tags:["english-daily"] },
+      { id:"iel-acknowledge", deck:"ielts", word:"Acknowledge", phon:"/əkˈnɒlɪdʒ/", meaning:"承认；感谢", cn:"承认", example:"I acknowledge that my essay has some weaknesses.", tags:["english-daily"] },
+      { id:"iel-contradict", deck:"ielts", word:"Contradict", phon:"/ˌkɒntrəˈdɪkt/", meaning:"矛盾；反驳", cn:"矛盾", example:"The results contradict the original hypothesis.", tags:["english-daily"] },
+      { id:"iel-mitigate", deck:"ielts", word:"Mitigate", phon:"/ˈmɪtɪɡeɪt/", meaning:"减轻；缓和", cn:"减轻", example:"Green spaces can mitigate the effects of urban heat.", tags:["english-daily"] },
+      { id:"iel-exacerbate", deck:"ielts", word:"Exacerbate", phon:"/ɪɡˈzæsəbeɪt/", meaning:"加剧；使恶化", cn:"加剧", example:"Pollution exacerbates respiratory problems.", tags:["english-daily"] },
+      { id:"iel-pragmatic", deck:"ielts", word:"Pragmatic", phon:"/præɡˈmætɪk/", meaning:"务实的；实用主义的", cn:"务实的", example:"We need a pragmatic approach to solving this issue.", tags:["english-daily"] },
+      { id:"iel-autonomy", deck:"ielts", word:"Autonomy", phon:"/ɔːˈtɒnəmi/", meaning:"自主权；自治", cn:"自主权", example:"Students should have more autonomy in their learning.", tags:["english-daily"] },
+      { id:"iel-empirical", deck:"ielts", word:"Empirical", phon:"/ɪmˈpɪrɪkl/", meaning:"基于经验的；实证的", cn:"基于经验的", example:"The theory is supported by empirical evidence.", tags:["english-daily"] },
+      { id:"iel-stringent", deck:"ielts", word:"Stringent", phon:"/ˈstrɪndʒənt/", meaning:"严格的；严厉的", cn:"严格的", example:"Stringent safety standards must be maintained.", tags:["english-daily"] },
+      { id:"iel-paradox", deck:"ielts", word:"Paradox", phon:"/ˈpærədɒks/", meaning:"悖论；矛盾现象", cn:"悖论", example:"It's a paradox that the more we travel, the more carbon we emit.", tags:["english-daily"] },
+      { id:"iel-proliferate", deck:"ielts", word:"Proliferate", phon:"/prəˈlɪfəreɪt/", meaning:"激增；迅速扩散", cn:"激增", example:"Social media platforms have proliferated rapidly.", tags:["english-daily"] },
+      { id:"iel-scrutinise", deck:"ielts", word:"Scrutinise", phon:"/ˈskruːtɪnaɪz/", meaning:"仔细审查；详细检查", cn:"仔细审查", example:"The data was carefully scrutinised by researchers.", tags:["english-daily"] },
+      { id:"aus-catch-up", deck:"aussie", word:"Catch up", phon:"/kætʃ ʌp/", meaning:"叙旧；更新近况", cn:"叙旧", example:"We should catch up sometime this week.", tags:["english-daily"] },
+      { id:"aus-devo", deck:"aussie", word:"Devo", phon:"/ˈdevəʊ/", meaning:"很失望（devastated的缩写）", cn:"很失望", example:"I failed the test. I'm so devo.", tags:["english-daily"] },
+      { id:"aus-chuck", deck:"aussie", word:"Chuck", phon:"/tʃʌk/", meaning:"扔；放（澳洲口语）", cn:"扔", example:"Just chuck your bag on the chair.", tags:["english-daily"] },
+      { id:"aus-flat-out", deck:"aussie", word:"Flat out", phon:"/flæt aʊt/", meaning:"非常忙；全力以赴", cn:"非常忙", example:"I've been flat out with assignments this week.", tags:["english-daily"] },
+      { id:"aus-hang-on", deck:"aussie", word:"Hang on", phon:"/hæŋ ɒn/", meaning:"等一下；稍等", cn:"等一下", example:"Hang on, let me check my notes.", tags:["english-daily"] },
+      { id:"aus-chuffed", deck:"aussie", word:"Chuffed", phon:"/tʃʌft/", meaning:"很高兴；很得意", cn:"很高兴", example:"I'm really chuffed about my exam results.", tags:["english-daily"] },
+      { id:"aus-grab", deck:"aussie", word:"Grab", phon:"/ɡræb/", meaning:"去拿；去买（口语）", cn:"去拿", example:"Let's grab a coffee after class.", tags:["english-daily"] },
+      { id:"aus-suss-out", deck:"aussie", word:"Suss out", phon:"/sʌs aʊt/", meaning:"弄清楚；调查", cn:"弄清楚", example:"Let me suss out the best route to campus.", tags:["english-daily"] },
+      { id:"aus-pitch-in", deck:"aussie", word:"Pitch in", phon:"/pɪtʃ ɪn/", meaning:"一起帮忙；参与", cn:"一起帮忙", example:"Everyone pitched in to finish the group project.", tags:["english-daily"] },
+      { id:"aus-bear-with-me", deck:"aussie", word:"Bear with me", phon:"/beər wɪð miː/", meaning:"请稍等一下；耐心一点", cn:"请稍等一下", example:"Bear with me while I find the document.", tags:["english-daily"] },
+      { id:"aus-touch-base", deck:"aussie", word:"Touch base", phon:"/tʌtʃ beɪs/", meaning:"联系一下；确认一下", cn:"联系一下", example:"Let's touch base before the submission deadline.", tags:["english-daily"] },
+      { id:"aus-loop-in", deck:"aussie", word:"Loop in", phon:"/luːp ɪn/", meaning:"把某人纳入讨论；抄送", cn:"把某人纳入讨论", example:"Can you loop in the professor on this email?", tags:["english-daily"] },
+      { id:"aus-slash", deck:"aussie", word:"Slash", phon:"/slæʃ/", meaning:"大幅削减；斜杠（兼职称呼）", cn:"大幅削减", example:"They slashed the prices during the sale.", tags:["english-daily"] },
+      { id:"aus-wrap-up", deck:"aussie", word:"Wrap up", phon:"/ræp ʌp/", meaning:"结束；总结", cn:"结束", example:"Let's wrap up the meeting in 10 minutes.", tags:["english-daily"] },
+      { id:"aus-heads-up", deck:"aussie", word:"Heads up", phon:"/hedz ʌp/", meaning:"提前告知；提醒", cn:"提前告知", example:"Just a heads up — the exam time has changed.", tags:["english-daily"] },
+      { id:"aus-flog", deck:"aussie", word:"Flog", phon:"/flɒɡ/", meaning:"卖东西；拼命做（澳洲口语）", cn:"卖东西", example:"He's flogging his old textbooks on Facebook.", tags:["english-daily"] },
+      { id:"aus-nah", deck:"aussie", word:"Nah", phon:"/nɑː/", meaning:"不；算了（口语否定）", cn:"不", example:"Wanna come? — Nah, I'm too tired.", tags:["english-daily"] },
+      { id:"aus-yeah-nah", deck:"aussie", word:"Yeah nah", phon:"/jeə nɑː/", meaning:"表示不同意（澳洲特有）", cn:"表示不同意", example:"Was it good? — Yeah nah, not really.", tags:["english-daily"] },
+      { id:"aus-nah-yeah", deck:"aussie", word:"Nah yeah", phon:"/nɑː jeə/", meaning:"表示同意（澳洲特有）", cn:"表示同意", example:"That's a good idea! — Nah yeah, totally!", tags:["english-daily"] },
+      { id:"aus-cut-lunch", deck:"aussie", word:"Cut lunch", phon:"/kʌt lʌntʃ/", meaning:"午饭盒；自带餐（澳洲）", cn:"午饭盒", example:"I brought cut lunch today to save money.", tags:["english-daily"] },
+      { id:"eng-statics", deck:"engineering", word:"Statics", phon:"/ˈstætɪks/", meaning:"静力学——研究静止状态下力的平衡", cn:"静力学", example:"Statics is the study of forces in equilibrium.", tags:["english-daily"] },
+      { id:"eng-dynamics", deck:"engineering", word:"Dynamics", phon:"/daɪˈnæmɪks/", meaning:"动力学——研究运动和力的关系", cn:"动力学", example:"We study particle dynamics in ENGG1300.", tags:["english-daily"] },
+      { id:"eng-equilibrium", deck:"engineering", word:"Equilibrium", phon:"/ˌiːkwɪˈlɪbriəm/", meaning:"平衡；平衡状态", cn:"平衡", example:"The structure is in static equilibrium.", tags:["english-daily"] },
+      { id:"eng-resultant", deck:"engineering", word:"Resultant", phon:"/rɪˈzʌltənt/", meaning:"合力；合矢量", cn:"合力", example:"Calculate the resultant of these two forces.", tags:["english-daily"] },
+      { id:"eng-torque", deck:"engineering", word:"Torque", phon:"/tɔːk/", meaning:"扭矩；力矩", cn:"扭矩", example:"Torque is the rotational equivalent of force.", tags:["english-daily"] },
+      { id:"eng-velocity", deck:"engineering", word:"Velocity", phon:"/vəˈlɒsɪti/", meaning:"速度（矢量）", cn:"速度", example:"The velocity of the particle changes direction.", tags:["english-daily"] },
+      { id:"eng-acceleration", deck:"engineering", word:"Acceleration", phon:"/əkˌseləˈreɪʃn/", meaning:"加速度", cn:"加速度", example:"Net force equals mass times acceleration (F=ma).", tags:["english-daily"] },
+      { id:"eng-free-body-diagram", deck:"engineering", word:"Free Body Diagram", phon:"/friː ˈbɒdi ˈdaɪəɡræm/", meaning:"自由体图（FBD）", cn:"自由体图", example:"Always draw a free body diagram before solving.", tags:["english-daily"] },
+      { id:"eng-eigenvalue", deck:"engineering", word:"Eigenvalue", phon:"/ˈaɪɡənˌvæljuː/", meaning:"特征值", cn:"特征值", example:"Find the eigenvalues of matrix A.", tags:["english-daily"] },
+      { id:"eng-vector-space", deck:"engineering", word:"Vector Space", phon:"/ˈvektə speɪs/", meaning:"向量空间", cn:"向量空间", example:"R³ is a vector space with three dimensions.", tags:["english-daily"] },
+      { id:"eng-differential-equation", deck:"engineering", word:"Differential Equation", phon:"/ˌdɪfəˈrenʃl ɪˈkweɪʒn/", meaning:"微分方程", cn:"微分方程", example:"Solve the differential equation dy/dx = 2x.", tags:["english-daily"] },
+      { id:"eng-convergence", deck:"engineering", word:"Convergence", phon:"/kənˈvɜːdʒəns/", meaning:"收敛（数学）", cn:"收敛", example:"Does this series converge or diverge?", tags:["english-daily"] },
+      { id:"eng-machining", deck:"engineering", word:"Machining", phon:"/məˈʃiːnɪŋ/", meaning:"机械加工", cn:"机械加工", example:"Machining includes turning, milling and drilling.", tags:["english-daily"] },
+      { id:"eng-compressive", deck:"engineering", word:"Compressive", phon:"/kəmˈpresɪv/", meaning:"压缩的；受压的", cn:"压缩的", example:"The column is under compressive load.", tags:["english-daily"] },
+      { id:"eng-tensile", deck:"engineering", word:"Tensile", phon:"/ˈtensaɪl/", meaning:"拉伸的；张力的", cn:"拉伸的", example:"Steel has high tensile strength.", tags:["english-daily"] },
+      { id:"eng-momentum", deck:"engineering", word:"Momentum", phon:"/məˈmentəm/", meaning:"动量", cn:"动量", example:"Momentum equals mass times velocity.", tags:["english-daily"] },
+      { id:"eng-truss", deck:"engineering", word:"Truss", phon:"/trʌs/", meaning:"桁架", cn:"桁架", example:"Analyse the forces in each member of the truss.", tags:["english-daily"] },
+      { id:"eng-integration", deck:"engineering", word:"Integration", phon:"/ˌɪntɪˈɡreɪʃn/", meaning:"积分", cn:"积分", example:"Use integration to find the area under the curve.", tags:["english-daily"] },
+      { id:"eng-shear-force", deck:"engineering", word:"Shear Force", phon:"/ʃɪə fɔːs/", meaning:"剪切力", cn:"剪切力", example:"The shear force diagram shows internal forces in the beam.", tags:["english-daily"] },
+      { id:"eng-bending-moment", deck:"engineering", word:"Bending Moment", phon:"/ˈbendɪŋ ˈməʊmənt/", meaning:"弯矩", cn:"弯矩", example:"Draw the bending moment diagram for this beam.", tags:["english-daily"] },
+      { id:"eng-friction", deck:"engineering", word:"Friction", phon:"/ˈfrɪkʃn/", meaning:"摩擦力", cn:"摩擦力", example:"Friction opposes relative motion between surfaces.", tags:["english-daily"] },
+      { id:"eng-kinetic-energy", deck:"engineering", word:"Kinetic Energy", phon:"/kɪˈnetɪk ˈenədʒi/", meaning:"动能", cn:"动能", example:"Kinetic energy equals half times mass times velocity squared.", tags:["english-daily"] },
+      { id:"eng-potential-energy", deck:"engineering", word:"Potential Energy", phon:"/pəˈtenʃl ˈenədʒi/", meaning:"势能", cn:"势能", example:"The ball gains potential energy as it rises.", tags:["english-daily"] },
+      { id:"eng-linear-transformation", deck:"engineering", word:"Linear Transformation", phon:"/ˈlɪniə ˌtrænsfəˈmeɪʃn/", meaning:"线性变换", cn:"线性变换", example:"T is a linear transformation from R² to R³.", tags:["english-daily"] },
+      { id:"eng-determinant", deck:"engineering", word:"Determinant", phon:"/dɪˈtɜːmɪnənt/", meaning:"行列式", cn:"行列式", example:"The determinant of a 2x2 matrix is ad-bc.", tags:["english-daily"] },
+      { id:"eng-cnc", deck:"engineering", word:"CNC", phon:"/siː en siː/", meaning:"数控加工（Computer Numerical Control）", cn:"数控加工", example:"The part was machined on a CNC milling machine.", tags:["english-daily"] },
+      { id:"eng-yield-strength", deck:"engineering", word:"Yield Strength", phon:"/jiːld streŋθ/", meaning:"屈服强度", cn:"屈服强度", example:"The applied stress must not exceed the yield strength.", tags:["english-daily"] }
+    ];
+
+    var state = loadState();
+    var activeFilter = 'all';
+    var mode = 'translation';
+    var practiceDeck = 'engineering';
+    var current = null;
+    var practiceHistory = [];
+    var currentCardRevealed = false;
+    var DAILY_TARGET_PER_DECK = 30;
+    var worldBriefLoading = false;
+    var PROVERBS = [
+      { en:"Fortune favors the prepared mind. — Louis Pasteur", cn:"机会偏爱有准备的头脑。—— 路易·巴斯德" },
+      { en:"We are what we repeatedly do. Excellence, then, is not an act, but a habit. — Will Durant", cn:"我们反复做什么，就成为什么；卓越不是一次行动，而是一种习惯。—— 威尔·杜兰特" },
+      { en:"The limits of my language mean the limits of my world. — Ludwig Wittgenstein", cn:"我的语言边界，就是我的世界边界。—— 维特根斯坦" },
+      { en:"Knowing yourself is the beginning of all wisdom. — Aristotle", cn:"认识自己，是一切智慧的开端。—— 亚里士多德" },
+      { en:"He who has a why to live can bear almost any how. — Friedrich Nietzsche", cn:"知道为何而活的人，几乎能承受任何方式的生活。—— 尼采" },
+      { en:"Stay hungry, stay foolish. — Steve Jobs", cn:"求知若饥，虚心若愚。—— 史蒂夫·乔布斯" },
+      { en:"The unexamined life is not worth living. — Socrates", cn:"未经审视的人生不值得过。—— 苏格拉底" },
+      { en:"A smooth sea never made a skilled sailor. — English proverb", cn:"平静的大海练不出熟练的水手。—— 英语谚语" },
+      { en:"Fall seven times and stand up eight. — Japanese proverb", cn:"跌倒七次，站起八次。—— 日本谚语" },
+      { en:"Measure twice, cut once. — Craftsman’s proverb", cn:"量两次，切一次。—— 工匠谚语" }
+    ];
+    var NEWS_CATEGORIES = [
+      { key:'cs', label:'CS', en:'Counter-Strike CS2 HLTV BLAST ESL today match', zh:'CS2 反恐精英 电竞 今日 比赛' },
+      { key:'worldcup', label:'WC', en:'FIFA World Cup 2026 today qualification football', zh:'世界杯 2026 足球 今日 预选赛' },
+      { key:'live', label:'LIVE', en:'breaking news live updates today', zh:'突发 实时 新闻 今日' }
+    ];
+
+    function todayKey() {
+      var d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    }
+    function radarKey() {
+      var d = new Date();
+      if (d.getHours() < 8) d.setDate(d.getDate() - 1);
+      return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    }
+    function loadState() {
+      try {
+        return JSON.parse(localStorage.getItem('iueWordsState')) || {};
+      } catch(e) {
+        return {};
+      }
+    }
+    function saveState() {
+      localStorage.setItem('iueWordsState', JSON.stringify(state));
+    }
+    function allWords() {
+      return WORDS.slice();
+    }
+    function wordState(id) {
+      if (!state.words) state.words = {};
+      if (!state.words[id]) state.words[id] = { known:false, correct:0, wrong:0, seen:0 };
+      return state.words[id];
+    }
+    function deckWords(deck) {
+      return allWords().filter(function(w){ return w.deck === deck; });
+    }
+    function hashDay(key) {
+      var n = 0;
+      for (var i = 0; i < key.length; i++) n = (n * 31 + key.charCodeAt(i)) >>> 0;
+      return n;
+    }
+    function dailyProverb() {
+      return PROVERBS[hashDay(todayKey()) % PROVERBS.length];
+    }
+    function seededShuffle(list, seed) {
+      var arr = list.slice();
+      var s = seed || 1;
+      for (var i = arr.length - 1; i > 0; i--) {
+        s = (s * 1664525 + 1013904223) >>> 0;
+        var j = s % (i + 1);
+        var tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+      }
+      return arr;
+    }
+    function dailyPlan() {
+      var day = todayKey();
+      if (!state.daily) state.daily = {};
+      if (state.daily[day] && state.daily[day].words && state.daily[day].words.length >= DAILY_TARGET_PER_DECK * 3) return state.daily[day];
+
+      var words = allWords();
+      var byId = {};
+      words.forEach(function(w){ byId[w.id] = w; });
+      if (!state.reviewQueue) state.reviewQueue = {};
+
+      var seed = hashDay(day);
+      var picked = [];
+      var pickedSet = {};
+      function deckCount(deck) {
+        return picked.filter(function(id){ return byId[id] && byId[id].deck === deck; }).length;
+      }
+      function add(id, deck) {
+        if (!byId[id] || pickedSet[id]) return;
+        if (deck && byId[id].deck !== deck) return;
+        if (deck && deckCount(deck) >= DAILY_TARGET_PER_DECK) return;
+        picked.push(id);
+        pickedSet[id] = true;
+      }
+
+      ['engineering','aussie','ielts'].forEach(function(deck) {
+        Object.keys(state.reviewQueue).forEach(function(id) {
+          if (state.reviewQueue[id] > 0) add(id, deck);
+        });
+        var deckList = seededShuffle(words.filter(function(w){ return w.deck === deck; }), seed + deck.length);
+        for (var i = 0; i < deckList.length && deckCount(deck) < DAILY_TARGET_PER_DECK; i++) {
+          add(deckList[i].id, deck);
+        }
+      });
+
+      var tasks = {};
+      picked.forEach(function(id){ tasks[id] = { translation:false, listening:false }; });
+      state.daily[day] = { words:picked, tasks:tasks, complete:false };
+
+      Object.keys(state.reviewQueue).forEach(function(id) {
+        state.reviewQueue[id] -= 1;
+        if (state.reviewQueue[id] <= 0) delete state.reviewQueue[id];
+      });
+      saveState();
+      return state.daily[day];
+    }
+    function dailyStats() {
+      var plan = dailyPlan();
+      var total = plan.words.length * 2;
+      var done = plan.words.reduce(function(sum, id) {
+        var t = plan.tasks[id] || {};
+        return sum + (t.translation ? 1 : 0) + (t.listening ? 1 : 0);
+      }, 0);
+      return { total:total, done:done, remaining:Math.max(0,total-done), complete:total > 0 && done >= total };
+    }
+    function deckDailyStats(deck) {
+      var plan = dailyPlan();
+      var byId = {};
+      allWords().forEach(function(w){ byId[w.id] = w; });
+      var ids = plan.words.filter(function(id){ return byId[id] && byId[id].deck === deck; });
+      var total = ids.length * 2;
+      var done = ids.reduce(function(sum, id) {
+        var t = plan.tasks[id] || {};
+        return sum + (t.translation ? 1 : 0) + (t.listening ? 1 : 0);
+      }, 0);
+      return { total:total, done:done, pct:total ? Math.round(done / total * 100) : 0 };
+    }
+    function markDailyTask(id, task) {
+      var plan = dailyPlan();
+      if (!plan.tasks[id]) plan.tasks[id] = { translation:false, listening:false };
+      if (task === 'translation' || task === 'listening') plan.tasks[id][task] = true;
+      var stats = dailyStats();
+      if (stats.complete) {
+        plan.complete = true;
+        state.lastCheckIn = todayKey();
+        if (!state.checkIns) state.checkIns = {};
+        state.checkIns[todayKey()] = true;
+      }
+      saveState();
+    }
+    function queueReview(id) {
+      if (!state.reviewQueue) state.reviewQueue = {};
+      state.reviewQueue[id] = Math.max(state.reviewQueue[id] || 0, 2);
+    }
+    function reviewQueueCount() {
+      if (!state.reviewQueue) return 0;
+      return Object.keys(state.reviewQueue).length;
+    }
+    function showScreen(name) {
+      document.querySelectorAll('.screen').forEach(function(el){ el.classList.remove('active'); });
+      document.getElementById('screen-' + name).classList.add('active');
+      document.querySelectorAll('.tab').forEach(function(el){ el.classList.toggle('active', el.dataset.tab === name); });
+      if (name === 'practice') nextPractice(false);
+      render();
+    }
+    function render() {
+      renderHome();
+      renderFilters();
+      renderLibrary();
+      updatePracticeBadges();
+    }
+    function hydrateAvatar() {
+      var img = document.getElementById('avatar-img');
+      fetch('index.html').then(function(res){ return res.text(); }).then(function(html) {
+        var match = html.match(/<img\s+src="([^"]+)"/);
+        if (match && img) img.src = match[1];
+      }).catch(function() {
+        if (img) {
+          img.removeAttribute('src');
+          img.alt = 'Aa';
+        }
+      });
+    }
+    function renderHome() {
+      var words = allWords();
+      var total = words.length;
+      var known = words.filter(function(w){ return wordState(w.id).known; }).length;
+      var correct = words.reduce(function(sum,w){ return sum + (wordState(w.id).correct || 0); }, 0);
+      var due = reviewQueueCount();
+      var plan = dailyPlan();
+      var stats = dailyStats();
+      var pct = stats.total ? Math.min(100, Math.round(stats.done / stats.total * 100)) : 0;
+      var proverb = dailyProverb();
+      document.getElementById('known-count').textContent = known;
+      document.getElementById('write-count').textContent = correct;
+      document.getElementById('due-count').textContent = due;
+      document.getElementById('daily-proverb').textContent = proverb.en;
+      document.getElementById('daily-proverb-cn').textContent = proverb.cn;
+      document.getElementById('today-fill').style.width = pct + '%';
+      document.getElementById('today-label').textContent = '今日 ' + stats.done + ' / ' + stats.total + ' · ' + plan.words.length + '词';
+      document.getElementById('checkin-label').textContent = stats.complete ? '今天已打卡' : '还差 ' + stats.remaining;
+      document.getElementById('streak-num').textContent = calcStreak();
+      document.getElementById('home-badge').textContent = stats.remaining;
+      document.getElementById('practice-badge').textContent = stats.remaining;
+
+      var deckGrid = document.getElementById('deck-grid');
+      deckGrid.innerHTML = Object.keys(DECKS).map(function(key) {
+        var d = DECKS[key];
+        var list = deckWords(key);
+        var deckStats = deckDailyStats(key);
+        return '<div class="deck-card" onclick="openDeck(&quot;'+key+'&quot;)">'
+          + '<div class="deck-head"><div class="deck-left">'
+          + '<div class="deck-icon" style="background:'+d.soft+';color:'+d.color+'">'+d.icon+'</div>'
+          + '<div><div class="deck-title">'+d.label+'</div><div class="deck-note">'+d.note+'</div></div>'
+          + '</div><div class="deck-count">'+deckStats.done+'/'+deckStats.total+'</div></div>'
+          + '<div class="deck-bar"><div style="width:'+deckStats.pct+'%;background:'+d.color+'"></div></div>'
+          + '</div>';
+      }).join('');
+
+      renderWorldBrief();
+    }
+    function renderWorldBrief() {
+      var box = document.getElementById('daily-list');
+      if (!box) return;
+      var day = radarKey();
+      if (!state.worldBrief) state.worldBrief = {};
+      if (state.worldBrief[day] && state.worldBrief[day].version === 17 && state.worldBrief[day].items && state.worldBrief[day].items.length) {
+        box.innerHTML = state.worldBrief[day].items.map(function(item) {
+            return '<a class="quick-item brief" href="'+escapeAttr(item.url)+'" target="_blank" rel="noopener">'
+              + '<div><div class="brief-title">'+escapeHtml(item.title)+'</div>'
+              + '<div class="brief-cn">'+escapeHtml(repairBrokenText(item.cnTitle || summarizeHeadline(item.title, item.category)))+'</div>'
+              + '<div class="brief-meta">'+escapeHtml(item.source || 'Google News')+' · '+escapeHtml(item.time || 'live')+'</div></div>'
+              + '<span class="brief-cat">'+escapeHtml(item.category)+'</span>'
+              + '</a>';
+          }).join('');
+        refreshWorldBriefIfStale(day);
+        return;
+      }
+      box.innerHTML = '<div class="quick-item brief"><div><div class="brief-title">Loading today radar...</div><div class="brief-meta">CS · F1 · World Cup · Aerospace · Economy · Research · Live</div></div><span class="brief-cat">LIVE</span></div>';
+      loadWorldBrief(day);
+    }
+    function loadWorldBrief(day) {
+      if (worldBriefLoading) return;
+      worldBriefLoading = true;
+      Promise.all(NEWS_CATEGORIES.map(function(cat) {
+        return withTimeout(fetchNewsCategory(cat), 8000).catch(function(){ return null; });
+      })).then(function(items) {
+        items = featuredRadarItems(day).concat(items.map(function(item, index) {
+          return item || fallbackRadarItem(NEWS_CATEGORIES[index]);
+        }));
+        if (!items.length) throw new Error('empty brief');
+        if (!state.worldBrief) state.worldBrief = {};
+        state.worldBrief[day] = { version:17, items:items, savedAt:new Date().toISOString() };
+        saveState();
+        worldBriefLoading = false;
+        renderWorldBrief();
+      }).catch(function() {
+        worldBriefLoading = false;
+        var box = document.getElementById('daily-list');
+        if (!box) return;
+        box.innerHTML = '<div class="quick-item brief"><div><div class="brief-title">Bilingual news is unavailable right now.</div><div class="brief-cn">新闻源暂时没有返回。稍后刷新，或者先用这句练口语：What changed in the world today?</div><div class="brief-meta">Google News feed · offline fallback</div></div><span class="brief-cat">OFF</span></div>';
+      });
+    }
+    function refreshWorldBriefIfStale(day) {
+      var brief = state.worldBrief && state.worldBrief[day];
+      if (!brief || !brief.savedAt || worldBriefLoading) return;
+      var saved = new Date(brief.savedAt);
+      if (isNaN(saved.getTime())) return;
+      var age = Date.now() - saved.getTime();
+      if (age > 30 * 60 * 1000) loadWorldBrief(day);
+    }
+    function withTimeout(promise, ms) {
+      return new Promise(function(resolve, reject) {
+        var timer = setTimeout(function(){ reject(new Error('timeout')); }, ms);
+        promise.then(function(value) {
+          clearTimeout(timer);
+          resolve(value);
+        }).catch(function(err) {
+          clearTimeout(timer);
+          reject(err);
+        });
+      });
+    }
+    function featuredRadarItems(day) {
+      var items = [];
+      if (day === '2026-06-20') {
+        items.push({
+          category:'CS2',
+          title:'Team Spirit vs Team Falcons at IEM Cologne Major 2026 starts at 5:00 PM UTC.',
+          cnTitle:'绿龙 Team Spirit 今天打 Falcons；悉尼时间是 6月21日凌晨 3:00。',
+          url:'https://blast.tv/cs/tournaments/tournamentId/match/c5faedd3/spirit-falcons',
+          source:'BLAST.tv',
+          time:'Jun 20 · 5:00 PM UTC / Jun 21 · 3:00 AM Sydney'
+        });
+      }
+      var f1 = nextF1Radar(day);
+      if (f1) items.push(f1);
+      var space = spaceRadar(day);
+      if (space) items.push(space);
+      var economy = economyRadar(day);
+      if (economy) items.push(economy);
+      var science = scienceRadar(day);
+      if (science) items.push(science);
+      return items;
+    }
+    function nextF1Radar(day) {
+      if (day <= '2026-06-28') {
+        return {
+          category:'F1',
+          title:'F1’s next stop is the Austrian Grand Prix at Spielberg, June 26–28.',
+          cnTitle:'F1 下一站是奥地利大奖赛，6月26–28日，红牛环 Spielberg。',
+          url:'https://www.formula1.com/en/racing/2026',
+          source:'Formula 1',
+          time:'Next race · Jun 26–28'
+        };
+      }
+      return null;
+    }
+    function spaceRadar(day) {
+      return {
+        category:'SPACE',
+        title:'Space radar: Falcon 9 has fresh June launches; next watch is late June from Vandenberg/Florida.',
+        cnTitle:'航空航天：SpaceX 6月17日刚发射 BlueBird 8-10；下一批可关注 6月28日左右 Falcon 9 / Starlink 17-40，NASA 近期节点包括 Swift Boost（NET 6月）和 Roman Space Telescope（8月30日）。',
+        url:'https://nextspaceflight.com/launches/',
+        source:'Next Spaceflight · NASA · SpaceX',
+        time:'Fresh radar · Jun 20'
+      };
+    }
+    function economyRadar(day) {
+      return {
+        category:'ECON',
+        title:'Macro radar: Fed just held rates; next watch is Fed July, RBA August, BoK July, and China July policy signals.',
+        cnTitle:'经济：美联储 6月17日维持 3.5%-3.75%，下一次看 7月28-29日；澳洲 RBA 6月16日维持 4.35%，下一次重点看 8月；韩国央行 5月维持 2.50%，下一次关注 7月16日；中国重点看 7月政治局会议的稳增长/产业政策信号。',
+        url:'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm',
+        source:'Fed · RBA · BoK · China policy calendar',
+        time:'Policy radar'
+      };
+    }
+    function scienceRadar(day) {
+      return {
+        category:'SCI',
+        title:'Science radar: stem-cell immune reset kept severe autoimmune disease in remission for 15 years.',
+        cnTitle:'科研突破：干细胞“重置免疫系统”让严重自身免疫病长期缓解，Nature 报道两名患者接受治疗后 15 年仍无严重复发；含金量在于它不是短期症状控制，而是可能改写免疫系统本身。',
+        url:'https://www.nature.com/news',
+        source:'Nature',
+        time:'Jun 19 · high-value breakthrough'
+      };
+    }
+    function fetchNewsCategory(cat) {
+      return Promise.all([
+        fetchGoogleNews(cat.en, 'en').catch(function(){ return null; }),
+        fetchGoogleNews(cat.zh, 'zh').catch(function(){ return null; })
+      ]).then(function(results) {
+        var en = results[0];
+        var zh = results[1];
+        if (zh && (isBrokenNewsText(zh.title) || isLowQualityNews(zh.title))) zh = null;
+        if (!en && !zh) return null;
+        return {
+          category:cat.label,
+          title:shortBrief(en ? en.title : 'Open today’s ' + cat.label.toLowerCase() + ' radar.'),
+          cnTitle:zh ? shortBrief(zh.title) : summarizeHeadline(en ? en.title : '', cat.label),
+          url:(en && en.link) || (zh && zh.link) || googleNewsSearchUrl(cat.en, 'en'),
+          source:(en && en.source) || 'Google News',
+          time:(en && en.pubDate) ? formatNewsTime(en.pubDate) : 'live'
+        };
+      });
+    }
+    function fallbackRadarItem(cat) {
+      var fallback = {
+        cs:['Open today’s CS2 match radar.', 'CS：查看今天的 CS2 赛程、队伍和赛果。'],
+        worldcup:['Open today’s World Cup football radar.', '世界杯：查看今天的世界杯/预选赛相关动态。'],
+        space:['Open fresh aerospace and SpaceX search results.', '航空航天：最近 7 天没抓到干净新闻，点开看 SpaceX / NASA 最新搜索。'],
+        economy:['Open today’s China, Australia, US and South Korea economy radar.', '经济：查看中国、澳洲、美国、韩国今天的市场和政策动态。'],
+        research:['Open today’s science research radar.', '科研：查看今天大学、论文和科学突破动态。'],
+        live:['Open live breaking updates.', '实时：查看今天的突发和滚动更新。']
+      }[cat.key] || ['Open today’s radar.', '查看今天的相关动态。'];
+      return {
+        category:cat.label,
+        title:fallback[0],
+        cnTitle:fallback[1],
+        url:googleNewsSearchUrl(cat.en, 'en'),
+        source:'Google News search',
+        time:'live'
+      };
+    }
+    function fetchGoogleNews(query, lang) {
+      var rss = googleNewsRssUrl(query, lang);
+      var url = 'https://api.rss2json.com/v1/api.json?rss_url=' + urlEncode(rss);
+      return fetch(url).then(function(res){ return res.json(); }).then(function(data) {
+        var list = data && data.items ? data.items : [];
+        var item = list.map(function(entry) {
+          return {
+            title:cleanNewsTitle(entry.title || ''),
+            link:entry.link || googleNewsSearchUrl(query, lang),
+            pubDate:entry.pubDate || '',
+            source:extractNewsSource(entry.title || '') || 'Google News'
+          };
+        }).filter(function(entry) {
+          return entry.title && !isLowQualityNews(entry.title) && isFreshNews(entry.pubDate, 7);
+        })[0];
+        if (!item) throw new Error('empty feed');
+        return item;
+      });
+    }
+    function googleNewsRssUrl(query, lang) {
+      if (lang === 'zh') return 'https://news.google.com/rss/search?q=' + urlEncode(query) + '&hl=zh-CN&gl=CN&ceid=CN:zh-Hans';
+      return 'https://news.google.com/rss/search?q=' + urlEncode(query) + '&hl=en-US&gl=US&ceid=US:en';
+    }
+    function googleNewsSearchUrl(query, lang) {
+      if (lang === 'zh') return 'https://news.google.com/search?q=' + urlEncode(query) + '&hl=zh-CN&gl=CN&ceid=CN:zh-Hans';
+      return 'https://news.google.com/search?q=' + urlEncode(query) + '&hl=en-US&gl=US&ceid=US:en';
+    }
+    function urlEncode(str) {
+      if (typeof encodeURIComponent === 'function') return encodeURIComponent(str);
+      return String(str || '').replace(/[^A-Za-z0-9_.~-]/g, function(ch) {
+        if (ch === ' ') return '%20';
+        var hex = ch.charCodeAt(0).toString(16).toUpperCase();
+        return '%' + (hex.length === 1 ? '0' + hex : hex);
+      });
+    }
+    function cleanNewsTitle(title) {
+      var text = decodeHtml(String(title || '')).replace(/\s+/g,' ').trim();
+      var parts = text.split(' - ');
+      if (parts.length > 1) parts.pop();
+      return parts.join(' - ').trim();
+    }
+    function extractNewsSource(title) {
+      var parts = decodeHtml(String(title || '')).split(' - ');
+      return parts.length > 1 ? parts[parts.length - 1].trim() : '';
+    }
+    function summarizeHeadline(title, category) {
+      var original = cleanNewsTitle(title || '');
+      if (!original) return category + ' 今日动态：点开查看最新消息。';
+      var text = original;
+      var replacements = [
+        [/Coming to XBOX Game Pass:?/ig,'Xbox Game Pass 即将加入'],
+        [/Counter-Strike/ig,'CS'],
+        [/CS2/ig,'CS2'],
+        [/HLTV/ig,'HLTV'],
+        [/BLAST/ig,'BLAST'],
+        [/ESL/ig,'ESL'],
+        [/Game Pass/ig,'Game Pass'],
+        [/EA Sports FC 26/ig,'EA Sports FC 26'],
+        [/RV There Yet\\?/ig,'RV There Yet?'],
+        [/Winds of Arcana: Ruination/ig,'Winds of Arcana: Ruination'],
+        [/NCCU Men’s Tennis Earns Berth in UTR Sports NIT Championship Field/ig,'NCCU 男子网球队获得 UTR Sports NIT 锦标赛席位'],
+        [/AI-first/ig,'AI 优先'],
+        [/AI-powered/ig,'AI 驱动'],
+        [/artificial intelligence/ig,'人工智能'],
+        [/aerospace/ig,'航空航天'],
+        [/SpaceX/ig,'SpaceX'],
+        [/rocket launch/ig,'火箭发射'],
+        [/NASA/ig,'NASA'],
+        [/FIFA World Cup 2026/ig,'2026 世界杯'],
+        [/World Cup/ig,'世界杯'],
+        [/qualification/ig,'预选赛'],
+        [/China/ig,'中国'],
+        [/Australia/ig,'澳洲'],
+        [/United States/ig,'美国'],
+        [/South Korea/ig,'韩国'],
+        [/startup/ig,'初创公司'],
+        [/raises/ig,'融资'],
+        [/crores/ig,'千万卢比'],
+        [/in-store music intelligence platform/ig,'门店音乐智能平台'],
+        [/commercial spaces/ig,'商业空间'],
+        [/sports?/ig,'体育'],
+        [/football/ig,'足球'],
+        [/basketball/ig,'篮球'],
+        [/tennis/ig,'网球'],
+        [/today/ig,'今日'],
+        [/this week/ig,'本周'],
+        [/economics?/ig,'经济'],
+        [/markets?/ig,'市场'],
+        [/politics?/ig,'政治'],
+        [/election/ig,'选举'],
+        [/conflict/ig,'冲突'],
+        [/world/ig,'全球'],
+        [/news/ig,'新闻'],
+        [/technology/ig,'科技'],
+        [/science/ig,'科学'],
+        [/research/ig,'科研'],
+        [/university/ig,'大学'],
+        [/breakthrough/ig,'突破'],
+        [/Open today’s/ig,'查看今天的'],
+        [/What’s happening/ig,'正在发生什么'],
+        [/Billion-Dollar/ig,'数十亿美元规模的'],
+        [/Gaming Boom/ig,'游戏产业热潮'],
+        [/Global Entertainment/ig,'全球娱乐产业']
+      ];
+      replacements.forEach(function(pair){ text = text.replace(pair[0], pair[1]); });
+      text = repairBrokenText(text);
+      if (!/[\u4e00-\u9fff]/.test(text)) {
+        return categoryLabelCn(category) + '：' + original;
+      }
+      text = text.replace(/\\?\\?/g,'?').replace(/\\s*\\|\\s*/g,'，').replace(/\\s+/g,' ').trim();
+      return shortBrief(categoryLabelCn(category) + '：' + text);
+    }
+    function categoryLabelCn(category) {
+      return {
+        CS2:'电竞',
+        F1:'F1',
+        CS:'CS',
+        WC:'世界杯',
+        SPACE:'航空航天',
+        ECON:'经济',
+        SCI:'科研',
+        LIVE:'实时'
+      }[category] || '动态';
+    }
+    function isLowQualityNews(title) {
+      return /免费|直播|在线|入口|平台|app下载|高清|一网打尽|详解|体育在线|博彩|赔率|盘口|betting|走地|travel|tourism/i.test(String(title || ''));
+    }
+    function isFreshNews(value, maxDays) {
+      var d = parseNewsDate(value);
+      if (!d) return false;
+      var now = new Date();
+      var age = now.getTime() - d.getTime();
+      return age >= -12 * 60 * 60 * 1000 && age <= maxDays * 24 * 60 * 60 * 1000;
+    }
+    function parseNewsDate(value) {
+      if (!value) return null;
+      var d = new Date(String(value).replace(' ', 'T') + 'Z');
+      if (isNaN(d.getTime())) d = new Date(value);
+      return isNaN(d.getTime()) ? null : d;
+    }
+    function isBrokenNewsText(title) {
+      var text = String(title || '');
+      return (text.match(/\?/g) || []).length > 4 || /\?.\?.\?/.test(text);
+    }
+    function decodeHtml(str) {
+      if (!document.createElement) return str;
+      var el = document.createElement('textarea');
+      el.innerHTML = str;
+      return el.value;
+    }
+    function repairBrokenText(text) {
+      var value = String(text || '')
+        .replace(/\?([\u4e00-\u9fff])/g,'$1')
+        .replace(/([\u4e00-\u9fff])\?/g,'$1')
+        .replace(/\?([A-Za-z])/g,'$1')
+        .replace(/([A-Za-z])\?/g,'$1');
+      if (/[\u4e00-\u9fff]/.test(value) && (value.match(/\?/g) || []).length > 0) {
+        value = value.replace(/\?/g,'');
+      }
+      return value;
+    }
+    function formatNewsTime(value) {
+      var d = parseNewsDate(value);
+      if (!d) return String(value || '').slice(0, 16);
+      return d.toLocaleString([], { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+    }
+    function shortBrief(text) {
+      text = String(text || '').replace(/\s+/g,' ').trim();
+      if (text.length <= 190) return text;
+      var cut = text.slice(0, 190);
+      var space = cut.lastIndexOf(' ');
+      return cut.slice(0, space > 120 ? space : 190) + '...';
+    }
+    function renderFilters() {
+      var filters = [{key:'all',label:'全部'}].concat(Object.keys(DECKS).map(function(k){ return {key:k,label:DECKS[k].label}; }));
+      document.getElementById('filter-row').innerHTML = filters.map(function(f) {
+        return '<button class="chip '+(activeFilter===f.key?'active':'')+'" onclick="setFilter(&quot;'+f.key+'&quot;)">'+f.label+'</button>';
+      }).join('');
+    }
+    function renderLibrary() {
+      var list = allWords().filter(function(w){ return activeFilter === 'all' || w.deck === activeFilter; });
+      document.getElementById('word-list').innerHTML = list.map(function(w) {
+        var d = DECKS[w.deck];
+        var ws = wordState(w.id);
+        return '<div class="word-card" id="word-'+w.id+'">'
+          + '<div class="word-top" onclick="toggleWord(&quot;'+w.id+'&quot;)">'
+          + '<div class="word-main"><div class="word" style="color:'+d.color+'">'+escapeHtml(w.word)+'</div>'
+          + '<div class="phonetic">'+escapeHtml(w.phon || '')+'</div><div class="meaning">'+escapeHtml(w.meaning)+'</div></div>'
+          + '<div class="word-actions">'
+          + '<button class="icon-btn" onclick="event.stopPropagation(); speakWord(&quot;'+w.id+'&quot;)">▶</button>'
+          + '<button class="icon-btn '+(ws.known?'done':'')+'" onclick="event.stopPropagation(); toggleKnown(&quot;'+w.id+'&quot;)">'+(ws.known?'✓':'+' )+'</button>'
+          + '</div></div>'
+          + '<div class="word-body"><div class="example"><strong>Example</strong><br>'+escapeHtml(w.example)+'</div>'
+          + '<div class="word-meta">'+(w.tags || []).map(function(t){ return '<span class="pill">'+escapeHtml(t)+'</span>'; }).join('')+'</div></div>'
+          + '</div>';
+      }).join('');
+    }
+    function setFilter(key) {
+      activeFilter = key;
+      render();
+    }
+    function openDeck(key) {
+      activeFilter = key;
+      showScreen('library');
+    }
+    function openWord(id) {
+      var w = allWords().find(function(x){ return x.id === id; });
+      if (w) activeFilter = w.deck;
+      showScreen('library');
+      setTimeout(function(){ toggleWord(id, true); }, 50);
+    }
+    function toggleWord(id, forceOpen) {
+      var el = document.getElementById('word-' + id);
+      if (!el) return;
+      if (forceOpen) el.classList.add('open');
+      else el.classList.toggle('open');
+      wordState(id).seen += 1;
+      saveState();
+      renderHome();
+    }
+    function toggleKnown(id) {
+      var ws = wordState(id);
+      ws.known = !ws.known;
+      saveState();
+      render();
+      toast(ws.known ? '已标记掌握：' + getWord(id).word : '已取消掌握');
+    }
+    function checkIn() {
+      var stats = dailyStats();
+      if (!stats.complete) {
+        toast('还不能打卡，今天还差 ' + stats.remaining + ' 个训练项');
+        showScreen('practice');
+        return;
+      }
+      state.lastCheckIn = todayKey();
+      if (!state.checkIns) state.checkIns = {};
+      state.checkIns[todayKey()] = true;
+      dailyPlan().complete = true;
+      saveState();
+      render();
+      toast('今天打卡完成，宝宝稳稳推进呀');
+    }
+    function resetToday() {
+      var day = todayKey();
+      if (state.daily && state.daily[day]) delete state.daily[day];
+      if (state.checkIns && state.checkIns[day]) delete state.checkIns[day];
+      if (state.lastCheckIn === day) state.lastCheckIn = '';
+      saveState();
+      render();
+      toast('今日进度已重置');
+    }
+    function calcStreak() {
+      if (!state.checkIns) return 0;
+      var count = 0;
+      var d = new Date();
+      for (var i=0; i<365; i++) {
+        var key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+        if (state.checkIns[key]) count++;
+        else break;
+        d.setDate(d.getDate() - 1);
+      }
+      return count;
+    }
+    function getWord(id) {
+      return allWords().find(function(w){ return w.id === id; });
+    }
+    function setMode(next) {
+      mode = next;
+      practiceHistory = [];
+      document.querySelectorAll('[data-mode]').forEach(function(btn){ btn.classList.toggle('active', btn.dataset.mode === mode); });
+      nextPractice(false);
+    }
+    function setPracticeDeck(deck) {
+      practiceDeck = deck;
+      practiceHistory = [];
+      document.querySelectorAll('[data-practice-deck]').forEach(function(btn){
+        btn.classList.toggle('active', btn.dataset.practiceDeck === practiceDeck);
+      });
+      nextPractice(false);
+    }
+    function startPractice(next, id) {
+      mode = next;
+      document.querySelectorAll('[data-mode]').forEach(function(btn){ btn.classList.toggle('active', btn.dataset.mode === mode); });
+      current = getWord(id);
+      if (current) {
+        practiceDeck = current.deck;
+        practiceHistory = [];
+        document.querySelectorAll('[data-practice-deck]').forEach(function(btn){
+          btn.classList.toggle('active', btn.dataset.practiceDeck === practiceDeck);
+        });
+      }
+      showScreen('practice');
+      renderPracticeCard();
+    }
+    function pickPracticeWord() {
+      var plan = dailyPlan();
+      var byId = {};
+      allWords().forEach(function(w){ byId[w.id] = w; });
+      var dailyPool = plan.words.map(function(id){ return byId[id]; }).filter(Boolean).filter(function(w) {
+        var t = plan.tasks[w.id] || {};
+        if (w.deck !== practiceDeck) return false;
+        if (mode === 'translation') return !t.translation;
+        if (mode === 'listening') return !t.listening;
+        return true;
+      });
+      var fallback = allWords().filter(function(w){ return w.deck === practiceDeck; });
+      var pool = (dailyPool.length ? dailyPool : fallback).slice().sort(function(a,b){
+        var as = wordState(a.id), bs = wordState(b.id);
+        return (as.correct - as.wrong * 2) - (bs.correct - bs.wrong * 2);
+      });
+      var top = pool.slice(0, Math.min(14, pool.length));
+      return top[Math.floor(Math.random() * top.length)] || pool[0];
+    }
+    function nextPractice(clear) {
+      if (current && clear !== false) practiceHistory.push(current);
+      current = pickPracticeWord();
+      if (!current) return;
+      renderPracticeCard();
+      if (clear !== false) document.getElementById('answer-box').focus();
+    }
+    function previousPractice() {
+      if (!practiceHistory.length) {
+        toast('还没有上一题');
+        return;
+      }
+      current = practiceHistory.pop();
+      renderPracticeCard();
+      document.getElementById('answer-box').focus();
+    }
+    function renderPracticeCard() {
+      if (!current) return;
+      var kind = document.getElementById('practice-kind');
+      var prompt = document.getElementById('practice-prompt');
+      var sub = document.getElementById('practice-sub');
+      var input = document.getElementById('answer-box');
+      var feedback = document.getElementById('feedback');
+      var answer = document.getElementById('card-answer');
+      var hint = document.getElementById('tap-hint');
+      var answerPanel = document.getElementById('answer-panel');
+      var checkBtn = document.getElementById('check-btn');
+      currentCardRevealed = false;
+      input.value = '';
+      feedback.className = 'feedback';
+      feedback.textContent = '';
+      answer.className = 'card-answer';
+      answer.innerHTML = '<strong>' + escapeHtml(current.meaning) + '</strong><div class="card-example">' + escapeHtml(current.example) + '</div>';
+      hint.style.display = 'block';
+      checkBtn.style.display = '';
+      if (mode === 'translation') {
+        kind.textContent = deckLabel(current.deck) + ' · 中文默写';
+        prompt.textContent = current.cn || current.meaning;
+        sub.textContent = '看中文翻译，默写英文；完成一次算入今日打卡';
+        input.placeholder = 'type the English word';
+        answerPanel.style.display = 'block';
+      } else {
+        kind.textContent = deckLabel(current.deck) + ' · 听写';
+        prompt.textContent = '听音默写';
+        sub.textContent = '点发音，然后默写英文；完成一次算入今日打卡';
+        input.placeholder = 'type what you heard';
+        answerPanel.style.display = 'block';
+        setTimeout(speakCurrent, 250);
+      }
+    }
+    function deckLabel(deck) {
+      return DECKS[deck] ? DECKS[deck].label : deck;
+    }
+    function flipCurrentCard() {
+      if (!current) return;
+      var answer = document.getElementById('card-answer');
+      var hint = document.getElementById('tap-hint');
+      currentCardRevealed = !currentCardRevealed;
+      answer.classList.toggle('show', currentCardRevealed);
+      hint.style.display = currentCardRevealed ? 'none' : 'block';
+    }
+    function checkAnswer() {
+      if (!current) nextPractice(false);
+      var ans = document.getElementById('answer-box').value.trim().toLowerCase();
+      var ws = wordState(current.id);
+      var ok = false;
+      ok = normalize(ans) === normalize(current.word);
+      ws.seen += 1;
+      var feedback = document.getElementById('feedback');
+      if (ok) {
+        ws.correct += 1;
+        if (mode === 'translation' || mode === 'listening') markDailyTask(current.id, mode);
+        if (ws.correct >= 3) ws.known = true;
+        flipAnswerOpen();
+        feedback.className = 'feedback show good';
+        feedback.innerHTML = '对啦。<strong>' + escapeHtml(current.word) + '</strong> = ' + escapeHtml(current.meaning);
+      } else {
+        ws.wrong += 1;
+        if (mode === 'translation' || mode === 'listening') {
+          markDailyTask(current.id, mode);
+          queueReview(current.id);
+        }
+        flipAnswerOpen();
+        feedback.className = 'feedback show bad';
+        feedback.innerHTML = '差一点，今日进度已记录，已放进明后天复现池。答案是 <strong>' + escapeHtml(current.word) + '</strong><br>' + escapeHtml(current.meaning);
+      }
+      saveState();
+      renderHome();
+      updatePracticeBadges();
+    }
+    function revealAnswer() {
+      if (!current) return;
+      flipAnswerOpen();
+      var feedback = document.getElementById('feedback');
+      feedback.className = 'feedback show';
+      feedback.innerHTML = '<strong>' + escapeHtml(current.word) + '</strong><br>' + escapeHtml(current.meaning) + '<br><span style="color:var(--muted)">' + escapeHtml(current.example) + '</span>';
+      wordState(current.id).seen += 1;
+      saveState();
+      renderHome();
+    }
+    function flipAnswerOpen() {
+      currentCardRevealed = false;
+      flipCurrentCard();
+    }
+    function speakCurrent() {
+      if (current) speak(current.word);
+    }
+    function speakWord(id) {
+      var w = getWord(id);
+      if (w) speak(w.word);
+    }
+    function speak(text) {
+      if (!window.speechSynthesis) {
+        toast('这个浏览器不支持发音');
+        return;
+      }
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-AU';
+      u.rate = .86;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(u);
+    }
+    function updatePracticeBadges() {
+      var stats = dailyStats();
+      document.getElementById('practice-badge').textContent = stats.remaining;
+      document.getElementById('home-badge').textContent = stats.remaining;
+    }
+    function normalize(str) {
+      return String(str || '').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+    }
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g,function(ch){
+        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];
+      });
+    }
+    function escapeAttr(str) {
+      return escapeHtml(str).replace(/`/g,'&#96;');
+    }
+    function toast(msg) {
+      var el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 1800);
+    }
+    document.getElementById('answer-box').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') checkAnswer();
+    });
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) refreshWorldBriefIfStale(radarKey());
+    });
+    hydrateAvatar();
+    render();
+    nextPractice(false);
+  </script>
+</body>
+</html>
