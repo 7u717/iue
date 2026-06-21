@@ -1252,7 +1252,7 @@
       if (!box) return;
       var day = radarKey();
       if (!state.worldBrief) state.worldBrief = {};
-      if (state.worldBrief[day] && state.worldBrief[day].version === 17 && state.worldBrief[day].items && state.worldBrief[day].items.length) {
+      if (state.worldBrief[day] && state.worldBrief[day].version === 18 && state.worldBrief[day].items && state.worldBrief[day].items.length) {
         box.innerHTML = state.worldBrief[day].items.map(function(item) {
             return '<a class="quick-item brief" href="'+escapeAttr(item.url)+'" target="_blank" rel="noopener">'
               + '<div><div class="brief-title">'+escapeHtml(item.title)+'</div>'
@@ -1278,7 +1278,7 @@
         }));
         if (!items.length) throw new Error('empty brief');
         if (!state.worldBrief) state.worldBrief = {};
-        state.worldBrief[day] = { version:17, items:items, savedAt:new Date().toISOString() };
+        state.worldBrief[day] = { version:18, items:items, savedAt:new Date().toISOString() };
         saveState();
         worldBriefLoading = false;
         renderWorldBrief();
@@ -1319,6 +1319,16 @@
           url:'https://blast.tv/cs/tournaments/tournamentId/match/c5faedd3/spirit-falcons',
           source:'BLAST.tv',
           time:'Jun 20 · 5:00 PM UTC / Jun 21 · 3:00 AM Sydney'
+        });
+      }
+      if (day === '2026-06-21') {
+        items.push({
+          category:'MAJOR',
+          title:'IEM Cologne Major 2026 Grand Final is tonight: BO5 for the CS2 Major title at Lanxess Arena.',
+          cnTitle:'今晚是 CS2 Major 决赛日。IEM Cologne Major 2026 总决赛，BO5，冠军就在 Lanxess Arena 决出来；这应该是 Today Radar 最高优先级。',
+          url:'https://en.wikipedia.org/wiki/IEM_Cologne_Major_2026',
+          source:'IEM Cologne Major 2026',
+          time:'Jun 21 · Grand Final night'
         });
       }
       var f1 = nextF1Radar(day);
