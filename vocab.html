@@ -1252,7 +1252,7 @@
       if (!box) return;
       var day = radarKey();
       if (!state.worldBrief) state.worldBrief = {};
-      if (state.worldBrief[day] && state.worldBrief[day].version === 18 && state.worldBrief[day].items && state.worldBrief[day].items.length) {
+      if (state.worldBrief[day] && state.worldBrief[day].version === 19 && state.worldBrief[day].items && state.worldBrief[day].items.length) {
         box.innerHTML = state.worldBrief[day].items.map(function(item) {
             return '<a class="quick-item brief" href="'+escapeAttr(item.url)+'" target="_blank" rel="noopener">'
               + '<div><div class="brief-title">'+escapeHtml(item.title)+'</div>'
@@ -1278,7 +1278,7 @@
         }));
         if (!items.length) throw new Error('empty brief');
         if (!state.worldBrief) state.worldBrief = {};
-        state.worldBrief[day] = { version:18, items:items, savedAt:new Date().toISOString() };
+        state.worldBrief[day] = { version:19, items:items, savedAt:new Date().toISOString() };
         saveState();
         worldBriefLoading = false;
         renderWorldBrief();
@@ -1324,11 +1324,21 @@
       if (day === '2026-06-21') {
         items.push({
           category:'MAJOR',
-          title:'IEM Cologne Major 2026 Grand Final is tonight: BO5 for the CS2 Major title at Lanxess Arena.',
-          cnTitle:'今晚是 CS2 Major 决赛日。IEM Cologne Major 2026 总决赛，BO5，冠军就在 Lanxess Arena 决出来。',
-          url:'https://en.wikipedia.org/wiki/IEM_Cologne_Major_2026',
-          source:'IEM Cologne Major 2026',
-          time:'Jun 21 · Grand Final night'
+          title:'Falcons beat FURIA 3-0 to win IEM Cologne Major 2026; m0NESY takes MVP.',
+          cnTitle:'Falcons 3-0 横扫 FURIA，夺得 IEM Cologne Major 2026 冠军；m0NESY 拿下 MVP，NiKo 终于拿到 Major。',
+          url:'https://www.hltv.org/news/44972/falcons-sweep-furia-to-win-iem-cologne-major',
+          source:'HLTV · ESL',
+          time:'Jun 21 · champion update'
+        });
+      }
+      if (day === '2026-06-22') {
+        items.push({
+          category:'MAJOR',
+          title:'Falcons are the IEM Cologne Major champions after a 3-0 sweep over FURIA.',
+          cnTitle:'CS2：Falcons 3-0 FURIA 夺冠，m0NESY 获 IEM Cologne Major 2026 MVP。这个结果今天应放在最前面。',
+          url:'https://www.hltv.org/news/44973/m0nesy-clinches-iem-cologne-major-2026-mvp',
+          source:'HLTV',
+          time:'Jun 22 · latest result'
         });
       }
       var f1 = nextF1Radar(day);

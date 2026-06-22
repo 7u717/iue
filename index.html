@@ -957,6 +957,11 @@
         <div class="subtopic">圆三角恒等式：1+tan²u=sec²u　　1−sin²u=cos²u　　sec²u−1=tan²u</div>
         <div class="subtopic">双曲恒等式：cosh²u−sinh²u=1　→　1+sinh²u=cosh²u　，　1−tanh²u=sech²u</div>
         <div class="subtopic">回代（以 x=a·tan(u) 为例）：三角形对边=x，邻边=a，斜边=√(a²+x²)</div>
+        <div class="subtopic">定积分换元：上下限也要换成 u；如 x=3sec(u), x=3→u=0, x=6→u=π/3</div>
+        <div class="subtopic">扇形面积速算：∫₀ᵃ √(a²−x²) dx = πa²/4，例如 a=4 得 4π</div>
+        <div class="subtopic">f'/f 型：∫ f'(x)/f(x) dx = ln(abs(f(x))) + C</div>
+        <div class="subtopic">配方反三角：∫ 1/((x+h)²+a²) dx = (1/a) arctan((x+h)/a)+C</div>
+        <div class="subtopic">还原公式例：Iₙ=∫₀¹xⁿe⁻ˣdx → Iₙ=nIₙ₋₁−1/e；Iₙ=∫secⁿx dx → Iₙ=secⁿ⁻²(x)tan(x)/(n−1)+(n−2)Iₙ₋₂/(n−1)</div>
         <div class="subtopic">∫sech(u)du 法①：令 t=eᵘ → 2arctan(eᵘ)+C</div>
         <div class="subtopic">∫sech(u)du 法②：令 t=sinh(u) → arctan(sinh u)+C</div>
 
@@ -998,6 +1003,7 @@
         <div class="subtopic">🖥️ arcsin(x)　arccos(x)　arctan(x)　← 反三角</div>
         <div class="subtopic">🖥️ arcsinh(x)　arccosh(x)　arctanh(x)　← 反双曲</div>
         <div class="subtopic">🖥️ sqrt(x)　exp(x)　ln(abs(x))　← 根号、e次方、绝对值对数</div>
+        <div class="subtopic">🖥️ int(expr, x)　int(expr, x=a..b)　← 不定/定积分；π 写 Pi，e 写 exp(1)</div>
         <div class="subtopic">🖥️ sin(x)^2　tan(x)^2　← 平方写在括号后（不是 sin²(x)）</div>
         <div class="subtopic">🖥️ simplify(expr)　← 化简结果，导数后常用</div>
 
@@ -1863,10 +1869,10 @@
       { tag:"Ch2A", title:"积分技巧 I：三角积分与还原公式", file:"Holzer_chap2A_1231_Calculus_2026.pdf",
         yt:"trigonometric integrals reduction formula trig substitution", bili:"三角函数积分 还原公式 三角换元",
         mobius: true,
-        points:["【换元选择速查表】含 √(a²+x²) → x=a tan(u) 或 x=a sinh(u)；含 √(a²−x²) → x=a sin(u) 或 x=a tanh(u)；含 √(x²−a²) → x=a sec(u) 或 x=a cosh(u)","📌 圆三角换元四步：① 令 x=a·trig(u)，求 dx ② 代入被积式，用恒等式消根号（关键）③ 对 u 积分得结果 ④ 用直角三角形将 u 的结果回代成 x","📌 直角三角形回代法（以 x=a tan(u) 为例）：画直角三角形，对边=x, 邻边=a, 斜边=√(a²+x²)，由此直接读出 tan(u)=x/a, sec(u)=√(a²+x²)/a, sin(u)=x/√(a²+x²)","✅ 圆三角恒等式速查：1+tan²u = sec²u（消 √(a²+x²)）；1−sin²u = cos²u（消 √(a²−x²)）；sec²u−1 = tan²u（消 √(x²−a²)）","📌 双曲换元四步：① 令 x=a·sinh(u)（或 tanh/cosh），求 dx ② 用双曲恒等式消根号 ③ 对 u 积分 ④ 用反双曲函数回代","✅ 双曲恒等式速查：cosh²u − sinh²u = 1 → 1+sinh²u=cosh²u（消 √(a²+x²)）；1−tanh²u = sech²u（消 √(a²−x²)）","∫sech(u)du 方法①：令 t=eᵘ，sech(u)=2/(eᵘ+e⁻ᵘ)=2t/(t²+1)，化为 2∫1/(1+t²)dt = 2arctan(eᵘ)+C","∫sech(u)du 方法②：令 t=sinh(u)，dt=cosh(u)du，cosh²=1+t²，化为 ∫1/(1+t²)dt = arctan(sinh u)+C","❌ 易错（根号正负）：化简 √(cosh²u) = cosh(u)（cosh 恒正，直接取正）；√(cos²u) = |cos u|，需确认 u 范围使 cos u > 0","❌ 易错（回代遗漏）：用 u 表示的积分结果一定要回代成 x 的表达式，否则答题不完整","📌 Maple 语法速查：arcsinh(x), arctan(x), arcsin(x), arctanh(x), ln(abs(x)), sqrt(x), exp(x)；tan²(x) 写作 tan(x)^2","还原公式 reduction formula：∫sinⁿx dx 或 ∫secⁿx dx 等用递推式降次，常见于高次三角积分"] },
+        points:["【换元选择速查表】含 √(a²+x²) → x=a tan(u) 或 x=a sinh(u)；含 √(a²−x²) → x=a sin(u) 或 x=a tanh(u)；含 √(x²−a²) → x=a sec(u) 或 x=a cosh(u)","📌 圆三角换元四步：① 令 x=a·trig(u)，求 dx ② 代入被积式，用恒等式消根号（关键）③ 对 u 积分得结果 ④ 用直角三角形将 u 的结果回代成 x","📌 直角三角形回代法（以 x=a tan(u) 为例）：画直角三角形，对边=x, 邻边=a, 斜边=√(a²+x²)，由此直接读出 tan(u)=x/a, sec(u)=√(a²+x²)/a, sin(u)=x/√(a²+x²)","✅ 圆三角恒等式速查：1+tan²u = sec²u（消 √(a²+x²)）；1−sin²u = cos²u（消 √(a²−x²)）；sec²u−1 = tan²u（消 √(x²−a²)）","📌 双曲换元四步：① 令 x=a·sinh(u)（或 tanh/cosh），求 dx ② 用双曲恒等式消根号 ③ 对 u 积分 ④ 用反双曲函数回代","✅ 双曲恒等式速查：cosh²u − sinh²u = 1 → 1+sinh²u=cosh²u（消 √(a²+x²)）；1−tanh²u = sech²u（消 √(a²−x²)）","📌 定积分三角换元：上下限也一起换；例如 x=3sec(u)，x=3→u=0，x=6→u=π/3，再算 ∫sec(u)du","📌 几何速算：∫₀ᵃ √(a²−x²) dx 是半径 a 的四分之一圆面积 = πa²/4，a=4 时答案 4π","📌 换元优先级：若分子刚好是根号内部导数的一部分，如 ∫x/√(x²−9)dx，代数换元 u=x²−9 比三角换元更快","✅ f'/f 型：∫f'(x)/f(x)dx = ln|f(x)|+C；tanh(x)=sinh(x)/cosh(x)，所以 ∫tanh(x)dx=ln(cosh(x))+C","📌 配方法反三角：x²+8x+20=(x+4)²+4，所以 ∫1/(x²+8x+20)dx=(1/2)arctan((x+4)/2)+C","∫sech(u)du 方法①：令 t=eᵘ，sech(u)=2/(eᵘ+e⁻ᵘ)=2t/(t²+1)，化为 2∫1/(1+t²)dt = 2arctan(eᵘ)+C","∫sech(u)du 方法②：令 t=sinh(u)，dt=cosh(u)du，cosh²=1+t²，化为 ∫1/(1+t²)dt = arctan(sinh u)+C","还原公式 reduction formula：∫sinⁿx dx 或 ∫secⁿx dx 等用递推式降次，常见于高次三角积分","📌 Week 3 还原公式：Iₙ=∫₀¹xⁿe⁻ˣdx ⇒ Iₙ=nIₙ₋₁−1/e；Iₙ=∫secⁿx dx ⇒ Iₙ=secⁿ⁻²(x)tan(x)/(n−1)+(n−2)Iₙ₋₂/(n−1)","📌 Beta 函数递推：B(1,1)=1；B(m,n)=B(m−1,n)(m−1)/(m+n−1) 或 B(m,n−1)(n−1)/(m+n−1)","❌ 易错（根号正负）：化简 √(cosh²u) = cosh(u)（cosh 恒正，直接取正）；√(cos²u) = |cos u|，需确认 u 范围使 cos u > 0","❌ 易错（回代遗漏）：用 u 表示的积分结果一定要回代成 x 的表达式，否则答题不完整","📌 Maple 语法速查：arcsinh(x), arctan(x), arcsin(x), arctanh(x), ln(abs(x)), sqrt(x), exp(x)；tan²(x) 写作 tan(x)^2"] },
       { tag:"Ch2B", title:"积分技巧 II：有理函数与部分分式", file:"Holzer_chap2B_1231_Calculus_2026.pdf",
         yt:"partial fractions integration rational functions", bili:"部分分式分解 有理函数积分",
-        points:["处理假分式：分子次数 ≥ 分母次数时先做多项式长除法","部分分式分解三种情形：不同线性因子、重复线性因子、不可约二次因子","Cover-Up Rule：针对不同线性因子，快速求出对应系数","重复因子 (x−a)ⁿ 需展开成 A₁/(x−a)+A₂/(x−a)²+...+Aₙ/(x−a)ⁿ","不可约二次因子 (x²+bx+c) 对应项形式为 (Ax+B)/(x²+bx+c)，配方后用反三角/对数积分","Further Substitution：Weierstrass 替换 t=tan(x/2) 处理三角函数有理式","Sample Class Test 例题：综合练习选择合适技巧的顺序"] },
+        points:["处理假分式：分子次数 ≥ 分母次数时先做多项式长除法","部分分式分解三种情形：不同线性因子、重复线性因子、不可约二次因子","Cover-Up Rule：针对不同线性因子，快速求出对应系数","📌 非 monic 线性因子要记得链式系数：∫A/(kx+b)dx = (A/k)ln|kx+b|+C","📌 不同线性因子例：1/((x−4)(x−5)) = -1/(x−4)+1/(x−5)，积分为 ln|(x−5)/(x−4)|+C","重复因子 (x−a)ⁿ 需展开成 A₁/(x−a)+A₂/(x−a)²+...+Aₙ/(x−a)ⁿ","📌 重复因子例：1/((x−3)(x−4)²)=1/(x−3)−1/(x−4)+1/(x−4)²，最后一项积分是 −1/(x−4)","不可约二次因子 (x²+bx+c) 对应项形式为 (Ax+B)/(x²+bx+c)，配方后用反三角/对数积分","📌 有理式混合题：若分子含分母导数，先拆出 f'/f 的对数部分，剩下常数项再用 arctan 或部分分式","Further Substitution：Weierstrass 替换 t=tan(x/2) 处理三角函数有理式","Sample Class Test 例题：综合练习选择合适技巧的顺序"] },
       { tag:"Ch3A", title:"常微分方程入门 ODE Basics", file:"Holzer_chap3A_1231_Calculus_2026.pdf",
         yt:"first order differential equations separable linear exact", bili:"一阶微分方程 可分离变量 线性方程",
         points:["ODE 基本概念：阶（order）= 方程中最高阶导数的阶数","解的类型：通解（general solution，含任意常数）、特解（particular solution）、解析解","初值问题 IVP：给定初始条件 y(x₀)=y₀，确定通解中的常数","一阶可分离变量方程：dy/dx=g(x)h(y) ⇒ ∫dy/h(y) = ∫g(x)dx","一阶线性 ODE：y'+P(x)y=Q(x)，用积分因子 μ=e^∫P dx 求解","一阶精确方程 exact ODE：M dx+N dy=0，检验条件 ∂M/∂y=∂N/∂x，再求势函数","结合微积分基本定理（FTC）将隐式解写成显式形式"] },
