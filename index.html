@@ -193,6 +193,8 @@
       border-radius:6px;padding:2px 8px;margin-left:auto;flex-shrink:0;
     }
     .topic-side-tag { background:#102538;color:#93a8ba; }
+    .topic-side-tags { display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-left:auto;flex-shrink:0; }
+    .topic-side-tags .topic-side-tag { margin-left:0; }
     .topic-chevron { color: var(--dim); font-size: 11px; transition: transform .2s; flex-shrink: 0; }
     .topic-card.open .topic-chevron { transform: rotate(180deg); }
     .topic-body { display: none; padding: 0 18px 18px; }
@@ -260,6 +262,22 @@
       box-sizing:border-box;outline:none;line-height:1.6;
     }
     #memo-area:focus { border-color:var(--math-color); }
+    .sync-card {
+      margin-top:16px;padding:14px;border:1px solid var(--border);border-radius:14px;background:var(--surface2);
+    }
+    .sync-row { display:flex;gap:8px;margin-top:10px; }
+    .sync-input {
+      width:100%;border:1px solid var(--border);border-radius:10px;background:#0b0b0b;
+      color:var(--text);padding:10px 12px;font-size:12px;font-family:'Space Grotesk',sans-serif;
+      outline:none;box-sizing:border-box;
+    }
+    .sync-input:focus { border-color:var(--math-color); }
+    .sync-btn {
+      flex:1;border:1px solid var(--border);border-radius:10px;background:#121212;color:var(--text);
+      padding:10px 8px;font-size:12px;font-weight:800;cursor:pointer;
+    }
+    .sync-btn.primary { background:var(--math-color);border-color:var(--math-color);color:#06121f; }
+    .sync-status { min-height:16px;margin-top:9px;font-size:11px;color:var(--muted);line-height:1.45; }
 
     /* GRADE TRACKER */
     .gt-bar-wrap { margin:10px 0 14px; }
@@ -885,7 +903,7 @@
   </div>
 
   <!-- Progress -->
-  <div class="topic-group">
+  <div class="topic-group" id="math-progress-group">
     <div class="group-label">学习进度</div>
     <div class="topic-card" style="padding:16px;">
       <div class="progress-bar-wrap">
@@ -897,7 +915,7 @@
         <div class="progress-label"><span>线性代数</span><span id="alg-pct">0%</span></div>
         <div class="progress-track"><div class="progress-fill math-fill" id="alg-bar" style="width:0%"></div></div>
       </div>
-      <div style="height:14px;font-size:12px;color:var(--dim);margin-top:10px;">点击各知识点勾选完成状态</div>
+      <div style="height:14px;font-size:12px;color:var(--dim);margin-top:10px;">按 Möbius Lessons 统计，Week 1 复习不计入</div>
     </div>
   </div>
 
@@ -929,12 +947,12 @@
   <!-- Mobius Checklist -->
   <div class="topic-group">
   <!-- Formula Sheet + Maple Commands -->
-  <div class="topic-group">
-    <div class="group-label">📐 公式速查 & Maple 指令</div>
+  <div class="topic-group" id="formula-quickref-group">
+    <div class="group-label">📐 公式速查</div>
 
     <div class="topic-card" id="tc-formulas">
       <div class="topic-header" onclick="toggleTopic('tc-formulas')">
-        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">公式速查 Formula Sheet</div></div>
+        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">微积分公式速查 Calculus</div></div>
         <span class="topic-chevron">▼</span>
       </div>
       <div class="topic-body">
@@ -960,27 +978,51 @@
         <div class="subtopic">定积分换元：上下限也要换成 u；如 x=3sec(u), x=3→u=0, x=6→u=π/3</div>
         <div class="subtopic">扇形面积速算：∫₀ᵃ √(a²−x²) dx = πa²/4，例如 a=4 得 4π</div>
         <div class="subtopic">f'/f 型：∫ f'(x)/f(x) dx = ln(abs(f(x))) + C</div>
+        <div class="subtopic">基础对数积分：∫1/x dx = ln(abs(x)) + C</div>
+        <div class="subtopic">sec 积分：∫sec(x) dx = ln(abs(sec(x)+tan(x))) + C</div>
         <div class="subtopic">配方反三角：∫ 1/((x+h)²+a²) dx = (1/a) arctan((x+h)/a)+C</div>
+        <div class="subtopic">反三角标准式：∫1/(x²+a²) dx = (1/a) arctan(x/a)+C</div>
         <div class="subtopic">还原公式例：Iₙ=∫₀¹xⁿe⁻ˣdx → Iₙ=nIₙ₋₁−1/e；Iₙ=∫secⁿx dx → Iₙ=secⁿ⁻²(x)tan(x)/(n−1)+(n−2)Iₙ₋₂/(n−1)</div>
+        <div class="subtopic">降阶公式核心：先用分部积分/恒等式把 Iₙ 写成 Iₙ₋₁ 或 Iₙ₋₂，再递推到 base case</div>
+        <div class="subtopic">Beta Function：B(m,n)=∫₀¹xᵐ⁻¹(1−x)ⁿ⁻¹dx；B(m,n)=B(n,m)</div>
+        <div class="subtopic">Beta 递推：B(m,n)=((m−1)/(m+n−1))B(m−1,n)=((n−1)/(m+n−1))B(m,n−1)</div>
+        <div class="subtopic">整数 Beta：B(m,n)=((m−1)!(n−1)!)/(m+n−1)!，适合快速验算</div>
         <div class="subtopic">∫sech(u)du 法①：令 t=eᵘ → 2arctan(eᵘ)+C</div>
         <div class="subtopic">∫sech(u)du 法②：令 t=sinh(u) → arctan(sinh u)+C</div>
 
-        <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:10px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">Linear Algebra · 核心公式</div>
-        <div class="subtopic">行列式（2×2）：det[a b; c d] = ad − bc</div>
-        <div class="subtopic">行列式（3×3）：沿第一行展开，交替正负号 + − +</div>
-        <div class="subtopic">特征值：det(A − λI) = 0 → 解出 λ</div>
-        <div class="subtopic">特征向量：(A − λI)v = 0 → 解出 v（null space）</div>
-        <div class="subtopic">子空间判定：① 含零向量 ② 加法封闭 ③ 标量乘法封闭</div>
-        <div class="subtopic">线性无关：c₁v₁+c₂v₂+…=0 只有零解 → 无关；否则有关</div>
-        <div class="subtopic">Rank-Nullity 定理：rank(A) + nullity(A) = n（列数）</div>
-        <div class="subtopic">正交：u·v=0；单位向量：‖v‖=1；投影：proj_v(u) = (u·v/v·v)·v</div>
+      </div>
+    </div>
 
+    <div class="topic-card" id="tc-linear-formulas">
+      <div class="topic-header" onclick="toggleTopic('tc-linear-formulas')">
+        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">线性代数公式速查 Linear Algebra</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:6px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">向量空间 & 子空间</div>
+        <div class="subtopic">子空间判定：① 0∈W ② u,v∈W ⇒ u+v∈W ③ c∈R,v∈W ⇒ cv∈W</div>
+        <div class="subtopic">span{v₁,...,vₖ} = 所有线性组合 c₁v₁+...+cₖvₖ，必定是子空间</div>
+        <div class="subtopic">线性无关：c₁v₁+c₂v₂+...+cₖvₖ=0 只有零解；否则线性相关</div>
+        <div class="subtopic">齐次系统 Ax=0：自由变量存在 ⇒ 有非零解 ⇒ 列向量线性相关</div>
+        <div class="subtopic">行化简判定：每一列都有主元 ⇒ 只有零解 ⇒ 列向量线性无关</div>
+        <div class="subtopic">含零向量的集合一定线性相关；ℝⁿ 中超过 n 个向量也一定线性相关</div>
+
+        <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:10px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">矩阵 & 秩</div>
+        <div class="subtopic">行列式（2×2）：det[a b; c d] = ad − bc</div>
+        <div class="subtopic">行列式（3×3）：沿第一行展开，符号 + − +</div>
+        <div class="subtopic">列空间 col(A) = span{A 的列向量}；b∈col(A) ⇔ Ax=b 有解</div>
+        <div class="subtopic">Rank-Nullity：rank(A)+nullity(A)=n（n 是列数）</div>
+
+        <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:10px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">特征值 & 几何</div>
+        <div class="subtopic">特征值：det(A−λI)=0；特征向量：(A−λI)v=0 且 v≠0</div>
+        <div class="subtopic">对角化：A=PDP⁻¹，P 的列是特征向量，D 的对角线是特征值</div>
+        <div class="subtopic">正交：u·v=0；单位向量：‖v‖=1；投影：proj_v(u)=(u·v/v·v)v</div>
       </div>
     </div>
 
     <div class="topic-card" id="tc-maple-cmds">
       <div class="topic-header" onclick="toggleTopic('tc-maple-cmds')">
-        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">Maple 固定指令速查</div></div>
+        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">Maple 指令速查 Maple</div></div>
         <span class="topic-chevron">▼</span>
       </div>
       <div class="topic-body">
@@ -1007,9 +1049,18 @@
         <div class="subtopic">🖥️ sin(x)^2　tan(x)^2　← 平方写在括号后（不是 sin²(x)）</div>
         <div class="subtopic">🖥️ simplify(expr)　← 化简结果，导数后常用</div>
 
+        <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:10px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">部分分式 · ODE · 连乘 · Taylor</div>
+        <div class="subtopic">🖥️ convert(p/q, parfrac, x)　← 对 p/q 做部分分式分解</div>
+        <div class="subtopic">🖥️ dsolve({diff(y(x),x)+4*y(x)=cos(x)+x, y(0)=0}, y(x))　← 一阶 IVP</div>
+        <div class="subtopic">🖥️ dsolve({y(x)*diff(y(x),x$2)+diff(y(x),x)^2=0, y(0)=3, D(y)(0)=9}, y(x))　← 二阶 IVP，初始导数写 D(y)(0)</div>
+        <div class="subtopic">🖥️ product(x^2+k+9*x, k=190..1500)　← 连乘 Π；也可用 mul(...)</div>
+        <div class="subtopic">🖥️ coeff(series(exp(4*x)/(1-x), x=0, 8), x, 7)　← 取 Taylor 展开中 x^7 的系数</div>
+
         <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:10px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">❌ 常见错误</div>
         <div class="subtopic">❌ 乘法漏写 *：6x^5 要写 6*x^5，sin(9x-y) 要写 sin(9*x-y)</div>
         <div class="subtopic">❌ 幂次用错：x² 要写 x^2，不能写 x2 或 x²</div>
+        <div class="subtopic">❌ Maple 输出题不要粘 y(x)=，题目要求只填右侧表达式时要删掉左边</div>
+        <div class="subtopic">❌ product / series 题不要加赋值 := 或分号 ;，Mobius 通常只要表达式本身</div>
         <div class="subtopic">❌ 10位有效数字题必须从 Maple 复制答案，Python 最后1-2位可能偏差</div>
 
       </div>
@@ -1019,16 +1070,15 @@
     <div class="group-label">Möbius 作业追踪</div>
     <div class="topic-card" style="padding:16px;">
       <div id="mobius-list">
-        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 1 · 积分换元法</span></div>
-        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 2 · 分部积分 + 三角换元</span></div>
-        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 3 · 部分分数分解</span></div>
-        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 4 · 常微分方程</span></div>
-        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 5 · 数列与级数</span></div>
-        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 6 · Taylor 展开</span></div>
-        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 7 · 向量空间</span></div>
-        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 8 · 线性变换</span></div>
-        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 9 · 特征值特征向量</span></div>
-        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 10 · 综合复习</span></div>
+        <div class="checklist-item" data-subject="review" data-week="1" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 1 Möbius Lessons (Due 5pm Tuesday Week 2)</span></div>
+        <div class="checklist-item" data-subject="both" data-week="2" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 2 Möbius Lessons (Due 5pm Tuesday Week 3)</span></div>
+        <div class="checklist-item" data-subject="both" data-week="3" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 3 Möbius Lessons (Due 5pm Tuesday Week 4)</span></div>
+        <div class="checklist-item" data-subject="both" data-week="4" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 4 Möbius Lessons (Due 5pm Tuesday Week 5)</span></div>
+        <div class="checklist-item" data-subject="both" data-week="5" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 5 Möbius Lessons (Due 5pm Tuesday Week 7)</span></div>
+        <div class="checklist-item" data-subject="both" data-week="7" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 7 Möbius Lessons (Due 5pm Tuesday Week 8)</span></div>
+        <div class="checklist-item" data-subject="both" data-week="8" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 8 Möbius Lessons (Due 5pm Tuesday Week 9)</span></div>
+        <div class="checklist-item" data-subject="both" data-week="9" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 9 Möbius Lessons (Due 5pm Tuesday Week 10)</span></div>
+        <div class="checklist-item" data-subject="both" data-week="10" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Week 10 Möbius Lessons (Due 5pm Tuesday Week 11)</span></div>
       </div>
     </div>
   </div>
@@ -1167,18 +1217,23 @@
       <div class="topic-header" onclick="toggleTopic('tc-tools1-inclass')">
         <div class="topic-left">
           <div class="topic-dot mman-dot"></div>
-          <div class="topic-title">TOOLS1 · 课堂测量任务单</div>
-          <span class="mman-topic-tag">🏫 Week 2–3 课堂</span>
+          <div class="topic-title">测量工具实操</div>
+          <span class="mman-topic-tag">🏫 Week 2–3</span>
         </div>
         <span class="topic-chevron">▼</span>
       </div>
       <div class="topic-body">
         <div class="subtopics">
-          <div class="subtopic">截止时间：Week 3 周五 11:59pm 提交 Moodle（只有一次机会，量完再提交）</div>
-          <div class="subtopic">Week 2 用具：Engineering rule、Vernier caliper、Height gauge、Micrometre</div>
-          <div class="subtopic">Week 3 用具：Radius gauge、Thread gauge、Feeler gauge、Surface finish comparator</div>
-          <div class="subtopic">Drop-in：Week 2 & 3 周五 4–6pm，Ainsworth 504</div>
-          <div class="subtopic">⚠️ 每人单独记录，可小组合量但答案要自己填；测量准确度影响分数</div>
+          <div class="subtopic">截止时间：第三周周五晚上十一点五十九分提交，只有一次机会，量完再提交。</div>
+          <div class="subtopic">Due date: Friday Week 3 at 11:59 pm on Moodle. There is only one attempt, so submit after measuring everything.</div>
+          <div class="subtopic">第二周用具：工程尺、游标卡尺、高度规和千分尺。</div>
+          <div class="subtopic">Week 2 tools: engineering rule, vernier caliper, height gauge and micrometre.</div>
+          <div class="subtopic">第三周用具：半径规、螺距规、塞尺和表面粗糙度比较样板。</div>
+          <div class="subtopic">Week 3 tools: radius gauge, thread gauge, feeler gauge and surface finish comparator.</div>
+          <div class="subtopic">补做时间：第二周和第三周周五下午四点到六点，在 Ainsworth 504。</div>
+          <div class="subtopic">Drop-in sessions: Week 2 and Week 3, Friday 4 pm to 6 pm, Ainsworth 504.</div>
+          <div class="subtopic">注意事项：每个人单独记录，可以小组合量，但答案必须自己填写，测量准确度会影响分数。</div>
+          <div class="subtopic">Note: record your own answers. You may measure in a group, but accuracy affects the mark.</div>
         </div>
         <div style="margin:12px 0 6px;font-size:12px;font-weight:600;color:var(--text);letter-spacing:0.03em;">📋 需要现场量的尺寸（红框部分）</div>
         <div style="background:var(--bg);border-radius:10px;padding:12px;font-size:13px;">
@@ -1206,6 +1261,68 @@
           <div style="color:var(--muted);padding:3px 0;">· L3 总长 → 外爪</div>
         </div>
         <div style="margin-top:12px;font-size:12px;color:var(--muted);">📌 每个尺寸量3次取平均；101和103同尺寸只需量一个；量完立刻记录，不要靠记忆</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-group" id="engineering-classroom-group">
+    <div class="group-label">工程课堂 Engineering Practical Classes</div>
+
+    <div class="topic-card" id="tc-tools2-handtools">
+      <div class="topic-header" onclick="toggleTopic('tc-tools2-handtools')">
+        <div class="topic-left">
+          <div class="topic-dot mman-dot"></div>
+          <div class="topic-title">手工工具实操</div>
+          <span class="mman-topic-tag">🏫 Week 4–5</span>
+        </div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">地点：本科教学实验室，威利斯附楼 J18，214A 房间。</div>
+          <div class="subtopic">Location: Undergraduate Teaching Lab, Room 214A, Willis Annexe J18.</div>
+          <div class="subtopic">必须携带：笔或永久记号笔。入场时准备好课前模块完成证明。</div>
+          <div class="subtopic">Bring: a pen or permanent marker. Have evidence of pre-class completion ready when entering.</div>
+          <div class="subtopic">课前要求：第四周手工工具课前模块必须完成，可以无限尝试，但进入实验室前必须达到百分之百。</div>
+          <div class="subtopic">Pre-class requirement: complete the Week 4 Hand Tools module with a 100% score before entering the lab.</div>
+          <div class="subtopic">安全要求：必须穿包脚鞋。宽松衣物要固定，外套脱掉，袖口、纽扣和拉链要整理好。</div>
+          <div class="subtopic">Safety: enclosed shoes are mandatory. Loose clothing must be secured, with jackets removed or sleeves, buttons and zips fastened.</div>
+          <div class="subtopic">安全要求：项链、手链和大耳环等首饰要摘掉。长发必须完全扎在脑后。</div>
+          <div class="subtopic">Safety: jewellery such as necklaces, bracelets and large earrings must be removed. Long hair must be fully restrained behind the head.</div>
+          <div class="subtopic">安全要求：长胡须要用胡须网或类似方式约束。进入课堂时会提供护目镜。</div>
+          <div class="subtopic">Safety: long beards must be restrained with a beard net or equivalent. Safety glasses will be provided when entering class.</div>
+          <div class="subtopic">第四周技能：钻孔、冲压、划线、手锯、锉削，以及用锉刀做圆角和倒角。</div>
+          <div class="subtopic">Week 4 skills: drilling, stamping, scribing, marking out, hacksawing, filing, filleting and chamfering with a file.</div>
+          <div class="subtopic">第四周任务：按照工程图在工件上划线，为手锯切割和钻孔做准备。</div>
+          <div class="subtopic">Week 4 task: mark out the workpiece according to the engineering drawing for hacksawing and drilling.</div>
+          <div class="subtopic">第四周任务：用手锯去除多余材料，用锉刀修整切割面，保证表面质量和尺寸准确。</div>
+          <div class="subtopic">Week 4 task: remove excess material with a hacksaw, then file the cut surfaces for surface finish and dimensional accuracy.</div>
+          <div class="subtopic">第四周任务：按照图纸做需要的圆角和倒角，并把学生号码冲压到工件上。</div>
+          <div class="subtopic">Week 4 task: create the required fillets and chamfers, then stamp your student number on the workpiece.</div>
+          <div class="subtopic">第五周任务：从盒子里找回第四周的工件，继续完成未完成的加工。准确度和表面质量会计入成绩。</div>
+          <div class="subtopic">Week 5 task: retrieve your Week 4 workpiece from the box and continue working. Accuracy and finish contribute to the TOOLS2 mark.</div>
+          <div class="subtopic">第五周任务：定位钻、钻孔、去毛刺，并在铝制工件上至少攻两个螺纹孔。</div>
+          <div class="subtopic">Week 5 task: spot drill, drill the hole, deburr the workpiece, and tap a minimum of two holes in the aluminium workpiece.</div>
+          <div class="subtopic">提交要求：完成后必须让指导老师检查并签确认。只有被确认后才能带走工件。</div>
+          <div class="subtopic">Submission: get the workpiece marked off by a demonstrator. You may keep it only after it has been marked.</div>
+          <div class="subtopic">补做时间：第七周和第八周周五下午四点到六点，在本科教学实验室。</div>
+          <div class="subtopic">Drop-in sessions: Week 7 and Week 8, Friday 4 pm to 6 pm, Undergraduate Teaching Lab.</div>
+          <div class="subtopic">易错点：课前模块没做到百分之百，离开前忘记写姓名和学号，或者工件还没确认就带走。</div>
+          <div class="subtopic">Common mistakes: not scoring 100% in the pre-class module, forgetting to write your name and zID, or taking the workpiece before it is marked.</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/results?search_query=metalworking+hand+tools+marking+out+hacksaw+filing+drilling+tapping" target="_blank">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Metalworking Hand Tools<span class="link-src">YouTube · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://search.bilibili.com/all?keyword=金工实习 手锯 锉削 钻孔 攻丝" target="_blank">
+            <div class="link-icon bili">B</div>
+            <div class="link-text">金工实习手工工具<span class="link-src">Bilibili · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -1867,12 +1984,13 @@
         mobius: true,
         points:["全微分近似：Δz ≈ ∂z/∂x·Δx + ∂z/∂y·Δy，用于估计函数值变化量或误差传播","【链式法则公式（二元单参数）】dz/dt = ∂z/∂x · dx/dt + ∂z/∂y · dy/dt","【链式法则公式（三元单参数）】dF/dt = ∂F/∂x·dx/dt + ∂F/∂y·dy/dt + ∂F/∂z·dz/dt = ∇F · (dx/dt)","📌 解题三步：① 对 z=f(x,y,…) 求各偏导数 ② 对参数方程 x(t), y(t) 直接普通求导得 dx/dt, dy/dt ③ 代入链式法则公式展开，再把 x=x(t), y=y(t) 代入化简","📌 隐函数反解技巧：F(x,y,z)=C（C 为常数）两边对 t 求导 → dF/dt=0，展开后 dz/dt 是唯一未知量，可直接解出","📌 反解已知量技巧：已知曲面方程与各速度分量，代入链式法则展开式，可反解出未知坐标或导数","几何直觉：∇F 是曲面法向量，dx/dt 是曲面上运动曲线的切向量，两者垂直 → 点积 dF/dt=0","❌ 易错（符号）：d 用于单变量（如 dx/dt），∂ 用于多变量（如 ∂z/∂x），不可混用，考试中写错符号会扣分","❌ 易错（代入顺序）：先展开链式法则公式，再把 x(t), y(t) 代入化简，不能在代入前约分","📌 化简技巧：cos²t − sin²t = cos(2t)；出现 sin²t+cos²t 时整体等于 1；展开后优先尝试二倍角公式","链式法则（多参数）：z=z(x,y), x=x(s,t), y=y(s,t) ⇒ ∂z/∂s 和 ∂z/∂t 各用树状图展开，加上对应乘积"] },
       { tag:"Ch2A", title:"积分技巧 I：三角积分与还原公式", file:"Holzer_chap2A_1231_Calculus_2026.pdf",
-        yt:"trigonometric integrals reduction formula trig substitution", bili:"三角函数积分 还原公式 三角换元",
-        mobius: true,
-        points:["【换元选择速查表】含 √(a²+x²) → x=a tan(u) 或 x=a sinh(u)；含 √(a²−x²) → x=a sin(u) 或 x=a tanh(u)；含 √(x²−a²) → x=a sec(u) 或 x=a cosh(u)","📌 圆三角换元四步：① 令 x=a·trig(u)，求 dx ② 代入被积式，用恒等式消根号（关键）③ 对 u 积分得结果 ④ 用直角三角形将 u 的结果回代成 x","📌 直角三角形回代法（以 x=a tan(u) 为例）：画直角三角形，对边=x, 邻边=a, 斜边=√(a²+x²)，由此直接读出 tan(u)=x/a, sec(u)=√(a²+x²)/a, sin(u)=x/√(a²+x²)","✅ 圆三角恒等式速查：1+tan²u = sec²u（消 √(a²+x²)）；1−sin²u = cos²u（消 √(a²−x²)）；sec²u−1 = tan²u（消 √(x²−a²)）","📌 双曲换元四步：① 令 x=a·sinh(u)（或 tanh/cosh），求 dx ② 用双曲恒等式消根号 ③ 对 u 积分 ④ 用反双曲函数回代","✅ 双曲恒等式速查：cosh²u − sinh²u = 1 → 1+sinh²u=cosh²u（消 √(a²+x²)）；1−tanh²u = sech²u（消 √(a²−x²)）","📌 定积分三角换元：上下限也一起换；例如 x=3sec(u)，x=3→u=0，x=6→u=π/3，再算 ∫sec(u)du","📌 几何速算：∫₀ᵃ √(a²−x²) dx 是半径 a 的四分之一圆面积 = πa²/4，a=4 时答案 4π","📌 换元优先级：若分子刚好是根号内部导数的一部分，如 ∫x/√(x²−9)dx，代数换元 u=x²−9 比三角换元更快","✅ f'/f 型：∫f'(x)/f(x)dx = ln|f(x)|+C；tanh(x)=sinh(x)/cosh(x)，所以 ∫tanh(x)dx=ln(cosh(x))+C","📌 配方法反三角：x²+8x+20=(x+4)²+4，所以 ∫1/(x²+8x+20)dx=(1/2)arctan((x+4)/2)+C","∫sech(u)du 方法①：令 t=eᵘ，sech(u)=2/(eᵘ+e⁻ᵘ)=2t/(t²+1)，化为 2∫1/(1+t²)dt = 2arctan(eᵘ)+C","∫sech(u)du 方法②：令 t=sinh(u)，dt=cosh(u)du，cosh²=1+t²，化为 ∫1/(1+t²)dt = arctan(sinh u)+C","还原公式 reduction formula：∫sinⁿx dx 或 ∫secⁿx dx 等用递推式降次，常见于高次三角积分","📌 Week 3 还原公式：Iₙ=∫₀¹xⁿe⁻ˣdx ⇒ Iₙ=nIₙ₋₁−1/e；Iₙ=∫secⁿx dx ⇒ Iₙ=secⁿ⁻²(x)tan(x)/(n−1)+(n−2)Iₙ₋₂/(n−1)","📌 Beta 函数递推：B(1,1)=1；B(m,n)=B(m−1,n)(m−1)/(m+n−1) 或 B(m,n−1)(n−1)/(m+n−1)","❌ 易错（根号正负）：化简 √(cosh²u) = cosh(u)（cosh 恒正，直接取正）；√(cos²u) = |cos u|，需确认 u 范围使 cos u > 0","❌ 易错（回代遗漏）：用 u 表示的积分结果一定要回代成 x 的表达式，否则答题不完整","📌 Maple 语法速查：arcsinh(x), arctan(x), arcsin(x), arctanh(x), ln(abs(x)), sqrt(x), exp(x)；tan²(x) 写作 tan(x)^2"] },
+        yt:"trigonometric integrals reduction formula beta function integration by parts", bili:"三角函数积分 还原公式 Beta函数 分部积分",
+        mobius: true, mobiusLabels:["Möbius Week 2", "Möbius Week 3"],
+        points:["【换元选择速查表】含 √(a²+x²) → x=a tan(u) 或 x=a sinh(u)；含 √(a²−x²) → x=a sin(u) 或 x=a tanh(u)；含 √(x²−a²) → x=a sec(u) 或 x=a cosh(u)","📌 圆三角换元四步：① 令 x=a·trig(u)，求 dx ② 代入被积式，用恒等式消根号（关键）③ 对 u 积分得结果 ④ 用直角三角形将 u 的结果回代成 x","📌 直角三角形回代法（以 x=a tan(u) 为例）：画直角三角形，对边=x, 邻边=a, 斜边=√(a²+x²)，由此直接读出 tan(u)=x/a, sec(u)=√(a²+x²)/a, sin(u)=x/√(a²+x²)","✅ 圆三角恒等式速查：1+tan²u = sec²u（消 √(a²+x²)）；1−sin²u = cos²u（消 √(a²−x²)）；sec²u−1 = tan²u（消 √(x²−a²)）","📌 双曲换元四步：① 令 x=a·sinh(u)（或 tanh/cosh），求 dx ② 用双曲恒等式消根号 ③ 对 u 积分 ④ 用反双曲函数回代","✅ 双曲恒等式速查：cosh²u − sinh²u = 1 → 1+sinh²u=cosh²u（消 √(a²+x²)）；1−tanh²u = sech²u（消 √(a²−x²)）","📌 定积分三角换元：上下限也一起换；含 √(x²−a²) 且下限等于 a 时是 improper，要特别检查端点","📌 几何速算：∫₀ᵃ √(a²−x²) dx 是半径 a 的四分之一圆面积 = πa²/4","📌 换元优先级：若分子刚好是根号内部导数的一部分，代数换元 u=根号内部 通常比三角换元更快","✅ 基础对数积分：∫1/x dx = ln|x|+C，是 f'/f 型在 f(x)=x 时的特例","✅ f'/f 型：∫f'(x)/f(x)dx = ln|f(x)|+C；tanh(x)=sinh(x)/cosh(x)，所以 ∫tanh(x)dx=ln(cosh(x))+C","✅ sec 积分公式：∫sec(x)dx = ln|sec(x)+tan(x)|+C；三角换元后常直接出现","📌 反三角标准式：∫1/(x²+a²)dx=(1/a)arctan(x/a)+C","📌 配方法反三角：二次式判别式 < 0 时先配成 (x+h)²+a²，再套 ∫1/(u²+a²)du=(1/a)arctan(u/a)+C","∫sech(u)du 方法①：令 t=eᵘ，sech(u)=2/(eᵘ+e⁻ᵘ)=2t/(t²+1)，化为 2∫1/(1+t²)dt = 2arctan(eᵘ)+C","∫sech(u)du 方法②：令 t=sinh(u)，dt=cosh(u)du，cosh²=1+t²，化为 ∫1/(1+t²)dt = arctan(sinh u)+C","还原公式 reduction formula：先找到 base case，再用递推把 n 降低；常见于 ∫tanⁿx、∫secⁿx、∫₀¹xⁿe⁻ˣdx","📌 降阶公式推导套路：把一个因子拆出来，剩下部分用恒等式改写，再做分部积分，最后把含 Iₙ 的项移到左边合并","📌 分部积分型递推：Iₙ=∫₀¹xⁿe⁻ˣdx，取 u=xⁿ、dv=e⁻ˣdx，可得 Iₙ=nIₙ₋₁−1/e；边界项 [uv] 一定要代上下限","📌 sec 还原公式：Iₙ=∫secⁿx dx ⇒ Iₙ=secⁿ⁻²(x)tan(x)/(n−1)+(n−2)Iₙ₋₂/(n−1)","📌 tan 还原思路：tanⁿx=tanⁿ⁻²x(sec²x−1)，拆成可直接换元的一项 − Iₙ₋₂","📌 base case 很重要：偶数通常降到 I₀，奇数通常降到 I₁；例如 sec 题需要记住 ∫sec x dx = ln|sec x+tan x|+C","❌ 易错（降阶）：递推公式只能在相同积分区间/相同被积结构下使用；定积分每一步都要保留上下限","Beta Function 定义：B(m,n)=∫₀¹xᵐ⁻¹(1−x)ⁿ⁻¹dx，且 B(m,n)=B(n,m)","📌 Beta 递推：B(m,n)=((m−1)/(m+n−1))B(m−1,n)=((n−1)/(m+n−1))B(m,n−1)","📌 Beta base case：B(1,1)=1；B(1,n)=1/n，B(m,1)=1/m","📌 整数 Beta 快速公式：B(m,n)=((m−1)!(n−1)!)/(m+n−1)!，适合 Mobius 选择题/填空题验算","📌 Beta 识别技巧：看到 ∫₀¹ x^a(1−x)^b dx，就令 m=a+1, n=b+1；不要把指数 a,b 直接当作 m,n","❌ 易错（Beta）：B(m,n) 的指数是 m−1,n−1；递推分母是 m+n−1，不是 m+n","❌ 易错（绝对值）：ln 型积分通常要写绝对值，例如 ln|x|、ln|sec x+tan x|；但 ln(cosh x) 不需要，因为 cosh x>0","❌ 易错（根号正负）：化简 √(cosh²u) = cosh(u)（cosh 恒正，直接取正）；√(cos²u) = |cos u|，需确认 u 范围使 cos u > 0","❌ 易错（回代遗漏）：用 u 表示的积分结果一定要回代成 x 的表达式，否则答题不完整","📌 Maple 语法速查：arcsinh(x), arctan(x), arcsin(x), arctanh(x), ln(abs(x)), sqrt(x), exp(x)；tan²(x) 写作 tan(x)^2"] },
       { tag:"Ch2B", title:"积分技巧 II：有理函数与部分分式", file:"Holzer_chap2B_1231_Calculus_2026.pdf",
         yt:"partial fractions integration rational functions", bili:"部分分式分解 有理函数积分",
-        points:["处理假分式：分子次数 ≥ 分母次数时先做多项式长除法","部分分式分解三种情形：不同线性因子、重复线性因子、不可约二次因子","Cover-Up Rule：针对不同线性因子，快速求出对应系数","📌 非 monic 线性因子要记得链式系数：∫A/(kx+b)dx = (A/k)ln|kx+b|+C","📌 不同线性因子例：1/((x−4)(x−5)) = -1/(x−4)+1/(x−5)，积分为 ln|(x−5)/(x−4)|+C","重复因子 (x−a)ⁿ 需展开成 A₁/(x−a)+A₂/(x−a)²+...+Aₙ/(x−a)ⁿ","📌 重复因子例：1/((x−3)(x−4)²)=1/(x−3)−1/(x−4)+1/(x−4)²，最后一项积分是 −1/(x−4)","不可约二次因子 (x²+bx+c) 对应项形式为 (Ax+B)/(x²+bx+c)，配方后用反三角/对数积分","📌 有理式混合题：若分子含分母导数，先拆出 f'/f 的对数部分，剩下常数项再用 arctan 或部分分式","Further Substitution：Weierstrass 替换 t=tan(x/2) 处理三角函数有理式","Sample Class Test 例题：综合练习选择合适技巧的顺序"] },
+        mobius: true, mobiusLabels:["Möbius Week 3"],
+        points:["处理假分式：分子次数 ≥ 分母次数时先做多项式长除法，再对余式做部分分式","部分分式分解三种情形：不同线性因子、重复线性因子、不可约二次因子","Cover-Up Rule：针对不同线性因子，快速求出对应系数；设 x 为让该因子为 0 的值","📌 非 monic 线性因子要记得链式系数：∫A/(kx+b)dx = (A/k)ln|kx+b|+C","📌 不同线性因子：A/(x−a)+B/(x−b)，求完 A、B 后分别积分成对数","重复因子 (x−a)ⁿ 需展开成 A₁/(x−a)+A₂/(x−a)²+...+Aₙ/(x−a)ⁿ","📌 重复因子技巧：先代根求最高次项系数，再比较 x²、x 等系数求剩下系数","❌ 易错（重复因子积分）：∫1/(x−a)²dx = −1/(x−a)+C，不是 ln|x−a|","不可约二次因子 (x²+bx+c) 对应项形式为 (Ax+B)/(x²+bx+c)，配方后用反三角/对数积分","📌 有理式混合题：若分子含分母导数，先拆出 f'/f 的 ln 部分，剩下常数项再用 arctan 或部分分式","📌 判别式判断：二次因子 Δ<0 → 不可约，用配方 + arctan；Δ≥0 → 可拆线性因子，用部分分式","❌ 易错（绝对值）：线性因子积分写 ln|...|；不可约二次且始终为正时不一定需要绝对值","Further Substitution：Weierstrass 替换 t=tan(x/2) 处理三角函数有理式","Sample Class Test 例题：综合练习选择合适技巧的顺序"] },
       { tag:"Ch3A", title:"常微分方程入门 ODE Basics", file:"Holzer_chap3A_1231_Calculus_2026.pdf",
         yt:"first order differential equations separable linear exact", bili:"一阶微分方程 可分离变量 线性方程",
         points:["ODE 基本概念：阶（order）= 方程中最高阶导数的阶数","解的类型：通解（general solution，含任意常数）、特解（particular solution）、解析解","初值问题 IVP：给定初始条件 y(x₀)=y₀，确定通解中的常数","一阶可分离变量方程：dy/dx=g(x)h(y) ⇒ ∫dy/h(y) = ∫g(x)dx","一阶线性 ODE：y'+P(x)y=Q(x)，用积分因子 μ=e^∫P dx 求解","一阶精确方程 exact ODE：M dx+N dy=0，检验条件 ∂M/∂y=∂N/∂x，再求势函数","结合微积分基本定理（FTC）将隐式解写成显式形式"] },
@@ -1913,12 +2031,12 @@
         points:["子空间定义：向量空间V的非空子集W，在V的加法和标量乘法下封闭","【子空间判定定理（Subspace Theorem）】只需验证3条：① 0∈W ② u,v∈W ⟹ u+v∈W ③ v∈W,c∈ℝ ⟹ cv∈W","✅ 常见子空间：过原点的直线/平面（ax+by+cz=0型）、齐次方程组Ax=0的解集、对称矩阵集合","❌ 常见反子空间：不过原点的直线/平面（含常数项）、右半平面{x≥0}（标量封闭失败）、单位圆盘（标量封闭失败）","📌 ℝ²中子空间只有三种：{0}、过原点的直线、ℝ²本身","📌 ℝ³中子空间只有四种：{0}、过原点的直线、过原点的平面、ℝ³本身","反例构造技巧：证明不是子空间只需一个反例；取负标量（λ<0）可破坏标量封闭；取两个向量其和不在集合内可破坏加法封闭","❌ 易错：右半平面R={x≥0}满足加法封闭，但不满足标量封闭（取λ=−1即可破坏）；同理不满足负元存在","子空间本身也是向量空间（继承V的所有运算）"] },
       { tag:"Sect4", title:"线性组合与张成 Linear Combinations & Spans", file:"MATH1231_ALG_2026T2-Sect4-LinearCombosAndSpans.pdf",
         yt:"linear combinations span column space matrix", bili:"线性组合 张成 列空间 矩阵",
-        mobius:"Week 2 Algebra Q6 Q7 Q8 Q9 Q10 Q11 Q12 Q13 Q14",
-        points:["线性组合定义：c₁v₁+c₂v₂+...+cₖvₖ（cᵢ为标量）","张成 span{v₁,...,vₖ}：所有线性组合构成的集合，一定是V的子空间","Fact：Ax = x₁c₁+x₂c₂+...+xₙcₙ，即A乘向量x等于A的列向量的线性组合","列空间 col(A) = span{A的列向量} = {b: b=Ax，for some x}","判断 b∈col(A)：对增广矩阵[A|b]做行化简，有解则b∈col(A)","col(A)的几何形状取决于rank(A)：rank=3→ℝ³全空间；rank=2→过原点平面；rank=1→过原点直线；rank=0→{0}","span{v}（单向量）= 过原点的直线，x=λv形式","span{u,v}（u,v线性独立）= 过原点的平面，用法向量n=u×v求方程ax+by+cz=0","从平面方程ax+by+cz=0找基向量：令两个自由变量取简单值（如1或0），依次求第三个变量","W={x:a·x=0且b·x=0}的形状：a,b线性独立→直线；a,b平行或其一为0→平面；a=b=0→ℝ³","📌 span一定过原点（λ=0给出零向量），所以方程无常数项","📌 Maple语法：向量<1,2,3>，向量集合{<1,2,3>,<4,5,6>}"] },
+        mobius:"Week 2 Algebra Q6 Q7 Q8 Q9 Q10 Q11 Q12 Q13 Q14", mobiusLabels:["Möbius Week 2", "Möbius Week 3"],
+        points:["线性组合定义：c₁v₁+c₂v₂+...+cₖvₖ（cᵢ为标量）","张成 span{v₁,...,vₖ}：所有线性组合构成的集合，一定是V的子空间","Fact：Ax = x₁c₁+x₂c₂+...+xₙcₙ，即A乘向量x等于A的列向量的线性组合","列空间 col(A) = span{A的列向量} = {b: b=Ax，for some x}","判断 b∈col(A)：对增广矩阵[A|b]做行化简，有解则b∈col(A)","col(A)的几何形状取决于rank(A)：rank=3→ℝ³全空间；rank=2→过原点平面；rank=1→过原点直线；rank=0→{0}","span{v}（单向量）= 过原点的直线，x=λv形式","span{u,v}（u,v线性独立）= 过原点的平面，用法向量n=u×v求方程ax+by+cz=0","从平面方程ax+by+cz=0找基向量：令两个自由变量取简单值（如1或0），依次求第三个变量","W={x:a·x=0且b·x=0}的形状：a,b线性独立→直线；a,b平行或其一为0→平面；a=b=0→ℝ³","📌 Week 3 系数题：要求 w=ru+sv，就按分量列方程求 r,s；若要求 ru+sv+tw=0，选一个自由变量（常让 t=1）快速解出非零关系","📌 RGB 颜色题：把颜色看成 ℝ³ 向量，例如 cyan=(0,255,255)=G+B；若某颜色可由另外两个颜色线性组合出来，则该集合相关","📌 冗余向量：如果某个 vᵢ 可由其他向量线性组合得到，删掉它不改变 span；这就是 span{全部}=span{删掉 vᵢ 后的集合}","❌ 易错：有一个非零关系不代表所有向量都一定能分别由其余向量表示；只有对应系数不为0的向量才能被移项表示","📌 span一定过原点（λ=0给出零向量），所以方程无常数项","📌 Maple语法：向量<1,2,3>，向量集合{<1,2,3>,<4,5,6>}"] },
       { tag:"Sect5", title:"线性独立 Linear Independence", file:"MATH1231_ALG_2026T2-Sect5-LinearIndependence.pdf",
         yt:"linear independence linear algebra explained", bili:"线性相关 线性无关 判定方法",
-        mobius:"Week 2 Algebra Q14",
-        points:["线性独立定义：c₁v₁+...+cₖvₖ=0 只有零解（所有cᵢ=0）","线性相关定义：存在不全为零的cᵢ使线性组合=0","判定方法：将向量排成矩阵A，Ax=0只有零解⟺向量组线性独立⟺每列都有主元（行化简后无自由变量）","Theorem：线性相关⟺某向量是其余向量的线性组合","Theorem：线性独立时，向量在span中的表示唯一","Theorem：ℝⁿ中超过n个向量必线性相关","反证法判断u∉span{v}：假设u=λv，比较各分量得λ的矛盾值，则u不在span中","📌 W={x:a·x=0且b·x=0}：a,b线性独立⟹两个方程独立⟹W是直线（一维）；a,b线性相关⟹两方程等价⟹W是平面（二维）"] },
+        mobius:"Week 2 Algebra Q14", mobiusLabels:["Möbius Week 2", "Möbius Week 3"],
+        points:["线性独立定义：c₁v₁+...+cₖvₖ=0 只有零解（所有cᵢ=0）","线性相关定义：存在不全为零的cᵢ使线性组合=0","判定方法：将向量排成矩阵A，Ax=0只有零解⟺向量组线性独立⟺每列都有主元（行化简后无自由变量）","行阶梯形矩阵读法：缺少主元的列对应自由变量；自由变量能取非零值 ⇒ Ax=0 有非零解 ⇒ 线性相关","Theorem：线性相关⟺某向量是其余向量的线性组合","Theorem：线性独立时，向量在span中的表示唯一","Theorem：ℝⁿ中超过n个向量必线性相关；含零向量的集合必线性相关","📌 Week 3 快速判定：n×k 矩阵若 rank<k，则列向量相关；若 rank=k，则列向量无关","📌 找一个非零关系：先解 Ax=0，令自由变量为 1，回代得到系数向量，例如 [1,-2,1] 表示 v₁−2v₂+v₃=0","📌 函数空间也一样：把 eˣ,e⁻ˣ,cosh(x),sinh(x) 当作向量；cosh(x)=(eˣ+e⁻ˣ)/2，sinh(x)=(eˣ−e⁻ˣ)/2，所以它们线性相关","❌ 易错：题目问 linearly independent 时，答案取决于齐次方程 Ax=0，不是增广到某个非零 b","❌ 易错：row echelon 出现零行不一定必相关；关键看列数和主元数，若每列仍有主元则仍可无关","反证法判断u∉span{v}：假设u=λv，比较各分量得λ的矛盾值，则u不在span中","📌 W={x:a·x=0且b·x=0}：a,b线性独立⟹两个方程独立⟹W是直线（一维）；a,b线性相关⟹两方程等价⟹W是平面（二维）"] },
       { tag:"Sect6", title:"基与维数 Basis & Dimension", file:"MATH1231_ALG_2026T2-Sect6-BasisAndDimension.pdf",
         yt:"basis and dimension vector space", bili:"基与维数 向量空间",
         points:["基 basis 定义：V 的一组向量，既线性独立又张成 V","维数 dimension 定义：基中向量的个数，记作 dim(V)","Theorem（基的大小固定）：同一向量空间的所有基都含有相同数量的向量，因此维数定义合理","Theorem（从张成集合构造基）：若一组向量张成 V，可去掉多余（线性相关）的向量得到一组基","Theorem（独立集合不会比张成集合大）：若 S 线性独立、T 张成 V，则 |S|≤|T|","Theorem（维数 vs 张成/独立）：若 dim(V)=n，则 n 个独立向量自动构成基；n 个张成向量也自动构成基","正交集 orthonormal set 与正交基 orthonormal basis：两两正交且单位长度的（基）向量集合，便于计算坐标"] },
@@ -1972,6 +2090,26 @@
           "📌 z=x²y²（四角形）：坐标轴上 z=0，四个象限角高高翘起，z 全部≥0",
           "❌ 易错：√ 和碗形等高线都是圆，区别在于 √ 原点有尖角，x²+y² 原点光滑且可微"
         ]
+      },
+      { tag:"MapleW3", title:"部分分式、ODE 与 Taylor 系数", file:"Holzer_chap2B_1231_Calculus_2026.pdf",
+        yt:"Maple dsolve parfrac product Taylor series coeff", bili:"Maple dsolve 部分分式 product Taylor series coeff",
+        mobius: true, mobiusLabels:["Möbius Week 3"],
+        points:[
+          "【部分分式】convert(p/q, parfrac, x)：适合长多项式 p(x)/q(x)，避免手动分解出错",
+          "🖥️ 指令：p := ...; q := ...; convert(p/q, parfrac, x)",
+          "📌 考点：重复线性因子会出现 1/(x-a) 和 1/(x-a)^2；重复不可约二次因子会出现 (Ax+B)/(quadratic)^2",
+          "【ODE/IVP】dsolve({方程, 初始条件}, y(x))：一阶和二阶初值问题都可以直接求解",
+          "🖥️ 一阶例：dsolve({diff(y(x),x)+4*y(x)=cos(x)+x, y(0)=0}, y(x))",
+          "🖥️ 二阶例：dsolve({y(x)*diff(y(x),x$2)+diff(y(x),x)^2=0, y(0)=3, D(y)(0)=9}, y(x))",
+          "❌ 易错：二阶初始导数 y'(0)=9 在 Maple 里写 D(y)(0)=9，不写 y'(0)=9",
+          "❌ 易错：Mobius 说 Do NOT enter y(x)= 时，只粘贴 Maple 输出等号右边",
+          "【连乘】product(expr, k=a..b) 或 mul(expr, k=a..b)：对应数学符号 Π",
+          "🖥️ 指令：product(x^2+k+9*x, k=190..1500)",
+          "❌ 易错：题目要求 product(__,__) 形式时，不要加赋值 :=，不要加分号 ;",
+          "【Taylor 系数】series(expr, x=0, n) 生成到 x^(n-1) 的展开；coeff(..., x, k) 取 x^k 系数",
+          "🖥️ 指令：coeff(series(exp(4*x)/(1-x), x=0, 8), x, 7)",
+          "📌 技巧：要取 a7，series 阶数至少写 8，因为 Maple 的 n 表示截断到 O(x^n)"
+        ]
       }
     ],
     prob: [
@@ -1995,7 +2133,10 @@
         t.points.forEach(function(p){ pointsHtml += '<div class="subtopic">' + p + '</div>'; });
         var ytUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(t.yt || t.title);
         var biliUrl = 'https://search.bilibili.com/all?keyword=' + encodeURIComponent(t.bili || t.title);
-        var mobiusTag = t.mobius ? '<span class="topic-side-tag">📝 Möbius Week 2</span>' : '';
+        var labels = t.mobiusLabels || (t.mobius ? [t.mobiusLabel || 'Möbius Week 2'] : []);
+        var mobiusTag = labels.length ? '<span class="topic-side-tags">' + labels.map(function(label) {
+          return '<span class="topic-side-tag">📝 ' + label + '</span>';
+        }).join('') + '</span>' : '';
         html += '<div class="topic-card" id="' + id + '">';
         html += '<div class="topic-header" onclick="toggleTopic(\'' + id + '\')">';
         html += '<div class="topic-left"><div class="topic-dot math-dot"></div><span class="topic-tag">' + t.tag + '</span><div class="topic-title">' + t.title + '</div>' + mobiusTag + '</div>';
@@ -2020,33 +2161,131 @@
   // Re-run after dynamic render
   setTimeout(colorSubtopics, 0);
 
+  function placeFormulaQuickRef() {
+    var progress = document.getElementById('math-progress-group');
+    var quickref = document.getElementById('formula-quickref-group');
+    if (progress && quickref && progress.nextElementSibling !== quickref) {
+      progress.insertAdjacentElement('afterend', quickref);
+    }
+  }
+  placeFormulaQuickRef();
+
+  function placeEngineeringClassCards() {
+    var group = document.getElementById('engineering-classroom-group');
+    var week23 = document.getElementById('tc-tools1-inclass');
+    var week45 = document.getElementById('tc-tools2-handtools');
+    if (group && week23 && week45 && week23.parentElement !== group) {
+      group.insertBefore(week23, week45);
+    }
+  }
+  placeEngineeringClassCards();
 
   // Checklist
   function toggleCheck(el) {
     el.classList.toggle('checked');
     el.querySelector('.check-box').textContent = el.classList.contains('checked') ? '✓' : '';
+    saveMobiusChecklist();
     updateProgress();
+    renderCountdown();
+  }
+
+  function saveMobiusChecklist() {
+    var values = [];
+    document.querySelectorAll('#mobius-list .checklist-item').forEach(function(item) {
+      values.push(item.classList.contains('checked'));
+    });
+    try { localStorage.setItem('mobius_check_v1', JSON.stringify(values)); } catch(e) {}
+    markCloudDirty();
+  }
+
+  function loadMobiusChecklist() {
+    var values = [];
+    try { values = JSON.parse(localStorage.getItem('mobius_check_v1') || '[]'); } catch(e) { values = []; }
+    var items = document.querySelectorAll('#mobius-list .checklist-item');
+    try {
+      var schema = localStorage.getItem('mobius_check_schema') || '';
+      if (schema !== 'mobius-lessons-v4') {
+        if (schema === 'subject-v2') {
+          var old = values.slice();
+          values = [
+            !!old[0],
+            !!(old[1] || old[6]),
+            !!(old[2] || old[7]),
+            !!(old[3] || old[8]),
+            !!(old[4] || old[9]),
+            !!old[5],
+            false,
+            false,
+            false
+          ];
+        } else if (schema === 'mobius-lessons-v3') {
+          values = [
+            !!values[0],
+            !!values[1],
+            !!values[2],
+            !!values[3],
+            !!values[4],
+            !!values[6],
+            !!values[7],
+            !!values[8],
+            !!values[9]
+          ];
+        }
+        localStorage.setItem('mobius_check_schema', 'mobius-lessons-v4');
+        localStorage.setItem('mobius_check_v1', JSON.stringify(values));
+      }
+    } catch(e) {}
+    items.forEach(function(item, i) {
+      var done = !!values[i];
+      item.classList.toggle('checked', done);
+      item.querySelector('.check-box').textContent = done ? '✓' : '';
+    });
   }
 
   function updateProgress() {
     var items = document.querySelectorAll('#mobius-list .checklist-item');
-    var half = Math.ceil(items.length / 2);
-    var calcDone = 0, algDone = 0;
-    items.forEach(function(item, i) {
+    var totals = { calc: 0, alg: 0 };
+    var done = { calc: 0, alg: 0 };
+    items.forEach(function(item) {
+      var subject = item.dataset.subject;
+      if (subject === 'both') {
+        totals.calc++;
+        totals.alg++;
+      } else if (subject === 'calc' || subject === 'alg') {
+        totals[subject]++;
+      } else {
+        return;
+      }
       if (item.classList.contains('checked')) {
-        if (i < half) calcDone++; else algDone++;
+        if (subject === 'both') {
+          done.calc++;
+          done.alg++;
+        } else {
+          done[subject]++;
+        }
       }
     });
-    var calcPct = Math.round(calcDone / half * 100);
-    var algPct = Math.round(algDone / (items.length - half) * 100);
+    var calcPct = totals.calc ? Math.round(done.calc / totals.calc * 100) : 0;
+    var algPct = totals.alg ? Math.round(done.alg / totals.alg * 100) : 0;
     document.getElementById('calc-bar').style.width = calcPct + '%';
     document.getElementById('calc-pct').textContent = calcPct + '%';
     document.getElementById('alg-bar').style.width = algPct + '%';
     document.getElementById('alg-pct').textContent = algPct + '%';
   }
+  loadMobiusChecklist();
+  updateProgress();
 
   // ===== COUNTDOWN =====
   var deadlines = [
+    { name: '📝 Week 1 Möbius Lessons',        date: '2026-06-09T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 1 },
+    { name: '📝 Week 2 Möbius Lessons',        date: '2026-06-16T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 2 },
+    { name: '📝 Week 3 Möbius Lessons',        date: '2026-06-23T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 3 },
+    { name: '📝 Week 4 Möbius Lessons',        date: '2026-06-30T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 4 },
+    { name: '📝 Week 5 Möbius Lessons',        date: '2026-07-14T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 5 },
+    { name: '📝 Week 7 Möbius Lessons',        date: '2026-07-21T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 7 },
+    { name: '📝 Week 8 Möbius Lessons',        date: '2026-07-28T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 8 },
+    { name: '📝 Week 9 Möbius Lessons',        date: '2026-08-04T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 9 },
+    { name: '📝 Week 10 Möbius Lessons',       date: '2026-08-11T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 10 },
     { name: '🔧 MMAN1130 TOOLS1 测验',         date: '2026-06-19T23:55:00+10:00', tag: '5%',  color: 'var(--mman-color)', gtId: 'mm_t1'  },
     { name: '🧪 ENGG1300 Test 1',               date: '2026-06-20T10:00:00+10:00', tag: '20%', color: 'var(--engg-color)', gtId: 'eg_t1',  loc: 'E19 Patricia OShane 103' },
     { name: '💻 MMAN1130 DSIGN1 零件CAD',        date: '2026-06-26T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_d1'  },
@@ -2068,6 +2307,11 @@
     var now = new Date();
     var list = document.getElementById('countdown-list');
     var gtData = (function(){ try { return JSON.parse(localStorage.getItem('gt_v2')||'{}'); } catch(e){ return {}; } })();
+    var mobiusDone = {};
+    document.querySelectorAll('#mobius-list .checklist-item').forEach(function(item) {
+      var week = item.dataset.week;
+      if (week) mobiusDone[week] = item.classList.contains('checked');
+    });
 
     var all = deadlines.map(function(d){ return Object.assign({}, d, { diff: new Date(d.date) - now }); });
     var upcoming = all.filter(function(d){ return d.diff > 0; }).sort(function(a,b){ return a.diff - b.diff; });
@@ -2079,7 +2323,7 @@
     }
 
     function makeCard(d, forceDone) {
-      var done = forceDone || (d.gtId && gtData[d.gtId] && gtData[d.gtId].done);
+      var done = forceDone || (d.gtId && gtData[d.gtId] && gtData[d.gtId].done) || (d.mobiusWeek && mobiusDone[String(d.mobiusWeek)]);
       var totalHours = d.diff / (1000*60*60);
       var days = Math.floor(Math.abs(totalHours) / 24);
       var hours = Math.floor(Math.abs(totalHours) % 24);
@@ -2109,8 +2353,8 @@
     }
 
     // Separate done and not-done among upcoming
-    var notDone = upcoming.filter(function(d){ return !(d.gtId && gtData[d.gtId] && gtData[d.gtId].done); });
-    var doneUp  = upcoming.filter(function(d){ return d.gtId && gtData[d.gtId] && gtData[d.gtId].done; });
+    var notDone = upcoming.filter(function(d){ return !((d.gtId && gtData[d.gtId] && gtData[d.gtId].done) || (d.mobiusWeek && mobiusDone[String(d.mobiusWeek)])); });
+    var doneUp  = upcoming.filter(function(d){ return (d.gtId && gtData[d.gtId] && gtData[d.gtId].done) || (d.mobiusWeek && mobiusDone[String(d.mobiusWeek)]); });
 
     list.innerHTML =
       notDone.map(function(d){ return makeCard(d, false); }).join('') +
@@ -2164,7 +2408,7 @@
         { id:'mm_t1',  label:'🔧 TOOLS1 测验',      note:'Week 3 周五 11:55pm · 个人',  w:5,  date:'2026-06-19T23:55:00+10:00' },
         { id:'mm_d1',  label:'💻 DSIGN1 零件CAD',   note:'Week 4 周五 11:55pm · 个人',  w:10, date:'2026-06-26T23:55:00+10:00' },
         { id:'mm_d2',  label:'💻 DSIGN2 装配CAD',   note:'Week 5 周五 11:55pm · 个人',  w:5,  date:'2026-07-03T23:55:00+10:00' },
-        { id:'mm_t2',  label:'🔧 TOOLS2 手工工具',  note:'Week 5 PRJ课 · 个人',          w:10, date:'2026-07-03T23:55:00+10:00' },
+        { id:'mm_t2',  label:'🔧 TOOLS2 手工工具',  note:'Week 4–5 手工工具课 · 个人',   w:10, date:'2026-07-03T23:55:00+10:00' },
         { id:'mm_mf1', label:'📐 MANUF1 图纸',      note:'Week 7 周五 11:55pm · 个人',  w:15, date:'2026-07-17T23:55:00+10:00' },
         { id:'mm_mf2', label:'📋 MANUF2 工艺单',    note:'Week 9 周五 11:55pm · 小组',  w:10, date:'2026-08-01T23:55:00+10:00' },
         { id:'mm_mf3', label:'💻 MANUF3 CAM',       note:'Week 9 周五 11:55pm · 个人',  w:10, date:'2026-08-01T23:55:00+10:00' },
@@ -2184,7 +2428,7 @@
   };
 
   function gtLoad() { try { return JSON.parse(localStorage.getItem('gt_v2')||'{}'); } catch(e) { return {}; } }
-  function gtSave(d) { try { localStorage.setItem('gt_v2', JSON.stringify(d)); } catch(e) {} }
+  function gtSave(d) { try { localStorage.setItem('gt_v2', JSON.stringify(d)); } catch(e) {}; markCloudDirty(); }
 
   function gtMobiusCalc(data) {
     var scores = MOB_WEEKS.map(function(w) {
@@ -2430,6 +2674,7 @@
 
   function dashFocusSave(d) {
     try { localStorage.setItem(dashTodayKey(), JSON.stringify(d)); } catch(e) {}
+    markCloudDirty();
   }
 
   function dashToggleFocus(id) {
@@ -2541,15 +2786,32 @@
   }
   updateTabBadges();
 
-  // PROFILE PANEL
-  (function(){
+  // PROFILE PANEL + CLOUD SYNC
+  var CLOUD_SYNC_KEY = 'iue_cloud_sync_url_v2';
+  var DEFAULT_CLOUD_SYNC_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019ef37172584d55';
+  var CLOUD_CLIENT_KEY = 'iue_cloud_client_id';
+  var CLOUD_LAST_REMOTE_KEY = 'iue_cloud_last_remote_saved_at';
+  var CLOUD_LOCAL_CHANGED_KEY = 'iue_cloud_local_changed_at';
+  var CLOUD_POLL_MS = 15000;
+  var cloudPushTimer = null;
+  var cloudPollTimer = null;
+  var cloudApplying = false;
+
+  function initProfileWidgets(){
     var ta = document.getElementById('memo-area');
     if (ta) ta.value = localStorage.getItem('memo_7u') || '';
-  })();
+    var input = document.getElementById('sync-url');
+    var url = cloudActiveUrl();
+    if (input) input.value = syncReadableId(url);
+    cloudSetStatus(url ? '云同步已开启。电脑和手机会自动互相更新。' : '未连接云同步。先创建，再给另一台设备填写同一个 Sync ID。');
+  }
+
   function saveMemo() {
     var ta = document.getElementById('memo-area');
     if (ta) localStorage.setItem('memo_7u', ta.value);
+    markCloudDirty();
   }
+
   function toggleProfile() {
     var panel = document.getElementById('profile-panel');
     var overlay = document.getElementById('profile-overlay');
@@ -2557,6 +2819,216 @@
     panel.classList.toggle('open', !isOpen);
     overlay.style.display = isOpen ? 'none' : 'block';
   }
+
+  function syncEndpoint(raw) {
+    raw = (raw || '').trim();
+    if (!raw) return '';
+    if (/^https:\/\/jsonblob\.com\/api\/jsonBlob\//.test(raw)) return raw;
+    if (/^https:\/\/api\.restful-api\.dev\/objects\//.test(raw)) return raw;
+    var id = raw.split('/').filter(Boolean).pop();
+    if (!id) return '';
+    if (/^[a-f0-9]{32}$/i.test(id)) return 'https://api.restful-api.dev/objects/' + id;
+    return 'https://jsonblob.com/api/jsonBlob/' + id;
+  }
+
+  function syncReadableId(url) {
+    return (url || '').split('/').filter(Boolean).pop() || '';
+  }
+
+  function cloudClientId() {
+    var id = localStorage.getItem(CLOUD_CLIENT_KEY);
+    if (!id) {
+      id = 'device-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+      localStorage.setItem(CLOUD_CLIENT_KEY, id);
+    }
+    return id;
+  }
+
+  function cloudActiveUrl() {
+    return syncEndpoint(localStorage.getItem(CLOUD_SYNC_KEY) || DEFAULT_CLOUD_SYNC_URL);
+  }
+
+  function cloudHasLocalState() {
+    return !!(
+      localStorage.getItem('gt_v2') ||
+      localStorage.getItem('mobius_check_v1') ||
+      localStorage.getItem('memo_7u')
+    );
+  }
+
+  function cloudCollect() {
+    var data = {
+      app:'iue',
+      version:4,
+      savedAt:new Date().toISOString(),
+      clientId:cloudClientId(),
+      items:{}
+    };
+    var keep = ['gt_v2', 'memo_7u', 'mobius_check_v1', 'mobius_check_schema'];
+    keep.forEach(function(k){ data.items[k] = localStorage.getItem(k); });
+    for (var i=0; i<localStorage.length; i++) {
+      var key = localStorage.key(i);
+      if (key && key.indexOf('dash_focus_') === 0) data.items[key] = localStorage.getItem(key);
+    }
+    return data;
+  }
+
+  function cloudApply(payload) {
+    if (!payload || !payload.items) throw new Error('empty sync data');
+    cloudApplying = true;
+    try {
+      Object.keys(payload.items).forEach(function(k) {
+        if (payload.items[k] === null || typeof payload.items[k] === 'undefined') localStorage.removeItem(k);
+        else localStorage.setItem(k, payload.items[k]);
+      });
+      if (payload.savedAt) localStorage.setItem(CLOUD_LAST_REMOTE_KEY, payload.savedAt);
+      loadMobiusChecklist();
+      updateProgress();
+      renderGT('math'); renderGT('mman'); renderGT('engg');
+      renderCountdown();
+      renderDashboard();
+      updateTabBadges();
+      initProfileWidgets();
+    } finally {
+      cloudApplying = false;
+    }
+  }
+
+  function cloudSetStatus(text) {
+    var el = document.getElementById('sync-status');
+    if (el) el.textContent = text || '';
+  }
+
+  function rememberSyncUrl(url) {
+    url = syncEndpoint(url);
+    if (!url) return;
+    localStorage.setItem(CLOUD_SYNC_KEY, url);
+    var input = document.getElementById('sync-url');
+    if (input) input.value = syncReadableId(url);
+  }
+
+  function cloudCreate() {
+    cloudSetStatus('正在创建云同步...');
+    fetch('https://api.restful-api.dev/objects', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body:JSON.stringify({ name:'iue-sync', data:cloudCollect() })
+    }).then(function(res) {
+      if (!res.ok) throw new Error('create failed');
+      return res.json();
+    }).then(function(body) {
+      var url = body && body.id ? 'https://api.restful-api.dev/objects/' + body.id : '';
+      if (!url) throw new Error('missing sync id');
+      rememberSyncUrl(url);
+      localStorage.setItem(CLOUD_LAST_REMOTE_KEY, new Date().toISOString());
+      startCloudAutoSync();
+      cloudSetStatus('创建好了。另一台设备填这个 Sync ID：' + syncReadableId(url));
+    }).catch(function(err) {
+      cloudSetStatus('创建失败：' + err.message);
+    });
+  }
+
+  function cloudPushNow(silent) {
+    var input = document.getElementById('sync-url');
+    var url = syncEndpoint((input && input.value) || cloudActiveUrl());
+    if (!url) { cloudSetStatus('先创建或填写 Sync ID。'); return; }
+    rememberSyncUrl(url);
+    if (!silent) cloudSetStatus('正在上传到云端...');
+    var payload = cloudCollect();
+    var body = /^https:\/\/api\.restful-api\.dev\/objects\//.test(url) ? { name:'iue-sync', data:payload } : payload;
+    return fetch(url, {
+      method:'PUT',
+      headers:{ 'Content-Type':'application/json' },
+      body:JSON.stringify(body)
+    }).then(function(res) {
+      if (!res.ok) throw new Error('upload failed');
+      localStorage.setItem(CLOUD_LAST_REMOTE_KEY, payload.savedAt);
+      localStorage.removeItem(CLOUD_LOCAL_CHANGED_KEY);
+      if (!silent) cloudSetStatus('已上传云端：' + new Date().toLocaleTimeString());
+      return payload;
+    }).catch(function(err) {
+      if (!silent) cloudSetStatus('上传失败：' + err.message);
+      throw err;
+    });
+  }
+
+  function cloudPullNow(silent) {
+    var input = document.getElementById('sync-url');
+    var url = syncEndpoint((input && input.value) || cloudActiveUrl());
+    if (!url) { cloudSetStatus('先填写 Sync ID。'); return; }
+    rememberSyncUrl(url);
+    if (!silent) cloudSetStatus('正在从云端恢复...');
+    return fetch(url, { cache:'no-store' }).then(function(res) {
+      if (!res.ok) throw new Error('download failed');
+      return res.json();
+    }).then(function(payload) {
+      if (payload && payload.data && payload.data.app === 'iue') payload = payload.data;
+      var remoteTime = payload && payload.savedAt ? Date.parse(payload.savedAt) : 0;
+      var lastRemote = Date.parse(localStorage.getItem(CLOUD_LAST_REMOTE_KEY) || '') || 0;
+      var localChanged = Date.parse(localStorage.getItem(CLOUD_LOCAL_CHANGED_KEY) || '') || 0;
+      if (!payload || !payload.items || !remoteTime) {
+        if (cloudHasLocalState()) return cloudPushNow(true);
+        return payload;
+      }
+      if (localChanged && localChanged > remoteTime) {
+        return cloudPushNow(true);
+      }
+      if (remoteTime > lastRemote || !cloudHasLocalState()) {
+        cloudApply(payload);
+        if (!silent) cloudSetStatus('已从云端恢复：' + new Date().toLocaleTimeString());
+      } else if (!silent) {
+        cloudSetStatus('已经是最新：' + new Date().toLocaleTimeString());
+      }
+      return payload;
+    }).catch(function(err) {
+      if (!silent) cloudSetStatus('恢复失败：' + err.message);
+      throw err;
+    });
+  }
+
+  function markCloudDirty() {
+    if (cloudApplying) return;
+    localStorage.setItem(CLOUD_LOCAL_CHANGED_KEY, new Date().toISOString());
+    scheduleCloudPush();
+  }
+
+  function scheduleCloudPush() {
+    var url = cloudActiveUrl();
+    if (!url) return;
+    clearTimeout(cloudPushTimer);
+    cloudPushTimer = setTimeout(function(){
+      cloudPushNow(true).then(function() {
+        cloudSetStatus('已自动同步：' + new Date().toLocaleTimeString());
+      }).catch(function(){});
+    }, 1200);
+  }
+
+  function startCloudAutoSync() {
+    var url = cloudActiveUrl();
+    if (!url) return;
+    rememberSyncUrl(url);
+    clearInterval(cloudPollTimer);
+    cloudPullNow(true).then(function() {
+      cloudSetStatus('云同步运行中。大约每 15 秒检查一次更新。');
+    }).catch(function() {
+      if (cloudHasLocalState()) {
+        cloudPushNow(true).then(function(){
+          cloudSetStatus('云同步运行中。大约每 15 秒检查一次更新。');
+        }).catch(function(){ cloudSetStatus('云同步暂时连不上，稍后会再试。'); });
+      } else {
+        cloudSetStatus('云同步暂时连不上，稍后会再试。');
+      }
+    });
+    cloudPollTimer = setInterval(function(){
+      cloudPullNow(true).then(function(){})
+        .catch(function(){});
+    }, CLOUD_POLL_MS);
+  }
+
+  setTimeout(function(){
+    initProfileWidgets();
+    startCloudAutoSync();
+  }, 0);
 
 
 </script>
@@ -2580,6 +3052,16 @@
   </div>
   <div style="font-size:12px;color:var(--muted);margin-top:16px;margin-bottom:6px;">📝 临时备忘录</div>
   <textarea id="memo-area" placeholder="在这里写临时笔记..." oninput="saveMemo()"></textarea>
+  <div class="sync-card">
+    <div class="profile-label">云端同步</div>
+    <input id="sync-url" class="sync-input" placeholder="Sync ID / 云同步链接" autocomplete="off">
+    <div class="sync-row">
+      <button class="sync-btn primary" onclick="cloudCreate()">创建云同步</button>
+      <button class="sync-btn" onclick="cloudPushNow()">上传</button>
+      <button class="sync-btn" onclick="cloudPullNow()">恢复</button>
+    </div>
+    <div id="sync-status" class="sync-status"></div>
+  </div>
 </div>
 
 
