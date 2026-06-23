@@ -1463,26 +1463,62 @@
   </div>
 
   <div class="topic-group">
-    <div class="group-label">SolidWorks CAD</div>
+    <div class="group-label">SolidWorks 2025 使用教学</div>
 
-    <div class="topic-card" id="tc-sw-sketch">
-      <div class="topic-header" onclick="toggleTopic('tc-sw-sketch')">
-        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">草图与3D建模 Sketching & Modeling</div></div>
+    <div class="topic-card" id="tc-sw-roadmap">
+      <div class="topic-header" onclick="toggleTopic('tc-sw-roadmap')">
+        <div class="topic-left">
+          <div class="topic-dot mman-dot"></div>
+          <div class="topic-title">学习路线与建模顺序</div>
+          <span class="mman-topic-tag">CAD 基础</span>
+        </div>
         <span class="topic-chevron">▼</span>
       </div>
       <div class="topic-body">
         <div class="subtopics">
-          <div class="subtopic">2D草图约束与尺寸驱动</div>
-          <div class="subtopic">拉伸 Extrude / 切除 Cut</div>
-          <div class="subtopic">旋转体 Revolve</div>
-          <div class="subtopic">圆角/倒角 Fillet / Chamfer</div>
-          <div class="subtopic">装配体 Assembly</div>
+          <div class="subtopic">先读工程图：找主视图、基准面、总长总宽总高、孔位和对称关系。</div>
+          <div class="subtopic">Read the drawing first: identify the main view, datum faces, overall size, hole positions and symmetry.</div>
+          <div class="subtopic">再定建模策略：能拉伸就不要复杂曲面，能镜像就不要重复画，能阵列就不要手动复制。</div>
+          <div class="subtopic">Choose the simplest modelling plan: extrude when possible, mirror repeated geometry, and use patterns instead of manual copies.</div>
+          <div class="subtopic">推荐顺序：新建零件，设毫米单位，选基准面，画完全定义草图，拉伸主体，再做切除、孔、圆角和倒角。</div>
+          <div class="subtopic">Recommended order: new part, millimetre units, base plane, fully defined sketch, base extrude, then cuts, holes, fillets and chamfers.</div>
+          <div class="subtopic">每做完一个主要特征就改名，例如 Base Plate、Hole Cut、Corner Fillet，之后检查会快很多。</div>
+          <div class="subtopic">Rename major features as you go, such as Base Plate, Hole Cut and Corner Fillet, so later checking is much faster.</div>
+          <div class="subtopic">保存习惯：零件、装配和工程图放在同一个作业文件夹，不要移动单个文件破坏引用。</div>
+          <div class="subtopic">Save parts, assemblies and drawings in one assignment folder, and avoid moving single files because references can break.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-sw-sketch">
+      <div class="topic-header" onclick="toggleTopic('tc-sw-sketch')">
+        <div class="topic-left">
+          <div class="topic-dot mman-dot"></div>
+          <div class="topic-title">草图、约束与尺寸</div>
+          <span class="mman-topic-tag">Sketch</span>
+        </div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">草图目标：线条全部变黑，状态显示完全定义。</div>
+          <div class="subtopic">Sketch goal: all sketch geometry should turn black and show as fully defined.</div>
+          <div class="subtopic">优先使用几何关系：水平、垂直、相等、同心、相切、重合和对称。</div>
+          <div class="subtopic">Use geometric relations first: horizontal, vertical, equal, concentric, tangent, coincident and symmetric.</div>
+          <div class="subtopic">尺寸不要重复约束：一个长度只用一个主尺寸控制，避免过定义。</div>
+          <div class="subtopic">Avoid duplicate control dimensions because repeated constraints can over-define the sketch.</div>
+          <div class="subtopic">从原点开始建模：中心矩形、中心线和镜像关系能让零件更稳定。</div>
+          <div class="subtopic">Start from the origin because centre rectangles, centrelines and mirror relations make the model more stable.</div>
+          <div class="subtopic">圆孔优先用孔向导，普通切孔才用圆草图加拉伸切除。</div>
+          <div class="subtopic">Use Hole Wizard for standard holes, and use circle sketches with extruded cuts for simple custom holes.</div>
+          <div class="subtopic">易错点：草图还蓝着就拉伸，后面改尺寸时最容易整块飞掉。</div>
+          <div class="subtopic">Common mistake: extruding an under-defined blue sketch often makes the model unstable when dimensions change.</div>
         </div>
         <div class="links-label">学习资源</div>
         <div class="link-row">
-          <a class="resource-link" href="https://www.youtube.com/watch?v=qtj0UNSW4kQ" target="_blank">
-            <div class="link-icon yt">▶</div>
-            <div class="link-text">SolidWorks for Beginners – Full Course<span class="link-src">YouTube · Tutorials Point</span></div>
+          <a class="resource-link" href="https://help.solidworks.com/2025/english/SolidWorks/sldworks/c_dimensions_relations_top.htm" target="_blank">
+            <div class="link-icon doc">?</div>
+            <div class="link-text">Dimensions and Relations<span class="link-src">SOLIDWORKS 2025 Help</span></div>
             <span class="link-arrow">↗</span>
           </a>
           <a class="resource-link" href="https://www.bilibili.com/video/BV1cJ411p7Gw" target="_blank">
@@ -1494,25 +1530,142 @@
       </div>
     </div>
 
-    <div class="topic-card" id="tc-sw-drawing">
-      <div class="topic-header" onclick="toggleTopic('tc-sw-drawing')">
-        <div class="topic-left"><div class="topic-dot mman-dot"></div><div class="topic-title">工程图输出 SW Drawing</div></div>
+    <div class="topic-card" id="tc-sw-features">
+      <div class="topic-header" onclick="toggleTopic('tc-sw-features')">
+        <div class="topic-left">
+          <div class="topic-dot mman-dot"></div>
+          <div class="topic-title">零件特征与建模技巧</div>
+          <span class="mman-topic-tag">Part</span>
+        </div>
         <span class="topic-chevron">▼</span>
       </div>
       <div class="topic-body">
         <div class="subtopics">
-          <div class="subtopic">从3D模型生成标准工程图</div>
-          <div class="subtopic">标题栏 Title Block 填写</div>
-          <div class="subtopic">视图摆放与比例</div>
-          <div class="subtopic">自动标注与手动修改</div>
+          <div class="subtopic">拉伸凸台用来加材料，拉伸切除用来去材料。</div>
+          <div class="subtopic">Boss-Extrude adds material, while Extruded Cut removes material.</div>
+          <div class="subtopic">对称零件优先用中面拉伸，这样左右两边尺寸更好控制。</div>
+          <div class="subtopic">Use Mid Plane extrude for symmetric parts because both sides stay controlled from the centre plane.</div>
+          <div class="subtopic">圆柱、轴、轮廓类零件优先考虑旋转特征。</div>
+          <div class="subtopic">Use Revolve for shafts, cylinders and profiles that rotate around an axis.</div>
+          <div class="subtopic">重复孔、齿、槽优先用线性阵列或圆周阵列。</div>
+          <div class="subtopic">Use linear or circular patterns for repeated holes, teeth and slots.</div>
+          <div class="subtopic">圆角和倒角尽量最后做，因为它们依赖边线，太早做会让后续草图不好选边。</div>
+          <div class="subtopic">Add fillets and chamfers near the end because they depend on edges and can make later references fragile.</div>
+          <div class="subtopic">检查顺序：质量属性、总尺寸、孔距、厚度、圆角半径、倒角角度。</div>
+          <div class="subtopic">Check order: mass properties, overall size, hole spacing, thickness, fillet radius and chamfer angle.</div>
         </div>
         <div class="links-label">学习资源</div>
         <div class="link-row">
+          <a class="resource-link" href="https://help.solidworks.com/2025/english/SolidWorks/sldworks/Hidd_dve_end_spec_dlg.htm" target="_blank">
+            <div class="link-icon doc">?</div>
+            <div class="link-text">Extrudes<span class="link-src">SOLIDWORKS 2025 Help</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-sw-assembly">
+      <div class="topic-header" onclick="toggleTopic('tc-sw-assembly')">
+        <div class="topic-left">
+          <div class="topic-dot mman-dot"></div>
+          <div class="topic-title">装配、配合与爆炸图</div>
+          <span class="mman-topic-tag">Assembly</span>
+        </div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">装配第一步：插入第一个零件并固定，通常固定底板或基准件。</div>
+          <div class="subtopic">First assembly step: insert and fix the first component, usually the base plate or datum part.</div>
+          <div class="subtopic">常用配合：重合、同心、距离、平行、垂直和角度。</div>
+          <div class="subtopic">Common mates: coincident, concentric, distance, parallel, perpendicular and angle.</div>
+          <div class="subtopic">配合顺序：先定位大方向，再控制孔轴，最后限制剩余自由度。</div>
+          <div class="subtopic">Mate order: set the main orientation first, control holes and axes next, then remove remaining degrees of freedom.</div>
+          <div class="subtopic">不要过度配合：零件已经不能动时就停，多余配合会导致报错。</div>
+          <div class="subtopic">Avoid over-mating because extra mates can create errors once the component is already fully constrained.</div>
+          <div class="subtopic">爆炸图用于展示零件如何装配，移动方向要沿真实拆装方向。</div>
+          <div class="subtopic">Exploded views show how parts fit together, so move components along realistic assembly directions.</div>
+          <div class="subtopic">提交前检查：装配没有红叉，零件引用不丢，文件夹里包含所有零件和装配文件。</div>
+          <div class="subtopic">Before submission, check that the assembly has no rebuild errors, no missing references and all files are in the folder.</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://help.solidworks.com/2025/english/Solidworks/sldworks/c_management_panel.htm" target="_blank">
+            <div class="link-icon doc">?</div>
+            <div class="link-text">FeatureManager and Assembly Tree<span class="link-src">SOLIDWORKS 2025 Help</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+          <a class="resource-link" href="https://help.solidworks.com/2025/english/SolidWorks/sldworks/c_Exploded_Views_in_Assemblies.htm" target="_blank">
+            <div class="link-icon doc">?</div>
+            <div class="link-text">Exploded Views in Assemblies<span class="link-src">SOLIDWORKS 2025 Help</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-sw-drawing">
+      <div class="topic-header" onclick="toggleTopic('tc-sw-drawing')">
+        <div class="topic-left">
+          <div class="topic-dot mman-dot"></div>
+          <div class="topic-title">工程图输出与提交检查</div>
+          <span class="mman-topic-tag">Drawing</span>
+        </div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">工程图目标：别人只看图纸也能制造零件。</div>
+          <div class="subtopic">Drawing goal: another person should be able to manufacture the part from the drawing alone.</div>
+          <div class="subtopic">基础视图：主视图、俯视图、右视图和等轴测视图要摆清楚。</div>
+          <div class="subtopic">Basic views: place front, top, right and isometric views clearly.</div>
+          <div class="subtopic">尺寸标注：总尺寸、局部尺寸、孔径、孔距、厚度、圆角和倒角都要能读出来。</div>
+          <div class="subtopic">Dimensions: include overall size, local size, hole diameter, hole spacing, thickness, fillets and chamfers.</div>
+          <div class="subtopic">标题栏检查：姓名、zID、课程、零件名、比例、单位和日期。</div>
+          <div class="subtopic">Title block check: name, zID, course, part name, scale, units and date.</div>
+          <div class="subtopic">输出前检查：图纸比例合适，线条不重叠，尺寸不穿模，PDF 能打开。</div>
+          <div class="subtopic">Before export, check scale, overlapping lines, dimension placement and whether the PDF opens correctly.</div>
+          <div class="subtopic">作业包检查：如果提交装配，压缩包里要有装配文件、所有零件文件和需要的 PDF。</div>
+          <div class="subtopic">Submission package: for assemblies, include the assembly file, all part files and any required PDFs.</div>
+        </div>
+        <div class="links-label">学习资源</div>
+        <div class="link-row">
+          <a class="resource-link" href="https://help.solidworks.com/2025/english/solidworks/sldworks/c_document_properties.htm" target="_blank">
+            <div class="link-icon doc">?</div>
+            <div class="link-text">Document Properties<span class="link-src">SOLIDWORKS 2025 Help</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
           <a class="resource-link" href="https://www.youtube.com/watch?v=9dNFlNFxAcw" target="_blank">
             <div class="link-icon yt">▶</div>
             <div class="link-text">SolidWorks Drawing Tutorial<span class="link-src">YouTube · SolidWorks</span></div>
             <span class="link-arrow">↗</span>
           </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-sw-mman-checklist">
+      <div class="topic-header" onclick="toggleTopic('tc-sw-mman-checklist')">
+        <div class="topic-left">
+          <div class="topic-dot mman-dot"></div>
+          <div class="topic-title">MMAN1130 CAD 作业检查清单</div>
+          <span class="mman-topic-tag">DSIGN</span>
+        </div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic">第一轮检查：模型能重建，没有红叉，没有悬空草图和错误配合。</div>
+          <div class="subtopic">First check: the model rebuilds cleanly, with no red errors, dangling sketches or mate errors.</div>
+          <div class="subtopic">第二轮检查：关键尺寸和 Moodle 图纸一致，特别是孔、厚度、槽宽、圆角和倒角。</div>
+          <div class="subtopic">Second check: key dimensions match the Moodle drawing, especially holes, thickness, slot width, fillets and chamfers.</div>
+          <div class="subtopic">第三轮检查：零件命名清楚，特征树不乱，工程图标题栏完整。</div>
+          <div class="subtopic">Third check: part names are clear, the feature tree is readable and the drawing title block is complete.</div>
+          <div class="subtopic">第四轮检查：导出 PDF 后重新打开，确认视图和尺寸没有挤在一起。</div>
+          <div class="subtopic">Fourth check: reopen the exported PDF and confirm that views and dimensions are not crowded.</div>
+          <div class="subtopic">最后检查：提交前下载一次自己上传的文件，确认不是空文件、旧文件或少文件。</div>
+          <div class="subtopic">Final check: download your submitted file once and confirm it is not empty, outdated or missing parts.</div>
         </div>
       </div>
     </div>
@@ -1846,7 +1999,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-06-24-static-sync-1';
+  var APP_VERSION = '2026-06-24-solidworks-1';
 
   function showCourse(course) {
     var _secs = document.querySelectorAll('.course-section');
