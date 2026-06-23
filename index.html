@@ -1846,7 +1846,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-06-24-custom-focus-1';
+  var APP_VERSION = '2026-06-24-static-sync-1';
 
   function showCourse(course) {
     var _secs = document.querySelectorAll('.course-section');
@@ -2825,6 +2825,7 @@
   // PROFILE PANEL + CLOUD SYNC
   var CLOUD_SYNC_KEY = 'iue_cloud_sync_url_v2';
   var DEFAULT_CLOUD_SYNC_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019ef37172584d55';
+  var STATIC_CLOUD_STATE_FILE = 'iue-cloud-state.json';
   var CLOUD_CLIENT_KEY = 'iue_cloud_client_id';
   var CLOUD_LAST_REMOTE_KEY = 'iue_cloud_last_remote_saved_at';
   var CLOUD_LOCAL_CHANGED_KEY = 'iue_cloud_local_changed_at';
@@ -2869,6 +2870,11 @@
 
   function syncReadableId(url) {
     return (url || '').split('/').filter(Boolean).pop() || '';
+  }
+
+  function cloudStaticStateUrl() {
+    var clean = location.href.split('#')[0].split('?')[0];
+    return clean.slice(-1) === '/' ? clean + STATIC_CLOUD_STATE_FILE : clean.replace(/[^/]*$/, STATIC_CLOUD_STATE_FILE);
   }
 
   function cloudClientId() {
@@ -3017,8 +3023,19 @@
       }
       return payload;
     }).catch(function(err) {
-      if (!silent) cloudSetStatus('恢复失败：' + err.message);
-      throw err;
+      return fetch(cloudStaticStateUrl() + '?t=' + Date.now(), { cache:'no-store' }).then(function(res) {
+        if (!res.ok) throw err;
+        return res.json();
+      }).then(function(payload) {
+        var remoteTime = payload && payload.savedAt ? Date.parse(payload.savedAt) : 0;
+        var lastRemote = Date.parse(localStorage.getItem(CLOUD_LAST_REMOTE_KEY) || '') || 0;
+        if (payload && payload.items && remoteTime > lastRemote) cloudApply(payload);
+        if (!silent) cloudSetStatus('已从 GitHub 同步：' + new Date().toLocaleTimeString());
+        return payload;
+      }).catch(function() {
+        if (!silent) cloudSetStatus('恢复失败：' + err.message);
+        throw err;
+      });
     });
   }
 
