@@ -1846,7 +1846,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-06-23-auto-update-1';
+  var APP_VERSION = '2026-06-24-custom-focus-1';
 
   function showCourse(course) {
     var _secs = document.querySelectorAll('.course-section');
@@ -2673,8 +2673,32 @@
     return 'dash_focus_' + d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   }
 
+  function dashTaskKey() {
+    var d = new Date();
+    return 'dash_tasks_' + d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
   function dashFocusLoad() {
     try { return JSON.parse(localStorage.getItem(dashTodayKey()) || '{}'); } catch(e) { return {}; }
+  }
+
+  function dashTaskLoad() {
+    try { return JSON.parse(localStorage.getItem(dashTaskKey()) || '[]'); } catch(e) { return []; }
+  }
+
+  function dashTaskSave(tasks) {
+    try { localStorage.setItem(dashTaskKey(), JSON.stringify(tasks)); } catch(e) {}
+    markCloudDirty();
+  }
+
+  function dashAddTodayTask(id, text) {
+    var tasks = dashTaskLoad();
+    var exists = tasks.some(function(item){ return item && item.id === id; });
+    if (!exists) {
+      tasks.unshift({ id:id, text:text });
+      dashTaskSave(tasks);
+    }
+    renderDashboard();
   }
 
   function dashFocusSave(d) {
@@ -2743,6 +2767,9 @@
     }).join('') : '<div style="color:var(--muted);font-size:13px;padding:8px 0;">未来两周没有未完成考核。</div>';
 
     var focus = [];
+    dashTaskLoad().forEach(function(item) {
+      if (item && item.id && item.text) focus.push(item);
+    });
     var todayIso = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
     if (todayIso === '2026-06-23') {
       focus.push({ id:'today-mman-campus-2026-06-23', text:'18:00 准备出门去学校，上 MMAN。' });
@@ -2877,7 +2904,7 @@
     keep.forEach(function(k){ data.items[k] = localStorage.getItem(k); });
     for (var i=0; i<localStorage.length; i++) {
       var key = localStorage.key(i);
-      if (key && key.indexOf('dash_focus_') === 0) data.items[key] = localStorage.getItem(key);
+      if (key && (key.indexOf('dash_focus_') === 0 || key.indexOf('dash_tasks_') === 0)) data.items[key] = localStorage.getItem(key);
     }
     return data;
   }
