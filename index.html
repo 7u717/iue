@@ -2738,12 +2738,16 @@
     }).join('') : '<div style="color:var(--muted);font-size:13px;padding:8px 0;">未来两周没有未完成考核。</div>';
 
     var focus = [];
+    var todayIso = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+    if (todayIso === '2026-06-23') {
+      focus.push({ id:'today-mman-campus-2026-06-23', text:'18:00 准备出门去学校，上 MMAN。' });
+    }
     if (next) focus.push({ id:'next-' + (next.gtId || 'deadline'), text:'先处理 '+next.name.replace(/^[^\w\u4e00-\u9fff]+/,'')+'，它是当前最近的考核。' });
     if (urgent.length > 1) focus.push({ id:'prep-' + (urgent[1].gtId || 'deadline'), text:'把 '+urgent[1].name.replace(/^[^\w\u4e00-\u9fff]+/,'')+' 的资料先打开，做一轮轻量预习。' });
     var low = ['math','mman','engg'].map(function(course){ return Object.assign({ course: course }, dashGradeSummary(course, data)); }).sort(function(a,b){ return a.total - b.total; })[0];
     focus.push({ id:'grade-' + low.course, text:'检查 '+dashCourseName(low.course)+' 的成绩项，优先补还没有标记完成的部分。' });
     var focusDone = dashFocusLoad();
-    document.getElementById('dash-focus').innerHTML = focus.slice(0,3).map(function(item, i) {
+    document.getElementById('dash-focus').innerHTML = focus.slice(0,4).map(function(item, i) {
       var done = !!focusDone[item.id];
       return '<div class="dash-focus-row '+(done?'done':'')+'" onclick="dashToggleFocus(\''+item.id+'\')"><div class="dash-focus-num">'+(done?'✓':(i+1))+'</div><div class="dash-focus-text">'+item.text+'</div></div>';
     }).join('');
