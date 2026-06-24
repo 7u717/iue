@@ -960,6 +960,29 @@
       </div>
       <div class="topic-body">
 
+        <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:6px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">基础积分表 · Integrals.pdf</div>
+        <div class="subtopic">∫ 1/x dx = ln|x| + C</div>
+        <div class="subtopic">∫ e^(ax) dx = (1/a)e^(ax) + C</div>
+        <div class="subtopic">∫ a^x dx = a^x/ln(a) + C，a ≠ 1</div>
+        <div class="subtopic">∫ sin(ax) dx = -(1/a)cos(ax) + C</div>
+        <div class="subtopic">∫ cos(ax) dx = (1/a)sin(ax) + C</div>
+        <div class="subtopic">∫ sec²(ax) dx = (1/a)tan(ax) + C</div>
+        <div class="subtopic">∫ cosec²(ax) dx = -(1/a)cot(ax) + C</div>
+        <div class="subtopic">∫ tan(ax) dx = (1/a)ln|sec(ax)| + C</div>
+        <div class="subtopic">∫ cot(ax) dx = (1/a)ln|sin(ax)| + C</div>
+        <div class="subtopic">∫ sec(ax) dx = (1/a)ln|sec(ax)+tan(ax)| + C</div>
+        <div class="subtopic">∫ sinh(ax) dx = (1/a)cosh(ax) + C</div>
+        <div class="subtopic">∫ cosh(ax) dx = (1/a)sinh(ax) + C</div>
+        <div class="subtopic">∫ sech²(ax) dx = (1/a)tanh(ax) + C</div>
+        <div class="subtopic">∫ cosech²(ax) dx = -(1/a)coth(ax) + C</div>
+        <div class="subtopic">∫ dx/(a²+x²) = (1/a)tan⁻¹(x/a) + C</div>
+        <div class="subtopic">∫ dx/(a²−x²) = (1/a)tanh⁻¹(x/a) + C，|x| &lt; a</div>
+        <div class="subtopic">∫ dx/(a²−x²) = (1/a)coth⁻¹(x/a) + C，|x| &gt; a &gt; 0</div>
+        <div class="subtopic">∫ dx/(a²−x²) = (1/(2a))ln|(a+x)/(a−x)| + C，x² ≠ a²</div>
+        <div class="subtopic">∫ dx/√(a²−x²) = sin⁻¹(x/a) + C</div>
+        <div class="subtopic">∫ dx/√(x²+a²) = sinh⁻¹(x/a) + C</div>
+        <div class="subtopic">∫ dx/√(x²−a²) = cosh⁻¹(x/a) + C，x ≥ a &gt; 0</div>
+
         <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:6px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">Ch1A · 偏导数 & 梯度</div>
         <div class="subtopic">∂f/∂x → 固定 y（及其他变量），对 x 求普通导数</div>
         <div class="subtopic">∇F = (∂F/∂x, ∂F/∂y, ∂F/∂z) → 梯度向量 = 隐曲面 F(x,y,z)=C 的法向量</div>
@@ -1999,7 +2022,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-06-24-solidworks-1';
+  var APP_VERSION = '2026-06-24-integrals-1';
 
   function showCourse(course) {
     var _secs = document.querySelectorAll('.course-section');
