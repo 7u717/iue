@@ -142,7 +142,8 @@
     /* CONTENT */
     .course-section {
       display: none; padding: 16px; width: 100%; max-width: var(--phone-width); margin: 0 auto;
-      position: fixed; top: var(--header-h); bottom: var(--nav-h); left: 50%; transform: translateX(-50%);
+      position: fixed; top: var(--header-h); left: 0; right: 0;
+      height: calc(100dvh - var(--header-h) - var(--nav-h));
       overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
     }
     .course-section.active { display: block; }
@@ -832,6 +833,7 @@
       </div>
     </div>
 
+
     <div class="topic-group">
       <div class="group-label">考试时间表</div>
       <div class="topic-card" style="padding:16px;">
@@ -1164,9 +1166,12 @@
             </div>
             <div class="test-panel-note">20 个题型已放入。点开卡片查看题目和解析图片。</div>
           </div>
-          <div class="test-panel">
-            <div class="test-panel-title">Calculus</div>
-            <div class="test-panel-note">先占位，等你把微积分题型图片放进来再补。</div>
+          <div class="test-panel clickable" id="lab-test-1-calculus-panel" onclick="toggleTestSection('lab-test-1-calculus')">
+            <div class="test-panel-head">
+              <div class="test-panel-title">Calculus</div>
+              <span class="test-panel-chevron">▼</span>
+            </div>
+            <div class="test-panel-note">20 个题型已放入。点开卡片查看题目和解析图片。</div>
           </div>
         </div>
 
@@ -1193,6 +1198,32 @@
           <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 18</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-18.png" alt="Lab Test 1 Algebra 题型 18"></div></div>
           <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 19</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-19.png" alt="Lab Test 1 Algebra 题型 19"></div></div>
           <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 20</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-20.png" alt="Lab Test 1 Algebra 题型 20"></div></div>
+        </div>
+        </div>
+
+        <div class="test-type-section" id="lab-test-1-calculus">
+        <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:4px 0 8px;">Calculus 题型</div>
+        <div class="test-type-grid">
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 1</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-01.png" alt="Lab Test 1 Calculus 题型 1"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 2</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-02.png" alt="Lab Test 1 Calculus 题型 2"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 3</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-03.png" alt="Lab Test 1 Calculus 题型 3"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 4</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-04.png" alt="Lab Test 1 Calculus 题型 4"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 5</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-05.png" alt="Lab Test 1 Calculus 题型 5"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 6</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-06.png" alt="Lab Test 1 Calculus 题型 6"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 7</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-07.png" alt="Lab Test 1 Calculus 题型 7"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 8</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-08.png" alt="Lab Test 1 Calculus 题型 8"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 9</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-09.png" alt="Lab Test 1 Calculus 题型 9"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 10</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-10.png" alt="Lab Test 1 Calculus 题型 10"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 11</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-11.png" alt="Lab Test 1 Calculus 题型 11"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 12</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-12.png" alt="Lab Test 1 Calculus 题型 12"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 13</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-13.png" alt="Lab Test 1 Calculus 题型 13"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 14</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-14.png" alt="Lab Test 1 Calculus 题型 14"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 15</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-15.png" alt="Lab Test 1 Calculus 题型 15"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 16</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-16.png" alt="Lab Test 1 Calculus 题型 16"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 17</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-17.png" alt="Lab Test 1 Calculus 题型 17"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 18</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-18.png" alt="Lab Test 1 Calculus 题型 18"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 19</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-19.png" alt="Lab Test 1 Calculus 题型 19"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 20</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/calculus/calculus-20.png" alt="Lab Test 1 Calculus 题型 20"></div></div>
         </div>
         </div>
       </div>
@@ -2148,7 +2179,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-06-27-exam-bank-2';
+  var APP_VERSION = '2026-06-29-calculus-bank-1';
 
   function showCourse(course) {
     var _secs = document.querySelectorAll('.course-section');
@@ -2201,7 +2232,7 @@
     suppressNextSwipeClick = true;
     if (swipeActiveSection) {
       swipeActiveSection.style.transition = 'transform .22s cubic-bezier(.2,.8,.2,1), opacity .22s ease';
-      swipeActiveSection.style.transform = 'translateX(calc(-50% + ' + (direction < 0 ? 92 : -92) + 'px))';
+      swipeActiveSection.style.transform = 'translateX(' + (direction < 0 ? 92 : -92) + 'px)';
       swipeActiveSection.style.opacity = '.78';
     }
     setTimeout(function(){ showCourse(COURSE_SWIPE_ORDER[nextIndex]); }, 120);
@@ -2241,7 +2272,7 @@
     e.preventDefault();
     var limited = Math.max(-78, Math.min(78, dx * 0.42));
     swipeActiveSection.style.transition = 'none';
-    swipeActiveSection.style.transform = 'translateX(calc(-50% + ' + limited.toFixed(1) + 'px))';
+    swipeActiveSection.style.transform = 'translateX(' + limited.toFixed(1) + 'px)';
   }, { passive: false });
 
   document.addEventListener('touchend', function(e) {
