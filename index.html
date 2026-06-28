@@ -210,6 +210,65 @@
     }
     .subtopic::before { content: "·"; color: var(--dim); flex-shrink: 0; margin-top: 1px; }
 
+    .test-structure {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px; margin-bottom: 14px;
+    }
+    .test-pill {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 10px 12px;
+      font-size: 12px; font-weight: 700; color: var(--text);
+      text-align: center;
+    }
+    .test-pill.dimmed { color: var(--dim); }
+    .test-split {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px; margin: 12px 0 14px;
+    }
+    .test-panel {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 14px; padding: 12px;
+    }
+    .test-panel.clickable {
+      cursor: pointer; transition: border-color .18s ease, background .18s ease;
+    }
+    .test-panel.clickable.open {
+      border-color: rgba(29,155,240,.45); background: #07111c;
+    }
+    .test-panel-head { display:flex;align-items:center;justify-content:space-between;gap:10px; }
+    .test-panel-title { font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .test-panel-note { font-size: 11px; color: var(--dim); line-height: 1.35; }
+    .test-panel-chevron { color: var(--dim); font-size: 11px; transition: transform .2s; }
+    .test-panel.open .test-panel-chevron { transform: rotate(180deg); }
+    .test-type-section { display:none; margin-top: 12px; }
+    .test-type-section.open { display:block; }
+    .test-type-grid {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .test-type-card {
+      background: #0b0d10; border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden; cursor: pointer;
+      transition: border-color .18s ease, background .18s ease;
+    }
+    .test-type-card.open { border-color: rgba(29,155,240,.55); background: #07111c; }
+    .test-type-front {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; padding: 12px 13px;
+    }
+    .test-type-name { font-size: 13px; font-weight: 800; color: var(--text); }
+    .test-type-hint { font-size: 11px; color: var(--dim); flex-shrink: 0; }
+    .test-type-image { display: none; padding: 0 10px 10px; }
+    .test-type-card.open .test-type-image { display: block; }
+    .test-type-image img {
+      display: block; width: 100%; height: auto; border-radius: 10px;
+      background: #fff;
+    }
+    @media (max-width: 640px) {
+      .test-split, .test-type-grid { grid-template-columns: 1fr; }
+      .test-type-front { padding: 12px; }
+    }
+
     .topic-tag {
       font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700;
       color: var(--math-color); background: var(--math-soft);
@@ -1092,29 +1151,86 @@
       </div>
     </div>
 
-    <div class="topic-card" id="tc-exam-bank">
-      <div class="topic-header" onclick="toggleTopic('tc-exam-bank')">
-        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">考试题型库</div></div>
+  </div>
+
+  <!-- Test Library -->
+  <div class="topic-group" id="math-test-group">
+    <div class="group-label">Test</div>
+
+    <div class="test-structure">
+      <div class="test-pill">Lab Test 1</div>
+      <div class="test-pill dimmed">Lab Test 2</div>
+      <div class="test-pill dimmed">Final Exam</div>
+    </div>
+
+    <div class="topic-card" id="tc-lab-test-1">
+      <div class="topic-header" onclick="toggleTopic('tc-lab-test-1')">
+        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">Lab Test 1</div></div>
         <span class="topic-chevron">▼</span>
       </div>
       <div class="topic-body">
-        <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:6px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">Lab Test 1</div>
-        <div class="subtopic">考试结构：微积分、线性代数两个部分，Maple 题型混在对应部分里。</div>
-        <div class="subtopic">抽题规则：考试会从两个部分里抽 15–20 个题目，题型不变，只换数据。</div>
-        <div class="subtopic">微积分 · 40题型：包含相关 Maple 题，等待题型图片和知识点梗概。</div>
-        <div class="subtopic">线性代数 · 40题型：包含相关 Maple 题，等待题型图片和知识点梗概。</div>
+        <div class="subtopic">结构：Algebra 和 Calculus 两个板块，Maple 题型混在对应部分里。</div>
+        <div class="subtopic">规则：考试抽 15–20 个题目，题型不变，只换数据。</div>
 
-        <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:12px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">Lab Test 2</div>
-        <div class="subtopic">考试结构：微积分、线性代数两个部分，Maple 题型混在对应部分里。</div>
-        <div class="subtopic">抽题规则：考试会从两个部分里抽 15–20 个题目，题型不变，只换数据。</div>
-        <div class="subtopic">微积分 · 40题型：包含相关 Maple 题，等待题型图片和知识点梗概。</div>
-        <div class="subtopic">线性代数 · 40题型：包含相关 Maple 题，等待题型图片和知识点梗概。</div>
+        <div class="test-split">
+          <div class="test-panel clickable" id="lab-test-1-algebra-panel" onclick="toggleTestSection('lab-test-1-algebra')">
+            <div class="test-panel-head">
+              <div class="test-panel-title">Algebra</div>
+              <span class="test-panel-chevron">▼</span>
+            </div>
+            <div class="test-panel-note">20 个题型已放入。点开卡片查看题目和解析图片。</div>
+          </div>
+          <div class="test-panel">
+            <div class="test-panel-title">Calculus</div>
+            <div class="test-panel-note">先占位，等你把微积分题型图片放进来再补。</div>
+          </div>
+        </div>
 
-        <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:12px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">Final Exam</div>
-        <div class="subtopic">考试结构：微积分、线性代数两个部分，Maple 题型混在对应部分里。</div>
-        <div class="subtopic">抽题规则：考试会从两个部分里抽 15–20 个题目，题型不变，只换数据。</div>
-        <div class="subtopic">微积分 · 40题型：包含相关 Maple 题，等待题型图片和知识点梗概。</div>
-        <div class="subtopic">线性代数 · 40题型：包含相关 Maple 题，等待题型图片和知识点梗概。</div>
+        <div class="test-type-section" id="lab-test-1-algebra">
+        <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:4px 0 8px;">Algebra 题型</div>
+        <div class="test-type-grid">
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 1</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-01.png" alt="Lab Test 1 Algebra 题型 1"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 2</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-02.png" alt="Lab Test 1 Algebra 题型 2"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 3</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-03.png" alt="Lab Test 1 Algebra 题型 3"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 4</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-04.png" alt="Lab Test 1 Algebra 题型 4"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 5</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-05.png" alt="Lab Test 1 Algebra 题型 5"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 6</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-06.png" alt="Lab Test 1 Algebra 题型 6"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 7</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-07.png" alt="Lab Test 1 Algebra 题型 7"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 8</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-08.png" alt="Lab Test 1 Algebra 题型 8"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 9</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-09.png" alt="Lab Test 1 Algebra 题型 9"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 10</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-10.png" alt="Lab Test 1 Algebra 题型 10"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 11</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-11.png" alt="Lab Test 1 Algebra 题型 11"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 12</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-12.png" alt="Lab Test 1 Algebra 题型 12"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 13</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-13.png" alt="Lab Test 1 Algebra 题型 13"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 14</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-14.png" alt="Lab Test 1 Algebra 题型 14"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 15</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-15.png" alt="Lab Test 1 Algebra 题型 15"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 16</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-16.png" alt="Lab Test 1 Algebra 题型 16"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 17</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-17.png" alt="Lab Test 1 Algebra 题型 17"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 18</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-18.png" alt="Lab Test 1 Algebra 题型 18"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 19</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-19.png" alt="Lab Test 1 Algebra 题型 19"></div></div>
+          <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 20</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-1/algebra/algebra-20.png" alt="Lab Test 1 Algebra 题型 20"></div></div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-lab-test-2">
+      <div class="topic-header" onclick="toggleTopic('tc-lab-test-2')">
+        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">Lab Test 2</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopic">先占位。后面放 Lab Test 2 的 Algebra / Calculus 题型库。</div>
+      </div>
+    </div>
+
+    <div class="topic-card" id="tc-final-exam">
+      <div class="topic-header" onclick="toggleTopic('tc-final-exam')">
+        <div class="topic-left"><div class="topic-dot math-dot"></div><div class="topic-title">Final Exam</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopic">先占位。后面放期末考试题型、公式和错题整理。</div>
       </div>
     </div>
   </div>
@@ -2179,6 +2295,18 @@
     card.classList.toggle('open');
   }
 
+  function toggleTestType(card) {
+    card.classList.toggle('open');
+  }
+
+  function toggleTestSection(id) {
+    var section = document.getElementById(id);
+    var panel = document.getElementById(id + '-panel');
+    if (!section) return;
+    section.classList.toggle('open');
+    if (panel) panel.classList.toggle('open', section.classList.contains('open'));
+  }
+
   // ===== MATH1231 DETAILED TOPICS =====
   var MATH_TOPICS = {
     calc: [
@@ -2371,8 +2499,12 @@
   function placeFormulaQuickRef() {
     var progress = document.getElementById('math-progress-group');
     var quickref = document.getElementById('formula-quickref-group');
+    var tests = document.getElementById('math-test-group');
     if (progress && quickref && progress.nextElementSibling !== quickref) {
       progress.insertAdjacentElement('afterend', quickref);
+    }
+    if (quickref && tests && quickref.nextElementSibling !== tests) {
+      quickref.insertAdjacentElement('afterend', tests);
     }
   }
   placeFormulaQuickRef();
