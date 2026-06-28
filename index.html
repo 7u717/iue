@@ -210,17 +210,6 @@
     }
     .subtopic::before { content: "·"; color: var(--dim); flex-shrink: 0; margin-top: 1px; }
 
-    .test-structure {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px; margin-bottom: 14px;
-    }
-    .test-pill {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 10px 12px;
-      font-size: 12px; font-weight: 700; color: var(--text);
-      text-align: center;
-    }
-    .test-pill.dimmed { color: var(--dim); }
     .test-split {
       display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px; margin: 12px 0 14px;
@@ -1157,11 +1146,6 @@
   <div class="topic-group" id="math-test-group">
     <div class="group-label">Test</div>
 
-    <div class="test-structure">
-      <div class="test-pill">Lab Test 1</div>
-      <div class="test-pill dimmed">Lab Test 2</div>
-      <div class="test-pill dimmed">Final Exam</div>
-    </div>
 
     <div class="topic-card" id="tc-lab-test-1">
       <div class="topic-header" onclick="toggleTopic('tc-lab-test-1')">
