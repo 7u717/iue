@@ -2786,7 +2786,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-11-preview-scroll-weights-1';
+  var APP_VERSION = '2026-07-11-math2089-t1-plan-1';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · 微积分 · 线性代数 · 概率', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Test · Mini-design Project', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
@@ -2794,10 +2794,10 @@
     { id:'engg1811', code:'ENGG1811', icon:'💻', short:'Code', color:'var(--engg-color)', name:'Computing for Engineers', tags:['Planned','Core','2026 T3'], status:'archived', hasPage:false, term:'2026 T3', order:5 },
     { id:'phys1160', code:'PHYS1160', icon:'🔭', short:'Astro', color:'#B9C7F2', name:'Introduction to Astronomy', tags:['Planned','Free Elective','2026 T3'], status:'archived', hasPage:false, term:'2026 T3', order:6 },
     { id:'desn1000', code:'DESN1000', icon:'🧩', short:'Design', color:'#C8C2D6', name:'Introduction to Engineering Design and Innovation', tags:['Prereq','Core','2027 T1'], status:'archived', hasPage:false, term:'2027 T1', order:7 },
-    { id:'elec1111', code:'ELEC1111', icon:'🔌', short:'Elec', color:'#CBD5E1', name:'Electrical Circuit Fundamentals', tags:['Prereq','Core','2027 T1'], status:'archived', hasPage:false, term:'2027 T1', order:8 },
+    { id:'elec1111', code:'ELEC1111', icon:'🔌', short:'Elec', color:'#CBD5E1', name:'Electrical Circuit Fundamentals', tags:['Prereq','Core','2027 T2'], status:'archived', hasPage:false, term:'2027 T2', order:8 },
     { id:'mman', code:'MMAN1130', icon:'🔧', short:'Design', color:'var(--mman-color)', name:'Design and Manufacturing · CAD · 工具 · 制造', tags:['Prereq','Core','2027 T1'], status:'archived', note:'已 drop，资料保留', term:'2027 T1', order:9 },
     { id:'math2018', code:'MATH2018', icon:'📐', short:'Math', color:'var(--math-color)', name:'Engineering Mathematics 2D', tags:['Selected','Core','2027 T2'], status:'archived', hasPage:false, term:'2027 T2', order:10 },
-    { id:'math2089', code:'MATH2089', icon:'📊', short:'Stats', color:'var(--math-color)', name:'Numerical Methods and Statistics', tags:['Core','2027 T2'], status:'archived', hasPage:false, term:'2027 T2', order:11 },
+    { id:'math2089', code:'MATH2089', icon:'📊', short:'Stats', color:'var(--math-color)', name:'Numerical Methods and Statistics', tags:['Core','2027 T1'], status:'archived', hasPage:false, term:'2027 T1', order:11 },
     { id:'mman2700', code:'MMAN2700', icon:'🌡️', short:'Thermo', color:'var(--mman-color)', name:'Thermodynamics', tags:['Core','2027 T2'], status:'archived', hasPage:false, term:'2027 T2', order:12 },
     { id:'engg2400', code:'ENGG2400', icon:'🧱', short:'Solids', color:'var(--engg-color)', name:'Mechanics of Solids 1', tags:['Core','2027 T3'], status:'archived', hasPage:false, term:'2027 T3', order:13 },
     { id:'engg2500', code:'ENGG2500', icon:'🌊', short:'Fluids', color:'var(--engg-color)', name:'Fluid Mechanics for Engineers', tags:['Core','2027 T3'], status:'archived', hasPage:false, term:'2027 T3', order:14 },
@@ -2961,14 +2961,57 @@
       ],
       rules:['机构资料评价这门课过程比较繁琐，建议每周 tutorial 题提前看。']
     },
-    ENGG2500: { target:'82+', targetNote:'流体是 aero 关键基础，目标 82+。' },
-    MMAN2300: { target:'80+', targetNote:'工程力学 2，目标 80+。' },
-    DESN2000: { target:'82+', targetNote:'设计/专业实践课，目标 82+。' },
+    ENGG2500: {
+      target:'82+',
+      targetNote:'流体是 aero 关键基础，目标 82+。',
+      source:'Institution reference screenshot; confirm current Moodle before enrolment',
+      assessments:[
+        { name:'Online Quizzes', weight:'16%', note:'12 online quizzes in reference screenshot' },
+        { name:'Lab Assessments', weight:'24%', note:'Lab assessment component' },
+        { name:'Final Examination', weight:'60%', note:'Final exam' }
+      ],
+      rules:['机构资料说这门可包课高分，但期末 60% 很重，平时分要尽量拿满。']
+    },
+    MMAN2300: {
+      target:'80+',
+      targetNote:'工程力学 2，目标 80+。',
+      source:'Institution reference screenshot for 26T2; confirm current Moodle before enrolment',
+      assessments:[
+        { name:'Quizzes', weight:'20%', note:'In-term quizzes, concept analysis and basic calculation' },
+        { name:'Final Exam', weight:'50%', note:'Covers kinematics, dynamics and vibration' },
+        { name:'Laboratory Tests', weight:'15%', note:'Lab data processing and error analysis' },
+        { name:'Weekly WHP', weight:'15%', note:'Weekly homework/practice component' }
+      ],
+      rules:['机构资料评价难度 4 星，建议别把题都堆到期末。']
+    },
+    DESN2000: {
+      target:'82+',
+      targetNote:'设计/专业实践课，目标 82+。',
+      source:'Institution reference screenshot; confirm current Moodle before enrolment',
+      assessments:[
+        { name:'School Assessments', weight:'60%', note:'Group report based assessments' },
+        { name:'Design Presentation', weight:'20%', note:'Group presentation, around Week 10 in reference screenshot' },
+        { name:'Design Journal', weight:'20%', note:'Individual journal documenting design process and reflection' }
+      ],
+      rules:['Reference screenshot says total score >= 50% required to pass.', 'All assessments and presentation are conducted in person in the reference screenshot.']
+    },
     AERO3410: { target:'85+', targetNote:'Level 3 权重 3，结构核心，目标 85+。' },
     AERO3630: { target:'85+', targetNote:'Level 3 权重 3，空气动力核心，目标 85+。' },
     AERO3660: { target:'85+', targetNote:'飞行性能/推进核心，目标 85+。' },
     AERO3110: { target:'84+', targetNote:'Aero design 项目课，目标 84+。' },
-    MMAN3200: { target:'82+', targetNote:'控制系统对飞行器很重要，目标 82+。' },
+    MMAN3200: {
+      target:'82+',
+      targetNote:'控制系统对飞行器很重要，目标 82+。',
+      source:'Institution reference screenshot; confirm current Moodle before enrolment',
+      assessments:[
+        { name:'Quizzes', weight:'10%', note:'Small quizzes around Weeks 2/4/7/9 in reference screenshot' },
+        { name:'Midterm', weight:'25%', note:'Invigilated in-term assessment' },
+        { name:'Lab Report 1', weight:'8%', note:'First lab report' },
+        { name:'Lab Report 2', weight:'12%', note:'Second lab report' },
+        { name:'Final Exam', weight:'45%', note:'Final exam' }
+      ],
+      rules:['Core topics include Laplace transform, transfer functions, linearisation, root locus, Bode plots, PID control and state space.']
+    },
     DESN3000: { target:'84+', targetNote:'设计创新课，目标 84+。' },
     AERO4620: { target:'86+', targetNote:'Level 4 权重 4，Honours WAM 拉分核心，目标 86+。' },
     AERO4110: { target:'86+', targetNote:'Aerospace Design 2，Level 4 权重 4，目标 86+。' },
@@ -3105,8 +3148,8 @@
     { term:'2026 T1', uoc:6, reason:'已拿到的基础 UOC。', courses:['MATH1131'] },
     { term:'2026 T2', uoc:12, reason:'当前在学，先稳住数学和工程力学。', courses:['MATH1231','ENGG1300'] },
     { term:'2026 T3', uoc:18, reason:'提前补 PHYS1121，同时用 ENGG1811 和 PHYS1160 拉 WAM。', courses:['PHYS1121','ENGG1811','PHYS1160'] },
-    { term:'2027 T1', uoc:18, reason:'DESN1000 后移一学期，和电路、制造类课程一起推进。', courses:['DESN1000','ELEC1111','MMAN1130'] },
-    { term:'2027 T2', uoc:18, reason:'进入 Year 2 主干：数学、统计、热力学。', courses:['MATH2018','MATH2089','MMAN2700'] },
+    { term:'2027 T1', uoc:18, reason:'把 ELEC1111 后移，先用 MATH2089 稳住节奏和 WAM。', courses:['DESN1000','MATH2089','MMAN1130'] },
+    { term:'2027 T2', uoc:18, reason:'电路放到这一学期单独面对，同时继续数学和热力学。', courses:['MATH2018','ELEC1111','MMAN2700'] },
     { term:'2027 T3', uoc:18, reason:'完成 Year 2 工程力学核心，打开 Level 3 aerospace。', courses:['ENGG2400','ENGG2500','MMAN2300'] },
     { term:'2028 T1', uoc:18, reason:'开始 aerospace 核心，结构和空气动力一起推进。', courses:['DESN2000','AERO3410','AERO3630'] },
     { term:'2028 T2', uoc:18, reason:'飞行性能、设计和控制系统，难度会比较高。', courses:['AERO3660','AERO3110','MMAN3200'] },
