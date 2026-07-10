@@ -1008,6 +1008,7 @@
     .dash-command-title { font-family:'Space Grotesk',sans-serif;font-size:25px;font-weight:850;line-height:1.08;color:var(--text);letter-spacing:0; }
     .dash-command-meta { margin-top:7px;font-size:13px;color:var(--muted);line-height:1.45; }
     .dash-command-count { text-align:right;min-width:76px; }
+    .dash-command-badge { display:none; }
     .dash-command-num { font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:850;line-height:.9;color:var(--text);letter-spacing:0; }
     .dash-command-unit { font-size:12px;color:var(--muted);margin-top:5px; }
     .dash-command-body { display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start; }
@@ -1234,7 +1235,7 @@
       <div class="dash-post">
         <div class="dash-topline">
           <div></div>
-          <div class="dash-pill" id="dash-command-count">0 件</div>
+          <div class="dash-pill dash-command-badge" id="dash-command-count"></div>
         </div>
         <div class="dash-command" id="dash-command"></div>
       </div>
@@ -2785,7 +2786,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-11-myplan-weights-1';
+  var APP_VERSION = '2026-07-11-preview-scroll-weights-1';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · 微积分 · 线性代数 · 概率', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Test · Mini-design Project', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
@@ -2844,38 +2845,37 @@
     DESN1000: {
       target: '82+',
       targetNote: '设计课很适合拉分，但组队/项目管理会影响结果；目标 82+。',
-      source: 'UNSW DESN1000 2022 official outline; exact 2027 project stream may vary',
+      source: 'UNSW DESN1000 2022 official outline + institution reference screenshot; exact 2027 project stream may vary',
       assessments: [
-        { name:'Impromptu Design reflective writing', weight:'5%', note:'Common faculty-wide task' },
-        { name:'Engineering Design Process', weight:'15%', note:'EDP task' },
-        { name:'Project assessments', weight:'60%', note:'Project outline gives detailed breakdown' },
-        { name:'Technical stream assessments', weight:'20%', note:'Some projects may instead use 80% project assessments' }
+        { name:'Faculty Assessment', weight:'20%', note:'Common design process / reflection tasks' },
+        { name:'Project Assessment', weight:'60%', note:'Design Proposal, Design Journal, Final Report + Competition' },
+        { name:'Technical Assessment', weight:'20%', note:'Project stream technical component' }
       ],
       rules: ['No final exam in the older official outline.', 'Project-specific Moodle outline is final; team contribution can adjust marks.']
     },
     ENGG1811: {
       target: '85+',
       targetNote: '编程课是最好拉 WAM 的机会之一；目标 85+，同时为 IC/科研打基础。',
-      source: 'UNSW CSE ENGG1811 26T2 official course outline',
+      source: 'Institution reference screenshot for 25T2; UNSW CSE 26T2 official outline may differ',
       assessments: [
-        { name:'Labs', weight:'10%', note:'Weekly labs + self-directed labs' },
-        { name:'Lab Quiz 1', weight:'15%', note:'Week 5 in-person invigilated quiz' },
-        { name:'Lab Quiz 2', weight:'15%', note:'Week 10 in-person invigilated quiz' },
-        { name:'Final Exam', weight:'60%', note:'Invigilated practical exam in exam period' }
+        { name:'Final Exam', weight:'40%', note:'Individual exam, broad course knowledge' },
+        { name:'Assignment 1', weight:'20%', note:'Individual task, due around Week 7 in reference screenshot' },
+        { name:'Assignment 2', weight:'20%', note:'Individual task, due around Week 10 in reference screenshot' },
+        { name:'Labs', weight:'20%', note:'Practical labs across teaching weeks' }
       ],
-      rules: ['Must obtain at least 40% in the final exam to pass the course.', 'No generative AI permitted for lab quizzes and final exam.']
+      rules: ['Use current Moodle / official outline as final authority before enrolment.', 'Earlier 26T2 official outline used a different practical-exam structure, so confirm the exact term.']
     },
     PHYS1160: {
       target: '85+',
       targetNote: 'Free Elective 放在前面最好拿高分，目标 85+ 用来拉整体 WAM。',
-      source: 'UNSW PHYS1160 2022 official outline; exact 2026 T3 Moodle may update details',
+      source: 'Institution reference screenshot; older UNSW PHYS1160 outline differs, exact 2026 T3 Moodle may update details',
       assessments: [
-        { name:'Activities', weight:'30%', note:'20 online lesson activities, older outline counted 1.5% each' },
-        { name:'Discussion forum contributions', weight:'25%', note:'5 module forums, older outline counted 5% each' },
-        { name:'Written assessment', weight:'20%', note:'APOD-based writing task: draft 5% + final 15%' },
-        { name:'Final exam', weight:'25%', note:'Online timed Moodle quiz in exam period' }
+        { name:'Weekly Quizzes', weight:'10%', note:'Individual timed weekly quizzes in reference screenshot' },
+        { name:'Short Report', weight:'25%', note:'Individual short written report' },
+        { name:'APOD Project', weight:'40%', note:'Project on Astronomy Picture of the Day' },
+        { name:'Experiment', weight:'25%', note:'Individual experiment task' }
       ],
-      rules: ['Fully online in the older outline, with no prerequisites or co-requisites listed.', 'Treat as WAM booster only after confirming 2026 T3 Moodle dates and any updated task format.']
+      rules: ['Fully online in the older UNSW outline, with no prerequisites or co-requisites listed.', 'Treat as WAM booster only after confirming 2026 T3 Moodle dates and exact task format.']
     },
     PHYS1121: {
       target:'80+',
@@ -2888,7 +2888,7 @@
         { name:'Class test 2', weight:'10%', note:'Invigilated quiz/test style' },
         { name:'Final Exam', weight:'50%', note:'Whole syllabus; older outline lists 2-hour exam' }
       ],
-      rules:['MATH1131/MATH1141/MATH1151/MATH1011 listed as co-requisite in older outline.', 'Use 2026 T3 Moodle for current lab format and exact test dates.']
+      rules:['数学基础已满足；2026 T3 具体 lab / test 以 Moodle 为准。']
     },
     ELEC1111: {
       target:'78+',
@@ -2917,31 +2917,50 @@
     MATH2018: {
       target:'82+',
       targetNote:'数学二年级课权重更高，目标 82+。',
-      source:'UNSW MATH2018 2022 official outline; exact 2027 Moodle may update details',
+      source:'Institution reference screenshot + older UNSW MATH2018 outline; exact 2027 Moodle may update details',
       assessments:[
-        { name:'Online Quizzes', weight:'10%', note:'Best 8 of 9 Mobius quizzes in older outline' },
-        { name:'Written Test', weight:'20%', note:'Week 5 in older outline' },
-        { name:'Computer Lab Test', weight:'10%', note:'Week 9 in older outline' },
+        { name:'Mobius Online Quizzes', weight:'10%', note:'Weekly, Weeks 1-9 in reference screenshot' },
+        { name:'Computer Lab Test 1', weight:'15%', note:'Week 5, 40 minutes' },
+        { name:'Computer Lab Test 2', weight:'15%', note:'Week 9, 40 minutes' },
         { name:'Final Exam', weight:'60%', note:'Exam period' }
       ],
-      rules:['No late submissions in older outline after approved extensions.', 'MATH2018 is equivalent to MATH2019 in the older outline.']
+      rules:['Reference screenshot says total 50/100 or more is required to pass.', 'Generative AI is not allowed for any assessment in the reference screenshot.']
     },
     MATH2089: {
       target:'82+',
       targetNote:'数值方法/统计对 IC 和科研都有用，目标 82+。',
-      source:'UNSW MATH2089 2022 official outline; newer offerings may split quiz weights differently',
+      source:'Institution reference screenshot; older UNSW MATH2089 outline may split components differently',
       assessments:[
-        { name:'Numerical Methods online quizzes', weight:'10%', note:'8 quizzes in older outline' },
-        { name:'Numerical Methods online tests', weight:'10%', note:'Two tests, 5% each' },
-        { name:'Numerical Methods final exam', weight:'30%', note:'Numerical Methods component final' },
-        { name:'Statistics online lectures & quizzes', weight:'10%', note:'10 quizzes in older outline' },
-        { name:'Statistics Midterm Test', weight:'10%', note:'Week 7 in older outline' },
-        { name:'Statistics final exam', weight:'30%', note:'Statistics component final' }
+        { name:'Online Quizzes', weight:'20%', note:'Numerical methods and statistics practice' },
+        { name:'Mid Term Test', weight:'10%', note:'In-term test' },
+        { name:'Numerical Methods Tests', weight:'10%', note:'Numerical methods test component' },
+        { name:'Final Exam', weight:'60%', note:'Final exam' }
       ],
       rules:['Older outline required at least 40% in both Statistics and Numerical Methods components.', 'Current Moodle should be checked because newer offerings may consolidate quizzes/tests.']
     },
-    MMAN2700: { target:'80+', targetNote:'热力学核心，目标 80+。' },
-    ENGG2400: { target:'82+', targetNote:'Level 2 权重 2，结构方向基础课，目标 82+。' },
+    MMAN2700: {
+      target:'80+',
+      targetNote:'热力学核心，目标 80+。',
+      source:'Institution reference screenshot; confirm current Moodle before enrolment',
+      assessments:[
+        { name:'Laboratory 1', weight:'15%', note:'Thermodynamics lab component' },
+        { name:'Laboratory 2', weight:'15%', note:'Thermodynamics lab component' },
+        { name:'Quizzes', weight:'30%', note:'In-term quiz component' },
+        { name:'Final Exam', weight:'40%', note:'Final exam' }
+      ]
+    },
+    ENGG2400: {
+      target:'82+',
+      targetNote:'Level 2 权重 2，结构方向基础课，目标 82+。',
+      source:'Institution reference screenshot; confirm current Moodle before enrolment',
+      assessments:[
+        { name:'Weekly Tasks', weight:'16%', note:'Regular weekly problem tasks' },
+        { name:'Labs', weight:'20%', note:'Laboratory component' },
+        { name:'Block Tests', weight:'24%', note:'In-term block tests' },
+        { name:'Final Examination', weight:'40%', note:'Final exam' }
+      ],
+      rules:['机构资料评价这门课过程比较繁琐，建议每周 tutorial 题提前看。']
+    },
     ENGG2500: { target:'82+', targetNote:'流体是 aero 关键基础，目标 82+。' },
     MMAN2300: { target:'80+', targetNote:'工程力学 2，目标 80+。' },
     DESN2000: { target:'82+', targetNote:'设计/专业实践课，目标 82+。' },
@@ -3247,8 +3266,14 @@
       showCourse(id);
       return;
     }
+    var coursesSection = document.getElementById('sec-courses');
+    var previousTop = coursesSection ? coursesSection.scrollTop : 0;
     selectedPreviewCourseId = selectedPreviewCourseId === id ? null : id;
-    showCourse('courses');
+    showCourse('courses', { preserveScroll: true, scrollTop: previousTop });
+    setTimeout(function(){
+      var restored = document.getElementById('sec-courses');
+      if (restored) restored.scrollTop = previousTop;
+    }, 0);
   }
 
   function coursePreviewMarkup(course) {
@@ -3369,7 +3394,8 @@
     });
   }
 
-  function showCourse(course) {
+  function showCourse(course, options) {
+    options = options || {};
     var _secs = document.querySelectorAll('.course-section');
     for (var _i=0; _i<_secs.length; _i++) {
       _secs[_i].classList.remove('active');
@@ -3385,7 +3411,11 @@
     if (!activeSection) return;
     activeSection.classList.add('active');
     activeSection.scrollLeft = 0;
-    activeSection.scrollTo({ top: 0, behavior: 'smooth' });
+    if (options.preserveScroll) {
+      activeSection.scrollTop = options.scrollTop || 0;
+    } else {
+      activeSection.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     var tabCourse = (course === 'math' || course === 'mman' || course === 'engg') ? 'courses' : (course === 'countdown' ? 'dashboard' : course);
     var tab = document.getElementById('tab-' + tabCourse);
     var colorMap = { dashboard: 'active-math', timetable: 'active-math', countdown: 'active-engg', courses: 'active-engg', math: 'active-math', mman: 'active-mman', engg: 'active-engg', myplan: 'active-math' };
@@ -3398,6 +3428,11 @@
     updateCourseVisibility();
     if (course === 'myplan') renderMyPlan();
     if (course === 'dashboard' && typeof renderDashboard === 'function') renderDashboard();
+    if (options.preserveScroll) {
+      requestAnimationFrame(function(){
+        activeSection.scrollTop = options.scrollTop || 0;
+      });
+    }
   }
 
   var COURSE_SWIPE_ORDER = activeCourseIds.slice();
