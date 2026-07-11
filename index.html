@@ -528,6 +528,41 @@
       border-style: dashed;
       background: rgba(255,255,255,.016);
     }
+    .plan-term-alerts {
+      display: grid;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .plan-term-alert {
+      border: 1px solid rgba(147,197,253,.12);
+      border-radius: 11px;
+      background: rgba(147,197,253,.045);
+      padding: 8px 9px;
+      font-size: 11px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+    .plan-term-alert.warn {
+      border-color: rgba(209,215,226,.18);
+      background: rgba(209,215,226,.055);
+      color: #C8D1DE;
+    }
+    .plan-prereq-chain {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .plan-prereq-pill {
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 999px;
+      background: rgba(255,255,255,.035);
+      color: var(--muted);
+      padding: 4px 8px;
+      font-size: 10px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
     .plan-term-code {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 12px;
@@ -675,6 +710,34 @@
       border-radius: 11px;
       background: rgba(255,255,255,.035);
       margin-top: 7px;
+    }
+    .course-preview-source {
+      margin-top: 12px;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 11px;
+      background: rgba(255,255,255,.026);
+      overflow: hidden;
+    }
+    .course-preview-source summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 8px 9px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #C8D1DE;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .course-preview-source summary::-webkit-details-marker { display: none; }
+    .course-preview-source summary::after { content: "▼"; color: var(--dim); font-size: 10px; }
+    .course-preview-source[open] summary::after { content: "▲"; }
+    .course-preview-source-body {
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding: 8px 9px 10px;
+      font-size: 11px;
+      line-height: 1.45;
+      color: var(--muted);
     }
     .course-preview-hero {
       display: flex;
@@ -1076,6 +1139,31 @@
       display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;font-weight:700;
     }
     .course-library { display:grid;grid-template-columns:minmax(0,1fr);gap:10px; }
+    .course-filter-bar {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      padding: 2px 0 12px;
+      margin-top: -2px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .course-filter-bar::-webkit-scrollbar { display:none; }
+    .course-filter {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface2);
+      color: var(--muted);
+      padding: 7px 11px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .course-filter.active {
+      color: #06121f;
+      border-color: rgba(147,197,253,.9);
+      background: linear-gradient(135deg, #EFF6FF, #93C5FD);
+    }
     .course-library-row {
       display:flex;align-items:center;gap:12px;padding:14px;background:var(--surface);
       border:1px solid var(--border);border-radius:16px;
@@ -1269,6 +1357,7 @@
       </div>
     </div>
 
+    <div class="course-filter-bar" id="course-filter-bar" aria-label="课程筛选"></div>
     <div class="course-library" id="course-library"></div>
   </div>
 </div>
@@ -2786,7 +2875,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-11-math2089-t1-plan-1';
+  var APP_VERSION = '2026-07-11-smart-plan-ui-1';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · 微积分 · 线性代数 · 概率', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Test · Mini-design Project', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
@@ -3019,6 +3108,34 @@
     MMAN4952: { target:'85+', targetNote:'Thesis B；尽早和 supervisor 对齐 rubric，目标 85+。' },
     MMAN4953: { target:'85+', targetNote:'Thesis C；最终产出和展示要冲高，目标 85+。' }
   };
+  var COURSE_SMART = {
+    MATH1231: { type:'Math', prereqs:['MATH1131'], unlocks:['MATH2018','MATH2089'], note:'数学底座课，后面二年级数学会接着用。' },
+    ENGG1300: { type:'ENGG', unlocks:['MMAN2300','ENGG2400'], note:'工程力学底座，后续固体/力学课会继续用。' },
+    PHYS1121: { type:'Phys', prereqs:['MATH1131'], unlocks:['AERO3630','AERO3660'], note:'aero 方向的物理底座，尽量别拖。' },
+    ENGG1811: { type:'ENGG', unlocks:['Coding confidence'], note:'编程基础，对科研/数据处理/IC 申请都加分。' },
+    PHYS1160: { type:'Free', booster:true, note:'Free Elective 里的 WAM booster 候选。' },
+    DESN1000: { type:'Design', unlocks:['DESN2000','DESN3000'], note:'设计表达和小组推进能力会延续到后续 DESN。' },
+    ELEC1111: { type:'ENGG', prereqs:['MATH1131'], unlocks:['controls context'], note:'电路基础不一定卡 aero 主线，但对控制/系统理解有帮助。' },
+    MMAN1130: { type:'MMAN', unlocks:['DESN2000','manufacturing skills'], note:'CAD/制造基础，重修时要按 rubric 提前推进。' },
+    MATH2018: { type:'Math', prereqs:['MATH1231'], unlocks:['AERO core maths'], note:'工程数学 2D，给高年级 aero 算法和模型打底。' },
+    MATH2089: { type:'Math', prereqs:['MATH1231'], unlocks:['simulation','data analysis'], note:'数值方法和统计，对科研/仿真/数据处理很有用。' },
+    MMAN2700: { type:'MMAN', prereqs:['MATH1231'], unlocks:['AERO3660'], note:'热力学会接推进和能量系统。' },
+    ENGG2400: { type:'ENGG', prereqs:['ENGG1300'], unlocks:['AERO3410'], note:'固体力学是结构方向关键前置能力。' },
+    ENGG2500: { type:'ENGG', prereqs:['MATH1231','PHYS1121'], unlocks:['AERO3630'], note:'流体是 aero 核心前置，final 重。' },
+    MMAN2300: { type:'MMAN', prereqs:['ENGG1300'], unlocks:['AERO vehicle dynamics'], note:'工程力学 2，别堆到期末。' },
+    DESN2000: { type:'Design', prereqs:['DESN1000'], unlocks:['DESN3000'], booster:true, note:'过程型设计课，组队顺的话适合拉分。' },
+    AERO3410: { type:'Aero', prereqs:['ENGG2400'], unlocks:['AERO4110'], note:'航空结构核心。' },
+    AERO3630: { type:'Aero', prereqs:['ENGG2500','MATH2018'], unlocks:['AERO3660'], note:'空气动力核心。' },
+    AERO3660: { type:'Aero', prereqs:['AERO3630','MMAN2700'], unlocks:['AERO4110'], note:'飞行性能和推进核心。' },
+    AERO3110: { type:'Aero', prereqs:['DESN2000'], unlocks:['AERO4110'], note:'Aero design 第一段。' },
+    MMAN3200: { type:'MMAN', prereqs:['MATH2018'], unlocks:['AERO4620'], note:'控制系统对飞行器很重要。' },
+    DESN3000: { type:'Design', prereqs:['DESN2000'], booster:true, note:'设计创新课，可作为压力缓冲。' },
+    AERO4620: { type:'Aero', prereqs:['MMAN3200','AERO3660'], unlocks:['Year 4 thesis/design'], note:'Level 4 权重高，Honours WAM 核心。' },
+    AERO4110: { type:'Aero', prereqs:['AERO3110','AERO3660'], unlocks:['graduation capstone'], note:'Aerospace Design 2，收尾核心。' },
+    MMAN4951: { type:'Thesis', prereqs:['research topic'], unlocks:['MMAN4952'], note:'Thesis A 开题和计划。' },
+    MMAN4952: { type:'Thesis', prereqs:['MMAN4951'], unlocks:['MMAN4953'], note:'Thesis B 做主体工作。' },
+    MMAN4953: { type:'Thesis', prereqs:['MMAN4952'], note:'Thesis C 收尾和展示。' }
+  };
 
   function toggleHeaderLinks(event) {
     if (event) event.stopPropagation();
@@ -3159,6 +3276,7 @@
     { term:'2029 T3', uoc:10, reason:'Aerospace Design 2 和 Thesis C 收尾。', courses:['AERO4110','MMAN4953'] }
   ];
   var selectedPreviewCourseId = null;
+  var currentCourseFilter = 'all';
 
   function loadActiveCourses() {
     try {
@@ -3181,6 +3299,59 @@
 
   function courseMeta(code) {
     return COURSE_META[code] || {};
+  }
+
+  function courseSmart(code) {
+    return COURSE_SMART[code] || {};
+  }
+
+  function parseWeight(weight) {
+    var match = String(weight || '').match(/(\d+(?:\.\d+)?)/);
+    return match ? parseFloat(match[1]) : 0;
+  }
+
+  function courseFinalWeight(code) {
+    var meta = courseMeta(code);
+    if (!meta.assessments) return 0;
+    return meta.assessments.reduce(function(max, item) {
+      return /final|exam|期末/i.test(item.name || '') ? Math.max(max, parseWeight(item.weight)) : max;
+    }, 0);
+  }
+
+  function courseAssessmentLoad(code) {
+    var meta = courseMeta(code);
+    return (meta.assessments || []).reduce(function(sum, item) { return sum + parseWeight(item.weight); }, 0);
+  }
+
+  function termWarnings(term) {
+    var codes = term.courses.filter(function(item){ return typeof item === 'string'; });
+    var finals = codes.map(function(code){ return { code:code, weight:courseFinalWeight(code) }; }).filter(function(item){ return item.weight >= 45; });
+    var boosters = codes.filter(function(code){ return courseSmart(code).booster; });
+    var alerts = [];
+    if (finals.length >= 2) {
+      alerts.push({ kind:'warn', text:'考试压力偏高：' + finals.map(function(item){ return item.code + ' final ' + item.weight + '%'; }).join(' / ') });
+    } else if (finals.length === 1 && finals[0].weight >= 55) {
+      alerts.push({ kind:'warn', text:'注意 ' + finals[0].code + ' 期末占 ' + finals[0].weight + '%，平时分要尽量拿满。' });
+    }
+    if (codes.indexOf('ELEC1111') > -1 && codes.indexOf('MMAN1130') > -1) {
+      alerts.push({ kind:'warn', text:'ELEC1111 和 MMAN1130 同 term 会比较压，当前已尽量拆开。' });
+    }
+    if (boosters.length) {
+      alerts.push({ kind:'ok', text:'拉分窗口：' + boosters.join(' / ') + ' 可以承担 WAM buffer。' });
+    }
+    if (!alerts.length && codes.length >= 3) {
+      alerts.push({ kind:'ok', text:'这个 term 结构比较均衡，保持每周推进就行。' });
+    }
+    return alerts;
+  }
+
+  function prerequisiteMarkup(code) {
+    var smart = courseSmart(code);
+    var parts = [];
+    if (smart.prereqs && smart.prereqs.length) parts.push('<span class="plan-prereq-pill">前置：'+smart.prereqs.join(' / ')+'</span>');
+    if (smart.unlocks && smart.unlocks.length) parts.push('<span class="plan-prereq-pill">解锁：'+smart.unlocks.join(' / ')+'</span>');
+    if (smart.note) parts.push('<span class="plan-prereq-pill">'+smart.note+'</span>');
+    return parts.length ? '<div class="plan-prereq-chain">'+parts.join('')+'</div>' : '';
   }
 
   function renderMyPlanTermCourse(item) {
@@ -3209,12 +3380,16 @@
     var termEl = document.getElementById('plan-term-list');
     if (!termEl) return;
     termEl.innerHTML = MYPLAN_TERMS.map(function(term) {
+      var alerts = termWarnings(term).map(function(alert) {
+        return '<div class="plan-term-alert '+(alert.kind === 'warn' ? 'warn' : '')+'">'+alert.text+'</div>';
+      }).join('');
       return '<div class="plan-term-card">'
         + '<div class="plan-term-head">'
         + '<div><div class="plan-term-name">'+term.term+'</div><div class="plan-term-reason">'+term.reason+'</div></div>'
         + '<div class="plan-term-uoc">'+term.uoc+' UOC</div>'
         + '</div>'
         + '<div class="plan-term-courses">'+term.courses.map(renderMyPlanTermCourse).join('')+'</div>'
+        + (alerts ? '<div class="plan-term-alerts">'+alerts+'</div>' : '')
         + '</div>';
     }).join('');
   }
@@ -3323,6 +3498,7 @@
     var tags = (course.tags || []).map(function(t){ return '<span class="course-chip">'+t+'</span>'; }).join('');
     var uoc = course.uoc || (course.code && course.code.indexOf('MMAN495') === 0 ? 4 : 6);
     var meta = courseMeta(course.code);
+    var smart = courseSmart(course.code);
     var assessmentHtml = meta.assessments && meta.assessments.length ? meta.assessments.map(function(a) {
       return '<div class="course-preview-assess-row">'
         + '<div><div class="course-preview-assess-name">'+a.name+'</div>'
@@ -3348,8 +3524,9 @@
       + '</div>'
       + (meta.targetNote ? '<div class="course-preview-rule" style="margin-top:12px;">'+meta.targetNote+'</div>' : '')
       + '<div class="course-preview-section"><div class="course-preview-section-title">成绩占比</div><div class="course-preview-assess">'+assessmentHtml+'</div></div>'
+      + (prerequisiteMarkup(course.code) ? '<div class="course-preview-section"><div class="course-preview-section-title">Prerequisite / Path</div>'+prerequisiteMarkup(course.code)+'</div>' : '')
       + (rulesHtml ? '<div class="course-preview-section"><div class="course-preview-section-title">Rules / Hurdles</div>'+rulesHtml+'</div>' : '')
-      + (meta.source ? '<div class="course-preview-rule">Source: '+meta.source+'</div>' : '')
+      + (meta.source ? '<details class="course-preview-source"><summary>'+((smart.booster ? '参考资料 · 拉分候选' : '参考资料 · 需确认'))+'</summary><div class="course-preview-source-body">'+meta.source+'</div></details>' : '')
       + '<div class="course-tile-meta" style="margin-top:12px;">'+tags+'</div>'
       + '</div>';
   }
@@ -3372,15 +3549,30 @@
   function renderCourseManager() {
     var rail = document.getElementById('active-course-rail');
     var lib = document.getElementById('course-library');
+    var filters = document.getElementById('course-filter-bar');
     var count = document.getElementById('active-course-count');
     if (!rail || !lib || !count) return;
     count.textContent = activeCourseIds.length + ' / ' + ACTIVE_COURSE_LIMIT;
     var activeCourses = activeCourseIds.map(courseById).filter(Boolean);
     rail.innerHTML = activeCourses.map(function(c){ return renderCourseTile(c, true); }).join('')
       + (activeCourses.length < ACTIVE_COURSE_LIMIT ? '<div class="course-slot-empty">+ 从课程库加入</div>' : '');
+    if (filters) {
+      var filterItems = [
+        { id:'all', label:'All' },
+        { id:'2027', label:'2027' },
+        { id:'math', label:'Math' },
+        { id:'aero', label:'Aero' },
+        { id:'design', label:'Design' },
+        { id:'exam', label:'Exam-heavy' },
+        { id:'booster', label:'WAM booster' }
+      ];
+      filters.innerHTML = filterItems.map(function(item) {
+        return '<button class="course-filter '+(currentCourseFilter === item.id ? 'active' : '')+'" onclick="setCourseFilter(\''+item.id+'\')">'+item.label+'</button>';
+      }).join('');
+    }
     var sortedCatalog = COURSE_CATALOG.slice().sort(function(a,b){
       return (a.order || 999) - (b.order || 999);
-    });
+    }).filter(courseMatchesFilter);
     lib.innerHTML = sortedCatalog.map(function(c){
       var active = isActiveCourse(c.id);
       var unavailable = c.hasPage === false;
@@ -3398,6 +3590,25 @@
         +'</div>';
       return row + (selectedPreviewCourseId === c.id ? coursePreviewMarkup(c) : '');
     }).join('');
+  }
+
+  function courseMatchesFilter(course) {
+    if (currentCourseFilter === 'all') return true;
+    var smart = courseSmart(course.code);
+    var text = [course.code, course.name, course.term, smart.type, (course.tags || []).join(' ')].join(' ').toLowerCase();
+    if (currentCourseFilter === '2027') return (course.term || '').indexOf('2027') === 0;
+    if (currentCourseFilter === 'math') return smart.type === 'Math' || /^MATH/.test(course.code);
+    if (currentCourseFilter === 'aero') return smart.type === 'Aero' || /^AERO/.test(course.code);
+    if (currentCourseFilter === 'design') return smart.type === 'Design' || text.indexOf('design') > -1 || /^DESN/.test(course.code);
+    if (currentCourseFilter === 'exam') return courseFinalWeight(course.code) >= 50;
+    if (currentCourseFilter === 'booster') return !!smart.booster;
+    return true;
+  }
+
+  function setCourseFilter(filter) {
+    currentCourseFilter = filter || 'all';
+    selectedPreviewCourseId = null;
+    renderCourseManager();
   }
 
   function renderCourseSwitchers(currentCourse) {
@@ -4095,6 +4306,33 @@
     return 'background:'+courseFillStyle(course, color)+';';
   }
 
+  function gtCourseCode(course) {
+    return { math:'MATH1231', mman:'MMAN1130', engg:'ENGG1300' }[course] || '';
+  }
+
+  function gtTargetNumber(course) {
+    var meta = courseMeta(gtCourseCode(course));
+    var match = String(meta.target || '').match(/(\d+)/);
+    return match ? parseInt(match[1], 10) : 80;
+  }
+
+  function gtNeedMarkup(course, total, doneW, color) {
+    var target = gtTargetNumber(course);
+    var remainW = Math.max(0, 100 - doneW);
+    var need = remainW > 0 ? Math.max(0, (target - total) / remainW * 100) : 0;
+    var text;
+    if (total >= target) {
+      text = '目标 ' + target + '+ 已达到，后面稳住就行。';
+    } else if (remainW <= 0) {
+      text = '目标 ' + target + '+，当前还差 ' + (target - total).toFixed(1) + ' 分。';
+    } else if (need > 100) {
+      text = '目标 ' + target + '+ 已经很难，只看下一项先追回一点。';
+    } else {
+      text = '目标 ' + target + '+：剩余 ' + remainW + '% 平均要拿 ' + need.toFixed(0) + '%。';
+    }
+    return '<div class="course-preview-rule" style="margin-top:10px;"><span style="color:'+color+';font-weight:800;">Target</span> · '+text+'</div>';
+  }
+
   function gtLoad() { try { return JSON.parse(localStorage.getItem('gt_v2')||'{}'); } catch(e) { return {}; } }
   function gtSave(d) { try { localStorage.setItem('gt_v2', JSON.stringify(d)); } catch(e) {}; markCloudDirty(); }
 
@@ -4193,7 +4431,9 @@
       +'</div>'
       +'<div style="height:6px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;">'
       +'<div style="height:100%;border-radius:999px;'+courseFillCss(course, cfg.color)+'width:'+Math.min(total,100)+'%;transition:width .4s;"></div>'
-      +'</div></div>';
+      +'</div>'
+      +gtNeedMarkup(course, total, doneW, cfg.color)
+      +'</div>';
 
     // Render items
     for (var i=0; i<cfg.items.length; i++) {
@@ -4427,23 +4667,23 @@
       var locText = next.loc ? ' · '+next.loc : '';
       commandEl.innerHTML =
         '<div class="dash-command-main">'
-        +'<div><div class="dash-command-label">Primary Focus</div><div class="dash-command-title">'+next.name+'</div><div class="dash-command-meta">'+dashFormatDate(next.date)+' · '+dashCourseName(course)+' · '+next.tag+locText+'</div>'
+        +'<div><div class="dash-command-label">Now</div><div class="dash-command-title">'+next.name+'</div><div class="dash-command-meta">'+dashFormatDate(next.date)+' · '+dashCourseName(course)+' · '+next.tag+locText+'</div>'
         +'<div class="dash-actions"><button class="dash-action primary" onclick="showCourse(\''+course+'\')">查看课程</button><button class="dash-action" onclick="showCourse(\'countdown\')">全部倒计时</button></div></div>'
         +'<div class="dash-command-count"><div class="dash-command-num">'+left.num+'</div><div class="dash-command-unit">'+left.unit+'</div></div>'
         +'</div>'
         +'<div class="dash-command-body">'
-        +'<div><div class="dash-command-section-title">Next Queue</div><div class="dash-queue">'+(queueHtml || '<div style="color:var(--muted);font-size:13px;padding:6px 0;">未来两周没有未完成考核。</div>')+'</div></div>'
-        +'<div><div class="dash-command-section-title">Tiny Tasks</div><div class="dash-focus">'+(tinyHtml || '<div style="color:var(--muted);font-size:13px;padding:6px 0;">今天没有自动任务。</div>')+'</div></div>'
+        +'<div><div class="dash-command-section-title">本周风险</div><div class="dash-queue">'+(queueHtml || '<div style="color:var(--muted);font-size:13px;padding:6px 0;">未来两周没有未完成考核。</div>')+'</div></div>'
+        +'<div><div class="dash-command-section-title">小任务</div><div class="dash-focus">'+(tinyHtml || '<div style="color:var(--muted);font-size:13px;padding:6px 0;">今天没有自动任务。</div>')+'</div></div>'
         +'</div>';
     } else {
       commandEl.innerHTML =
         '<div class="dash-command-main">'
-        +'<div><div class="dash-command-label">Primary Focus</div><div class="dash-command-title">目前没有未完成的倒计时</div><div class="dash-command-meta">可以复盘成绩，或者提前整理下一周内容。</div></div>'
+        +'<div><div class="dash-command-label">Now</div><div class="dash-command-title">目前没有未完成的倒计时</div><div class="dash-command-meta">可以复盘成绩，或者提前整理下一周内容。</div></div>'
         +'<div class="dash-command-count"><div class="dash-command-num">✓</div><div class="dash-command-unit">All clear</div></div>'
         +'</div>'
         +'<div class="dash-command-body">'
-        +'<div><div class="dash-command-section-title">Next Queue</div><div style="color:var(--muted);font-size:13px;padding:6px 0;">未来两周没有未完成考核。</div></div>'
-        +'<div><div class="dash-command-section-title">Tiny Tasks</div><div class="dash-focus">'+(tinyHtml || '<div style="color:var(--muted);font-size:13px;padding:6px 0;">今天没有自动任务。</div>')+'</div></div>'
+        +'<div><div class="dash-command-section-title">本周风险</div><div style="color:var(--muted);font-size:13px;padding:6px 0;">未来两周没有未完成考核。</div></div>'
+        +'<div><div class="dash-command-section-title">小任务</div><div class="dash-focus">'+(tinyHtml || '<div style="color:var(--muted);font-size:13px;padding:6px 0;">今天没有自动任务。</div>')+'</div></div>'
         +'</div>';
     }
 
