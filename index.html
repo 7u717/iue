@@ -2875,7 +2875,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-11-english-course-subtitles-1';
+  var APP_VERSION = '2026-07-11-ios-course-swipe-1';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
@@ -3467,7 +3467,7 @@
       if (!activeCourseIds.length) activeCourseIds = ['math'];
     }
     saveActiveCourses();
-    COURSE_SWIPE_ORDER = activeCourseIds.slice();
+    COURSE_SWIPE_ORDER = swipeOrder();
     renderCourseManager();
     renderCourseSwitchers();
     updateCourseVisibility();
@@ -3689,56 +3689,62 @@
     }
   }
 
-  var COURSE_SWIPE_ORDER = activeCourseIds.slice();
+  function swipeOrder() {
+    return activeCourseIds.concat(['courses']);
+  }
+
+  var COURSE_SWIPE_ORDER = swipeOrder();
   var swipeStartX = 0;
   var swipeStartY = 0;
   var swipeStartCourse = null;
   var swipeActiveSection = null;
   var swipeHorizontal = false;
   var suppressNextSwipeClick = false;
+  var swipeEase = 'cubic-bezier(.22,1,.36,1)';
 
   function currentSwipeCourse() {
     var active = document.querySelector('.course-section.active');
     if (!active) return null;
     var id = active.id.replace('sec-', '');
     if (id === 'myplan') return 'myplan';
+    if (id === 'courses') return 'courses';
     return COURSE_SWIPE_ORDER.indexOf(id) > -1 ? id : null;
   }
 
   function shouldIgnoreSwipeTarget(target) {
-    return !!(target && target.closest && target.closest('.tab-bar, .course-switcher, a, button, input, textarea, select'));
+    return !!(target && target.closest && target.closest('.tab-bar, .course-switcher, .course-rail, .course-filter-bar, .test-type-grid, a, button, input, textarea, select, details, summary'));
+  }
+
+  function animateSwipeOut(direction) {
+    if (!swipeActiveSection) return;
+    swipeActiveSection.style.transition = 'transform .28s '+swipeEase+', opacity .24s ease';
+    swipeActiveSection.style.transform = 'translateX(' + (direction < 0 ? 116 : -116) + 'px)';
+    swipeActiveSection.style.opacity = '.74';
   }
 
   function showSwipeCourse(direction) {
     var current = swipeStartCourse || currentSwipeCourse();
     if (current === 'myplan') {
       suppressNextSwipeClick = true;
-      if (swipeActiveSection) {
-        swipeActiveSection.style.transition = 'transform .22s cubic-bezier(.2,.8,.2,1), opacity .22s ease';
-        swipeActiveSection.style.transform = 'translateX(' + (direction < 0 ? 92 : -92) + 'px)';
-        swipeActiveSection.style.opacity = '.78';
-      }
-      setTimeout(function(){ showCourse('dashboard'); }, 120);
-      setTimeout(function(){ suppressNextSwipeClick = false; }, 380);
+      animateSwipeOut(direction);
+      setTimeout(function(){ showCourse('dashboard'); }, 118);
+      setTimeout(function(){ suppressNextSwipeClick = false; }, 430);
       return;
     }
+    COURSE_SWIPE_ORDER = swipeOrder();
     var index = COURSE_SWIPE_ORDER.indexOf(current);
     if (index < 0) return;
     var nextIndex = index + direction;
     if (nextIndex < 0 || nextIndex >= COURSE_SWIPE_ORDER.length) return;
     suppressNextSwipeClick = true;
-    if (swipeActiveSection) {
-      swipeActiveSection.style.transition = 'transform .22s cubic-bezier(.2,.8,.2,1), opacity .22s ease';
-      swipeActiveSection.style.transform = 'translateX(' + (direction < 0 ? 92 : -92) + 'px)';
-      swipeActiveSection.style.opacity = '.78';
-    }
-    setTimeout(function(){ showCourse(COURSE_SWIPE_ORDER[nextIndex]); }, 120);
-    setTimeout(function(){ suppressNextSwipeClick = false; }, 380);
+    animateSwipeOut(direction);
+    setTimeout(function(){ showCourse(COURSE_SWIPE_ORDER[nextIndex]); }, 118);
+    setTimeout(function(){ suppressNextSwipeClick = false; }, 430);
   }
 
   function resetSwipeVisual() {
     if (!swipeActiveSection) return;
-    swipeActiveSection.style.transition = 'transform .22s cubic-bezier(.2,.8,.2,1), opacity .18s ease';
+    swipeActiveSection.style.transition = 'transform .32s '+swipeEase+', opacity .22s ease';
     swipeActiveSection.style.transform = '';
     swipeActiveSection.style.opacity = '';
     swipeActiveSection = null;
@@ -3753,6 +3759,7 @@
 
   document.addEventListener('touchstart', function(e) {
     if (!currentSwipeCourse() || shouldIgnoreSwipeTarget(e.target) || !e.touches || e.touches.length !== 1) return;
+    COURSE_SWIPE_ORDER = swipeOrder();
     swipeStartCourse = currentSwipeCourse();
     swipeActiveSection = document.querySelector('.course-section.active');
     swipeHorizontal = false;
@@ -3767,16 +3774,19 @@
     if (!swipeHorizontal && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.08) swipeHorizontal = true;
     if (!swipeHorizontal) return;
     e.preventDefault();
-    var limited = Math.max(-78, Math.min(78, dx * 0.42));
+    var edge = (swipeStartCourse === COURSE_SWIPE_ORDER[0] && dx > 0) || (swipeStartCourse === COURSE_SWIPE_ORDER[COURSE_SWIPE_ORDER.length - 1] && dx < 0);
+    var resistance = edge ? 0.18 : 0.58;
+    var limited = Math.max(-118, Math.min(118, dx * resistance));
     swipeActiveSection.style.transition = 'none';
     swipeActiveSection.style.transform = 'translateX(' + limited.toFixed(1) + 'px)';
+    swipeActiveSection.style.opacity = String(Math.max(.82, 1 - Math.abs(limited) / 420));
   }, { passive: false });
 
   document.addEventListener('touchend', function(e) {
     if (!swipeStartCourse || !e.changedTouches || e.changedTouches.length !== 1) return;
     var dx = e.changedTouches[0].clientX - swipeStartX;
     var dy = e.changedTouches[0].clientY - swipeStartY;
-    var shouldSwipe = Math.abs(dx) >= 42 && Math.abs(dx) > Math.abs(dy) * 1.08;
+    var shouldSwipe = Math.abs(dx) >= 36 && Math.abs(dx) > Math.abs(dy) * 1.04;
     if (shouldSwipe) showSwipeCourse(dx < 0 ? 1 : -1);
     else resetSwipeVisual();
     swipeStartCourse = null;
@@ -3784,6 +3794,7 @@
 
   document.addEventListener('mousedown', function(e) {
     if (!currentSwipeCourse() || shouldIgnoreSwipeTarget(e.target)) return;
+    COURSE_SWIPE_ORDER = swipeOrder();
     swipeStartCourse = currentSwipeCourse();
     swipeActiveSection = document.querySelector('.course-section.active');
     swipeHorizontal = false;
@@ -3795,7 +3806,7 @@
     if (!swipeStartCourse) return;
     var dx = e.clientX - swipeStartX;
     var dy = e.clientY - swipeStartY;
-    var shouldSwipe = Math.abs(dx) >= 42 && Math.abs(dx) > Math.abs(dy) * 1.08;
+    var shouldSwipe = Math.abs(dx) >= 36 && Math.abs(dx) > Math.abs(dy) * 1.04;
     if (shouldSwipe) showSwipeCourse(dx < 0 ? 1 : -1);
     else resetSwipeVisual();
     swipeStartCourse = null;
