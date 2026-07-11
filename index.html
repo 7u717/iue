@@ -2875,7 +2875,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-11-ios-course-swipe-1';
+  var APP_VERSION = '2026-07-11-ios-course-swipe-2';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
@@ -3733,9 +3733,15 @@
     }
     COURSE_SWIPE_ORDER = swipeOrder();
     var index = COURSE_SWIPE_ORDER.indexOf(current);
-    if (index < 0) return;
+    if (index < 0) {
+      resetSwipeVisual();
+      return;
+    }
     var nextIndex = index + direction;
-    if (nextIndex < 0 || nextIndex >= COURSE_SWIPE_ORDER.length) return;
+    if (nextIndex < 0 || nextIndex >= COURSE_SWIPE_ORDER.length) {
+      resetSwipeVisual();
+      return;
+    }
     suppressNextSwipeClick = true;
     animateSwipeOut(direction);
     setTimeout(function(){ showCourse(COURSE_SWIPE_ORDER[nextIndex]); }, 118);
