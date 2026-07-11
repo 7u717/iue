@@ -2763,82 +2763,78 @@
 
     <div class="topic-card" style="padding:16px;">
       <div style="font-size:14px; line-height:1.7; color:var(--text);">
-        <strong>项目简介：</strong>从4种结构中选1个（脚手架 Scaffolding / 直升机停机坪 Helipad / 起重机支撑 Crane Support / 工作平台 Work Platform），完成静力分析（恒载 Wdl = 11 kN）和动力冲击分析（按你的姓氏分组 P–T，冲击质量 m = 70 kg）。
+        <strong>Project brief：</strong>从 4 种二维钢桁架中选 1 个，完成 static load + impact load 两套分析，并交一份最多 20 页的 PDF 工程报告。你现在按 P–T 组：Wdl = 11 kN，impact mass = 70 kg。
       </div>
       <div style="height:10px;"></div>
-      <a class="pdf-link" href="engg1300/pdfs/ENGG1300_Mini-design_Project.pdf" target="_blank" rel="noopener">📄 项目说明 PDF 原件</a>
+      <a class="pdf-link" href="engg1300/pdfs/ENGG1300_Mini-design_Project.pdf" target="_blank" rel="noopener">📄 Original brief</a>
+      <a class="pdf-link" href="engg1300/pdfs/ENGG1300_Mini-design_Project_CN.pdf" target="_blank" rel="noopener">译 中文翻译件</a>
+      <a class="pdf-link" href="engg1300/pdfs/ENGG1300_Mini-design_Project_Playbook.pdf" target="_blank" rel="noopener">🧭 项目书 / Playbook</a>
     </div>
 
     <div class="topic-card" id="tc-mdp-prep">
       <div class="topic-header" onclick="toggleTopic('tc-mdp-prep')">
-        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">准备步骤 & 时间规划</div></div>
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">Project route：先别急着算</div></div>
         <span class="topic-chevron">▼</span>
       </div>
       <div class="topic-body">
         <div class="subtopics">
-          <div class="subtopic"><strong>Week 5：</strong>选定一种结构，画出几何简图（标注尺寸、节点编号、支座类型）</div>
-          <div class="subtopic"><strong>Week 5：</strong>静力分析 — 求整体支座反力，再用节点法/截面法求各杆件内力（Wdl=11kN）</div>
-          <div class="subtopic"><strong>Week 8：</strong>动力冲击分析 — 计算冲击物体（m=70kg）下落产生的冲击力，与静载情况对比</div>
-          <div class="subtopic"><strong>Week 8：</strong>找出关键杆件（受力最大），计算其应力 σ=N/A</div>
-          <div class="subtopic"><strong>Week 10：</strong>应力校核 — 确定临界杆件所需的最小直径/截面尺寸</div>
-          <div class="subtopic"><strong>Week 10：</strong>两种方法（静力 vs 动力）结果对比分析</div>
-          <div class="subtopic"><strong>最终：</strong>撰写150–250字反思总结，整理报告（最多20页PDF）</div>
+          <div class="subtopic"><strong>核心判断：</strong>这不是普通算题，是 30% 的 design report。目标是“假设清楚、图清楚、每根杆件力清楚、结果能被第二种方法复核”。</div>
+          <div class="subtopic"><strong>推荐结构：</strong>想贴合 aerospace，优先看 Option 2 Helipad side truss；想计算直观，Option 1 / 4 的水平冲击也很清楚；Option 3 通常杆件更多，报告工作量偏大。</div>
+          <div class="subtopic"><strong>先确认一个口径：</strong>Wdl = 11 kN 到底是总静载分配到指定节点，还是每个指定节点 11 kN。PDF wording 容易误读，最终按 Moodle/老师口径写进 assumptions。</div>
+          <div class="subtopic"><strong>时间线：</strong>Week 5 完成结构选择、几何性质、static reactions/member forces；Week 8 完成 impact load；Week 10 完成 stress check、critical diameter、second method；Week 11 Fri 20:00 交最终 PDF。</div>
         </div>
       </div>
     </div>
 
     <div class="topic-card" id="tc-mdp-joints">
       <div class="topic-header" onclick="toggleTopic('tc-mdp-joints')">
-        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">桁架分析：节点法 & 截面法</div></div>
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">Known values：先把数字钉死</div></div>
         <span class="topic-chevron">▼</span>
       </div>
       <div class="topic-body">
         <div class="subtopics">
-          <div class="subtopic">先画整体FBD，用 ΣF=0、ΣM=0 求支座反力</div>
-          <div class="subtopic">节点法 Method of Joints：逐个节点列 ΣFx=0、ΣFy=0，从只有2个未知力的节点开始</div>
-          <div class="subtopic">截面法 Method of Sections：切割桁架，对截面整体取矩，适合求单个杆件内力</div>
-          <div class="subtopic">受拉为正（Tension）、受压为负（Compression），结果符号要标清楚</div>
-          <div class="subtopic">零力杆判断：可简化计算量</div>
-        </div>
-        <div class="links-label">学习资源</div>
-        <div class="link-row">
-          <a class="resource-link" href="https://www.youtube.com/results?search_query=truss+method+of+joints+method+of+sections+tutorial" target="_blank" rel="noopener">
-            <div class="link-icon yt">▶</div>
-            <div class="link-text">Truss Analysis：节点法 & 截面法<span class="link-src">YouTube · 搜索结果</span></div>
-            <span class="link-arrow">↗</span>
-          </a>
-          <a class="resource-link" href="https://search.bilibili.com/all?keyword=桁架结构分析%20节点法%20截面法" target="_blank" rel="noopener">
-            <div class="link-icon bili">B</div>
-            <div class="link-text">桁架结构分析 节点法截面法<span class="link-src">Bilibili · 搜索结果</span></div>
-            <span class="link-arrow">↗</span>
-          </a>
+          <div class="subtopic"><strong>Material：</strong>steel, ρ = 7850 kg/m³, E = 200 GPa, allowable axial stress = 80 MPa。</div>
+          <div class="subtopic"><strong>Cross-section：</strong>solid circular member, d = 30 mm；A = πd²/4 ≈ 706.9 mm²；I = πd⁴/64 ≈ 39,761 mm⁴。</div>
+          <div class="subtopic"><strong>Self-weight：</strong>w = ρAg ≈ 0.0544 kN/m。报告里要说明是否计入，或者为什么按 brief/课堂要求处理。</div>
+          <div class="subtopic"><strong>Stress capacity：</strong>N_allow = σ_allow A ≈ 56.55 kN。任何杆件 |N| 超过这个量级就要标成 fail。</div>
+          <div class="subtopic"><strong>Vertical impact estimate：</strong>m = 70 kg, h = 3 m, stopping distance = 0.10 m；F ≈ mgh / ss ≈ 20.6 kN。</div>
+          <div class="subtopic"><strong>Horizontal impact estimate：</strong>a = 5.00 m/s² over 3 m；v = √(2as) ≈ 5.48 m/s；F ≈ mv²/(2ss) ≈ 10.5 kN。</div>
         </div>
       </div>
     </div>
 
     <div class="topic-card" id="tc-mdp-impact">
       <div class="topic-header" onclick="toggleTopic('tc-mdp-impact')">
-        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">动力冲击载荷分析</div></div>
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">Step-by-step：一把手流程</div></div>
         <span class="topic-chevron">▼</span>
       </div>
       <div class="topic-body">
         <div class="subtopics">
-          <div class="subtopic">冲击前速度：自由落体 v²=2as（s为下落高度）</div>
-          <div class="subtopic">冲击力估算：F = m·v² / (2×停止距离)，或用能量法 mgh = F·d</div>
-          <div class="subtopic">动态放大系数 Dynamic Load Factor (DLF)：冲击载荷 / 静载荷</div>
-          <div class="subtopic">将等效冲击力代入桁架，重新做节点法/截面法分析</div>
-          <div class="subtopic">对比静力与动力情况下临界杆件的内力差异</div>
+          <div class="subtopic"><strong>1. Report skeleton：</strong>先建 20 页以内报告骨架：cover、contents、background、selected structure、geometry、static、impact、stress、critical diameter、comparison、reflection。</div>
+          <div class="subtopic"><strong>2. Node map：</strong>把选定结构的节点、杆件、支座、load nodes、impact node 全部编号。每根杆件起一个名字，例如 AB、AC、BD。</div>
+          <div class="subtopic"><strong>3. Assumptions：</strong>连接为 pin-jointed；杆件只受 axial force；材料均为 steel；圆截面 d = 30 mm；忽略或计入自重的理由写清楚。</div>
+          <div class="subtopic"><strong>4. Static FBD：</strong>画整体 free-body diagram，用 ΣFx=0、ΣFy=0、ΣM=0 求支座反力，再用 method of joints / sections 求每根杆件力。</div>
+          <div class="subtopic"><strong>5. Impact FBD：</strong>先由能量/运动学求 equivalent impact force，再把它放到指定 impact node，重复一次 reactions + member forces。</div>
+          <div class="subtopic"><strong>6. Member table：</strong>做表格：member、N_static、T/C、N_dynamic、T/C、σ_static、σ_dynamic、pass/fail。这张表是报告核心。</div>
+          <div class="subtopic"><strong>7. Critical member：</strong>找 |N| 最大的杆件。用 d_min = √(4N / (πσ_allow)) 分别算 static 和 dynamic 的最小直径。</div>
+          <div class="subtopic"><strong>8. Second method：</strong>用 Excel/Python/MATLAB/Space Gass/AI 复核 reactions 和 member forces；写清楚输入、假设、差异原因。</div>
+          <div class="subtopic"><strong>9. Reflection：</strong>150–250 words，重点写：哪个方法更容易出错、动力载荷如何改变 critical member、设计直径为什么变大。</div>
         </div>
         <div class="links-label">学习资源</div>
         <div class="link-row">
+          <a class="resource-link" href="https://www.youtube.com/results?search_query=truss+method+of+joints+method+of+sections+tutorial" target="_blank" rel="noopener">
+            <div class="link-icon yt">▶</div>
+            <div class="link-text">Truss Analysis：Joints & Sections<span class="link-src">YouTube · 搜索结果</span></div>
+            <span class="link-arrow">↗</span>
+          </a>
           <a class="resource-link" href="https://www.youtube.com/results?search_query=impact+load+dynamic+load+factor+structure+engineering" target="_blank" rel="noopener">
             <div class="link-icon yt">▶</div>
             <div class="link-text">Impact Load & Dynamic Load Factor<span class="link-src">YouTube · 搜索结果</span></div>
             <span class="link-arrow">↗</span>
           </a>
-          <a class="resource-link" href="https://search.bilibili.com/all?keyword=冲击载荷%20动态放大系数%20结构分析" target="_blank" rel="noopener">
+          <a class="resource-link" href="https://search.bilibili.com/all?keyword=桁架结构分析%20节点法%20截面法%20冲击载荷" target="_blank" rel="noopener">
             <div class="link-icon bili">B</div>
-            <div class="link-text">冲击载荷 动态放大系数<span class="link-src">Bilibili · 搜索结果</span></div>
+            <div class="link-text">桁架分析 + 冲击载荷<span class="link-src">Bilibili · 搜索结果</span></div>
             <span class="link-arrow">↗</span>
           </a>
         </div>
@@ -2847,29 +2843,18 @@
 
     <div class="topic-card" id="tc-mdp-stress">
       <div class="topic-header" onclick="toggleTopic('tc-mdp-stress')">
-        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">应力校核 & 截面尺寸设计</div></div>
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">Checklist：交之前逐项打勾</div></div>
         <span class="topic-chevron">▼</span>
       </div>
       <div class="topic-body">
         <div class="subtopics">
-          <div class="subtopic">轴向应力公式：σ = N/A（N为杆件内力，A为截面积）</div>
-          <div class="subtopic">已知材料许用应力 σ_allow，反求所需最小截面积 A_min = N/σ_allow</div>
-          <div class="subtopic">圆形截面：A=πd²/4，反推最小直径 d</div>
-          <div class="subtopic">找出受力最大的杆件（critical member）作为设计依据</div>
-          <div class="subtopic">安全系数 Factor of Safety 的概念与应用</div>
-        </div>
-        <div class="links-label">学习资源</div>
-        <div class="link-row">
-          <a class="resource-link" href="https://www.youtube.com/results?search_query=axial+stress+allowable+stress+minimum+diameter+design" target="_blank" rel="noopener">
-            <div class="link-icon yt">▶</div>
-            <div class="link-text">Axial Stress & Allowable Stress Design<span class="link-src">YouTube · 搜索结果</span></div>
-            <span class="link-arrow">↗</span>
-          </a>
-          <a class="resource-link" href="https://search.bilibili.com/all?keyword=轴向应力%20截面设计" target="_blank" rel="noopener">
-            <div class="link-icon bili">B</div>
-            <div class="link-text">轴向应力 截面尺寸设计<span class="link-src">Bilibili · 搜索结果</span></div>
-            <span class="link-arrow">↗</span>
-          </a>
+          <div class="subtopic">报告是单个 PDF，最多 20 页 A4；页边距、页码、figure/table label、单位都要完整。</div>
+          <div class="subtopic">有 selected structure 的图：尺寸、节点编号、杆件编号、支座类型、静载节点、冲击节点。</div>
+          <div class="subtopic">Static 和 impact 两套 FBD 都有；support reactions 不只给答案，要有关键方程。</div>
+          <div class="subtopic">每根 member force 都有 Tension / Compression 标记，最后汇总到表格。</div>
+          <div class="subtopic">Stress check 用 σ=N/A；pass/fail 写清楚；critical member 和 minimum diameter 分 static / dynamic 两套。</div>
+          <div class="subtopic">第二种方法要有截图或输出，不要只说“我用软件算了”。差异要解释，不能假装完全一样。</div>
+          <div class="subtopic">Reflection 不写鸡汤，写工程判断：哪里最不确定、哪个 load case 控制设计、下次会怎么建模。</div>
         </div>
       </div>
     </div>
@@ -2877,7 +2862,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-11-ios-course-swipe-4';
+  var APP_VERSION = '2026-07-12-mini-project-1';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
