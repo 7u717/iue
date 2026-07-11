@@ -2877,7 +2877,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-11-ios-course-swipe-3';
+  var APP_VERSION = '2026-07-11-ios-course-swipe-4';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
@@ -3279,6 +3279,7 @@
   ];
   var selectedPreviewCourseId = null;
   var currentCourseFilter = 'all';
+  var courseManagerDirty = true;
 
   function loadActiveCourses() {
     try {
@@ -3470,7 +3471,8 @@
     }
     saveActiveCourses();
     COURSE_SWIPE_ORDER = swipeOrder();
-    renderCourseManager();
+    courseManagerDirty = true;
+    renderCourseManager(true);
     renderCourseSwitchers();
     updateCourseVisibility();
     renderCountdown();
@@ -3483,12 +3485,14 @@
     var section = document.getElementById('sec-' + id);
     if (section) {
       selectedPreviewCourseId = null;
+      courseManagerDirty = true;
       showCourse(id);
       return;
     }
     var coursesSection = document.getElementById('sec-courses');
     var previousTop = coursesSection ? coursesSection.scrollTop : 0;
     selectedPreviewCourseId = selectedPreviewCourseId === id ? null : id;
+    courseManagerDirty = true;
     showCourse('courses', { preserveScroll: true, scrollTop: previousTop });
     setTimeout(function(){
       var restored = document.getElementById('sec-courses');
@@ -3548,7 +3552,8 @@
       +'</div>';
   }
 
-  function renderCourseManager() {
+  function renderCourseManager(force) {
+    if (!force && !courseManagerDirty) return;
     var rail = document.getElementById('active-course-rail');
     var lib = document.getElementById('course-library');
     var filters = document.getElementById('course-filter-bar');
@@ -3592,6 +3597,7 @@
         +'</div>';
       return row + (selectedPreviewCourseId === c.id ? coursePreviewMarkup(c) : '');
     }).join('');
+    courseManagerDirty = false;
   }
 
   function courseMatchesFilter(course) {
@@ -3610,7 +3616,8 @@
   function setCourseFilter(filter) {
     currentCourseFilter = filter || 'all';
     selectedPreviewCourseId = null;
-    renderCourseManager();
+    courseManagerDirty = true;
+    renderCourseManager(true);
   }
 
   function renderCourseSwitchers(currentCourse) {
@@ -3681,7 +3688,13 @@
       if (tabCourse === 'dashboard') tab.className = 'tab tab-main';
       tab.classList.add(colorMap[course] || colorMap[tabCourse] || 'active-math');
     }
-    renderCourseManager();
+    if (course === 'courses') {
+      if (options.deferCourseRender) {
+        setTimeout(function(){ renderCourseManager(false); }, 180);
+      } else {
+        renderCourseManager(false);
+      }
+    }
     renderCourseSwitchers(course);
     updateCourseVisibility();
     if (course === 'myplan') renderMyPlan();
@@ -3734,7 +3747,7 @@
   }
 
   function animateCourseIn(course, direction) {
-    showCourse(course, { instantScroll: true });
+    showCourse(course, { instantScroll: true, deferCourseRender: course === 'courses' });
     var incoming = document.querySelector('.course-section.active');
     if (!incoming) return;
     incoming.style.transition = 'none';
@@ -4278,6 +4291,12 @@
   }
   renderCountdown();
   updateCourseVisibility();
+  function warmCourseManager() {
+    if (!courseManagerDirty) return;
+    renderCourseManager(false);
+  }
+  if ('requestIdleCallback' in window) requestIdleCallback(warmCourseManager, { timeout: 1200 });
+  else setTimeout(warmCourseManager, 450);
 
   // Two-color subtopics: label on top line in course color, explanation below in muted
   function colorSubtopics() {
