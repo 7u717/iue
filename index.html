@@ -2763,12 +2763,30 @@
 
     <div class="topic-card" style="padding:16px;">
       <div style="font-size:14px; line-height:1.7; color:var(--text);">
-        <strong>Project brief：</strong>从 4 种二维钢桁架中选 1 个，完成 static load + impact load 两套分析，并交一份最多 20 页的 PDF 工程报告。你现在按 P–T 组：Wdl = 11 kN，impact mass = 70 kg。
+        <strong>Project brief：</strong>已按 Option 2 Helipad side truss 开始推进。完成 static load + impact load 两套分析，并交一份最多 20 页的 PDF 工程报告。你现在按 P–T 组：G/H/I 每个加载点 Wdl = 11 kN，impact mass = 70 kg。
       </div>
       <div style="height:10px;"></div>
       <a class="pdf-link" href="engg1300/pdfs/ENGG1300_Mini-design_Project.pdf" target="_blank" rel="noopener">📄 Original brief</a>
       <a class="pdf-link" href="engg1300/pdfs/ENGG1300_Mini-design_Project_CN.pdf" target="_blank" rel="noopener">译 中文翻译件</a>
       <a class="pdf-link" href="engg1300/pdfs/ENGG1300_Mini-design_Project_Playbook.pdf" target="_blank" rel="noopener">🧭 项目书 / Playbook</a>
+    </div>
+
+    <div class="topic-card" id="tc-mdp-option2">
+      <div class="topic-header" onclick="toggleTopic('tc-mdp-option2')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">Option 2 starter：Helipad side truss</div></div>
+        <span class="topic-chevron">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="subtopics">
+          <div class="subtopic"><strong>Nodes：</strong>A(0,0), B(4,0), C(8,0), D(12,0), E(16,0), F(0,4), G(4,4), H(8,4), I(12,4), J(16,4)。单位 m。</div>
+          <div class="subtopic"><strong>Supports：</strong>A = pin support，所以有 Ax、Ay；E = roller support，所以有 Ey。竖向荷载对称，Ax = 0。</div>
+          <div class="subtopic"><strong>Members：</strong>AF, FG, AB, AG, BG, BC, GC, GH, CH, CD, CI, HI, DI, DE, IE, IJ, EJ。共 17 根，配合 10 个节点和 3 个支座反力，刚好 statically determinate。</div>
+          <div class="subtopic"><strong>Static case：</strong>G、H、I 各向下 11 kN。支座反力：Ay = 16.5 kN, Ey = 16.5 kN。</div>
+          <div class="subtopic"><strong>Dynamic case：</strong>H 点额外 impact force ≈ mgh/ss = 70×9.81×3/0.10 = 20.6 kN。总荷载为 G=11, H=31.6, I=11 kN。支座反力：Ay ≈ 26.8 kN, Ey ≈ 26.8 kN。</div>
+          <div class="subtopic"><strong>First-pass result：</strong>static 最大杆件力约 23.3 kN（AG/IE compression）；dynamic 最大杆件力约 42.6 kN（GH/HI compression）。30 mm 圆杆应力都低于 80 MPa。</div>
+          <div class="subtopic"><strong>Next action：</strong>下一步把每个节点的 method of joints 手算过程写出来，再用表格整理 static / dynamic 的 member force、T/C、stress、pass/fail。</div>
+        </div>
+      </div>
     </div>
 
     <div class="topic-card" id="tc-mdp-prep">
@@ -2862,7 +2880,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-12-mini-project-1';
+  var APP_VERSION = '2026-07-12-mini-project-option2-1';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
