@@ -225,6 +225,8 @@
       position: fixed; top: var(--header-h); left: 0; right: 0;
       height: calc(100dvh - var(--header-h) - var(--nav-h));
       overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+      backface-visibility: hidden; contain: layout paint; transform: translate3d(0,0,0);
+      will-change: transform, opacity;
     }
     .course-section.active { display: block; }
 
@@ -2875,7 +2877,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-11-ios-course-swipe-2';
+  var APP_VERSION = '2026-07-11-ios-course-swipe-3';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
@@ -3667,6 +3669,8 @@
     activeSection.scrollLeft = 0;
     if (options.preserveScroll) {
       activeSection.scrollTop = options.scrollTop || 0;
+    } else if (options.instantScroll) {
+      activeSection.scrollTop = 0;
     } else {
       activeSection.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -3701,6 +3705,8 @@
   var swipeHorizontal = false;
   var suppressNextSwipeClick = false;
   var swipeEase = 'cubic-bezier(.22,1,.36,1)';
+  var swipeFrame = null;
+  var swipeVisualX = 0;
 
   function currentSwipeCourse() {
     var active = document.querySelector('.course-section.active');
@@ -3715,20 +3721,40 @@
     return !!(target && target.closest && target.closest('.tab-bar, .course-switcher, .course-rail, .course-filter-bar, .test-type-grid, a, button, input, textarea, select, details, summary'));
   }
 
-  function animateSwipeOut(direction) {
-    if (!swipeActiveSection) return;
-    swipeActiveSection.style.transition = 'transform .28s '+swipeEase+', opacity .24s ease';
-    swipeActiveSection.style.transform = 'translateX(' + (direction < 0 ? 116 : -116) + 'px)';
-    swipeActiveSection.style.opacity = '.74';
+  function setSwipeVisual(x) {
+    swipeVisualX = x;
+    if (swipeFrame) return;
+    swipeFrame = requestAnimationFrame(function(){
+      swipeFrame = null;
+      if (!swipeActiveSection) return;
+      swipeActiveSection.style.transition = 'none';
+      swipeActiveSection.style.transform = 'translate3d(' + swipeVisualX.toFixed(1) + 'px,0,0)';
+      swipeActiveSection.style.opacity = String(Math.max(.84, 1 - Math.abs(swipeVisualX) / 520));
+    });
+  }
+
+  function animateCourseIn(course, direction) {
+    showCourse(course, { instantScroll: true });
+    var incoming = document.querySelector('.course-section.active');
+    if (!incoming) return;
+    incoming.style.transition = 'none';
+    incoming.style.transform = 'translate3d(' + (direction > 0 ? 42 : -42) + 'px,0,0)';
+    incoming.style.opacity = '.88';
+    requestAnimationFrame(function(){
+      incoming.style.transition = 'transform .34s '+swipeEase+', opacity .22s ease';
+      incoming.style.transform = 'translate3d(0,0,0)';
+      incoming.style.opacity = '';
+    });
   }
 
   function showSwipeCourse(direction) {
     var current = swipeStartCourse || currentSwipeCourse();
     if (current === 'myplan') {
       suppressNextSwipeClick = true;
-      animateSwipeOut(direction);
-      setTimeout(function(){ showCourse('dashboard'); }, 118);
-      setTimeout(function(){ suppressNextSwipeClick = false; }, 430);
+      animateCourseIn('dashboard', direction);
+      swipeActiveSection = null;
+      swipeHorizontal = false;
+      setTimeout(function(){ suppressNextSwipeClick = false; }, 260);
       return;
     }
     COURSE_SWIPE_ORDER = swipeOrder();
@@ -3743,15 +3769,20 @@
       return;
     }
     suppressNextSwipeClick = true;
-    animateSwipeOut(direction);
-    setTimeout(function(){ showCourse(COURSE_SWIPE_ORDER[nextIndex]); }, 118);
-    setTimeout(function(){ suppressNextSwipeClick = false; }, 430);
+    animateCourseIn(COURSE_SWIPE_ORDER[nextIndex], direction);
+    swipeActiveSection = null;
+    swipeHorizontal = false;
+    setTimeout(function(){ suppressNextSwipeClick = false; }, 260);
   }
 
   function resetSwipeVisual() {
     if (!swipeActiveSection) return;
+    if (swipeFrame) {
+      cancelAnimationFrame(swipeFrame);
+      swipeFrame = null;
+    }
     swipeActiveSection.style.transition = 'transform .32s '+swipeEase+', opacity .22s ease';
-    swipeActiveSection.style.transform = '';
+    swipeActiveSection.style.transform = 'translate3d(0,0,0)';
     swipeActiveSection.style.opacity = '';
     swipeActiveSection = null;
     swipeHorizontal = false;
@@ -3764,8 +3795,8 @@
   }, true);
 
   document.addEventListener('touchstart', function(e) {
-    if (!currentSwipeCourse() || shouldIgnoreSwipeTarget(e.target) || !e.touches || e.touches.length !== 1) return;
     COURSE_SWIPE_ORDER = swipeOrder();
+    if (!currentSwipeCourse() || shouldIgnoreSwipeTarget(e.target) || !e.touches || e.touches.length !== 1) return;
     swipeStartCourse = currentSwipeCourse();
     swipeActiveSection = document.querySelector('.course-section.active');
     swipeHorizontal = false;
@@ -3777,30 +3808,28 @@
     if (!swipeStartCourse || !swipeActiveSection || !e.touches || e.touches.length !== 1) return;
     var dx = e.touches[0].clientX - swipeStartX;
     var dy = e.touches[0].clientY - swipeStartY;
-    if (!swipeHorizontal && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.08) swipeHorizontal = true;
+    if (!swipeHorizontal && Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy) * .95) swipeHorizontal = true;
     if (!swipeHorizontal) return;
     e.preventDefault();
     var edge = (swipeStartCourse === COURSE_SWIPE_ORDER[0] && dx > 0) || (swipeStartCourse === COURSE_SWIPE_ORDER[COURSE_SWIPE_ORDER.length - 1] && dx < 0);
-    var resistance = edge ? 0.18 : 0.58;
-    var limited = Math.max(-118, Math.min(118, dx * resistance));
-    swipeActiveSection.style.transition = 'none';
-    swipeActiveSection.style.transform = 'translateX(' + limited.toFixed(1) + 'px)';
-    swipeActiveSection.style.opacity = String(Math.max(.82, 1 - Math.abs(limited) / 420));
+    var resistance = edge ? 0.22 : 0.74;
+    var limited = Math.max(-142, Math.min(142, dx * resistance));
+    setSwipeVisual(limited);
   }, { passive: false });
 
   document.addEventListener('touchend', function(e) {
     if (!swipeStartCourse || !e.changedTouches || e.changedTouches.length !== 1) return;
     var dx = e.changedTouches[0].clientX - swipeStartX;
     var dy = e.changedTouches[0].clientY - swipeStartY;
-    var shouldSwipe = Math.abs(dx) >= 36 && Math.abs(dx) > Math.abs(dy) * 1.04;
+    var shouldSwipe = Math.abs(dx) >= 28 && Math.abs(dx) > Math.abs(dy) * .95;
     if (shouldSwipe) showSwipeCourse(dx < 0 ? 1 : -1);
     else resetSwipeVisual();
     swipeStartCourse = null;
   }, { passive: true });
 
   document.addEventListener('mousedown', function(e) {
-    if (!currentSwipeCourse() || shouldIgnoreSwipeTarget(e.target)) return;
     COURSE_SWIPE_ORDER = swipeOrder();
+    if (!currentSwipeCourse() || shouldIgnoreSwipeTarget(e.target)) return;
     swipeStartCourse = currentSwipeCourse();
     swipeActiveSection = document.querySelector('.course-section.active');
     swipeHorizontal = false;
@@ -3812,7 +3841,7 @@
     if (!swipeStartCourse) return;
     var dx = e.clientX - swipeStartX;
     var dy = e.clientY - swipeStartY;
-    var shouldSwipe = Math.abs(dx) >= 36 && Math.abs(dx) > Math.abs(dy) * 1.04;
+    var shouldSwipe = Math.abs(dx) >= 28 && Math.abs(dx) > Math.abs(dy) * .95;
     if (shouldSwipe) showSwipeCourse(dx < 0 ? 1 : -1);
     else resetSwipeVisual();
     swipeStartCourse = null;
