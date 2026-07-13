@@ -387,6 +387,45 @@
       opacity: .72;
     }
     .water-console > * { position: relative; z-index: 2; }
+    .hydration-title { touch-action: manipulation; }
+    .water-spill {
+      --spill-depth: 0%;
+      height: 0;
+      margin: 0 10px;
+      border-radius: 0 0 18px 18px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transition: height .42s cubic-bezier(.2,.9,.22,1), opacity .25s ease, margin .42s cubic-bezier(.2,.9,.22,1);
+      background: rgba(34,91,141,.08);
+      border: 1px solid transparent;
+      border-top: 0;
+    }
+    .water-spill.show {
+      height: 42px;
+      margin-top: -1px;
+      opacity: 1;
+      border-color: rgba(140,200,255,.16);
+    }
+    .water-spill:before,
+    .water-spill:after {
+      content: "";
+      position: absolute;
+      left: -24%;
+      right: -24%;
+      bottom: 0;
+      height: var(--spill-depth);
+      border-radius: 48% 52% 0 0 / 20% 24% 0 0;
+      background: linear-gradient(180deg, rgba(193,229,255,.62), rgba(61,147,222,.45) 38%, rgba(26,88,151,.58));
+      animation: spillDrift 2.8s ease-in-out infinite alternate;
+    }
+    .water-spill:after {
+      opacity: .58;
+      left: -34%;
+      right: -16%;
+      background: linear-gradient(180deg, rgba(224,244,255,.45), rgba(71,157,234,.25));
+      animation: spillDriftAlt 2.1s ease-in-out infinite alternate;
+    }
     @keyframes waterDrift {
       from { left: -38%; right: -32%; border-radius: 47% 53% 0 0 / 9% 14% 0 0; }
       to { left: -31%; right: -39%; border-radius: 54% 46% 0 0 / 15% 9% 0 0; }
@@ -394,6 +433,14 @@
     @keyframes waterDriftAlt {
       from { left: -32%; right: -38%; border-radius: 57% 43% 0 0 / 16% 10% 0 0; }
       to { left: -40%; right: -30%; border-radius: 42% 58% 0 0 / 9% 17% 0 0; }
+    }
+    @keyframes spillDrift {
+      from { left: -29%; right: -19%; border-radius: 42% 58% 0 0 / 25% 19% 0 0; }
+      to { left: -17%; right: -31%; border-radius: 58% 42% 0 0 / 18% 26% 0 0; }
+    }
+    @keyframes spillDriftAlt {
+      from { left: -32%; right: -16%; border-radius: 54% 46% 0 0 / 19% 25% 0 0; }
+      to { left: -18%; right: -30%; border-radius: 43% 57% 0 0 / 27% 17% 0 0; }
     }
     .water-main {
       display: flex;
@@ -1150,7 +1197,7 @@
           <div class="card-head">
             <div>
               <div class="eyebrow">Water</div>
-              <div class="card-title">Hydration</div>
+              <div class="card-title hydration-title" onpointerdown="holdSpillStart(event)" onpointerup="holdSpillCancel()" onpointerleave="holdSpillCancel()" oncontextmenu="toggleWaterSpill(event)">Hydration</div>
             </div>
           </div>
           <div class="water-console" id="water-console">
@@ -1168,6 +1215,7 @@
             <button onclick="setWaterTarget()">Save</button>
           </div>
           </div>
+          <div class="water-spill" id="water-spill" aria-hidden="true"></div>
         </div>
 
         <div class="card" style="margin-top:12px;">
@@ -1250,6 +1298,7 @@
       wake: '',
       water: 0,
       waterTarget: 2200,
+      waterSpillHidden: false,
       intake: 0,
       burn: 0,
       protein: 0,
@@ -1277,6 +1326,7 @@
     let logSwipeCurrentX = 0;
     let logSwipeMode = '';
     let editHoldTimer = null;
+    let spillHoldTimer = null;
     const FOOD_DB = [
       { keys: ['无糖巧克力'], kcal100: 500, protein100: 8, defaultGram: 50, units: { piece: 12 }, icon: '🍫' },
       { keys: ['巧克力', 'chocolate'], exclude: ['无糖巧克力'], kcal100: 540, protein100: 8, defaultGram: 50, units: { piece: 12 }, icon: '🍫' },
@@ -1492,6 +1542,11 @@
       document.getElementById('water-target-input').value = waterTarget;
       // Content is always above the liquid layer; at 100% the tank can look full without hiding its controls.
       document.getElementById('water-console').style.setProperty('--water-depth', (waterRatio * 100) + '%');
+      const spill = document.getElementById('water-spill');
+      const overflowRatio = clamp((state.water - waterTarget) / waterTarget, 0, 1);
+      const showSpill = overflowRatio > 0 && !state.waterSpillHidden;
+      spill.classList.toggle('show', showSpill);
+      spill.style.setProperty('--spill-depth', (overflowRatio * 100) + '%');
       document.getElementById('burn-control-total').textContent = Math.round(state.burn) + ' kcal';
       document.getElementById('mood').value = state.mood;
       document.getElementById('energy').value = state.energy;
@@ -1790,6 +1845,23 @@
     function holdEditCancel() {
       if (editHoldTimer) clearTimeout(editHoldTimer);
       editHoldTimer = null;
+    }
+    function holdSpillStart(event) {
+      event.preventDefault();
+      holdSpillCancel();
+      spillHoldTimer = setTimeout(function() { toggleWaterSpill(); }, 450);
+    }
+    function holdSpillCancel() {
+      if (spillHoldTimer) clearTimeout(spillHoldTimer);
+      spillHoldTimer = null;
+    }
+    function toggleWaterSpill(event) {
+      if (event) event.preventDefault();
+      holdSpillCancel();
+      state.waterSpillHidden = !state.waterSpillHidden;
+      toast(state.waterSpillHidden ? 'Overflow hidden' : 'Overflow shown');
+      render();
+      return false;
     }
     function openEditPanel(event, kind) {
       event.preventDefault();
@@ -2137,6 +2209,9 @@
       tuneFood,
       holdEditStart,
       holdEditCancel,
+      holdSpillStart,
+      holdSpillCancel,
+      toggleWaterSpill,
       openEditPanel,
       toggleEditPanel
     });
