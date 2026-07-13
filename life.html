@@ -1906,19 +1906,6 @@
         waterFlow.pool = 0;
       }
       ctx.clearRect(0, 0, w, h);
-      if (waterFlow.spillActive) {
-        ctx.save();
-        ctx.strokeStyle = 'rgba(203,239,255,.84)';
-        ctx.lineWidth = 2.4;
-        for (const side of [leftRimX, rightRimX]) {
-          const outward = side === leftRimX ? -1 : 1;
-          ctx.beginPath();
-          ctx.moveTo(side - outward * 12, topRimY + 2);
-          ctx.quadraticCurveTo(side + outward * 3, topRimY - 2, side + outward * 2, topRimY + 13);
-          ctx.stroke();
-        }
-        ctx.restore();
-      }
       // The inner tank surface moves independently from the overflow and keeps the water level legible.
       if (waterFlow.tankRatio > 0) {
         const top = liquidSurfaceY;
@@ -1927,18 +1914,15 @@
         ctx.beginPath();
         ctx.rect(consoleEl.offsetLeft + 2, consoleEl.offsetTop + 2, consoleW - 4, consoleH - 4);
         ctx.clip();
-        for (let layer = 0; layer < 2; layer++) {
-          const offset = layer * 3;
-          ctx.beginPath();
-          for (let x = consoleEl.offsetLeft; x <= consoleEl.offsetLeft + consoleW; x += 7) {
-            const amplitude = (layer ? 1.8 : 2.7) + waterFlow.impulse * (layer ? 2.4 : 4.6);
-            const y = top + offset + Math.sin(phase * (layer ? 1.35 : 1) + x / (layer ? 15 : 22)) * amplitude;
-            if (x === consoleEl.offsetLeft) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-          }
-          ctx.strokeStyle = layer ? 'rgba(220,243,255,.42)' : 'rgba(230,248,255,.72)';
-          ctx.lineWidth = layer ? 1.1 : 1.7;
-          ctx.stroke();
+        ctx.beginPath();
+        for (let x = consoleEl.offsetLeft; x <= consoleEl.offsetLeft + consoleW; x += 8) {
+          const amplitude = 1.1 + waterFlow.impulse * 1.7;
+          const y = top + Math.sin(phase + x / 31) * amplitude;
+          if (x === consoleEl.offsetLeft) ctx.moveTo(x, y); else ctx.lineTo(x, y);
         }
+        ctx.strokeStyle = 'rgba(228,247,255,.58)';
+        ctx.lineWidth = 1.25;
+        ctx.stroke();
         ctx.restore();
       }
       const next = [];
@@ -1951,9 +1935,29 @@
         if (p.life > 0 && p.x < w + 10) next.push(p);
       }
       waterFlow.particles = next.slice(-90);
+      const poolH = waterFlow.pool * 52;
+      const surface = landingY - poolH;
+      if (waterFlow.spillActive) {
+        const streamWidth = 3 + clamp(waterFlow.displayedOverflow / 500, 0, 1) * 3;
+        ctx.save();
+        ctx.lineCap = 'round';
+        for (const side of [leftRimX, rightRimX]) {
+          const outward = side === leftRimX ? -1 : 1;
+          const stream = ctx.createLinearGradient(side, topRimY, side, surface);
+          stream.addColorStop(0, 'rgba(229,248,255,.92)');
+          stream.addColorStop(.25, 'rgba(115,194,250,.82)');
+          stream.addColorStop(1, 'rgba(45,137,215,.58)');
+          ctx.strokeStyle = stream;
+          ctx.lineWidth = streamWidth;
+          ctx.beginPath();
+          ctx.moveTo(side - outward * 12, topRimY + 1);
+          ctx.quadraticCurveTo(side + outward * 4, topRimY - 2, side + outward * 2, topRimY + 16);
+          ctx.bezierCurveTo(side + outward * 5, topRimY + 48, side + outward * 5, surface - 24, side + outward * 2, surface + 2);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
       if (waterFlow.pool > .02) {
-        const poolH = 6 + waterFlow.pool * 19;
-        const surface = landingY - poolH;
         const phase = now / 460;
         ctx.beginPath();
         ctx.moveTo(4, h);
