@@ -353,7 +353,6 @@
       overflow: hidden;
       position: relative;
       isolation: isolate;
-      margin: 0 14px;
     }
     .water-console.is-full {
       background: linear-gradient(180deg, rgba(119,191,245,.68), rgba(44,121,190,.68) 56%, rgba(26,74,126,.72));
@@ -431,8 +430,10 @@
     .hydration-stage.spill-active { padding-bottom: 54px; }
     .water-overflow-canvas {
       position: absolute;
-      inset: 0;
-      width: 100%;
+      top: 0;
+      bottom: 0;
+      left: -18px;
+      width: calc(100% + 36px);
       height: 100%;
       pointer-events: none;
       opacity: 0;
@@ -1363,7 +1364,7 @@
     let logSwipeMode = '';
     let editHoldTimer = null;
     let spillHoldTimer = null;
-    const waterFlow = { active: false, spillActive: false, tankRatio: 0, targetOverflow: 0, lastOverflowTarget: 0, displayedOverflow: 0, particles: [], pool: 0, spawnCarry: 0, impulse: 0, lastWater: 0, raf: 0, last: 0, width: 0, height: 0 };
+    const waterFlow = { active: false, spillActive: false, tankRatio: 0, targetOverflow: 0, lastOverflowTarget: 0, displayedOverflow: 0, collectedOverflow: 0, particles: [], pool: 0, spawnCarry: 0, impulse: 0, lastWater: 0, raf: 0, last: 0, width: 0, height: 0 };
     const FOOD_DB = [
       { keys: ['无糖巧克力'], kcal100: 500, protein100: 8, defaultGram: 50, units: { piece: 12 }, icon: '🍫' },
       { keys: ['巧克力', 'chocolate'], exclude: ['无糖巧克力'], kcal100: 540, protein100: 8, defaultGram: 50, units: { piece: 12 }, icon: '🍫' },
@@ -1856,6 +1857,7 @@
         waterFlow.particles = [];
         waterFlow.pool = 0;
         waterFlow.displayedOverflow = 0;
+        waterFlow.collectedOverflow = 0;
         if (waterFlow.raf) cancelAnimationFrame(waterFlow.raf);
         waterFlow.raf = 0;
         const ctx = canvas.getContext('2d');
@@ -1866,10 +1868,14 @@
       }
       if (overflowMl > 0 && waterFlow.lastOverflowTarget <= 0) {
         waterFlow.displayedOverflow = 0;
+        waterFlow.collectedOverflow = 0;
         waterFlow.pool = 0;
         waterFlow.particles = [];
       }
-      if (!spillActive && overflowMl === 0) waterFlow.displayedOverflow = 0;
+      if (!spillActive && overflowMl === 0) {
+        waterFlow.displayedOverflow = 0;
+        waterFlow.collectedOverflow = 0;
+      }
       waterFlow.lastOverflowTarget = overflowMl;
       if (!waterFlow.raf) {
         waterFlow.last = performance.now();
@@ -1877,7 +1883,7 @@
       }
     }
     function sizeWaterCanvas(canvas, stage) {
-      const rect = stage.getBoundingClientRect();
+      const rect = canvas.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const width = Math.max(1, Math.round(rect.width));
       const height = Math.max(1, Math.round(rect.height));
@@ -1947,18 +1953,18 @@
       const h = waterFlow.height;
       const consoleW = consoleEl.offsetWidth;
       const consoleH = consoleEl.offsetHeight;
-      const leftRimX = consoleEl.offsetLeft - 3;
-      const rightRimX = consoleEl.offsetLeft + consoleW + 3;
+      const canvasInset = (w - stage.getBoundingClientRect().width) / 2;
+      const leftRimX = canvasInset + consoleEl.offsetLeft - 3;
+      const rightRimX = canvasInset + consoleEl.offsetLeft + consoleW + 3;
       const topRimY = consoleEl.offsetTop + 5;
       const landingY = h - 10;
       if (waterFlow.spillActive) {
-        const remaining = Math.max(0, waterFlow.targetOverflow - waterFlow.displayedOverflow);
-        // 100 ml per second, with dt measured in 60 fps frames.
-        waterFlow.displayedOverflow += Math.min(remaining, (100 / 60) * dt);
-        const flowRatio = clamp(waterFlow.displayedOverflow / 500, 0, 1);
-        waterFlow.spawnCarry += (.65 + flowRatio * 1.55) * dt;
-        while (waterFlow.spawnCarry >= 1) {
+        // Release at 100 ml/s. The pool only grows once these parcels actually land.
+        waterFlow.spawnCarry += .8 * dt;
+        while (waterFlow.spawnCarry >= 1 && waterFlow.displayedOverflow < waterFlow.targetOverflow) {
           waterFlow.spawnCarry -= 1;
+          const parcel = Math.min(100 / 48, waterFlow.targetOverflow - waterFlow.displayedOverflow);
+          waterFlow.displayedOverflow += parcel;
           const leftSide = Math.random() < .5;
           waterFlow.particles.push({
             x: (leftSide ? leftRimX : rightRimX) + (Math.random() - .5) * 4,
@@ -1966,10 +1972,12 @@
             vx: (leftSide ? -.8 : .8) + (Math.random() - .5) * .35,
             vy: .32 + Math.random() * .6,
             r: 2 + Math.random() * 2.7,
+            ml: parcel,
             life: 1
           });
         }
-        waterFlow.pool = clamp(waterFlow.displayedOverflow / 500, 0, 1);
+        if (waterFlow.displayedOverflow >= waterFlow.targetOverflow) waterFlow.spawnCarry = 0;
+        waterFlow.pool = clamp(waterFlow.collectedOverflow / 500, 0, 1);
       } else {
         waterFlow.particles = [];
         waterFlow.pool = 0;
@@ -1982,7 +1990,7 @@
         p.x += p.vx * dt;
         p.y += p.vy * dt;
         p.life -= .008 * dt;
-        if (p.y >= landingY) continue;
+        if (p.y >= landingY) { waterFlow.collectedOverflow += p.ml || 0; continue; }
         if (p.life > 0 && p.x < w + 10) next.push(p);
       }
       waterFlow.particles = next.slice(-90);
