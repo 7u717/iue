@@ -6,9 +6,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#000000">
-  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-dock-1">
-  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-dock-1">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-dock-1">
+  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-scroll-polish-1">
+  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-scroll-polish-1">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-scroll-polish-1">
   <title>Orbit</title>
   <style>
     :root {
@@ -29,6 +29,7 @@
       --good: #9dd8c5;
       --warn: #f0c987;
       --shadow: 0 22px 60px rgba(0,0,0,.5);
+      --topbar-h: calc(58px + env(safe-area-inset-top));
       color-scheme: dark;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -50,9 +51,11 @@
     .page {
       height: 100%;
       overflow-y: auto;
-      padding: calc(max(18px, env(safe-area-inset-top)) + 60px) 18px calc(66px + env(safe-area-inset-bottom));
+      padding: calc(var(--topbar-h) + 16px) 18px calc(66px + env(safe-area-inset-bottom));
       scrollbar-width: none;
       scroll-padding-bottom: 86px;
+      overscroll-behavior-y: contain;
+      -webkit-overflow-scrolling: touch;
     }
     .app.keyboard-open .page { padding-bottom: 22px; }
     .app:has(input:focus) .page,
@@ -60,17 +63,19 @@
     .page::-webkit-scrollbar { display: none; }
     .topbar {
       position: absolute;
-      top: max(18px, env(safe-area-inset-top));
-      left: 18px;
-      right: 18px;
+      top: 0;
+      left: 0;
+      right: 0;
       z-index: 18;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      min-height: 46px;
-      background: rgba(0,0,0,.72);
-      backdrop-filter: blur(18px) saturate(1.1);
-      -webkit-backdrop-filter: blur(18px) saturate(1.1);
+      height: var(--topbar-h);
+      padding: calc(env(safe-area-inset-top) + 10px) 18px 10px;
+      background: #000;
+      border-bottom: 1px solid rgba(255,255,255,.075);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
     .avatar-btn {
       width: 38px;
@@ -430,13 +435,15 @@
     .action-tile {
       min-height: 54px;
       border-radius: 17px;
-      background: var(--panel-2);
-      border: 1px solid var(--line-soft);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(140,200,255,.18), transparent 62%),
+        linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.025));
+      border: 1px solid rgba(140,200,255,.16);
       display: grid;
       gap: 2px;
       place-items: center;
       font-weight: 900;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.055), 0 10px 24px rgba(0,0,0,.18);
     }
     .action-tile small {
       color: var(--muted);
@@ -444,11 +451,31 @@
       font-weight: 850;
     }
     .action-tile.primary-soft {
-      background: linear-gradient(135deg, rgba(140,200,255,.22), rgba(255,255,255,.045));
+      background:
+        radial-gradient(circle at 50% 0%, rgba(210,236,255,.38), transparent 66%),
+        linear-gradient(135deg, rgba(230,244,255,.92), rgba(92,180,255,.76));
       color: var(--blue-2);
       border-color: rgba(140,200,255,.28);
     }
-    .action-tile.primary-soft small { color: rgba(185,220,255,.72); }
+    .water-console .action-tile {
+      color: #e8f5ff;
+      border-color: rgba(140,200,255,.22);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(210,236,255,.22), transparent 66%),
+        linear-gradient(145deg, rgba(55,136,212,.18), rgba(255,255,255,.035));
+    }
+    .water-console .action-tile:nth-child(2) {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(210,236,255,.28), transparent 66%),
+        linear-gradient(145deg, rgba(67,155,230,.24), rgba(255,255,255,.04));
+    }
+    .water-console .action-tile:nth-child(3) {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(210,236,255,.34), transparent 66%),
+        linear-gradient(145deg, rgba(82,170,244,.3), rgba(255,255,255,.045));
+    }
+    .action-tile.primary-soft small,
+    .water-console .action-tile small { color: rgba(218,238,255,.76); }
     .inline-edit {
       display: none;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -624,13 +651,26 @@
     .slider-line span { color: var(--muted); font-size: 13px; font-weight: 850; }
     input[type="range"] {
       appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
       height: 8px;
       border-radius: 999px;
       background: linear-gradient(90deg, #8cc8ff, #b9b0c8);
       outline: none;
+      touch-action: pan-y;
+      cursor: pointer;
     }
     input[type="range"]::-webkit-slider-thumb {
       appearance: none;
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #f8fafc;
+      border: 2px solid rgba(0,0,0,.16);
+      box-shadow: 0 4px 14px rgba(0,0,0,.4);
+    }
+    input[type="range"]::-moz-range-thumb {
       width: 24px;
       height: 24px;
       border-radius: 50%;
@@ -662,17 +702,16 @@
       align-items: flex-start;
       padding: 14px;
       border-bottom: 0;
-      }
+    }
     .log-item:last-child { border-bottom: 0; }
     .log-swipe {
       position: relative;
       overflow: hidden;
-      border-bottom: 0;
       touch-action: pan-y;
       border-radius: 20px;
       margin-bottom: 10px;
-      background: rgba(255,255,255,.035);
-      border: 1px solid var(--line-soft);
+      background: #ff3b30;
+      border: 1px solid rgba(255,255,255,.055);
     }
     .log-swipe:last-child { border-bottom: 0; }
     .log-swipe .log-item {
@@ -680,21 +719,26 @@
       z-index: 1;
       border-bottom: 0;
       background: var(--panel);
-      transition: transform .22s cubic-bezier(.22,1,.36,1);
+      border-radius: 20px;
+      transition: transform .28s cubic-bezier(.2,.85,.2,1);
+      will-change: transform;
     }
-    .log-swipe.open .log-item { transform: translateX(-82px); }
+    .log-swipe.open .log-item { transform: translateX(-86px); }
     .log-delete {
       position: absolute;
       right: 0;
-      top: 8px;
-      bottom: 8px;
-      width: 72px;
-      border-radius: 18px;
-      background: #ff3b55;
+      top: 0;
+      bottom: 0;
+      width: 88px;
+      border-radius: 0;
+      background: linear-gradient(180deg, #ff453a, #d9252d);
       color: white;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 900;
       z-index: 0;
+      display: grid;
+      place-items: center;
+      padding-left: 8px;
     }
     .log-dot { width: 34px; height: 34px; border-radius: 12px; background: rgba(140,200,255,.13); color: var(--blue-2); margin-top: 0; flex-shrink: 0; display: grid; place-items: center; font-size: 17px; }
     .log-text { min-width: 0; }
@@ -1216,7 +1260,9 @@
     };
     let state = loadState();
     let logSwipeStartX = 0;
+    let logSwipeStartY = 0;
     let logSwipeCurrentX = 0;
+    let logSwipeMode = '';
     let editHoldTimer = null;
     const FOOD_DB = [
       { keys: ['无糖巧克力'], kcal100: 500, protein100: 8, defaultGram: 50, units: { piece: 12 }, icon: '🍫' },
@@ -1971,20 +2017,32 @@
     }
     function logTouchStart(event, el) {
       logSwipeStartX = event.touches[0].clientX;
+      logSwipeStartY = event.touches[0].clientY;
       logSwipeCurrentX = logSwipeStartX;
+      logSwipeMode = '';
       document.querySelectorAll('.log-swipe.open').forEach(item => {
         if (item !== el) item.classList.remove('open');
       });
     }
     function logTouchMove(event, el) {
       logSwipeCurrentX = event.touches[0].clientX;
+      const dy = event.touches[0].clientY - logSwipeStartY;
       const dx = Math.min(0, logSwipeCurrentX - logSwipeStartX);
-      if (dx < -8) el.querySelector('.log-item').style.transform = 'translateX(' + Math.max(-82, dx) + 'px)';
+      if (!logSwipeMode && Math.max(Math.abs(dx), Math.abs(dy)) > 8) {
+        logSwipeMode = Math.abs(dx) > Math.abs(dy) * 1.35 ? 'x' : 'y';
+      }
+      if (logSwipeMode !== 'x') return;
+      event.preventDefault();
+      if (dx < -6) {
+        const eased = Math.max(-96, dx * .92);
+        el.querySelector('.log-item').style.transform = 'translateX(' + eased + 'px)';
+      }
     }
     function logTouchEnd(event, el) {
       const dx = logSwipeCurrentX - logSwipeStartX;
       el.querySelector('.log-item').style.transform = '';
-      el.classList.toggle('open', dx < -44);
+      if (logSwipeMode === 'x') el.classList.toggle('open', dx < -42);
+      logSwipeMode = '';
     }
     function handleImage(event) {
       const file = event.target.files && event.target.files[0];
