@@ -5026,7 +5026,7 @@
       }).then(function(payload) {
         var remoteTime = payload && payload.savedAt ? Date.parse(payload.savedAt) : 0;
         var lastRemote = Date.parse(localStorage.getItem(CLOUD_LAST_REMOTE_KEY) || '') || 0;
-        if (remoteTime > lastRemote && cloudPayloadHasProgressState(payload)) {
+        if ((remoteTime > lastRemote || !cloudHasLocalState()) && cloudPayloadHasProgressState(payload)) {
           cloudApply(payload);
           if (!silent) cloudSetStatus('已从 GitHub 同步：' + new Date().toLocaleTimeString());
         } else if (!silent) {
