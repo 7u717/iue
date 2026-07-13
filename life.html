@@ -361,11 +361,12 @@
       left: -35%;
       right: -35%;
       bottom: 0;
-      height: var(--water-depth, 5%);
+      height: var(--water-depth, 0%);
       transform: translateY(0);
-      transition: transform .45s cubic-bezier(.2,.9,.22,1);
+      transition: height .48s cubic-bezier(.2,.9,.22,1);
       z-index: 0;
       pointer-events: none;
+      will-change: left, right, border-radius;
     }
     .water-console:before {
       background:
@@ -373,7 +374,7 @@
         radial-gradient(54% 20% at 73% 2%, rgba(255,255,255,.14), transparent 62%),
         linear-gradient(180deg, rgba(140,200,255,.42), rgba(47,157,247,.22) 54%, rgba(26,84,145,.18));
       border-radius: 49% 51% 0 0 / 10% 13% 0 0;
-      animation: waterDrift 8s ease-in-out infinite alternate;
+      animation: waterDrift 4.6s ease-in-out infinite alternate;
       opacity: .92;
     }
     .water-console:after {
@@ -382,7 +383,7 @@
         radial-gradient(52% 22% at 82% 0%, rgba(140,200,255,.30), transparent 64%),
         linear-gradient(90deg, rgba(140,200,255,.18), rgba(47,157,247,.34), rgba(185,176,200,.20));
       border-radius: 44% 56% 0 0 / 12% 15% 0 0;
-      animation: waterDriftAlt 6.5s ease-in-out infinite alternate;
+      animation: waterDriftAlt 3.8s ease-in-out infinite alternate;
       opacity: .72;
     }
     .water-console > * { position: relative; z-index: 2; }
@@ -872,9 +873,10 @@
       margin-top: 2px;
     }
     .bottom {
-      position: absolute;
-      left: 0;
-      right: 0;
+      position: fixed;
+      left: 50%;
+      right: auto;
+      width: min(100vw, 430px);
       bottom: 0;
       height: 52px;
       padding: 3px 42px max(3px, env(safe-area-inset-bottom));
@@ -887,16 +889,17 @@
       align-items: center;
       gap: 14px;
       z-index: 10;
+      transform: translateX(-50%);
       transition: transform .24s cubic-bezier(.2,.8,.2,1), opacity .2s ease;
     }
     .app.keyboard-open .bottom {
-      transform: translateY(calc(100% + 12px));
+      transform: translate(-50%, calc(100% + 12px));
       opacity: 0;
       pointer-events: none;
     }
     .app:has(input:focus) .bottom,
     .app:has(textarea:focus) .bottom {
-      transform: translateY(calc(100% + 12px));
+      transform: translate(-50%, calc(100% + 12px));
       opacity: 0;
       pointer-events: none;
     }
@@ -1484,7 +1487,7 @@
       document.getElementById('water-target-label').textContent = Math.round(waterRatio * 100) + '% / ' + (waterTarget / 1000).toFixed(1) + 'L';
       document.getElementById('water-target-input').value = waterTarget;
       // Content is always above the liquid layer; at 100% the tank can look full without hiding its controls.
-      document.getElementById('water-console').style.setProperty('--water-depth', Math.max(5, waterRatio * 100) + '%');
+      document.getElementById('water-console').style.setProperty('--water-depth', (waterRatio * 100) + '%');
       document.getElementById('burn-control-total').textContent = Math.round(state.burn) + ' kcal';
       document.getElementById('mood').value = state.mood;
       document.getElementById('energy').value = state.energy;
