@@ -425,7 +425,7 @@
       z-index: 4;
       transition: opacity .22s ease;
     }
-    .hydration-stage.spill-active .water-overflow-canvas { opacity: 1; }
+    .hydration-stage.has-water .water-overflow-canvas { opacity: 1; }
     .water-spill:before,
     .water-spill:after {
       content: "";
@@ -1348,7 +1348,7 @@
     let logSwipeMode = '';
     let editHoldTimer = null;
     let spillHoldTimer = null;
-    const waterFlow = { active: false, intensity: 0, particles: [], pool: 0, spawnCarry: 0, raf: 0, last: 0, width: 0, height: 0 };
+    const waterFlow = { active: false, spillActive: false, tankRatio: 0, targetOverflow: 0, displayedOverflow: 0, particles: [], pool: 0, spawnCarry: 0, raf: 0, last: 0, width: 0, height: 0 };
     const FOOD_DB = [
       { keys: ['无糖巧克力'], kcal100: 500, protein100: 8, defaultGram: 50, units: { piece: 12 }, icon: '🍫' },
       { keys: ['巧克力', 'chocolate'], exclude: ['无糖巧克力'], kcal100: 540, protein100: 8, defaultGram: 50, units: { piece: 12 }, icon: '🍫' },
@@ -1564,9 +1564,9 @@
       document.getElementById('water-target-input').value = waterTarget;
       // Content is always above the liquid layer; at 100% the tank can look full without hiding its controls.
       document.getElementById('water-console').style.setProperty('--water-depth', (waterRatio * 100) + '%');
-      const overflowRatio = clamp((state.water - waterTarget) / waterTarget, 0, 1);
-      const showSpill = overflowRatio > 0 && !state.waterSpillHidden;
-      updateWaterOverflow(showSpill, overflowRatio);
+      const overflowMl = Math.max(0, state.water - waterTarget);
+      const showSpill = overflowMl > 0 && !state.waterSpillHidden;
+      updateWaterOverflow(waterRatio > 0, showSpill, overflowMl, waterRatio);
       document.getElementById('burn-control-total').textContent = Math.round(state.burn) + ' kcal';
       document.getElementById('mood').value = state.mood;
       document.getElementById('energy').value = state.energy;
@@ -1824,16 +1824,20 @@
       toast('Sleep: ' + feeling);
       render();
     }
-    function updateWaterOverflow(active, intensity) {
+    function updateWaterOverflow(active, spillActive, overflowMl, tankRatio) {
       const stage = document.getElementById('hydration-stage');
       const canvas = document.getElementById('water-overflow-canvas');
       if (!stage || !canvas) return;
       waterFlow.active = active;
-      waterFlow.intensity = intensity;
-      stage.classList.toggle('spill-active', active);
+      waterFlow.spillActive = spillActive;
+      waterFlow.targetOverflow = overflowMl;
+      waterFlow.tankRatio = tankRatio;
+      stage.classList.toggle('has-water', active);
+      stage.classList.toggle('spill-active', spillActive);
       if (!active) {
         waterFlow.particles = [];
         waterFlow.pool = 0;
+        waterFlow.displayedOverflow = 0;
         if (waterFlow.raf) cancelAnimationFrame(waterFlow.raf);
         waterFlow.raf = 0;
         const ctx = canvas.getContext('2d');
@@ -1868,34 +1872,66 @@
       waterFlow.last = now;
       const w = waterFlow.width;
       const h = waterFlow.height;
-      const rimX = consoleEl.offsetLeft + consoleEl.offsetWidth - 10;
-      const rimY = consoleEl.offsetTop + consoleEl.offsetHeight - 18;
+      const consoleW = consoleEl.offsetWidth;
+      const consoleH = consoleEl.offsetHeight;
+      const leftRimX = consoleEl.offsetLeft + 10;
+      const rightRimX = consoleEl.offsetLeft + consoleW - 10;
+      const liquidSurfaceY = consoleEl.offsetTop + Math.max(10, consoleH * (1 - waterFlow.tankRatio));
       const landingY = h - 10;
-      waterFlow.spawnCarry += (.32 + waterFlow.intensity * 1.05) * dt;
-      while (waterFlow.spawnCarry >= 1) {
-        waterFlow.spawnCarry -= 1;
-        waterFlow.particles.push({
-          x: rimX + (Math.random() - .3) * 4,
-          y: rimY + Math.random() * 4,
-          vx: .55 + Math.random() * 1.05,
-          vy: .45 + Math.random() * .7,
-          r: 2.2 + Math.random() * 2.5,
-          life: 1,
-          phase: Math.random() * Math.PI * 2
-        });
+      if (waterFlow.spillActive) {
+        const remaining = Math.max(0, waterFlow.targetOverflow - waterFlow.displayedOverflow);
+        waterFlow.displayedOverflow += Math.min(remaining, 3.2 * dt);
+        const flowRatio = clamp(waterFlow.displayedOverflow / 500, 0, 1);
+        waterFlow.spawnCarry += (.65 + flowRatio * 1.55) * dt;
+        while (waterFlow.spawnCarry >= 1) {
+          waterFlow.spawnCarry -= 1;
+          const leftSide = Math.random() < .5;
+          waterFlow.particles.push({
+            x: (leftSide ? leftRimX : rightRimX) + (Math.random() - .5) * 4,
+            y: liquidSurfaceY + Math.random() * 4,
+            vx: (leftSide ? -.55 : .55) + (Math.random() - .5) * .35,
+            vy: .32 + Math.random() * .6,
+            r: 2 + Math.random() * 2.7,
+            life: 1
+          });
+        }
+        waterFlow.pool = clamp(waterFlow.displayedOverflow / 500, 0, 1);
+      } else {
+        waterFlow.particles = [];
+        waterFlow.pool = 0;
       }
       ctx.clearRect(0, 0, w, h);
+      // The inner tank surface moves independently from the overflow and keeps the water level legible.
+      if (waterFlow.tankRatio > 0) {
+        const top = liquidSurfaceY;
+        const phase = now / 360;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(consoleEl.offsetLeft + 2, consoleEl.offsetTop + 2, consoleW - 4, consoleH - 4);
+        ctx.clip();
+        for (let layer = 0; layer < 2; layer++) {
+          const offset = layer * 3;
+          ctx.beginPath();
+          for (let x = consoleEl.offsetLeft; x <= consoleEl.offsetLeft + consoleW; x += 7) {
+            const y = top + offset + Math.sin(phase * (layer ? 1.35 : 1) + x / (layer ? 15 : 22)) * (layer ? 1.8 : 2.7);
+            if (x === consoleEl.offsetLeft) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+          }
+          ctx.strokeStyle = layer ? 'rgba(220,243,255,.42)' : 'rgba(230,248,255,.72)';
+          ctx.lineWidth = layer ? 1.1 : 1.7;
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
       const next = [];
       for (const p of waterFlow.particles) {
         p.vy += .16 * dt;
         p.x += p.vx * dt;
         p.y += p.vy * dt;
         p.life -= .008 * dt;
-        if (p.y >= landingY) { waterFlow.pool = Math.min(1, waterFlow.pool + .025 * waterFlow.intensity); continue; }
+        if (p.y >= landingY) continue;
         if (p.life > 0 && p.x < w + 10) next.push(p);
       }
       waterFlow.particles = next.slice(-90);
-      waterFlow.pool = Math.max(waterFlow.intensity * .28, waterFlow.pool - .0025 * dt);
       if (waterFlow.pool > .02) {
         const poolH = 6 + waterFlow.pool * 19;
         const surface = landingY - poolH;
