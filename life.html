@@ -6,9 +6,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#000000">
-  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-detail-pass-1">
-  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-detail-pass-1">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-detail-pass-1">
+  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-layout-repair-1">
+  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-layout-repair-1">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-layout-repair-1">
   <title>Orbit</title>
   <style>
     :root {
@@ -51,9 +51,9 @@
     .page {
       height: 100%;
       overflow-y: auto;
-      padding: calc(var(--topbar-h) + 16px) 18px calc(74px + env(safe-area-inset-bottom));
+      padding: calc(var(--topbar-h) + 16px) 18px calc(86px + env(safe-area-inset-bottom));
       scrollbar-width: none;
-      scroll-padding-bottom: 96px;
+      scroll-padding-bottom: calc(96px + env(safe-area-inset-bottom));
       overscroll-behavior-y: contain;
       -webkit-overflow-scrolling: touch;
     }
@@ -360,9 +360,9 @@
       position: absolute;
       left: -35%;
       right: -35%;
-      bottom: -18%;
-      height: 118%;
-      transform: translateY(var(--water-wave, 100%));
+      bottom: 0;
+      height: var(--water-depth, 5%);
+      transform: translateY(0);
       transition: transform .45s cubic-bezier(.2,.9,.22,1);
       z-index: 0;
       pointer-events: none;
@@ -383,9 +383,9 @@
         linear-gradient(90deg, rgba(140,200,255,.18), rgba(47,157,247,.34), rgba(185,176,200,.20));
       border-radius: 44% 56% 0 0 / 12% 15% 0 0;
       animation: waterDriftAlt 6.5s ease-in-out infinite alternate;
-      mix-blend-mode: screen;
       opacity: .72;
     }
+    .water-console > * { position: relative; z-index: 2; }
     @keyframes waterDrift {
       from { left: -38%; right: -32%; border-radius: 47% 53% 0 0 / 9% 14% 0 0; }
       to { left: -31%; right: -39%; border-radius: 54% 46% 0 0 / 15% 9% 0 0; }
@@ -875,15 +875,13 @@
       position: absolute;
       left: 0;
       right: 0;
-      bottom: max(6px, env(safe-area-inset-bottom));
+      bottom: 0;
       height: 52px;
-      padding: 3px 42px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,0) 1px),
-        linear-gradient(180deg, rgba(8,10,12,.94), rgba(0,0,0,.97));
+      padding: 3px 42px max(3px, env(safe-area-inset-bottom));
+      background: #000;
       border-top: 1px solid rgba(255,255,255,.045);
-      box-shadow: 0 -18px 34px rgba(0,0,0,.78);
-      backdrop-filter: blur(24px) saturate(1.12);
+      box-shadow: 0 -18px 28px rgba(0,0,0,.9);
+      backdrop-filter: none;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       align-items: center;
@@ -1485,7 +1483,8 @@
       document.getElementById('water-control-total').textContent = (state.water / 1000).toFixed(1) + 'L';
       document.getElementById('water-target-label').textContent = Math.round(waterRatio * 100) + '% / ' + (waterTarget / 1000).toFixed(1) + 'L';
       document.getElementById('water-target-input').value = waterTarget;
-      document.getElementById('water-console').style.setProperty('--water-wave', (100 - waterRatio * 100) + '%');
+      // Content is always above the liquid layer; at 100% the tank can look full without hiding its controls.
+      document.getElementById('water-console').style.setProperty('--water-depth', Math.max(5, waterRatio * 100) + '%');
       document.getElementById('burn-control-total').textContent = Math.round(state.burn) + ' kcal';
       document.getElementById('mood').value = state.mood;
       document.getElementById('energy').value = state.energy;
@@ -1797,10 +1796,6 @@
       if (!panel) return;
       const shouldOpen = typeof force === 'boolean' ? force : !panel.classList.contains('show');
       panel.classList.toggle('show', shouldOpen);
-      if (shouldOpen) {
-        const input = panel.querySelector('input');
-        if (input) setTimeout(function() { input.focus(); }, 80);
-      }
     }
     function containsAny(text, keys) {
       return keys.some(key => text.includes(key));
