@@ -6,9 +6,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#000000">
-  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-ui-3">
-  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-ui-3">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-ui-3">
+  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-dock-1">
+  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-dock-1">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-dock-1">
   <title>Orbit</title>
   <style>
     :root {
@@ -50,9 +50,9 @@
     .page {
       height: 100%;
       overflow-y: auto;
-      padding: calc(max(18px, env(safe-area-inset-top)) + 60px) 18px calc(80px + env(safe-area-inset-bottom));
+      padding: calc(max(18px, env(safe-area-inset-top)) + 60px) 18px calc(66px + env(safe-area-inset-bottom));
       scrollbar-width: none;
-      scroll-padding-bottom: 120px;
+      scroll-padding-bottom: 86px;
     }
     .app.keyboard-open .page { padding-bottom: 22px; }
     .app:has(input:focus) .page,
@@ -824,16 +824,18 @@
       left: 0;
       right: 0;
       bottom: 0;
-      height: calc(58px + env(safe-area-inset-bottom));
-      padding: 4px 34px max(3px, env(safe-area-inset-bottom));
+      height: calc(52px + env(safe-area-inset-bottom));
+      padding: 3px 42px max(2px, env(safe-area-inset-bottom));
       background:
-        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,0) 1px),
-        rgba(0,0,0,.92);
-      border-top: 1px solid rgba(255,255,255,.055);
-      backdrop-filter: blur(24px) saturate(1.2);
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,0) 1px),
+        linear-gradient(180deg, rgba(8,10,12,.94), rgba(0,0,0,.97));
+      border-top: 1px solid rgba(255,255,255,.045);
+      box-shadow: 0 -18px 34px rgba(0,0,0,.78);
+      backdrop-filter: blur(24px) saturate(1.12);
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      align-items: center;
+      gap: 14px;
       z-index: 10;
       transition: transform .24s cubic-bezier(.2,.8,.2,1), opacity .2s ease;
     }
@@ -849,45 +851,65 @@
       pointer-events: none;
     }
     .nav {
-      height: 50px;
-      border-radius: 18px;
+      appearance: none;
+      -webkit-appearance: none;
+      padding: 0;
+      height: 44px;
+      border-radius: 16px;
       background: transparent;
       color: var(--muted);
-      display: grid;
-      place-items: center;
-      font-size: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 17px;
+      line-height: 1;
       position: relative;
-      align-self: start;
+      min-width: 0;
     }
-    .nav.active { color: var(--blue-2); background: transparent; }
+    .nav.active {
+      color: var(--blue-2);
+      background: transparent;
+      text-shadow: 0 0 18px rgba(140,200,255,.42);
+    }
     .nav[data-tab="log"] {
-      width: 58px;
-      height: 50px;
+      width: 52px;
+      height: 46px;
       justify-self: center;
       margin-top: 0;
-      border-radius: 19px;
-      background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035));
+      border-radius: 17px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(150,205,255,.16), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.085), rgba(255,255,255,.032));
       border: 1px solid rgba(255,255,255,.06);
       color: var(--text);
-      box-shadow: 0 18px 40px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.055);
+      box-shadow:
+        0 8px 22px rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.07);
     }
     .nav[data-tab="log"].active {
       color: var(--text);
-      background: linear-gradient(180deg, rgba(140,200,255,.17), rgba(255,255,255,.04));
-      box-shadow: 0 16px 40px rgba(47,157,247,.13), inset 0 1px 0 rgba(255,255,255,.08);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(150,205,255,.2), transparent 64%),
+        linear-gradient(180deg, rgba(255,255,255,.095), rgba(255,255,255,.038));
+      box-shadow:
+        0 10px 26px rgba(47,157,247,.12),
+        0 8px 20px rgba(0,0,0,.42),
+        inset 0 1px 0 rgba(255,255,255,.085);
     }
     .nav small {
       display: block;
       font-size: 10px;
       font-weight: 850;
-      margin-top: -3px;
+      margin-top: 0;
       letter-spacing: .02em;
     }
     .toast {
       position: absolute;
       left: 22px;
       right: 22px;
-      bottom: calc(72px + env(safe-area-inset-bottom));
+      bottom: calc(62px + env(safe-area-inset-bottom));
       background: rgba(22,22,24,.94);
       border: 1px solid var(--line);
       border-radius: 18px;
