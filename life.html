@@ -6,9 +6,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#000000">
-  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-scroll-polish-1">
-  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-scroll-polish-1">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-scroll-polish-1">
+  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-detail-pass-1">
+  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-detail-pass-1">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-detail-pass-1">
   <title>Orbit</title>
   <style>
     :root {
@@ -51,9 +51,9 @@
     .page {
       height: 100%;
       overflow-y: auto;
-      padding: calc(var(--topbar-h) + 16px) 18px calc(66px + env(safe-area-inset-bottom));
+      padding: calc(var(--topbar-h) + 16px) 18px calc(74px + env(safe-area-inset-bottom));
       scrollbar-width: none;
-      scroll-padding-bottom: 86px;
+      scroll-padding-bottom: 96px;
       overscroll-behavior-y: contain;
       -webkit-overflow-scrolling: touch;
     }
@@ -479,8 +479,8 @@
     .inline-edit {
       display: none;
       grid-template-columns: minmax(0, 1fr) auto;
-      gap: 9px;
-      margin-top: 12px;
+      gap: 8px;
+      margin-top: 10px;
       position: relative;
       z-index: 1;
     }
@@ -491,12 +491,12 @@
     .inline-edit input {
       width: 100%;
       min-width: 0;
-      min-height: 44px;
-      border-radius: 16px;
+      min-height: 38px;
+      border-radius: 14px;
       border: 1px solid var(--line-soft);
-      background: rgba(0,0,0,.22);
+      background: rgba(0,0,0,.38);
       color: var(--text);
-      padding: 0 13px;
+      padding: 0 12px;
       font-size: 16px;
       font-weight: 800;
       outline: none;
@@ -506,14 +506,22 @@
       box-shadow: 0 0 0 3px rgba(47,157,247,.12);
     }
     .inline-edit button {
-      min-height: 44px;
-      border-radius: 16px;
+      min-height: 38px;
+      border-radius: 14px;
       border: 1px solid rgba(140,200,255,.26);
-      background: rgba(47,157,247,.14);
+      background: rgba(47,157,247,.16);
       color: var(--blue-2);
-      padding: 0 13px;
+      padding: 0 12px;
       font-weight: 900;
       white-space: nowrap;
+    }
+    .water-console .inline-edit {
+      padding: 8px;
+      border-radius: 17px;
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(140,200,255,.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
     @media (max-width: 430px) {
       .inline-edit.workout-edit { grid-template-columns: 1fr 80px; }
@@ -710,8 +718,8 @@
       touch-action: pan-y;
       border-radius: 20px;
       margin-bottom: 10px;
-      background: #ff3b30;
-      border: 1px solid rgba(255,255,255,.055);
+      background: rgba(255,255,255,.035);
+      border: 1px solid var(--line-soft);
     }
     .log-swipe:last-child { border-bottom: 0; }
     .log-swipe .log-item {
@@ -727,10 +735,10 @@
     .log-delete {
       position: absolute;
       right: 0;
-      top: 0;
-      bottom: 0;
-      width: 88px;
-      border-radius: 0;
+      top: 1px;
+      bottom: 1px;
+      width: 86px;
+      border-radius: 0 19px 19px 0;
       background: linear-gradient(180deg, #ff453a, #d9252d);
       color: white;
       font-size: 13px;
@@ -738,7 +746,7 @@
       z-index: 0;
       display: grid;
       place-items: center;
-      padding-left: 8px;
+      padding-left: 6px;
     }
     .log-dot { width: 34px; height: 34px; border-radius: 12px; background: rgba(140,200,255,.13); color: var(--blue-2); margin-top: 0; flex-shrink: 0; display: grid; place-items: center; font-size: 17px; }
     .log-text { min-width: 0; }
@@ -867,9 +875,9 @@
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 0;
-      height: calc(52px + env(safe-area-inset-bottom));
-      padding: 3px 42px max(2px, env(safe-area-inset-bottom));
+      bottom: max(6px, env(safe-area-inset-bottom));
+      height: 52px;
+      padding: 3px 42px;
       background:
         linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,0) 1px),
         linear-gradient(180deg, rgba(8,10,12,.94), rgba(0,0,0,.97));
@@ -953,7 +961,7 @@
       position: absolute;
       left: 22px;
       right: 22px;
-      bottom: calc(62px + env(safe-area-inset-bottom));
+      bottom: calc(72px + env(safe-area-inset-bottom));
       background: rgba(22,22,24,.94);
       border: 1px solid var(--line);
       border-radius: 18px;
