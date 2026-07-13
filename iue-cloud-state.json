@@ -1,7 +1,13 @@
 {
   "app": "iue",
   "version": 4,
-  "savedAt": "",
-  "clientId": "github-static-sync-disabled",
-  "items": {}
+  "savedAt": "2026-07-13T03:40:00.000Z",
+  "clientId": "github-static-sync-recovered-from-visible-page",
+  "items": {
+    "gt_v2": "{\"mg_mob_open\":false,\"mw2\":{\"done\":true},\"mw3\":{\"done\":true},\"mg_lt1\":{\"done\":true,\"s\":\"65\",\"m\":\"100\"},\"mm_t1\":{\"done\":true,\"s\":\"93\",\"m\":\"100\"},\"mm_d1\":{\"done\":true,\"s\":\"20\",\"m\":\"100\"},\"mm_d2\":{\"done\":true,\"s\":\"100\",\"m\":\"100\"},\"eg_t1\":{\"done\":true,\"s\":\"95\",\"m\":\"100\"}}",
+    "mobius_check_v1": "[true,true,true,false,false,false,false,false,false]",
+    "mobius_check_schema": "mobius-lessons-v4",
+    "memo_7u": null,
+    "iue.activeCourses.v1": "[\"math\",\"engg\"]"
+  }
 }
