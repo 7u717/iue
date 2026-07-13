@@ -2887,7 +2887,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-13-app-icon-1';
+  var APP_VERSION = '2026-07-13-black-icon-restore-1';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
@@ -4889,6 +4889,12 @@
     );
   }
 
+  function cloudPayloadHasProgressState(payload) {
+    if (!payload || !payload.items) return false;
+    var items = payload.items;
+    return !!(items.gt_v2 || items.mobius_check_v1 || items.memo_7u || items['iue.activeCourses.v1']);
+  }
+
   function cloudCollect() {
     var data = {
       app:'iue',
@@ -4897,7 +4903,7 @@
       clientId:cloudClientId(),
       items:{}
     };
-    var keep = ['gt_v2', 'memo_7u', 'mobius_check_v1', 'mobius_check_schema'];
+    var keep = ['gt_v2', 'memo_7u', 'mobius_check_v1', 'mobius_check_schema', 'iue.activeCourses.v1'];
     keep.forEach(function(k){ data.items[k] = localStorage.getItem(k); });
     for (var i=0; i<localStorage.length; i++) {
       var key = localStorage.key(i);
@@ -5020,8 +5026,12 @@
       }).then(function(payload) {
         var remoteTime = payload && payload.savedAt ? Date.parse(payload.savedAt) : 0;
         var lastRemote = Date.parse(localStorage.getItem(CLOUD_LAST_REMOTE_KEY) || '') || 0;
-        if (payload && payload.items && remoteTime > lastRemote) cloudApply(payload);
-        if (!silent) cloudSetStatus('已从 GitHub 同步：' + new Date().toLocaleTimeString());
+        if (remoteTime > lastRemote && cloudPayloadHasProgressState(payload)) {
+          cloudApply(payload);
+          if (!silent) cloudSetStatus('已从 GitHub 同步：' + new Date().toLocaleTimeString());
+        } else if (!silent) {
+          cloudSetStatus('云同步暂时拿不到有效进度，先不要上传。');
+        }
         return payload;
       }).catch(function() {
         if (!silent) cloudSetStatus('恢复失败：' + err.message);
