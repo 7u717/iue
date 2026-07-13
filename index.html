@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
   <meta http-equiv="Pragma" content="no-cache"/>
   <meta http-equiv="Expires" content="0"/>
@@ -37,7 +37,7 @@
       --engg-soft: #171b22;
       --phone-width: 420px;
       --header-h: 65px;
-      --nav-h: 54px;
+      --nav-h: 58px;
     }
     html { scroll-behavior: smooth; }
     body {
@@ -49,7 +49,12 @@
       border-right: 1px solid var(--border);
       overflow: hidden;
       position: relative;
+      touch-action: pan-x pan-y;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
     }
+    input, textarea, select { -webkit-user-select: text; user-select: text; }
 
     /* HEADER */
     header {
@@ -155,13 +160,16 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       align-items: center;
-      background: rgba(0,0,0,0.96); backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-top: 1px solid var(--border);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,0) 1px),
+        rgba(0,0,0,.92);
+      backdrop-filter: blur(24px) saturate(1.2);
+      -webkit-backdrop-filter: blur(24px) saturate(1.2);
+      border-top: 1px solid rgba(255,255,255,.055);
       position: fixed; bottom: 0; left: 0; right: 0;
-      z-index: 90; padding: 6px 30px calc(4px + env(safe-area-inset-bottom));
+      z-index: 90; padding: 4px 34px max(3px, env(safe-area-inset-bottom));
       max-width: var(--phone-width); margin: 0 auto;
-      box-shadow: 0 -8px 24px rgba(0,0,0,.62);
+      box-shadow: 0 -10px 30px rgba(0,0,0,.68);
       min-height: var(--nav-h);
     }
     .tab-bar::-webkit-scrollbar { display: none; }
@@ -170,8 +178,8 @@
     .tab {
       position: relative;
       display: flex; align-items: center; justify-content: center;
-      min-height: 40px; cursor: pointer;
-      top: 3px;
+      min-height: 50px; cursor: pointer;
+      top: 0;
       color: rgba(231,233,234,.62);
       transition: color .18s, transform .18s, filter .18s;
       border: none; background: transparent;
@@ -179,8 +187,8 @@
       filter: none;
       -webkit-tap-highlight-color: transparent;
     }
-    .tab:hover { transform: translateY(-1px); }
-    .tab:active { transform: translateY(1px) scale(.98); }
+    .tab:hover { transform: none; }
+    .tab:active { transform: scale(.985); }
     .nav-icon {
       width: 29px; height: 29px;
       stroke: currentColor; fill: none;
@@ -190,21 +198,22 @@
       transition: opacity .18s, filter .18s;
     }
     .tab.tab-main {
-      width: 44px; height: 44px; min-height: 44px;
+      width: 58px; height: 50px; min-height: 50px;
       margin: 0 auto;
-      border-radius: 50%;
-      background: rgba(29,155,240,.12);
-      color: rgba(231,233,234,.72);
-      box-shadow: inset 0 0 0 1px rgba(29,155,240,.24);
+      border-radius: 19px;
+      background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035));
+      border: 1px solid rgba(255,255,255,.06);
+      color: rgba(231,233,234,.82);
+      box-shadow: 0 18px 40px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.055);
       filter: none;
     }
     .tab.tab-main .nav-icon { width: 25px;height:25px; }
     .tab.tab-main.active-math,
     .tab.tab-main.active-mman,
     .tab.tab-main.active-engg {
-      background: rgba(29,155,240,.16);
-      color:#1d9bf0;
-      box-shadow: inset 0 0 0 1px rgba(29,155,240,.38), 0 0 18px rgba(29,155,240,.22);
+      background: linear-gradient(180deg, rgba(29,155,240,.17), rgba(255,255,255,.04));
+      color:#8cc8ff;
+      box-shadow: 0 16px 40px rgba(29,155,240,.13), inset 0 1px 0 rgba(255,255,255,.08);
     }
     .tab-dot {
       position: absolute; top: 1px; right: calc(50% - 18px);
@@ -216,11 +225,11 @@
     }
     .tab.active-math,
     .tab.active-mman,
-    .tab.active-engg { color: #1d9bf0; }
+    .tab.active-engg { color: #8cc8ff; }
     .tab.active-math .nav-icon,
     .tab.active-mman .nav-icon,
     .tab.active-engg .nav-icon {
-      opacity:1;filter:drop-shadow(0 0 12px rgba(29,155,240,.55));
+      opacity:1;filter:drop-shadow(0 0 10px rgba(140,200,255,.42));
     }
     .tab.active-math,
     .tab.active-mman,
@@ -1234,7 +1243,7 @@
     @media (max-width:520px) {
       :root {
         --header-h: calc(57px + env(safe-area-inset-top));
-        --nav-h: calc(54px + env(safe-area-inset-bottom));
+        --nav-h: calc(58px + env(safe-area-inset-bottom));
       }
       .dash-hero { grid-template-columns:1fr; }
       .dash-count { text-align:left; }
@@ -1247,19 +1256,19 @@
       .course-section { padding: 12px; }
       .tab-bar {
         max-width: none;
-        padding: 6px 30px calc(4px + env(safe-area-inset-bottom));
+        padding: 4px 34px max(3px, env(safe-area-inset-bottom));
         grid-template-columns: repeat(3, 1fr);
-        min-height: 58px;
+        min-height: var(--nav-h);
       }
       .tab {
-        min-height: 38px;
+        min-height: 50px;
         padding: 0;
       }
       .nav-icon { width:28px;height:28px; }
       .tab.tab-main {
-        width: 44px;
-        height: 44px;
-        min-height: 44px;
+        width: 58px;
+        height: 50px;
+        min-height: 50px;
         margin-top: 0;
       }
       .tab.active-math,
@@ -2887,7 +2896,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-13-black-icon-restore-1';
+  var APP_VERSION = '2026-07-14-liquid-nav-zoom-lock-1';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
@@ -5102,7 +5111,20 @@
     setInterval(checkForNewVersion, 60000);
   }
 
+  function lockAppZoom() {
+    ['gesturestart', 'gesturechange', 'gestureend'].forEach(function(type) {
+      document.addEventListener(type, function(event) { event.preventDefault(); }, { passive: false });
+    });
+    var lastTouchEnd = 0;
+    document.addEventListener('touchend', function(event) {
+      var now = Date.now();
+      if (now - lastTouchEnd <= 320) event.preventDefault();
+      lastTouchEnd = now;
+    }, { passive: false });
+  }
+
   setTimeout(function(){
+    lockAppZoom();
     initProfileWidgets();
     startCloudAutoSync();
     startAppUpdateWatcher();

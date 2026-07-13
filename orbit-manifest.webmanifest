@@ -2,7 +2,7 @@
   "name": "Orbit",
   "short_name": "Orbit",
   "description": "Personal life control dashboard",
-  "start_url": "./life.html?v=2026-07-14-orbit-ui-2",
+  "start_url": "./life.html?v=2026-07-14-orbit-ui-3",
   "scope": "./",
   "display": "standalone",
   "background_color": "#000000",

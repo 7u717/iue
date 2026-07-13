@@ -2,21 +2,21 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#000000">
-  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-ui-2">
-  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-ui-2">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-ui-2">
+  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-ui-3">
+  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-ui-3">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-ui-3">
   <title>Orbit</title>
   <style>
     :root {
       --bg: #000;
-      --panel: #111113;
-      --panel-2: #19191c;
-      --panel-3: #202024;
-      --line: rgba(255,255,255,.095);
+      --panel: #101010;
+      --panel-2: #151515;
+      --panel-3: #181818;
+      --line: rgba(255,255,255,.075);
       --line-soft: rgba(255,255,255,.055);
       --text: #f4f5f7;
       --muted: #8f939c;
@@ -33,7 +33,8 @@
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Inter, Arial, sans-serif; }
-    body { overflow: hidden; }
+    body { overflow: hidden; touch-action: pan-x pan-y; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+    input, textarea { -webkit-user-select: text; user-select: text; }
     button, input, textarea { font: inherit; color: inherit; }
     button { border: 0; cursor: pointer; }
     .app {
@@ -49,7 +50,7 @@
     .page {
       height: 100%;
       overflow-y: auto;
-      padding: max(18px, env(safe-area-inset-top)) 18px calc(84px + env(safe-area-inset-bottom));
+      padding: calc(max(18px, env(safe-area-inset-top)) + 60px) 18px calc(80px + env(safe-area-inset-bottom));
       scrollbar-width: none;
       scroll-padding-bottom: 120px;
     }
@@ -58,11 +59,18 @@
     .app:has(textarea:focus) .page { padding-bottom: 22px; }
     .page::-webkit-scrollbar { display: none; }
     .topbar {
+      position: absolute;
+      top: max(18px, env(safe-area-inset-top));
+      left: 18px;
+      right: 18px;
+      z-index: 18;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 18px;
       min-height: 46px;
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(18px) saturate(1.1);
+      -webkit-backdrop-filter: blur(18px) saturate(1.1);
     }
     .avatar-btn {
       width: 38px;
@@ -132,7 +140,7 @@
     }
     .subline { color: var(--muted); font-weight: 700; font-size: 14px; line-height: 1.45; }
     .card {
-      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.025)), var(--panel);
+      background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 26px;
       padding: 18px;
@@ -210,8 +218,9 @@
       min-height: 156px;
       border-radius: 28px;
       background:
-        radial-gradient(circle at 18% 25%, rgba(140,200,255,.22), transparent 28%),
-        linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.018));
+        radial-gradient(circle at 18% 25%, rgba(140,200,255,.18), transparent 28%),
+        linear-gradient(145deg, rgba(255,255,255,.035), rgba(255,255,255,.012)),
+        var(--panel-2);
       border: 1px solid var(--line-soft);
       padding: 22px 18px 18px;
       display: grid;
@@ -421,7 +430,7 @@
     .action-tile {
       min-height: 54px;
       border-radius: 17px;
-      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02)), var(--panel-2);
+      background: var(--panel-2);
       border: 1px solid var(--line-soft);
       display: grid;
       gap: 2px;
@@ -670,7 +679,7 @@
       position: relative;
       z-index: 1;
       border-bottom: 0;
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.018)), var(--panel);
+      background: var(--panel);
       transition: transform .22s cubic-bezier(.22,1,.36,1);
     }
     .log-swipe.open .log-item { transform: translateX(-82px); }
@@ -743,7 +752,7 @@
       gap: 12px;
       padding: 16px;
       border-radius: 24px;
-      background: linear-gradient(180deg, rgba(255,255,255,.043), rgba(255,255,255,.022)), var(--panel);
+      background: var(--panel);
       border: 1px solid var(--line);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
     }
@@ -815,8 +824,8 @@
       left: 0;
       right: 0;
       bottom: 0;
-      height: calc(62px + env(safe-area-inset-bottom));
-      padding: 4px 34px max(4px, env(safe-area-inset-bottom));
+      height: calc(58px + env(safe-area-inset-bottom));
+      padding: 4px 34px max(3px, env(safe-area-inset-bottom));
       background:
         linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,0) 1px),
         rgba(0,0,0,.92);
@@ -853,10 +862,10 @@
     .nav.active { color: var(--blue-2); background: transparent; }
     .nav[data-tab="log"] {
       width: 58px;
-      height: 54px;
+      height: 50px;
       justify-self: center;
-      margin-top: -7px;
-      border-radius: 21px;
+      margin-top: 0;
+      border-radius: 19px;
       background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035));
       border: 1px solid rgba(255,255,255,.06);
       color: var(--text);
@@ -878,7 +887,7 @@
       position: absolute;
       left: 22px;
       right: 22px;
-      bottom: calc(76px + env(safe-area-inset-bottom));
+      bottom: calc(72px + env(safe-area-inset-bottom));
       background: rgba(22,22,24,.94);
       border: 1px solid var(--line);
       border-radius: 18px;
@@ -1173,7 +1182,7 @@
       sleepEndIso: '',
       sleepFeeling: '',
       mailUnread: true,
-      trendRange: 'week',
+      trendRange: 'day',
       baselineMood: 7,
       baselineStress: 5,
       logsExpanded: false,
@@ -1974,6 +1983,7 @@
       render();
     }
     function showTab(tab) {
+      if (tab === 'trend') state.trendRange = 'day';
       document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === tab));
       document.querySelectorAll('.nav').forEach(n => n.classList.toggle('active', n.dataset.tab === tab));
       document.querySelector('.page').scrollTop = 0;
@@ -1999,6 +2009,17 @@
       document.addEventListener('focusout', () => {
         setTimeout(() => setKeyboardMode(false), 160);
       });
+    }
+    function lockAppZoom() {
+      ['gesturestart', 'gesturechange', 'gestureend'].forEach(type => {
+        document.addEventListener(type, event => event.preventDefault(), { passive: false });
+      });
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', event => {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 320) event.preventDefault();
+        lastTouchEnd = now;
+      }, { passive: false });
     }
     function toast(msg) {
       const el = document.getElementById('toast');
@@ -2030,6 +2051,7 @@
       toggleEditPanel
     });
     setupKeyboardMode();
+    lockAppZoom();
     render();
   </script>
 </body>
