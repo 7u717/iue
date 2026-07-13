@@ -353,9 +353,11 @@
       overflow: hidden;
       position: relative;
       isolation: isolate;
+      margin: 0 14px;
     }
     .water-console:before,
     .water-console:after {
+      display: none;
       content: "";
       position: absolute;
       left: -35%;
@@ -387,6 +389,14 @@
       opacity: .72;
     }
     .water-console > * { position: relative; z-index: 2; }
+    .water-tank-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1 !important;
+      pointer-events: none;
+    }
     .hydration-title { touch-action: manipulation; }
     .water-spill {
       --spill-depth: 0%;
@@ -412,6 +422,7 @@
     .hydration-stage {
       position: relative;
       padding-bottom: 0;
+      overflow: visible;
       transition: padding-bottom .35s cubic-bezier(.2,.9,.22,1);
     }
     .hydration-stage.spill-active { padding-bottom: 54px; }
@@ -425,7 +436,7 @@
       z-index: 4;
       transition: opacity .22s ease;
     }
-    .hydration-stage.has-water .water-overflow-canvas { opacity: 1; }
+    .hydration-stage.spill-active .water-overflow-canvas { opacity: 1; }
     .water-spill:before,
     .water-spill:after {
       content: "";
@@ -1221,6 +1232,7 @@
           </div>
           <div class="hydration-stage" id="hydration-stage">
             <div class="water-console" id="water-console">
+              <canvas id="water-tank-canvas" class="water-tank-canvas" aria-hidden="true"></canvas>
               <div class="water-main">
                 <div><small>Water today</small><br><strong id="water-control-total">0.0L</strong></div>
                 <span class="water-target" id="water-target-label" onpointerdown="holdEditStart(event,'water')" onpointerup="holdEditCancel()" onpointerleave="holdEditCancel()" oncontextmenu="openEditPanel(event,'water')">0 / 2.2L</span>
@@ -1844,6 +1856,8 @@
         waterFlow.raf = 0;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const tank = document.getElementById('water-tank-canvas');
+        if (tank) tank.getContext('2d').clearRect(0, 0, tank.width, tank.height);
         return;
       }
       if (!spillActive && overflowMl === 0) waterFlow.displayedOverflow = 0;
@@ -1864,6 +1878,52 @@
       canvas.height = Math.round(height * dpr);
       canvas.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
     }
+    function sizeTankCanvas(canvas, consoleEl) {
+      const rect = consoleEl.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const width = Math.max(1, Math.round(rect.width));
+      const height = Math.max(1, Math.round(rect.height));
+      if (canvas.width === Math.round(width * dpr) && canvas.height === Math.round(height * dpr)) return;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function drawTankWater(now, consoleEl) {
+      const tank = document.getElementById('water-tank-canvas');
+      if (!tank) return;
+      sizeTankCanvas(tank, consoleEl);
+      const ctx = tank.getContext('2d');
+      const width = consoleEl.offsetWidth;
+      const height = consoleEl.offsetHeight;
+      ctx.clearRect(0, 0, width, height);
+      if (waterFlow.tankRatio <= 0) return;
+      const surface = Math.max(2, height * (1 - waterFlow.tankRatio));
+      const phase = now / 500;
+      const amplitude = 2.2 + waterFlow.impulse * 2.4;
+      ctx.beginPath();
+      ctx.moveTo(0, height);
+      ctx.lineTo(0, surface + Math.sin(phase) * amplitude);
+      for (let x = 0; x <= width; x += 8) {
+        const y = surface + Math.sin(phase + x / 30) * amplitude + Math.sin(phase * 1.72 + x / 57) * (amplitude * .32);
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(width, height);
+      ctx.closePath();
+      const water = ctx.createLinearGradient(0, surface, 0, height);
+      water.addColorStop(0, 'rgba(182,225,255,.78)');
+      water.addColorStop(.16, 'rgba(94,176,239,.58)');
+      water.addColorStop(1, 'rgba(29,88,146,.74)');
+      ctx.fillStyle = water;
+      ctx.fill();
+      ctx.beginPath();
+      for (let x = 0; x <= width; x += 8) {
+        const y = surface + Math.sin(phase + x / 30) * amplitude + Math.sin(phase * 1.72 + x / 57) * (amplitude * .32);
+        if (!x) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = 'rgba(233,249,255,.84)';
+      ctx.lineWidth = 1.35;
+      ctx.stroke();
+    }
     function drawWaterOverflow(now) {
       const canvas = document.getElementById('water-overflow-canvas');
       const stage = document.getElementById('hydration-stage');
@@ -1877,10 +1937,9 @@
       const h = waterFlow.height;
       const consoleW = consoleEl.offsetWidth;
       const consoleH = consoleEl.offsetHeight;
-      const leftRimX = consoleEl.offsetLeft + 10;
-      const rightRimX = consoleEl.offsetLeft + consoleW - 10;
+      const leftRimX = consoleEl.offsetLeft - 3;
+      const rightRimX = consoleEl.offsetLeft + consoleW + 3;
       const topRimY = consoleEl.offsetTop + 5;
-      const liquidSurfaceY = consoleEl.offsetTop + Math.max(10, consoleH * (1 - waterFlow.tankRatio));
       const landingY = h - 10;
       if (waterFlow.spillActive) {
         const remaining = Math.max(0, waterFlow.targetOverflow - waterFlow.displayedOverflow);
@@ -1906,25 +1965,7 @@
         waterFlow.pool = 0;
       }
       ctx.clearRect(0, 0, w, h);
-      // The inner tank surface moves independently from the overflow and keeps the water level legible.
-      if (waterFlow.tankRatio > 0) {
-        const top = liquidSurfaceY;
-        const phase = now / 360;
-        ctx.save();
-        ctx.beginPath();
-        ctx.rect(consoleEl.offsetLeft + 2, consoleEl.offsetTop + 2, consoleW - 4, consoleH - 4);
-        ctx.clip();
-        ctx.beginPath();
-        for (let x = consoleEl.offsetLeft; x <= consoleEl.offsetLeft + consoleW; x += 8) {
-          const amplitude = 1.1 + waterFlow.impulse * 1.7;
-          const y = top + Math.sin(phase + x / 31) * amplitude;
-          if (x === consoleEl.offsetLeft) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-        }
-        ctx.strokeStyle = 'rgba(228,247,255,.58)';
-        ctx.lineWidth = 1.25;
-        ctx.stroke();
-        ctx.restore();
-      }
+      drawTankWater(now, consoleEl);
       const next = [];
       for (const p of waterFlow.particles) {
         p.vy += .16 * dt;
