@@ -355,6 +355,9 @@
       isolation: isolate;
       margin: 0 14px;
     }
+    .water-console.is-full {
+      background: linear-gradient(180deg, rgba(119,191,245,.68), rgba(44,121,190,.68) 56%, rgba(26,74,126,.72));
+    }
     .water-console:before,
     .water-console:after {
       display: none;
@@ -1360,7 +1363,7 @@
     let logSwipeMode = '';
     let editHoldTimer = null;
     let spillHoldTimer = null;
-    const waterFlow = { active: false, spillActive: false, tankRatio: 0, targetOverflow: 0, displayedOverflow: 0, particles: [], pool: 0, spawnCarry: 0, impulse: 0, lastWater: 0, raf: 0, last: 0, width: 0, height: 0 };
+    const waterFlow = { active: false, spillActive: false, tankRatio: 0, targetOverflow: 0, lastOverflowTarget: 0, displayedOverflow: 0, particles: [], pool: 0, spawnCarry: 0, impulse: 0, lastWater: 0, raf: 0, last: 0, width: 0, height: 0 };
     const FOOD_DB = [
       { keys: ['无糖巧克力'], kcal100: 500, protein100: 8, defaultGram: 50, units: { piece: 12 }, icon: '🍫' },
       { keys: ['巧克力', 'chocolate'], exclude: ['无糖巧克力'], kcal100: 540, protein100: 8, defaultGram: 50, units: { piece: 12 }, icon: '🍫' },
@@ -1574,6 +1577,7 @@
       document.getElementById('water-control-total').textContent = (state.water / 1000).toFixed(1) + 'L';
       document.getElementById('water-target-label').textContent = Math.round(waterRatio * 100) + '% / ' + (waterTarget / 1000).toFixed(1) + 'L';
       document.getElementById('water-target-input').value = waterTarget;
+      document.getElementById('water-console').classList.toggle('is-full', waterRatio >= .999);
       // Content is always above the liquid layer; at 100% the tank can look full without hiding its controls.
       document.getElementById('water-console').style.setProperty('--water-depth', (waterRatio * 100) + '%');
       const overflowMl = Math.max(0, state.water - waterTarget);
@@ -1860,7 +1864,13 @@
         if (tank) tank.getContext('2d').clearRect(0, 0, tank.width, tank.height);
         return;
       }
+      if (overflowMl > 0 && waterFlow.lastOverflowTarget <= 0) {
+        waterFlow.displayedOverflow = 0;
+        waterFlow.pool = 0;
+        waterFlow.particles = [];
+      }
       if (!spillActive && overflowMl === 0) waterFlow.displayedOverflow = 0;
+      waterFlow.lastOverflowTarget = overflowMl;
       if (!waterFlow.raf) {
         waterFlow.last = performance.now();
         waterFlow.raf = requestAnimationFrame(drawWaterOverflow);
@@ -1979,21 +1989,30 @@
       const poolH = waterFlow.pool * 52;
       const surface = landingY - poolH;
       if (waterFlow.spillActive) {
-        const streamWidth = 3 + clamp(waterFlow.displayedOverflow / 500, 0, 1) * 3;
+        const flow = clamp(waterFlow.displayedOverflow / 500, 0, 1);
+        const streamWidth = 3.5 + flow * 4.5;
+        const ripple = now / 250;
         ctx.save();
-        ctx.lineCap = 'round';
         for (const side of [leftRimX, rightRimX]) {
           const outward = side === leftRimX ? -1 : 1;
-          const stream = ctx.createLinearGradient(side, topRimY, side, surface);
-          stream.addColorStop(0, 'rgba(229,248,255,.92)');
-          stream.addColorStop(.25, 'rgba(115,194,250,.82)');
-          stream.addColorStop(1, 'rgba(45,137,215,.58)');
-          ctx.strokeStyle = stream;
-          ctx.lineWidth = streamWidth;
+          const bend = Math.sin(ripple + (outward > 0 ? 1.1 : 0)) * 1.7;
+          const topX = side - outward * 11;
+          const endX = side + outward * (4 + bend);
+          const stream = ctx.createLinearGradient(side, topRimY, endX, surface);
+          stream.addColorStop(0, 'rgba(239,251,255,.96)');
+          stream.addColorStop(.18, 'rgba(150,215,255,.9)');
+          stream.addColorStop(.72, 'rgba(71,159,227,.74)');
+          stream.addColorStop(1, 'rgba(43,125,195,.5)');
+          ctx.fillStyle = stream;
           ctx.beginPath();
-          ctx.moveTo(side - outward * 12, topRimY + 1);
-          ctx.quadraticCurveTo(side + outward * 4, topRimY - 2, side + outward * 2, topRimY + 16);
-          ctx.bezierCurveTo(side + outward * 5, topRimY + 48, side + outward * 5, surface - 24, side + outward * 2, surface + 2);
+          ctx.moveTo(topX, topRimY + 1);
+          ctx.bezierCurveTo(side - outward * 2, topRimY - 3, side + outward * 7, topRimY + 15, endX - streamWidth / 2, surface);
+          ctx.lineTo(endX + streamWidth / 2, surface);
+          ctx.bezierCurveTo(side + outward * 10, topRimY + 15, side + outward * 2, topRimY - 1, topX + outward * streamWidth, topRimY + 1);
+          ctx.closePath();
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(235,250,255,.64)';
+          ctx.lineWidth = 1;
           ctx.stroke();
         }
         ctx.restore();
