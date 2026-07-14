@@ -9,9 +9,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-fixed-nav-rebuild-1">
-  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-fixed-nav-rebuild-1">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-fixed-nav-rebuild-1">
+  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-unsw-nav-1">
+  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-unsw-nav-1">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-unsw-nav-1">
   <title>Orbit</title>
   <style>
     :root {
@@ -33,8 +33,8 @@
       --warn: #f0c987;
       --shadow: 0 22px 60px rgba(0,0,0,.5);
       --topbar-h: calc(58px + env(safe-area-inset-top));
-      --bottom-nav-h: 74px;
-      --page-dock-space: calc(var(--bottom-nav-h) + 10px);
+      --bottom-nav-h: calc(58px + env(safe-area-inset-bottom));
+      --page-dock-space: calc(var(--bottom-nav-h) + 8px);
       color-scheme: dark;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -1004,80 +1004,115 @@
     }
     .orbit-tabs {
       position: fixed;
-      left: 50%;
-      bottom: env(safe-area-inset-bottom);
-      transform: translateX(-50%);
-      z-index: 20;
-      width: min(100vw, 430px);
-      height: var(--bottom-nav-h);
-      padding: 8px 42px 10px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 90;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      align-items: end;
-      pointer-events: none;
-      background: transparent;
+      align-items: center;
+      width: 100%;
+      max-width: min(100vw, 430px);
+      min-height: var(--bottom-nav-h);
+      margin: 0 auto;
+      padding: 4px 34px max(3px, env(safe-area-inset-bottom));
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,0) 1px),
+        rgba(0,0,0,.92);
+      border-top: 1px solid rgba(255,255,255,.055);
+      box-shadow: 0 -10px 30px rgba(0,0,0,.68);
+      backdrop-filter: blur(24px) saturate(1.2);
+      -webkit-backdrop-filter: blur(24px) saturate(1.2);
+    }
+    @supports (left: max(0px)) {
+      .orbit-tabs {
+        left: max(0px, calc((100vw - 430px) / 2));
+        right: max(0px, calc((100vw - 430px) / 2));
+        width: auto;
+      }
     }
     .nav {
       appearance: none;
       -webkit-appearance: none;
-      pointer-events: auto;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       justify-self: center;
-      width: 56px;
-      height: 48px;
-      border-radius: 18px;
-      color: rgba(244,245,247,.58);
+      min-height: 50px;
+      width: 58px;
+      height: 50px;
+      padding: 0;
+      color: rgba(231,233,234,.62);
       background: transparent;
       border: 0;
-      box-shadow: none;
-      display: grid;
-      place-items: center;
-      gap: 2px;
-      transition: transform .18s cubic-bezier(.2,.8,.2,1), color .18s ease, border-color .18s ease, box-shadow .18s ease;
+      text-decoration: none;
+      filter: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: color .18s ease, transform .18s ease, filter .18s ease;
     }
+    .nav:active { transform: scale(.985); }
     .nav svg {
-      width: 22px;
-      height: 22px;
+      width: 28px;
+      height: 28px;
       stroke: currentColor;
-      stroke-width: 2;
+      stroke-width: 1.85;
       fill: none;
       stroke-linecap: round;
       stroke-linejoin: round;
+      opacity: .9;
+      transition: opacity .18s ease, filter .18s ease;
     }
-    .nav small {
-      display: block;
-      font-size: 9px;
-      line-height: 1;
-      font-weight: 850;
-      letter-spacing: .01em;
-      margin-top: -6px;
-    }
+    .nav small { display: none; }
     .nav.active {
-      color: var(--blue-2);
-      text-shadow: 0 0 18px rgba(47,157,247,.42);
+      color: #8cc8ff;
+      text-shadow: none;
+    }
+    .nav.active svg {
+      opacity: 1;
+      filter: drop-shadow(0 0 10px rgba(140,200,255,.42));
     }
     .nav[data-tab="log"] {
-      width: 64px;
-      height: 64px;
-      border-radius: 24px;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(168,218,255,.20), transparent 62%),
-        linear-gradient(180deg, rgba(255,255,255,.105), rgba(255,255,255,.028));
-      border: 1px solid rgba(255,255,255,.085);
+      width: 58px;
+      height: 50px;
+      min-height: 50px;
+      margin: 0 auto;
+      border-radius: 19px;
+      color: rgba(231,233,234,.82);
+      background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035));
+      border: 1px solid rgba(255,255,255,.06);
       box-shadow:
-        0 0 24px rgba(47,157,247,.13),
-        0 10px 26px rgba(0,0,0,.42),
-        inset 0 1px 0 rgba(255,255,255,.08);
-      backdrop-filter: blur(18px) saturate(1.1);
-      -webkit-backdrop-filter: blur(18px) saturate(1.1);
-      transform: translateY(-3px);
+        0 18px 40px rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.055);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      transform: none;
     }
-    .nav[data-tab="log"]:active { transform: translateY(-3px) scale(.97); }
-    .nav:not([data-tab="log"]):active { transform: scale(.96); }
+    .nav[data-tab="log"] svg {
+      width: 25px;
+      height: 25px;
+    }
+    .nav[data-tab="log"].active {
+      background: linear-gradient(180deg, rgba(29,155,240,.17), rgba(255,255,255,.04));
+      color: #8cc8ff;
+      box-shadow:
+        0 16px 40px rgba(29,155,240,.13),
+        inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .nav[data-tab="log"]:active { transform: scale(.985); }
     .app.keyboard-open .orbit-tabs,
     .app:has(input:focus) .orbit-tabs,
     .app:has(textarea:focus) .orbit-tabs {
       display: none;
+    }
+    @media (max-width: 520px) {
+      .orbit-tabs {
+        max-width: none;
+        padding: 4px 34px max(3px, env(safe-area-inset-bottom));
+      }
+      .nav { min-height: 50px; width: 58px; height: 50px; }
+      .nav svg { width: 28px; height: 28px; }
+      .nav[data-tab="log"] { width: 58px; height: 50px; min-height: 50px; }
     }
     .toast {
       position: absolute;
@@ -1382,7 +1417,7 @@
 
   <script>
     const KEY = 'life_console_v5';
-    const ORBIT_APP_VERSION = '2026-07-14-orbit-fixed-nav-rebuild-1';
+    const ORBIT_APP_VERSION = '2026-07-14-orbit-unsw-nav-1';
     const ORBIT_CLOUD_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019f5e0e6766570f';
     const ORBIT_CLOUD_LAST_REMOTE_KEY = 'orbit_cloud_last_remote_saved_at';
     const ORBIT_CLOUD_LOCAL_CHANGED_KEY = 'orbit_cloud_local_changed_at';
@@ -2620,7 +2655,7 @@
     setupTabSwipe();
     lockAppZoom();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-orbit-fixed-nav-rebuild-1').then(registration => registration.update()).catch(() => {});
+      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-orbit-unsw-nav-1').then(registration => registration.update()).catch(() => {});
     }
     startOrbitCloudSync();
     startOrbitUpdateWatcher();
