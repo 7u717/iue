@@ -30,6 +30,7 @@
       --warn: #f0c987;
       --shadow: 0 22px 60px rgba(0,0,0,.5);
       --topbar-h: calc(58px + env(safe-area-inset-top));
+      --dock-h: 54px;
       color-scheme: dark;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -51,9 +52,9 @@
     .page {
       height: 100%;
       overflow-y: auto;
-      padding: calc(var(--topbar-h) + 16px) 18px calc(86px + env(safe-area-inset-bottom));
+      padding: calc(var(--topbar-h) + 16px) 18px calc(var(--dock-h) + 18px);
       scrollbar-width: none;
-      scroll-padding-bottom: calc(96px + env(safe-area-inset-bottom));
+      scroll-padding-bottom: calc(var(--dock-h) + 26px);
       overscroll-behavior-y: contain;
       -webkit-overflow-scrolling: touch;
     }
@@ -972,13 +973,13 @@
       margin-top: 2px;
     }
     .bottom {
-      position: fixed;
+      position: absolute;
       left: 50%;
       right: auto;
       width: min(100vw, 430px);
       bottom: 0;
-      height: 48px;
-      padding: 2px 42px;
+      height: var(--dock-h);
+      padding: 3px 42px 5px;
       background: #000;
       border-top: 1px solid rgba(255,255,255,.045);
       box-shadow: 0 -18px 28px rgba(0,0,0,.9);
@@ -1006,7 +1007,7 @@
       appearance: none;
       -webkit-appearance: none;
       padding: 0;
-      height: 38px;
+      height: 40px;
       border-radius: 14px;
       background: transparent;
       color: var(--muted);
@@ -1027,7 +1028,7 @@
     }
     .nav[data-tab="log"] {
       width: 48px;
-      height: 42px;
+      height: 44px;
       justify-self: center;
       margin-top: 0;
       border-radius: 15px;
@@ -1360,7 +1361,7 @@
       water: 0,
       waterTarget: 2200,
       waterSpillHidden: false,
-      hydrationBasinVersion: 2,
+      hydrationBasinVersion: 3,
       intake: 0,
       burn: 0,
       protein: 0,
@@ -1387,10 +1388,10 @@
     let orbitCloudReady = false;
     let orbitCloudPushTimer = null;
     let orbitCloudPollTimer = null;
-    if (state.hydrationBasinVersion !== 2) {
+    if (state.hydrationBasinVersion !== 3) {
       // The old overflow renderer could leave a stale hidden state behind.
       state.waterSpillHidden = false;
-      state.hydrationBasinVersion = 2;
+      state.hydrationBasinVersion = 3;
     }
     let logSwipeStartX = 0;
     let logSwipeStartY = 0;
@@ -2456,7 +2457,8 @@
       if (remoteTime > lastRemote) {
         orbitCloudApplying = true;
         try {
-          state = Object.assign({}, defaults, payload.state, { hydrationBasinVersion: 2 });
+          state = Object.assign({}, defaults, payload.state, { hydrationBasinVersion: 3 });
+          state.waterSpillHidden = false;
           localStorage.setItem(KEY, JSON.stringify(state));
           localStorage.setItem(ORBIT_CLOUD_LAST_REMOTE_KEY, payload.savedAt);
           render();
