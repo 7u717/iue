@@ -9,9 +9,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-scroll-repair-1">
-  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-scroll-repair-1">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-scroll-repair-1">
+  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-hydration-edge-1">
+  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-hydration-edge-1">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-hydration-edge-1">
   <title>Orbit</title>
   <style>
     :root {
@@ -366,8 +366,9 @@
       background: linear-gradient(180deg, rgba(119,191,245,.68), rgba(44,121,190,.68) 56%, rgba(26,74,126,.72));
     }
     .hydration-stage.overflowing .water-console {
-      border-radius: 24px 24px 0 0;
-      border-bottom-color: transparent;
+      /* The stage owns every visible edge while overflowing. This keeps the liquid flush with one continuous rim. */
+      border-radius: 0;
+      border: 0;
     }
     .water-console:before,
     .water-console:after {
@@ -450,9 +451,7 @@
       border: 1px solid var(--line-soft);
     }
     .hydration-stage.overflowing .water-console {
-      border-left: 0;
-      border-right: 0;
-      border-top: 0;
+      width: 100%;
     }
     .water-catch {
       height: 0;
@@ -466,7 +465,7 @@
       transition: height .32s cubic-bezier(.2,.85,.2,1), opacity .16s ease;
     }
     .water-catch.show {
-      height: 72px;
+      height: 0;
       opacity: 1;
     }
     .water-catch-canvas {
@@ -474,6 +473,7 @@
       inset: auto 0 0;
       width: 100%;
       height: 100%;
+      border-radius: 0;
       pointer-events: none;
       display: block;
     }
@@ -1413,6 +1413,7 @@
       state.waterSpillHidden = false;
       state.hydrationBasinVersion = 3;
     }
+    let tabSwipeStart = null;
     let logSwipeStartX = 0;
     let logSwipeStartY = 0;
     let logSwipeCurrentX = 0;
@@ -2009,7 +2010,8 @@
       const canvas = document.getElementById('water-catch-canvas');
       const stage = document.getElementById('hydration-stage');
       const consoleEl = document.getElementById('water-console');
-      if (!canvas || !stage || !consoleEl || !waterFlow.active) { waterFlow.raf = 0; return; }
+      const basin = document.getElementById('water-catch');
+      if (!canvas || !stage || !consoleEl || !basin || !waterFlow.active) { waterFlow.raf = 0; return; }
       sizeWaterCanvas(canvas);
       const ctx = canvas.getContext('2d');
       const dt = Math.min(2.2, Math.max(.55, (now - waterFlow.last) / 16.67));
@@ -2029,14 +2031,16 @@
       ctx.clearRect(0, 0, w, h);
       drawTankWater(now, consoleEl);
       waterFlow.pool = waterFlow.spillActive ? clamp(waterFlow.collectedOverflow / 500, 0, 1) : 0;
+      // The spill tray grows with the collected water, so it never reveals an empty black cavity.
+      basin.style.height = (waterFlow.pool * 72).toFixed(2) + 'px';
       if (waterFlow.pool > .02) {
         const phase = now / 460;
-        const surface = Math.max(0, h * (1 - waterFlow.pool));
+        const surface = 2.5 + Math.sin(phase) * 1.1;
         ctx.beginPath();
         ctx.moveTo(0, h);
-        ctx.lineTo(0, surface + Math.sin(phase) * 1.5);
+        ctx.lineTo(0, surface);
         for (let x = 0; x <= w; x += 8) {
-          ctx.lineTo(x, surface + Math.sin(phase + x / 18) * 2.1 + Math.sin(phase * 1.7 + x / 31) * 1.2);
+          ctx.lineTo(x, surface + Math.sin(phase + x / 18) * 1.7 + Math.sin(phase * 1.7 + x / 31) * .85);
         }
         ctx.lineTo(w, h);
         ctx.closePath();
@@ -2396,6 +2400,31 @@
       document.querySelectorAll('.nav').forEach(n => n.classList.toggle('active', n.dataset.tab === tab));
       document.querySelector('.page').scrollTop = 0;
     }
+    function setupTabSwipe() {
+      const page = document.querySelector('.page');
+      if (!page) return;
+      page.addEventListener('touchstart', event => {
+        if (event.touches.length !== 1 || event.target.closest('input, textarea, button, .log-swipe')) {
+          tabSwipeStart = null;
+          return;
+        }
+        const touch = event.touches[0];
+        tabSwipeStart = { x: touch.clientX, y: touch.clientY };
+      }, { passive: true });
+      page.addEventListener('touchend', event => {
+        if (!tabSwipeStart || !event.changedTouches.length) return;
+        const touch = event.changedTouches[0];
+        const dx = touch.clientX - tabSwipeStart.x;
+        const dy = touch.clientY - tabSwipeStart.y;
+        tabSwipeStart = null;
+        if (Math.abs(dx) < 72 || Math.abs(dx) < Math.abs(dy) * 1.25) return;
+        const tabs = ['today', 'log', 'trend'];
+        const active = document.querySelector('.section.active');
+        const current = Math.max(0, tabs.indexOf(active ? active.id : 'today'));
+        const next = dx < 0 ? current + 1 : current - 1;
+        if (next >= 0 && next < tabs.length) showTab(tabs[next]);
+      }, { passive: true });
+    }
     function setKeyboardMode(force) {
       const app = document.querySelector('.app');
       if (!app) return;
@@ -2529,6 +2558,7 @@
       toggleEditPanel
     });
     setupKeyboardMode();
+    setupTabSwipe();
     lockAppZoom();
     startOrbitCloudSync();
     render();
