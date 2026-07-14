@@ -9,9 +9,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-standalone-dock-1">
-  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-standalone-dock-1">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-standalone-dock-1">
+  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-dock-fix-2">
+  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-dock-fix-2">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-dock-fix-2">
   <title>Orbit</title>
   <style>
     :root {
@@ -33,8 +33,9 @@
       --warn: #f0c987;
       --shadow: 0 22px 60px rgba(0,0,0,.5);
       --topbar-h: calc(58px + env(safe-area-inset-top));
-      --dock-h: 82px;
+      --dock-h: 58px;
       --dock-content-h: 58px;
+      --page-dock-space: 92px;
       color-scheme: dark;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -57,9 +58,9 @@
       height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: calc(var(--topbar-h) + 16px) 18px calc(var(--dock-h) + 18px);
+      padding: calc(var(--topbar-h) + 16px) 18px calc(var(--page-dock-space) + env(safe-area-inset-bottom));
       scrollbar-width: none;
-      scroll-padding-bottom: calc(var(--dock-h) + 26px);
+      scroll-padding-bottom: calc(var(--page-dock-space) + env(safe-area-inset-bottom));
       overscroll-behavior-y: contain;
       -webkit-overflow-scrolling: touch;
       touch-action: pan-y;
@@ -1385,7 +1386,7 @@
 
   <script>
     const KEY = 'life_console_v5';
-    const ORBIT_APP_VERSION = '2026-07-14-orbit-standalone-dock-1';
+    const ORBIT_APP_VERSION = '2026-07-14-orbit-dock-fix-2';
     const ORBIT_CLOUD_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019f5e0e6766570f';
     const ORBIT_CLOUD_LAST_REMOTE_KEY = 'orbit_cloud_last_remote_saved_at';
     const ORBIT_CLOUD_LOCAL_CHANGED_KEY = 'orbit_cloud_local_changed_at';
@@ -2623,7 +2624,7 @@
     setupTabSwipe();
     lockAppZoom();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-orbit-standalone-dock-1').then(registration => registration.update()).catch(() => {});
+      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-orbit-dock-fix-2').then(registration => registration.update()).catch(() => {});
     }
     startOrbitCloudSync();
     startOrbitUpdateWatcher();
