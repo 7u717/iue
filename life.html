@@ -393,9 +393,9 @@
     .water-console > * { position: relative; z-index: 2; }
     .water-tank-canvas {
       position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
+      inset: -1px;
+      width: calc(100% + 2px);
+      height: calc(100% + 2px);
       z-index: 1 !important;
       pointer-events: none;
     }
@@ -1902,7 +1902,7 @@
       canvas.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     function sizeTankCanvas(canvas, consoleEl) {
-      const rect = consoleEl.getBoundingClientRect();
+      const rect = canvas.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const width = Math.max(1, Math.round(rect.width));
       const height = Math.max(1, Math.round(rect.height));
@@ -1916,8 +1916,8 @@
       if (!tank) return;
       sizeTankCanvas(tank, consoleEl);
       const ctx = tank.getContext('2d');
-      const width = consoleEl.offsetWidth;
-      const height = consoleEl.offsetHeight;
+      const width = tank.width / Math.min(window.devicePixelRatio || 1, 2);
+      const height = tank.height / Math.min(window.devicePixelRatio || 1, 2);
       ctx.clearRect(0, 0, width, height);
       if (waterFlow.tankRatio <= 0) return;
       const surface = Math.max(2, height * (1 - waterFlow.tankRatio));
@@ -1969,27 +1969,26 @@
       const rightRimX = consoleLeft + consoleW - 3;
       const topRimY = consoleTop + 5;
       const landingY = h - 10;
-      const flowing = waterFlow.spillActive && (waterFlow.displayedOverflow < waterFlow.targetOverflow || waterFlow.particles.length > 0);
-      if (flowing) {
+      if (waterFlow.spillActive) {
         // Release at 100 ml/s. The pool only grows once these parcels actually land.
-        waterFlow.spawnCarry += .8 * dt;
-        while (waterFlow.spawnCarry >= 1 && waterFlow.displayedOverflow < waterFlow.targetOverflow) {
-          waterFlow.spawnCarry -= 1;
-          const parcel = Math.min(100 / 48, waterFlow.targetOverflow - waterFlow.displayedOverflow);
-          waterFlow.displayedOverflow += parcel;
-          const leftSide = Math.random() < .5;
-          waterFlow.particles.push({
-            x: (leftSide ? leftRimX : rightRimX) + (Math.random() - .5) * 4,
-            y: topRimY + Math.random() * 4,
-            vx: (leftSide ? -.8 : .8) + (Math.random() - .5) * .35,
-            vy: .32 + Math.random() * .6,
-            r: 2 + Math.random() * 2.7,
-            ml: parcel,
-            life: 1
-          });
+        if (waterFlow.displayedOverflow < waterFlow.targetOverflow) {
+          waterFlow.spawnCarry += .8 * dt;
+          while (waterFlow.spawnCarry >= 1 && waterFlow.displayedOverflow < waterFlow.targetOverflow) {
+            waterFlow.spawnCarry -= 1;
+            const parcel = Math.min(100 / 48, waterFlow.targetOverflow - waterFlow.displayedOverflow);
+            waterFlow.displayedOverflow += parcel;
+            const leftSide = Math.random() < .5;
+            waterFlow.particles.push({
+              x: (leftSide ? leftRimX : rightRimX) + (Math.random() - .5) * 4,
+              y: topRimY + Math.random() * 4,
+              vx: (leftSide ? -.8 : .8) + (Math.random() - .5) * .35,
+              vy: .32 + Math.random() * .6,
+              ml: parcel,
+              life: 1
+            });
+          }
         }
         if (waterFlow.displayedOverflow >= waterFlow.targetOverflow) waterFlow.spawnCarry = 0;
-        waterFlow.pool = clamp(waterFlow.collectedOverflow / 500, 0, 1);
       } else {
         waterFlow.particles = [];
         waterFlow.pool = 0;
@@ -2006,62 +2005,33 @@
         if (p.life > 0 && p.x < w + 10) next.push(p);
       }
       waterFlow.particles = next.slice(-90);
+      // Once the final hidden parcel arrives, retain the full overflow volume.
+      // This keeps the catch basin filled instead of resetting on the next frame.
+      if (waterFlow.spillActive && waterFlow.displayedOverflow >= waterFlow.targetOverflow && waterFlow.particles.length === 0) {
+        waterFlow.collectedOverflow = waterFlow.targetOverflow;
+      }
+      waterFlow.pool = waterFlow.spillActive ? clamp(waterFlow.collectedOverflow / 500, 0, 1) : 0;
       const poolH = waterFlow.pool * 52;
       const surface = landingY - poolH;
-      if (waterFlow.spillActive) {
-        const flow = clamp(waterFlow.displayedOverflow / 500, 0, 1);
-        const streamWidth = 3.5 + flow * 4.5;
-        const ripple = now / 250;
-        ctx.save();
-        for (const side of [leftRimX, rightRimX]) {
-          const outward = side === leftRimX ? -1 : 1;
-          const bend = Math.sin(ripple + (outward > 0 ? 1.1 : 0)) * 1.7;
-          const topX = side - outward * 11;
-          const endX = outward < 0 ? 10 + bend : w - 10 + bend;
-          const stream = ctx.createLinearGradient(side, topRimY, endX, surface);
-          stream.addColorStop(0, 'rgba(239,251,255,.96)');
-          stream.addColorStop(.18, 'rgba(150,215,255,.9)');
-          stream.addColorStop(.72, 'rgba(71,159,227,.74)');
-          stream.addColorStop(1, 'rgba(43,125,195,.5)');
-          ctx.fillStyle = stream;
-          ctx.beginPath();
-          ctx.moveTo(topX, topRimY + 1);
-          ctx.bezierCurveTo(side - outward * 2, topRimY - 3, side + outward * 7, topRimY + 15, endX - streamWidth / 2, surface);
-          ctx.lineTo(endX + streamWidth / 2, surface);
-          ctx.bezierCurveTo(side + outward * 10, topRimY + 15, side + outward * 2, topRimY - 1, topX + outward * streamWidth, topRimY + 1);
-          ctx.closePath();
-          ctx.fill();
-          ctx.strokeStyle = 'rgba(235,250,255,.64)';
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        }
-        ctx.restore();
-      }
       if (waterFlow.pool > .02) {
         const phase = now / 460;
+        const radius = 26;
         ctx.beginPath();
-        ctx.moveTo(4, h);
-        ctx.lineTo(4, surface + Math.sin(phase) * 1.5);
-        for (let x = 4; x <= w - 4; x += 8) {
+        ctx.moveTo(0, h - radius);
+        ctx.lineTo(0, surface + Math.sin(phase) * 1.5);
+        for (let x = 0; x <= w; x += 8) {
           ctx.lineTo(x, surface + Math.sin(phase + x / 18) * 2.1 + Math.sin(phase * 1.7 + x / 31) * 1.2);
         }
-        ctx.lineTo(w - 4, h);
+        ctx.lineTo(w, h - radius);
+        ctx.quadraticCurveTo(w, h, w - radius, h);
+        ctx.lineTo(radius, h);
+        ctx.quadraticCurveTo(0, h, 0, h - radius);
         ctx.closePath();
         const poolFill = ctx.createLinearGradient(0, surface, 0, h);
         poolFill.addColorStop(0, 'rgba(188,228,255,.76)');
         poolFill.addColorStop(.3, 'rgba(76,163,235,.48)');
         poolFill.addColorStop(1, 'rgba(30,92,152,.58)');
         ctx.fillStyle = poolFill;
-        ctx.fill();
-      }
-      for (const p of waterFlow.particles) {
-        const glow = ctx.createRadialGradient(p.x - p.r * .28, p.y - p.r * .3, .2, p.x, p.y, p.r * 1.25);
-        glow.addColorStop(0, 'rgba(239,250,255,.96)');
-        glow.addColorStop(.42, 'rgba(132,205,255,.86)');
-        glow.addColorStop(1, 'rgba(41,137,220,.28)');
-        ctx.fillStyle = glow;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();
       }
       waterFlow.impulse *= .982;
