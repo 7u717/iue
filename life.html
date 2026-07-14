@@ -9,9 +9,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-hydration-edge-1">
-  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-hydration-edge-1">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-hydration-edge-1">
+  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-cloud-1">
+  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-cloud-1">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-cloud-1">
   <title>Orbit</title>
   <style>
     :root {
@@ -1383,6 +1383,7 @@
 
   <script>
     const KEY = 'life_console_v5';
+    const ORBIT_APP_VERSION = '2026-07-14-orbit-cloud-1';
     const ORBIT_CLOUD_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019f5e0e6766570f';
     const ORBIT_CLOUD_LAST_REMOTE_KEY = 'orbit_cloud_last_remote_saved_at';
     const ORBIT_CLOUD_LOCAL_CHANGED_KEY = 'orbit_cloud_local_changed_at';
@@ -2534,9 +2535,55 @@
     function startOrbitCloudSync() {
       orbitCloudPull(true).catch(() => {}).finally(() => {
         orbitCloudReady = true;
+        if (localStorage.getItem(ORBIT_CLOUD_LOCAL_CHANGED_KEY)) orbitCloudPush(true).catch(() => {});
       });
       clearInterval(orbitCloudPollTimer);
       orbitCloudPollTimer = setInterval(() => orbitCloudPull(true).catch(() => {}), 15000);
+      let lastForegroundPull = 0;
+      function pullOnForeground() {
+        const now = Date.now();
+        if (now - lastForegroundPull < 3000) return;
+        lastForegroundPull = now;
+        orbitCloudPull(true).catch(() => {});
+      }
+      window.addEventListener('pageshow', pullOnForeground);
+      window.addEventListener('focus', pullOnForeground);
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) pullOnForeground();
+      });
+    }
+    function startOrbitUpdateWatcher() {
+      if (location.protocol === 'file:') return;
+      let checking = false;
+      let lastCheck = 0;
+      function checkForNewVersion() {
+        const now = Date.now();
+        if (checking || now - lastCheck < 4000) return;
+        checking = true;
+        lastCheck = now;
+        const checkUrl = location.origin + location.pathname.replace(/[^/]*$/, '') + 'life.html?versionCheck=' + now;
+        fetch(checkUrl, { cache: 'no-store' }).then(response => {
+          if (!response.ok) throw new Error('version check failed');
+          return response.text();
+        }).then(html => {
+          const match = html.match(/const ORBIT_APP_VERSION = '([^']+)'/);
+          const remoteVersion = match && match[1];
+          if (!remoteVersion || remoteVersion === ORBIT_APP_VERSION) return;
+          const active = document.activeElement;
+          const isTyping = active && /^(INPUT|TEXTAREA)$/i.test(active.tagName || '');
+          if (isTyping) return;
+          const next = new URL(location.href);
+          next.searchParams.set('v', remoteVersion);
+          location.replace(next.toString());
+        }).catch(() => {}).finally(() => { checking = false; });
+      }
+      window.addEventListener('pageshow', checkForNewVersion);
+      window.addEventListener('focus', checkForNewVersion);
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) checkForNewVersion();
+      });
+      setTimeout(checkForNewVersion, 1200);
+      setInterval(checkForNewVersion, 20000);
     }
     function toast(msg) {
       const el = document.getElementById('toast');
@@ -2574,9 +2621,10 @@
     setupTabSwipe();
     lockAppZoom();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-network-first-1').then(registration => registration.update()).catch(() => {});
+      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-orbit-cloud-1').then(registration => registration.update()).catch(() => {});
     }
     startOrbitCloudSync();
+    startOrbitUpdateWatcher();
     render();
   </script>
 </body>

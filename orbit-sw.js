@@ -1,4 +1,4 @@
-const CACHE = 'orbit-network-first-v2';
+const CACHE = 'orbit-network-first-v3';
 
 self.addEventListener('install', event => {
   event.waitUntil(self.skipWaiting());

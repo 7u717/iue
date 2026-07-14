@@ -2,7 +2,7 @@
   "name": "Orbit",
   "short_name": "Orbit",
   "description": "Personal life control dashboard",
-  "start_url": "./orbit.html?v=2026-07-14-orbit-fresh-2",
+  "start_url": "./orbit.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#000000",
