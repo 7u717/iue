@@ -357,6 +357,10 @@
     .water-console.is-full {
       background: linear-gradient(180deg, rgba(119,191,245,.68), rgba(44,121,190,.68) 56%, rgba(26,74,126,.72));
     }
+    .water-console.overflowing {
+      border-radius: 24px 24px 0 0;
+      border-bottom-color: rgba(126,194,246,.2);
+    }
     .water-console:before,
     .water-console:after {
       display: none;
@@ -426,25 +430,35 @@
       overflow: hidden;
       isolation: isolate;
     }
-    .hydration-card > :not(.water-overflow-canvas) { position: relative; z-index: 1; }
     .hydration-stage {
       position: relative;
-      padding-bottom: 0;
-      overflow: visible;
-      transition: padding-bottom .35s cubic-bezier(.2,.9,.22,1);
+      overflow: hidden;
+      border-radius: 24px;
     }
-    .hydration-stage.spill-active { padding-bottom: 54px; }
-    .water-overflow-canvas {
+    .water-catch {
+      height: 0;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      background: linear-gradient(180deg, rgba(77,154,218,.14), rgba(29,84,137,.26));
+      border: 0 solid rgba(126,194,246,.18);
+      border-top: 0;
+      border-radius: 0 0 24px 24px;
+      transition: height .24s ease, opacity .16s ease;
+    }
+    .water-catch.show {
+      height: 58px;
+      opacity: 1;
+      border-width: 0 1px 1px;
+    }
+    .water-catch-canvas {
       position: absolute;
-      inset: 0;
+      inset: auto 0 0;
       width: 100%;
       height: 100%;
       pointer-events: none;
-      opacity: 0;
-      z-index: 0;
-      transition: opacity .22s ease;
+      display: block;
     }
-    .hydration-card.spill-active .water-overflow-canvas { opacity: 1; }
     .water-spill:before,
     .water-spill:after {
       content: "";
@@ -1232,7 +1246,6 @@
         </div>
 
         <div class="card hydration-card" id="hydration-card" style="margin-top:12px;">
-          <canvas id="water-overflow-canvas" class="water-overflow-canvas" aria-hidden="true"></canvas>
           <div class="card-head">
             <div>
               <div class="eyebrow">Water</div>
@@ -1255,6 +1268,9 @@
                 <input id="water-target-input" type="number" min="500" step="100" placeholder="Target ml">
                 <button onclick="setWaterTarget()">Save</button>
               </div>
+            </div>
+            <div class="water-catch" id="water-catch" aria-hidden="true">
+              <canvas id="water-catch-canvas" class="water-catch-canvas"></canvas>
             </div>
           </div>
         </div>
@@ -1587,6 +1603,7 @@
       document.getElementById('water-console').style.setProperty('--water-depth', (waterRatio * 100) + '%');
       const overflowMl = Math.max(0, state.water - waterTarget);
       const showSpill = overflowMl > 0 && !state.waterSpillHidden;
+      document.getElementById('water-console').classList.toggle('overflowing', showSpill);
       if (state.water > waterFlow.lastWater) waterFlow.impulse = Math.min(1, waterFlow.impulse + .7);
       waterFlow.lastWater = state.water;
       updateWaterOverflow(waterRatio > 0, showSpill, overflowMl, waterRatio);
@@ -1849,16 +1866,15 @@
     }
     function updateWaterOverflow(active, spillActive, overflowMl, tankRatio) {
       const stage = document.getElementById('hydration-stage');
-      const card = document.getElementById('hydration-card');
-      const canvas = document.getElementById('water-overflow-canvas');
-      if (!stage || !card || !canvas) return;
+      const basin = document.getElementById('water-catch');
+      const canvas = document.getElementById('water-catch-canvas');
+      if (!stage || !basin || !canvas) return;
       waterFlow.active = active;
       waterFlow.spillActive = spillActive;
       waterFlow.targetOverflow = overflowMl;
       waterFlow.tankRatio = tankRatio;
       stage.classList.toggle('has-water', active);
-      stage.classList.toggle('spill-active', spillActive);
-      card.classList.toggle('spill-active', spillActive);
+      basin.classList.toggle('show', spillActive);
       if (!active) {
         waterFlow.particles = [];
         waterFlow.pool = 0;
@@ -1866,7 +1882,6 @@
         waterFlow.collectedOverflow = 0;
         if (waterFlow.raf) cancelAnimationFrame(waterFlow.raf);
         waterFlow.raf = 0;
-        card.classList.remove('spill-active');
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const tank = document.getElementById('water-tank-canvas');
@@ -1879,9 +1894,11 @@
         waterFlow.pool = 0;
         waterFlow.particles = [];
       }
-      if (!spillActive && overflowMl === 0) {
+      if (!spillActive) {
         waterFlow.displayedOverflow = 0;
         waterFlow.collectedOverflow = 0;
+        waterFlow.pool = 0;
+        waterFlow.particles = [];
       }
       waterFlow.lastOverflowTarget = overflowMl;
       if (!waterFlow.raf) {
@@ -1889,7 +1906,7 @@
         waterFlow.raf = requestAnimationFrame(drawWaterOverflow);
       }
     }
-    function sizeWaterCanvas(canvas, stage) {
+    function sizeWaterCanvas(canvas) {
       const rect = canvas.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const width = Math.max(1, Math.round(rect.width));
@@ -1948,84 +1965,39 @@
       ctx.stroke();
     }
     function drawWaterOverflow(now) {
-      const canvas = document.getElementById('water-overflow-canvas');
+      const canvas = document.getElementById('water-catch-canvas');
       const stage = document.getElementById('hydration-stage');
-      const card = document.getElementById('hydration-card');
       const consoleEl = document.getElementById('water-console');
-      if (!canvas || !stage || !card || !consoleEl || !waterFlow.active) { waterFlow.raf = 0; return; }
-      sizeWaterCanvas(canvas, card);
+      if (!canvas || !stage || !consoleEl || !waterFlow.active) { waterFlow.raf = 0; return; }
+      sizeWaterCanvas(canvas);
       const ctx = canvas.getContext('2d');
       const dt = Math.min(2.2, Math.max(.55, (now - waterFlow.last) / 16.67));
       waterFlow.last = now;
       const w = waterFlow.width;
       const h = waterFlow.height;
-      const cardRect = card.getBoundingClientRect();
-      const consoleRect = consoleEl.getBoundingClientRect();
-      const consoleW = consoleRect.width;
-      const consoleH = consoleRect.height;
-      const consoleLeft = consoleRect.left - cardRect.left;
-      const consoleTop = consoleRect.top - cardRect.top;
-      const leftRimX = consoleLeft + 3;
-      const rightRimX = consoleLeft + consoleW - 3;
-      const topRimY = consoleTop + 5;
-      const landingY = h - 10;
       if (waterFlow.spillActive) {
-        // Release at 100 ml/s. The pool only grows once these parcels actually land.
-        if (waterFlow.displayedOverflow < waterFlow.targetOverflow) {
-          waterFlow.spawnCarry += .8 * dt;
-          while (waterFlow.spawnCarry >= 1 && waterFlow.displayedOverflow < waterFlow.targetOverflow) {
-            waterFlow.spawnCarry -= 1;
-            const parcel = Math.min(100 / 48, waterFlow.targetOverflow - waterFlow.displayedOverflow);
-            waterFlow.displayedOverflow += parcel;
-            const leftSide = Math.random() < .5;
-            waterFlow.particles.push({
-              x: (leftSide ? leftRimX : rightRimX) + (Math.random() - .5) * 4,
-              y: topRimY + Math.random() * 4,
-              vx: (leftSide ? -.8 : .8) + (Math.random() - .5) * .35,
-              vy: .32 + Math.random() * .6,
-              ml: parcel,
-              life: 1
-            });
-          }
-        }
-        if (waterFlow.displayedOverflow >= waterFlow.targetOverflow) waterFlow.spawnCarry = 0;
+        // Fill the catch basin at 100 ml/s from zero, then keep it filled.
+        waterFlow.collectedOverflow = Math.min(
+          waterFlow.targetOverflow,
+          waterFlow.collectedOverflow + (100 / 60) * dt
+        );
       } else {
-        waterFlow.particles = [];
+        waterFlow.collectedOverflow = 0;
         waterFlow.pool = 0;
       }
       ctx.clearRect(0, 0, w, h);
       drawTankWater(now, consoleEl);
-      const next = [];
-      for (const p of waterFlow.particles) {
-        p.vy += .16 * dt;
-        p.x += p.vx * dt;
-        p.y += p.vy * dt;
-        p.life -= .008 * dt;
-        if (p.y >= landingY) { waterFlow.collectedOverflow += p.ml || 0; continue; }
-        if (p.life > 0 && p.x < w + 10) next.push(p);
-      }
-      waterFlow.particles = next.slice(-90);
-      // Once the final hidden parcel arrives, retain the full overflow volume.
-      // This keeps the catch basin filled instead of resetting on the next frame.
-      if (waterFlow.spillActive && waterFlow.displayedOverflow >= waterFlow.targetOverflow && waterFlow.particles.length === 0) {
-        waterFlow.collectedOverflow = waterFlow.targetOverflow;
-      }
       waterFlow.pool = waterFlow.spillActive ? clamp(waterFlow.collectedOverflow / 500, 0, 1) : 0;
-      const poolH = waterFlow.pool * 52;
-      const surface = landingY - poolH;
       if (waterFlow.pool > .02) {
         const phase = now / 460;
-        const radius = 26;
+        const surface = Math.max(0, h * (1 - waterFlow.pool));
         ctx.beginPath();
-        ctx.moveTo(0, h - radius);
+        ctx.moveTo(0, h);
         ctx.lineTo(0, surface + Math.sin(phase) * 1.5);
         for (let x = 0; x <= w; x += 8) {
           ctx.lineTo(x, surface + Math.sin(phase + x / 18) * 2.1 + Math.sin(phase * 1.7 + x / 31) * 1.2);
         }
-        ctx.lineTo(w, h - radius);
-        ctx.quadraticCurveTo(w, h, w - radius, h);
-        ctx.lineTo(radius, h);
-        ctx.quadraticCurveTo(0, h, 0, h - radius);
+        ctx.lineTo(w, h);
         ctx.closePath();
         const poolFill = ctx.createLinearGradient(0, surface, 0, h);
         poolFill.addColorStop(0, 'rgba(188,228,255,.76)');
