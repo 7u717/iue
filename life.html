@@ -9,9 +9,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-bare-tabs-1">
-  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-bare-tabs-1">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-bare-tabs-1">
+  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-bottom-icons-1">
+  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-bottom-icons-1">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-bottom-icons-1">
   <title>Orbit</title>
   <style>
     :root {
@@ -33,7 +33,7 @@
       --warn: #f0c987;
       --shadow: 0 22px 60px rgba(0,0,0,.5);
       --topbar-h: calc(58px + env(safe-area-inset-top));
-      --page-dock-space: 84px;
+      --page-dock-space: 66px;
       color-scheme: dark;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -1003,7 +1003,7 @@
     .quick-tabs {
       position: fixed;
       left: 50%;
-      bottom: calc(env(safe-area-inset-bottom) + 14px);
+      bottom: calc(env(safe-area-inset-bottom) + 2px);
       transform: translateX(-50%);
       z-index: 18;
       width: min(calc(100vw - 42px), 360px);
@@ -1017,8 +1017,8 @@
       -webkit-appearance: none;
       pointer-events: auto;
       justify-self: center;
-      width: 58px;
-      height: 52px;
+      width: 56px;
+      height: 48px;
       border-radius: 18px;
       color: rgba(244,245,247,.58);
       background: transparent;
@@ -1065,9 +1065,9 @@
         inset 0 1px 0 rgba(255,255,255,.08);
       backdrop-filter: blur(18px) saturate(1.1);
       -webkit-backdrop-filter: blur(18px) saturate(1.1);
-      transform: translateY(-7px);
+      transform: translateY(-3px);
     }
-    .nav[data-tab="log"]:active { transform: translateY(-7px) scale(.97); }
+    .nav[data-tab="log"]:active { transform: translateY(-3px) scale(.97); }
     .nav:not([data-tab="log"]):active { transform: scale(.96); }
     .app.keyboard-open .quick-tabs,
     .app:has(input:focus) .quick-tabs,
@@ -1376,7 +1376,7 @@
 
   <script>
     const KEY = 'life_console_v5';
-    const ORBIT_APP_VERSION = '2026-07-14-orbit-bare-tabs-1';
+    const ORBIT_APP_VERSION = '2026-07-14-orbit-bottom-icons-1';
     const ORBIT_CLOUD_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019f5e0e6766570f';
     const ORBIT_CLOUD_LAST_REMOTE_KEY = 'orbit_cloud_last_remote_saved_at';
     const ORBIT_CLOUD_LOCAL_CHANGED_KEY = 'orbit_cloud_local_changed_at';
@@ -2614,7 +2614,7 @@
     setupTabSwipe();
     lockAppZoom();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-orbit-bare-tabs-1').then(registration => registration.update()).catch(() => {});
+      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-orbit-bottom-icons-1').then(registration => registration.update()).catch(() => {});
     }
     startOrbitCloudSync();
     startOrbitUpdateWatcher();
