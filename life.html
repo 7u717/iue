@@ -9,9 +9,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-no-dock-1">
-  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-no-dock-1">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-no-dock-1">
+  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-float-tabs-1">
+  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-float-tabs-1">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-float-tabs-1">
   <title>Orbit</title>
   <style>
     :root {
@@ -33,7 +33,7 @@
       --warn: #f0c987;
       --shadow: 0 22px 60px rgba(0,0,0,.5);
       --topbar-h: calc(58px + env(safe-area-inset-top));
-      --page-dock-space: 24px;
+      --page-dock-space: 96px;
       color-scheme: dark;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -1000,6 +1000,81 @@
       font-size: 14px;
       margin-top: 2px;
     }
+    .quick-tabs {
+      position: fixed;
+      left: 50%;
+      bottom: calc(env(safe-area-inset-bottom) + 13px);
+      transform: translateX(-50%);
+      z-index: 18;
+      width: min(calc(100vw - 42px), 360px);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      align-items: end;
+      pointer-events: none;
+    }
+    .nav {
+      appearance: none;
+      -webkit-appearance: none;
+      pointer-events: auto;
+      justify-self: center;
+      width: 54px;
+      height: 54px;
+      border-radius: 20px;
+      color: rgba(244,245,247,.58);
+      background: rgba(11,12,14,.72);
+      border: 1px solid rgba(255,255,255,.07);
+      box-shadow:
+        0 10px 26px rgba(0,0,0,.48),
+        inset 0 1px 0 rgba(255,255,255,.055);
+      backdrop-filter: blur(22px) saturate(1.15);
+      -webkit-backdrop-filter: blur(22px) saturate(1.15);
+      display: grid;
+      place-items: center;
+      gap: 2px;
+      transition: transform .18s cubic-bezier(.2,.8,.2,1), color .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .nav svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .nav small {
+      display: block;
+      font-size: 9px;
+      line-height: 1;
+      font-weight: 850;
+      letter-spacing: .01em;
+      margin-top: -6px;
+    }
+    .nav.active {
+      color: var(--blue-2);
+      border-color: rgba(140,200,255,.26);
+      box-shadow:
+        0 0 24px rgba(47,157,247,.18),
+        0 12px 28px rgba(0,0,0,.5),
+        inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .nav[data-tab="log"] {
+      width: 64px;
+      height: 64px;
+      border-radius: 24px;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(150,205,255,.18), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.095), rgba(255,255,255,.035));
+      transform: translateY(-7px);
+    }
+    .nav[data-tab="log"]:active { transform: translateY(-7px) scale(.97); }
+    .nav:not([data-tab="log"]):active { transform: scale(.96); }
+    .app.keyboard-open .quick-tabs,
+    .app:has(input:focus) .quick-tabs,
+    .app:has(textarea:focus) .quick-tabs {
+      display: none;
+    }
     .toast {
       position: absolute;
       left: 22px;
@@ -1283,12 +1358,26 @@
       </div>
     </aside>
 
+    <nav class="quick-tabs" aria-label="tabs">
+      <button class="nav active" data-tab="today" onclick="showTab('today')" aria-label="Today">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12h10"></path><path d="M8.5 8.5 7 12l1.5 3.5"></path><path d="M15.5 8.5 17 12l-1.5 3.5"></path></svg>
+        <small>Today</small>
+      </button>
+      <button class="nav" data-tab="log" onclick="showTab('log')" aria-label="Log">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+        <small>Log</small>
+      </button>
+      <button class="nav" data-tab="trend" onclick="showTab('trend')" aria-label="Trend">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5l3.2 2"></path><circle cx="12" cy="12" r="8.5"></circle></svg>
+        <small>Trend</small>
+      </button>
+    </nav>
     <div id="toast" class="toast"></div>
   </main>
 
   <script>
     const KEY = 'life_console_v5';
-    const ORBIT_APP_VERSION = '2026-07-14-orbit-no-dock-1';
+    const ORBIT_APP_VERSION = '2026-07-14-orbit-float-tabs-1';
     const ORBIT_CLOUD_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019f5e0e6766570f';
     const ORBIT_CLOUD_LAST_REMOTE_KEY = 'orbit_cloud_last_remote_saved_at';
     const ORBIT_CLOUD_LOCAL_CHANGED_KEY = 'orbit_cloud_local_changed_at';
@@ -2526,7 +2615,7 @@
     setupTabSwipe();
     lockAppZoom();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-orbit-no-dock-1').then(registration => registration.update()).catch(() => {});
+      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-orbit-float-tabs-1').then(registration => registration.update()).catch(() => {});
     }
     startOrbitCloudSync();
     startOrbitUpdateWatcher();
