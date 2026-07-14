@@ -2,7 +2,7 @@
   "name": "iue",
   "short_name": "iue",
   "description": "Personal study system",
-  "start_url": "./?v=2026-07-13-black-icon-restore-1",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#000000",
