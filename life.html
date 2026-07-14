@@ -358,8 +358,8 @@
       background: linear-gradient(180deg, rgba(119,191,245,.68), rgba(44,121,190,.68) 56%, rgba(26,74,126,.72));
     }
     .water-console.overflowing {
-      border-radius: 24px 24px 0 0;
-      border-bottom-color: rgba(126,194,246,.2);
+      border-radius: 24px 24px 0 0 !important;
+      border-bottom: 0;
     }
     .water-console:before,
     .water-console:after {
@@ -440,14 +440,14 @@
       position: relative;
       overflow: hidden;
       opacity: 0;
-      background: linear-gradient(180deg, rgba(77,154,218,.14), rgba(29,84,137,.26));
+      background: transparent;
       border: 0 solid rgba(126,194,246,.18);
       border-top: 0;
       border-radius: 0 0 24px 24px;
       transition: height .24s ease, opacity .16s ease;
     }
     .water-catch.show {
-      height: 58px;
+      height: 64px;
       opacity: 1;
       border-width: 0 1px 1px;
     }
@@ -977,8 +977,8 @@
       right: auto;
       width: min(100vw, 430px);
       bottom: 0;
-      height: 52px;
-      padding: 3px 42px max(3px, env(safe-area-inset-bottom));
+      height: 48px;
+      padding: 2px 42px;
       background: #000;
       border-top: 1px solid rgba(255,255,255,.045);
       box-shadow: 0 -18px 28px rgba(0,0,0,.9);
@@ -1006,8 +1006,8 @@
       appearance: none;
       -webkit-appearance: none;
       padding: 0;
-      height: 44px;
-      border-radius: 16px;
+      height: 38px;
+      border-radius: 14px;
       background: transparent;
       color: var(--muted);
       display: flex;
@@ -1026,11 +1026,11 @@
       text-shadow: 0 0 18px rgba(140,200,255,.42);
     }
     .nav[data-tab="log"] {
-      width: 52px;
-      height: 46px;
+      width: 48px;
+      height: 42px;
       justify-self: center;
       margin-top: 0;
-      border-radius: 17px;
+      border-radius: 15px;
       background:
         radial-gradient(circle at 50% 0%, rgba(150,205,255,.16), transparent 62%),
         linear-gradient(180deg, rgba(255,255,255,.085), rgba(255,255,255,.032));
@@ -1318,7 +1318,7 @@
           <div class="eyebrow">UNSW Inbox</div>
           <div class="card-title">Important 3</div>
         </div>
-        <span class="pill">6h radar</span>
+        <span class="pill">30m radar</span>
       </div>
       <div class="mail-item">
         <div class="mail-subject">ENGG1300 Test 2 reminder</div>
@@ -1350,12 +1350,17 @@
 
   <script>
     const KEY = 'life_console_v5';
+    const ORBIT_CLOUD_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019f5e0e6766570f';
+    const ORBIT_CLOUD_LAST_REMOTE_KEY = 'orbit_cloud_last_remote_saved_at';
+    const ORBIT_CLOUD_LOCAL_CHANGED_KEY = 'orbit_cloud_local_changed_at';
+    const ORBIT_CLOUD_CLIENT_KEY = 'orbit_cloud_client_id';
     const defaults = {
       bed: '',
       wake: '',
       water: 0,
       waterTarget: 2200,
       waterSpillHidden: false,
+      hydrationBasinVersion: 2,
       intake: 0,
       burn: 0,
       protein: 0,
@@ -1378,6 +1383,15 @@
       logs: []
     };
     let state = loadState();
+    let orbitCloudApplying = false;
+    let orbitCloudReady = false;
+    let orbitCloudPushTimer = null;
+    let orbitCloudPollTimer = null;
+    if (state.hydrationBasinVersion !== 2) {
+      // The old overflow renderer could leave a stale hidden state behind.
+      state.waterSpillHidden = false;
+      state.hydrationBasinVersion = 2;
+    }
     let logSwipeStartX = 0;
     let logSwipeStartY = 0;
     let logSwipeCurrentX = 0;
@@ -1442,7 +1456,12 @@
       try { return Object.assign({}, defaults, JSON.parse(localStorage.getItem(KEY) || '{}')); }
       catch(e) { return Object.assign({}, defaults); }
     }
-    function persist() { localStorage.setItem(KEY, JSON.stringify(state)); }
+    function persist() {
+      const next = JSON.stringify(state);
+      if (localStorage.getItem(KEY) === next) return;
+      localStorage.setItem(KEY, next);
+      if (!orbitCloudApplying && orbitCloudReady) markOrbitCloudDirty();
+    }
     function mins(time) {
       const p = String(time || '').split(':').map(Number);
       if (!Number.isFinite(p[0]) || !Number.isFinite(p[1])) return 0;
@@ -2388,6 +2407,72 @@
         lastTouchEnd = now;
       }, { passive: false });
     }
+    function orbitCloudClientId() {
+      let id = localStorage.getItem(ORBIT_CLOUD_CLIENT_KEY);
+      if (!id) {
+        id = 'orbit-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+        localStorage.setItem(ORBIT_CLOUD_CLIENT_KEY, id);
+      }
+      return id;
+    }
+    function orbitCloudPayload() {
+      return {
+        app: 'orbit',
+        version: 1,
+        savedAt: new Date().toISOString(),
+        clientId: orbitCloudClientId(),
+        state: state
+      };
+    }
+    function markOrbitCloudDirty() {
+      localStorage.setItem(ORBIT_CLOUD_LOCAL_CHANGED_KEY, new Date().toISOString());
+      clearTimeout(orbitCloudPushTimer);
+      orbitCloudPushTimer = setTimeout(() => orbitCloudPush(true).catch(() => {}), 900);
+    }
+    async function orbitCloudPush(silent) {
+      const payload = orbitCloudPayload();
+      const response = await fetch(ORBIT_CLOUD_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'orbit-sync', data: payload })
+      });
+      if (!response.ok) throw new Error('Orbit cloud upload failed');
+      localStorage.setItem(ORBIT_CLOUD_LAST_REMOTE_KEY, payload.savedAt);
+      localStorage.removeItem(ORBIT_CLOUD_LOCAL_CHANGED_KEY);
+      return payload;
+    }
+    async function orbitCloudPull(silent) {
+      const response = await fetch(ORBIT_CLOUD_URL, { cache: 'no-store' });
+      if (!response.ok) throw new Error('Orbit cloud download failed');
+      const body = await response.json();
+      const payload = body && body.data ? body.data : body;
+      const remoteTime = Date.parse(payload && payload.savedAt || '') || 0;
+      const localChanged = Date.parse(localStorage.getItem(ORBIT_CLOUD_LOCAL_CHANGED_KEY) || '') || 0;
+      const lastRemote = Date.parse(localStorage.getItem(ORBIT_CLOUD_LAST_REMOTE_KEY) || '') || 0;
+      if (!payload || payload.app !== 'orbit' || !payload.state) {
+        return orbitCloudPush(true);
+      }
+      if (localChanged > remoteTime) return orbitCloudPush(true);
+      if (remoteTime > lastRemote) {
+        orbitCloudApplying = true;
+        try {
+          state = Object.assign({}, defaults, payload.state, { hydrationBasinVersion: 2 });
+          localStorage.setItem(KEY, JSON.stringify(state));
+          localStorage.setItem(ORBIT_CLOUD_LAST_REMOTE_KEY, payload.savedAt);
+          render();
+        } finally {
+          orbitCloudApplying = false;
+        }
+      }
+      return payload;
+    }
+    function startOrbitCloudSync() {
+      orbitCloudPull(true).catch(() => {}).finally(() => {
+        orbitCloudReady = true;
+      });
+      clearInterval(orbitCloudPollTimer);
+      orbitCloudPollTimer = setInterval(() => orbitCloudPull(true).catch(() => {}), 15000);
+    }
     function toast(msg) {
       const el = document.getElementById('toast');
       el.textContent = msg;
@@ -2422,6 +2507,7 @@
     });
     setupKeyboardMode();
     lockAppZoom();
+    startOrbitCloudSync();
     render();
   </script>
 </body>
