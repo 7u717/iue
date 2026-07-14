@@ -9,9 +9,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-section-tabs-1">
-  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-section-tabs-1">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-section-tabs-1">
+  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-fixed-nav-rebuild-1">
+  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-fixed-nav-rebuild-1">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-fixed-nav-rebuild-1">
   <title>Orbit</title>
   <style>
     :root {
@@ -33,7 +33,8 @@
       --warn: #f0c987;
       --shadow: 0 22px 60px rgba(0,0,0,.5);
       --topbar-h: calc(58px + env(safe-area-inset-top));
-      --page-dock-space: 8px;
+      --bottom-nav-h: 74px;
+      --page-dock-space: calc(var(--bottom-nav-h) + 10px);
       color-scheme: dark;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -44,6 +45,7 @@
     button { border: 0; cursor: pointer; }
     .app {
       width: min(100vw, 430px);
+      height: 100vh;
       height: 100dvh;
       margin: 0 auto;
       background: #000;
@@ -132,7 +134,7 @@
       font-size: 18px;
     }
     .section { display: none; animation: lift .25s ease both; }
-    .section.active { display: block; }
+    .section.active { display: block; min-height: calc(100dvh - var(--topbar-h) - var(--page-dock-space) - env(safe-area-inset-bottom) - 16px); }
     @keyframes lift { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
     .hero {
       display: grid;
@@ -1000,15 +1002,20 @@
       font-size: 14px;
       margin-top: 2px;
     }
-    .section-tabs {
-      position: relative;
-      z-index: 2;
-      width: min(calc(100vw - 42px), 360px);
-      margin: 18px auto max(10px, env(safe-area-inset-bottom));
+    .orbit-tabs {
+      position: fixed;
+      left: 50%;
+      bottom: env(safe-area-inset-bottom);
+      transform: translateX(-50%);
+      z-index: 20;
+      width: min(100vw, 430px);
+      height: var(--bottom-nav-h);
+      padding: 8px 42px 10px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       align-items: end;
-      pointer-events: auto;
+      pointer-events: none;
+      background: transparent;
     }
     .nav {
       appearance: none;
@@ -1067,9 +1074,9 @@
     }
     .nav[data-tab="log"]:active { transform: translateY(-3px) scale(.97); }
     .nav:not([data-tab="log"]):active { transform: scale(.96); }
-    .app.keyboard-open .section-tabs,
-    .app:has(input:focus) .section-tabs,
-    .app:has(textarea:focus) .section-tabs {
+    .app.keyboard-open .orbit-tabs,
+    .app:has(input:focus) .orbit-tabs,
+    .app:has(textarea:focus) .orbit-tabs {
       display: none;
     }
     .toast {
@@ -1211,20 +1218,6 @@
             <div class="metric-label" id="recovery-label">not enough data</div>
           </div>
         </div>
-        <nav class="section-tabs" aria-label="tabs">
-          <button class="nav active" data-tab="today" onclick="showTab('today')" aria-label="Today">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12h10"></path><path d="M8.5 8.5 7 12l1.5 3.5"></path><path d="M15.5 8.5 17 12l-1.5 3.5"></path></svg>
-            <small>Today</small>
-          </button>
-          <button class="nav" data-tab="log" onclick="showTab('log')" aria-label="Log">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
-            <small>Log</small>
-          </button>
-          <button class="nav" data-tab="trend" onclick="showTab('trend')" aria-label="Trend">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5l3.2 2"></path><circle cx="12" cy="12" r="8.5"></circle></svg>
-            <small>Trend</small>
-          </button>
-        </nav>
       </section>
 
       <section id="log" class="section">
@@ -1324,20 +1317,6 @@
             <button onclick="addCustomWorkout()">Save</button>
           </div>
         </div>
-        <nav class="section-tabs" aria-label="tabs">
-          <button class="nav" data-tab="today" onclick="showTab('today')" aria-label="Today">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12h10"></path><path d="M8.5 8.5 7 12l1.5 3.5"></path><path d="M15.5 8.5 17 12l-1.5 3.5"></path></svg>
-            <small>Today</small>
-          </button>
-          <button class="nav active" data-tab="log" onclick="showTab('log')" aria-label="Log">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
-            <small>Log</small>
-          </button>
-          <button class="nav" data-tab="trend" onclick="showTab('trend')" aria-label="Trend">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5l3.2 2"></path><circle cx="12" cy="12" r="8.5"></circle></svg>
-            <small>Trend</small>
-          </button>
-        </nav>
       </section>
 
       <section id="trend" class="section">
@@ -1350,22 +1329,23 @@
           <button id="trend-month" onclick="setTrendRange('month')">Month</button>
         </div>
         <div id="trend-cards" class="trend-stack"></div>
-        <nav class="section-tabs" aria-label="tabs">
-          <button class="nav" data-tab="today" onclick="showTab('today')" aria-label="Today">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12h10"></path><path d="M8.5 8.5 7 12l1.5 3.5"></path><path d="M15.5 8.5 17 12l-1.5 3.5"></path></svg>
-            <small>Today</small>
-          </button>
-          <button class="nav" data-tab="log" onclick="showTab('log')" aria-label="Log">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
-            <small>Log</small>
-          </button>
-          <button class="nav active" data-tab="trend" onclick="showTab('trend')" aria-label="Trend">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5l3.2 2"></path><circle cx="12" cy="12" r="8.5"></circle></svg>
-            <small>Trend</small>
-          </button>
-        </nav>
       </section>
     </div>
+
+    <nav class="orbit-tabs" aria-label="tabs">
+      <button class="nav active" data-tab="today" onclick="showTab('today')" aria-label="Today">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12h10"></path><path d="M8.5 8.5 7 12l1.5 3.5"></path><path d="M15.5 8.5 17 12l-1.5 3.5"></path></svg>
+        <small>Today</small>
+      </button>
+      <button class="nav" data-tab="log" onclick="showTab('log')" aria-label="Log">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+        <small>Log</small>
+      </button>
+      <button class="nav" data-tab="trend" onclick="showTab('trend')" aria-label="Trend">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5l3.2 2"></path><circle cx="12" cy="12" r="8.5"></circle></svg>
+        <small>Trend</small>
+      </button>
+    </nav>
 
     <div id="drawer-mask" class="drawer-mask" onclick="toggleMailDrawer(false)"></div>
     <aside id="mail-drawer" class="mail-drawer" aria-label="UNSW inbox">
@@ -1402,7 +1382,7 @@
 
   <script>
     const KEY = 'life_console_v5';
-    const ORBIT_APP_VERSION = '2026-07-14-orbit-section-tabs-1';
+    const ORBIT_APP_VERSION = '2026-07-14-orbit-fixed-nav-rebuild-1';
     const ORBIT_CLOUD_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019f5e0e6766570f';
     const ORBIT_CLOUD_LAST_REMOTE_KEY = 'orbit_cloud_last_remote_saved_at';
     const ORBIT_CLOUD_LOCAL_CHANGED_KEY = 'orbit_cloud_local_changed_at';
@@ -2640,7 +2620,7 @@
     setupTabSwipe();
     lockAppZoom();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-orbit-section-tabs-1').then(registration => registration.update()).catch(() => {});
+      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-orbit-fixed-nav-rebuild-1').then(registration => registration.update()).catch(() => {});
     }
     startOrbitCloudSync();
     startOrbitUpdateWatcher();
