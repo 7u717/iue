@@ -9,9 +9,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-dock-fix-2">
-  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-dock-fix-2">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-dock-fix-2">
+  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-no-dock-1">
+  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-no-dock-1">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-no-dock-1">
   <title>Orbit</title>
   <style>
     :root {
@@ -33,9 +33,7 @@
       --warn: #f0c987;
       --shadow: 0 22px 60px rgba(0,0,0,.5);
       --topbar-h: calc(58px + env(safe-area-inset-top));
-      --dock-h: 58px;
-      --dock-content-h: 58px;
-      --page-dock-space: 92px;
+      --page-dock-space: 24px;
       color-scheme: dark;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -1002,97 +1000,6 @@
       font-size: 14px;
       margin-top: 2px;
     }
-    .bottom {
-      position: fixed;
-      left: 50%;
-      right: auto;
-      width: min(100vw, 430px);
-      bottom: 0;
-      height: calc(var(--dock-h) + env(safe-area-inset-bottom));
-      min-height: 0;
-      padding: 0 34px env(safe-area-inset-bottom);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,0) 1px),
-        rgba(0,0,0,.92);
-      border-top: 1px solid rgba(255,255,255,.045);
-      box-shadow: 0 -10px 30px rgba(0,0,0,.68);
-      backdrop-filter: blur(24px) saturate(1.2);
-      -webkit-backdrop-filter: blur(24px) saturate(1.2);
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      align-items: start;
-      align-content: start;
-      gap: 0;
-      z-index: 10;
-      transform: translateX(-50%);
-      transition: transform .24s cubic-bezier(.2,.8,.2,1), opacity .2s ease;
-    }
-    .app.keyboard-open .bottom {
-      transform: translate(-50%, calc(100% + 12px));
-      opacity: 0;
-      pointer-events: none;
-    }
-    .app:has(input:focus) .bottom,
-    .app:has(textarea:focus) .bottom {
-      transform: translate(-50%, calc(100% + 12px));
-      opacity: 0;
-      pointer-events: none;
-    }
-    .nav {
-      appearance: none;
-      -webkit-appearance: none;
-      padding: 0;
-      height: var(--dock-content-h);
-      border-radius: 16px;
-      background: transparent;
-      color: var(--muted);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      font-size: 17px;
-      line-height: 1;
-      position: relative;
-      min-width: 0;
-    }
-    .nav.active {
-      color: var(--blue-2);
-      background: transparent;
-      text-shadow: 0 0 18px rgba(140,200,255,.42);
-    }
-    .nav[data-tab="log"] {
-      width: 58px;
-      height: 50px;
-      justify-self: center;
-      margin-top: 0;
-      border-radius: 19px;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(150,205,255,.16), transparent 62%),
-        linear-gradient(180deg, rgba(255,255,255,.085), rgba(255,255,255,.032));
-      border: 1px solid rgba(255,255,255,.06);
-      color: var(--text);
-      box-shadow:
-        0 8px 22px rgba(0,0,0,.46),
-        inset 0 1px 0 rgba(255,255,255,.07);
-    }
-    .nav[data-tab="log"].active {
-      color: var(--text);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(150,205,255,.2), transparent 64%),
-        linear-gradient(180deg, rgba(255,255,255,.095), rgba(255,255,255,.038));
-      box-shadow:
-        0 10px 26px rgba(47,157,247,.12),
-        0 8px 20px rgba(0,0,0,.42),
-        inset 0 1px 0 rgba(255,255,255,.085);
-    }
-    .nav small {
-      display: block;
-      font-size: 10px;
-      font-weight: 850;
-      margin-top: 0;
-      letter-spacing: .02em;
-    }
     .toast {
       position: absolute;
       left: 22px;
@@ -1376,17 +1283,12 @@
       </div>
     </aside>
 
-    <nav class="bottom" aria-label="tabs">
-      <button class="nav active" data-tab="today" onclick="showTab('today')">⌁<small>Today</small></button>
-      <button class="nav" data-tab="log" onclick="showTab('log')">＋<small>Log</small></button>
-      <button class="nav" data-tab="trend" onclick="showTab('trend')">◷<small>Trend</small></button>
-    </nav>
     <div id="toast" class="toast"></div>
   </main>
 
   <script>
     const KEY = 'life_console_v5';
-    const ORBIT_APP_VERSION = '2026-07-14-orbit-dock-fix-2';
+    const ORBIT_APP_VERSION = '2026-07-14-orbit-no-dock-1';
     const ORBIT_CLOUD_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019f5e0e6766570f';
     const ORBIT_CLOUD_LAST_REMOTE_KEY = 'orbit_cloud_last_remote_saved_at';
     const ORBIT_CLOUD_LOCAL_CHANGED_KEY = 'orbit_cloud_local_changed_at';
@@ -2624,7 +2526,7 @@
     setupTabSwipe();
     lockAppZoom();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-orbit-dock-fix-2').then(registration => registration.update()).catch(() => {});
+      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-orbit-no-dock-1').then(registration => registration.update()).catch(() => {});
     }
     startOrbitCloudSync();
     startOrbitUpdateWatcher();
