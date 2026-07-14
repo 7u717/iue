@@ -70,10 +70,12 @@
     .app:has(textarea:focus) .page { padding-bottom: 22px; }
     .page::-webkit-scrollbar { display: none; }
     .topbar {
-      position: absolute;
+      position: fixed;
       top: 0;
-      left: 0;
-      right: 0;
+      left: 50%;
+      right: auto;
+      width: min(100vw, 430px);
+      transform: translateX(-50%);
       z-index: 18;
       display: flex;
       align-items: center;
@@ -465,7 +467,7 @@
       transition: height .32s cubic-bezier(.2,.85,.2,1), opacity .16s ease;
     }
     .water-catch.show {
-      height: 0;
+      height: 72px;
       opacity: 1;
     }
     .water-catch-canvas {
@@ -2031,16 +2033,14 @@
       ctx.clearRect(0, 0, w, h);
       drawTankWater(now, consoleEl);
       waterFlow.pool = waterFlow.spillActive ? clamp(waterFlow.collectedOverflow / 500, 0, 1) : 0;
-      // The spill tray grows with the collected water, so it never reveals an empty black cavity.
-      basin.style.height = (waterFlow.pool * 72).toFixed(2) + 'px';
       if (waterFlow.pool > .02) {
         const phase = now / 460;
-        const surface = 2.5 + Math.sin(phase) * 1.1;
+        const surface = Math.max(0, h * (1 - waterFlow.pool));
         ctx.beginPath();
         ctx.moveTo(0, h);
-        ctx.lineTo(0, surface);
+        ctx.lineTo(0, surface + Math.sin(phase) * 1.5);
         for (let x = 0; x <= w; x += 8) {
-          ctx.lineTo(x, surface + Math.sin(phase + x / 18) * 1.7 + Math.sin(phase * 1.7 + x / 31) * .85);
+          ctx.lineTo(x, surface + Math.sin(phase + x / 18) * 2.1 + Math.sin(phase * 1.7 + x / 31) * 1.2);
         }
         ctx.lineTo(w, h);
         ctx.closePath();
