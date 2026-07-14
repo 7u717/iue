@@ -56,9 +56,9 @@
       height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: calc(var(--topbar-h) + 16px) 18px calc(var(--dock-h) + 18px);
+      padding: calc(var(--topbar-h) + 16px) 18px calc(var(--dock-h) + env(safe-area-inset-bottom) + 18px);
       scrollbar-width: none;
-      scroll-padding-bottom: calc(var(--dock-h) + 26px);
+      scroll-padding-bottom: calc(var(--dock-h) + env(safe-area-inset-bottom) + 26px);
       overscroll-behavior-y: contain;
       -webkit-overflow-scrolling: touch;
       touch-action: pan-y;
@@ -441,6 +441,11 @@
       overflow: hidden;
       isolation: isolate;
     }
+    /* When the tank overflows, the liquid owns the lower edge of this card.
+       There is no second inset "basin" for it to visually detach from. */
+    .hydration-card.overflowing {
+      padding-bottom: 0;
+    }
     .hydration-stage {
       position: relative;
       overflow: hidden;
@@ -449,19 +454,23 @@
       border: 0;
     }
     .hydration-stage.overflowing {
-      background: var(--panel-2);
-      border: 1px solid var(--line-soft);
+      margin: 0 -18px -18px;
+      border-radius: 0 0 25px 25px;
+      background: transparent;
+      border: 0;
     }
     .hydration-stage.overflowing .water-console {
       width: 100%;
+      padding-left: 34px;
+      padding-right: 34px;
     }
     .water-catch {
       height: 0;
       position: relative;
       overflow: hidden;
       opacity: 0;
-      margin-top: -1px;
-      background: #101010;
+      margin-top: -2px;
+      background: transparent;
       border: 0;
       border-radius: 0;
       transition: height .32s cubic-bezier(.2,.85,.2,1), opacity .16s ease;
@@ -472,9 +481,9 @@
     }
     .water-catch-canvas {
       position: absolute;
-      inset: auto 0 0;
-      width: 100%;
-      height: 100%;
+      inset: -1px;
+      width: calc(100% + 2px);
+      height: calc(100% + 2px);
       border-radius: 0;
       pointer-events: none;
       display: block;
@@ -992,12 +1001,13 @@
       margin-top: 2px;
     }
     .bottom {
-      position: absolute;
+      position: fixed;
       left: 50%;
       right: auto;
       width: min(100vw, 430px);
       bottom: 0;
-      min-height: var(--dock-h);
+      height: calc(var(--dock-h) + env(safe-area-inset-bottom));
+      min-height: 0;
       padding: 4px 34px max(3px, env(safe-area-inset-bottom));
       background:
         linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,0) 1px),
@@ -1647,6 +1657,7 @@
       const overflowMl = Math.max(0, state.water - waterTarget);
       const showSpill = overflowMl > 0 && !state.waterSpillHidden;
       document.getElementById('water-console').classList.toggle('overflowing', showSpill);
+      document.getElementById('hydration-card').classList.toggle('overflowing', showSpill);
       if (state.water > waterFlow.lastWater) waterFlow.impulse = Math.min(1, waterFlow.impulse + .7);
       waterFlow.lastWater = state.water;
       updateWaterOverflow(waterRatio > 0, showSpill, overflowMl, waterRatio);
@@ -2034,20 +2045,22 @@
       drawTankWater(now, consoleEl);
       waterFlow.pool = waterFlow.spillActive ? clamp(waterFlow.collectedOverflow / 500, 0, 1) : 0;
       if (waterFlow.pool > .02) {
-        const phase = now / 460;
-        const surface = Math.max(0, h * (1 - waterFlow.pool));
+        // The catch fills from zero at 100 ml/s; its surface shares the tank's
+        // blue palette but has no bright seam line.
+        const phase = now / 500;
+        const surface = Math.max(-2, h * (1 - waterFlow.pool));
         ctx.beginPath();
         ctx.moveTo(0, h);
-        ctx.lineTo(0, surface + Math.sin(phase) * 1.5);
+        ctx.lineTo(0, surface + Math.sin(phase) * 1.15);
         for (let x = 0; x <= w; x += 8) {
-          ctx.lineTo(x, surface + Math.sin(phase + x / 18) * 2.1 + Math.sin(phase * 1.7 + x / 31) * 1.2);
+          ctx.lineTo(x, surface + Math.sin(phase + x / 30) * 1.15 + Math.sin(phase * 1.72 + x / 57) * .36);
         }
         ctx.lineTo(w, h);
         ctx.closePath();
         const poolFill = ctx.createLinearGradient(0, surface, 0, h);
-        poolFill.addColorStop(0, 'rgba(188,228,255,.76)');
-        poolFill.addColorStop(.3, 'rgba(76,163,235,.48)');
-        poolFill.addColorStop(1, 'rgba(30,92,152,.58)');
+        poolFill.addColorStop(0, 'rgba(52,123,181,.80)');
+        poolFill.addColorStop(.20, 'rgba(40,105,166,.78)');
+        poolFill.addColorStop(1, 'rgba(29,88,146,.78)');
         ctx.fillStyle = poolFill;
         ctx.fill();
       }
@@ -2560,6 +2573,9 @@
     setupKeyboardMode();
     setupTabSwipe();
     lockAppZoom();
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-network-first-1').then(registration => registration.update()).catch(() => {});
+    }
     startOrbitCloudSync();
     render();
   </script>
