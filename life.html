@@ -30,7 +30,7 @@
       --warn: #f0c987;
       --shadow: 0 22px 60px rgba(0,0,0,.5);
       --topbar-h: calc(58px + env(safe-area-inset-top));
-      --dock-h: 54px;
+      --dock-h: 58px;
       color-scheme: dark;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -358,9 +358,9 @@
     .water-console.is-full {
       background: linear-gradient(180deg, rgba(119,191,245,.68), rgba(44,121,190,.68) 56%, rgba(26,74,126,.72));
     }
-    .water-console.overflowing {
-      border-radius: 24px 24px 0 0 !important;
-      border-bottom: 0;
+    .hydration-stage.overflowing .water-console {
+      border-radius: 24px 24px 0 0;
+      border-bottom-color: transparent;
     }
     .water-console:before,
     .water-console:after {
@@ -398,9 +398,9 @@
     .water-console > * { position: relative; z-index: 2; }
     .water-tank-canvas {
       position: absolute;
-      inset: -1px;
-      width: calc(100% + 2px);
-      height: calc(100% + 2px);
+      inset: -2px;
+      width: calc(100% + 4px);
+      height: calc(100% + 4px);
       z-index: 1 !important;
       pointer-events: none;
     }
@@ -435,22 +435,32 @@
       position: relative;
       overflow: hidden;
       border-radius: 24px;
+      background: transparent;
+      border: 0;
+    }
+    .hydration-stage.overflowing {
+      background: var(--panel-2);
+      border: 1px solid var(--line-soft);
+    }
+    .hydration-stage.overflowing .water-console {
+      border-left: 0;
+      border-right: 0;
+      border-top: 0;
     }
     .water-catch {
       height: 0;
       position: relative;
       overflow: hidden;
       opacity: 0;
-      background: transparent;
-      border: 0 solid rgba(126,194,246,.18);
-      border-top: 0;
-      border-radius: 0 0 24px 24px;
-      transition: height .24s ease, opacity .16s ease;
+      margin-top: -1px;
+      background: #101010;
+      border: 0;
+      border-radius: 0;
+      transition: height .32s cubic-bezier(.2,.85,.2,1), opacity .16s ease;
     }
     .water-catch.show {
-      height: 64px;
+      height: 72px;
       opacity: 1;
-      border-width: 0 1px 1px;
     }
     .water-catch-canvas {
       position: absolute;
@@ -973,21 +983,24 @@
       margin-top: 2px;
     }
     .bottom {
-      position: absolute;
+      position: fixed;
       left: 50%;
       right: auto;
       width: min(100vw, 430px);
       bottom: 0;
-      height: var(--dock-h);
-      padding: 3px 42px 5px;
-      background: #000;
+      min-height: var(--dock-h);
+      padding: 4px 34px max(3px, env(safe-area-inset-bottom));
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,0) 1px),
+        rgba(0,0,0,.92);
       border-top: 1px solid rgba(255,255,255,.045);
-      box-shadow: 0 -18px 28px rgba(0,0,0,.9);
-      backdrop-filter: none;
+      box-shadow: 0 -10px 30px rgba(0,0,0,.68);
+      backdrop-filter: blur(24px) saturate(1.2);
+      -webkit-backdrop-filter: blur(24px) saturate(1.2);
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       align-items: center;
-      gap: 14px;
+      gap: 0;
       z-index: 10;
       transform: translateX(-50%);
       transition: transform .24s cubic-bezier(.2,.8,.2,1), opacity .2s ease;
@@ -1007,8 +1020,8 @@
       appearance: none;
       -webkit-appearance: none;
       padding: 0;
-      height: 40px;
-      border-radius: 14px;
+      height: 50px;
+      border-radius: 16px;
       background: transparent;
       color: var(--muted);
       display: flex;
@@ -1027,11 +1040,11 @@
       text-shadow: 0 0 18px rgba(140,200,255,.42);
     }
     .nav[data-tab="log"] {
-      width: 48px;
-      height: 44px;
+      width: 58px;
+      height: 50px;
       justify-self: center;
       margin-top: 0;
-      border-radius: 15px;
+      border-radius: 19px;
       background:
         radial-gradient(circle at 50% 0%, rgba(150,205,255,.16), transparent 62%),
         linear-gradient(180deg, rgba(255,255,255,.085), rgba(255,255,255,.032));
@@ -1894,6 +1907,7 @@
       waterFlow.targetOverflow = overflowMl;
       waterFlow.tankRatio = tankRatio;
       stage.classList.toggle('has-water', active);
+      stage.classList.toggle('overflowing', spillActive);
       basin.classList.toggle('show', spillActive);
       if (!active) {
         waterFlow.particles = [];
