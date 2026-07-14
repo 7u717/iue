@@ -421,6 +421,12 @@
     }
     /* The old decorative spill is deliberately retired in favour of the canvas fluid below. */
     .water-spill { display: none; }
+    .hydration-card {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .hydration-card > :not(.water-overflow-canvas) { position: relative; z-index: 1; }
     .hydration-stage {
       position: relative;
       padding-bottom: 0;
@@ -430,17 +436,15 @@
     .hydration-stage.spill-active { padding-bottom: 54px; }
     .water-overflow-canvas {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      left: -18px;
-      width: calc(100% + 36px);
+      inset: 0;
+      width: 100%;
       height: 100%;
       pointer-events: none;
       opacity: 0;
-      z-index: 4;
+      z-index: 0;
       transition: opacity .22s ease;
     }
-    .hydration-stage.spill-active .water-overflow-canvas { opacity: 1; }
+    .hydration-card.spill-active .water-overflow-canvas { opacity: 1; }
     .water-spill:before,
     .water-spill:after {
       content: "";
@@ -1227,7 +1231,8 @@
           </div>
         </div>
 
-        <div class="card" style="margin-top:12px;">
+        <div class="card hydration-card" id="hydration-card" style="margin-top:12px;">
+          <canvas id="water-overflow-canvas" class="water-overflow-canvas" aria-hidden="true"></canvas>
           <div class="card-head">
             <div>
               <div class="eyebrow">Water</div>
@@ -1251,7 +1256,6 @@
                 <button onclick="setWaterTarget()">Save</button>
               </div>
             </div>
-            <canvas id="water-overflow-canvas" class="water-overflow-canvas" aria-hidden="true"></canvas>
           </div>
         </div>
 
@@ -1845,14 +1849,16 @@
     }
     function updateWaterOverflow(active, spillActive, overflowMl, tankRatio) {
       const stage = document.getElementById('hydration-stage');
+      const card = document.getElementById('hydration-card');
       const canvas = document.getElementById('water-overflow-canvas');
-      if (!stage || !canvas) return;
+      if (!stage || !card || !canvas) return;
       waterFlow.active = active;
       waterFlow.spillActive = spillActive;
       waterFlow.targetOverflow = overflowMl;
       waterFlow.tankRatio = tankRatio;
       stage.classList.toggle('has-water', active);
       stage.classList.toggle('spill-active', spillActive);
+      card.classList.toggle('spill-active', spillActive);
       if (!active) {
         waterFlow.particles = [];
         waterFlow.pool = 0;
@@ -1860,6 +1866,7 @@
         waterFlow.collectedOverflow = 0;
         if (waterFlow.raf) cancelAnimationFrame(waterFlow.raf);
         waterFlow.raf = 0;
+        card.classList.remove('spill-active');
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const tank = document.getElementById('water-tank-canvas');
@@ -1943,22 +1950,27 @@
     function drawWaterOverflow(now) {
       const canvas = document.getElementById('water-overflow-canvas');
       const stage = document.getElementById('hydration-stage');
+      const card = document.getElementById('hydration-card');
       const consoleEl = document.getElementById('water-console');
-      if (!canvas || !stage || !consoleEl || !waterFlow.active) { waterFlow.raf = 0; return; }
-      sizeWaterCanvas(canvas, stage);
+      if (!canvas || !stage || !card || !consoleEl || !waterFlow.active) { waterFlow.raf = 0; return; }
+      sizeWaterCanvas(canvas, card);
       const ctx = canvas.getContext('2d');
       const dt = Math.min(2.2, Math.max(.55, (now - waterFlow.last) / 16.67));
       waterFlow.last = now;
       const w = waterFlow.width;
       const h = waterFlow.height;
-      const consoleW = consoleEl.offsetWidth;
-      const consoleH = consoleEl.offsetHeight;
-      const canvasInset = (w - stage.getBoundingClientRect().width) / 2;
-      const leftRimX = canvasInset + consoleEl.offsetLeft - 3;
-      const rightRimX = canvasInset + consoleEl.offsetLeft + consoleW + 3;
-      const topRimY = consoleEl.offsetTop + 5;
+      const cardRect = card.getBoundingClientRect();
+      const consoleRect = consoleEl.getBoundingClientRect();
+      const consoleW = consoleRect.width;
+      const consoleH = consoleRect.height;
+      const consoleLeft = consoleRect.left - cardRect.left;
+      const consoleTop = consoleRect.top - cardRect.top;
+      const leftRimX = consoleLeft + 3;
+      const rightRimX = consoleLeft + consoleW - 3;
+      const topRimY = consoleTop + 5;
       const landingY = h - 10;
-      if (waterFlow.spillActive) {
+      const flowing = waterFlow.spillActive && (waterFlow.displayedOverflow < waterFlow.targetOverflow || waterFlow.particles.length > 0);
+      if (flowing) {
         // Release at 100 ml/s. The pool only grows once these parcels actually land.
         waterFlow.spawnCarry += .8 * dt;
         while (waterFlow.spawnCarry >= 1 && waterFlow.displayedOverflow < waterFlow.targetOverflow) {
@@ -2005,7 +2017,7 @@
           const outward = side === leftRimX ? -1 : 1;
           const bend = Math.sin(ripple + (outward > 0 ? 1.1 : 0)) * 1.7;
           const topX = side - outward * 11;
-          const endX = side + outward * (4 + bend);
+          const endX = outward < 0 ? 10 + bend : w - 10 + bend;
           const stream = ctx.createLinearGradient(side, topRimY, endX, surface);
           stream.addColorStop(0, 'rgba(239,251,255,.96)');
           stream.addColorStop(.18, 'rgba(150,215,255,.9)');
