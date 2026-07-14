@@ -293,6 +293,15 @@
       border-radius: var(--radius); margin-bottom: 10px; overflow: hidden;
       box-shadow: var(--shadow-sm);
     }
+    /* Keep the study-topic cards visually separate on narrow phone screens. */
+    #calc-topics .topic-card,
+    #alg-topics .topic-card,
+    #prob-topics .topic-card,
+    #maple-topics .topic-card { margin-bottom: 16px; }
+    #calc-topics .topic-card:last-child,
+    #alg-topics .topic-card:last-child,
+    #prob-topics .topic-card:last-child,
+    #maple-topics .topic-card:last-child { margin-bottom: 0; }
     .topic-header {
       padding: 16px 18px; cursor: pointer;
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
@@ -3957,7 +3966,7 @@
       { tag:"Sect4", title:"线性组合与张成 Linear Combinations & Spans", file:"MATH1231_ALG_2026T2-Sect4-LinearCombosAndSpans.pdf",
         yt:"linear combinations span column space matrix", bili:"线性组合 张成 列空间 矩阵",
         mobius:"Week 2 Algebra Q6 Q7 Q8 Q9 Q10 Q11 Q12 Q13 Q14", mobiusLabels:["Möbius Week 2", "Möbius Week 3", "Möbius Week 5"],
-        points:["线性组合定义：c₁v₁+c₂v₂+...+cₖvₖ（cᵢ为标量）","张成 span{v₁,...,vₖ}：所有线性组合构成的集合，一定是V的子空间","Fact：Ax = x₁c₁+x₂c₂+...+xₙcₙ，即A乘向量x等于A的列向量的线性组合","列空间 col(A) = span{A的列向量} = {b: b=Ax，for some x}","判断 b∈col(A)：对增广矩阵[A|b]做行化简，有解则b∈col(A)","col(A)的几何形状取决于rank(A)：rank=3→ℝ³全空间；rank=2→过原点平面；rank=1→过原点直线；rank=0→{0}","span{v}（单向量）= 过原点的直线，x=λv形式","span{u,v}（u,v线性独立）=过原点的平面，用法向量n=u×v求方程ax+by+cz=0","从平面方程ax+by+cz=0找基向量：令两个自由变量取简单值（如1或0），依次求第三个变量","W={x:a·x=0且b·x=0}的形状：a,b线性独立→直线；a,b平行或其一为0→平面；a=b=0→ℝ³","📌 Week 3 系数题：要求 w=ru+sv，就按分量列方程求 r,s；若要求 ru+sv+tw=0，选一个自由变量（常让 t=1）快速解出非零关系","📌 RGB 颜色题：把颜色看成 ℝ³ 向量，例如 cyan=(0,255,255)=G+B；若某颜色可由另外两个颜色线性组合出来，则该集合相关","📌 冗余向量：如果某个 vᵢ 可由其他向量线性组合得到，删掉它不改变 span；这就是 span{全部}=span{删掉 vᵢ 后的集合}","❌ 易错：有一个非零关系不代表所有向量都一定能分别由其余向量表示；只有对应系数不为0的向量才能被移项表示","📌 span一定过原点（λ=0给出零向量），所以方程无常数项","📌 Maple语法：向量<1,2,3>，向量集合{<1,2,3>,<4,5,6>}","【Week 5 · Q6】把 αu+βv+γw=b 变成矩阵方程 [u v w]·(α,β,γ)^T=b；源向量必须排成列。","【Week 5 · Q6】正向题用 y=Ax；反向题才用 x=A⁻¹y。题目若要求 two significant figures，18.624 应写 19，而不是 18.62。"] },
+        points:["线性组合定义：c₁v₁+c₂v₂+...+cₖvₖ（cᵢ为标量）","张成 span{v₁,...,vₖ}：所有线性组合构成的集合，一定是V的子空间","Fact：Ax = x₁c₁+x₂c₂+...+xₙcₙ，即A乘向量x等于A的列向量的线性组合","列空间 col(A) = span{A的列向量} = {b: b=Ax，for some x}","判断 b∈col(A)：对增广矩阵[A|b]做行化简，有解则b∈col(A)","col(A)的几何形状取决于rank(A)：rank=3→ℝ³全空间；rank=2→过原点平面；rank=1→过原点直线；rank=0→{0}","span{v}（单向量）= 过原点的直线，x=λv形式","span{u,v}（u,v线性独立）=过原点的平面，用法向量n=u×v求方程ax+by+cz=0","从平面方程ax+by+cz=0找基向量：令两个自由变量取简单值（如1或0），依次求第三个变量","W={x:a·x=0且b·x=0}的形状：a,b线性独立→直线；a,b平行或其一为0→平面；a=b=0→ℝ³","📌 Week 3 系数题：要求 w=ru+sv，就按分量列方程求 r,s；若要求 ru+sv+tw=0，选一个自由变量（常让 t=1）快速解出非零关系","📌 RGB 颜色题：把颜色看成 ℝ³ 向量，例如 cyan=(0,255,255)=G+B；若某颜色可由另外两个颜色线性组合出来，则该集合相关","📌 冗余向量：如果某个 vᵢ 可由其他向量线性组合得到，删掉它不改变 span；这就是 span{全部}=span{删掉 vᵢ 后的集合}","❌ 易错：有一个非零关系不代表所有向量都一定能分别由其余向量表示；只有对应系数不为0的向量才能被移项表示","📌 span一定过原点（λ=0给出零向量），所以方程无常数项","📌 Maple语法：向量<1,2,3>，向量集合{<1,2,3>,<4,5,6>}","【Week 5 · 考点】把 αu+βv+γw=b 写成矩阵方程 [u v w](α,β,γ)^T=b；源向量必须排成列。","【Week 5 · 技巧】正向映射用 y=Ax；求原像时才解 Ax=b。有效数字按 significant figures 处理，不按小数位数。"] },
       { tag:"Sect5", title:"线性独立 Linear Independence", file:"MATH1231_ALG_2026T2-Sect5-LinearIndependence.pdf",
         yt:"linear independence linear algebra explained", bili:"线性相关 线性无关 判定方法",
         mobius:"Week 2 Algebra Q14", mobiusLabels:["Möbius Week 2", "Möbius Week 3"],
@@ -3968,11 +3977,11 @@
       { tag:"Sect7", title:"线性变换 Linear Transformations", file:"MATH1231_ALG_2026T2-Sect7-LinearTransformations.pdf",
         yt:"linear transformations definition properties", bili:"线性变换 定义",
         mobius:true, mobiusLabels:["Möbius Week 5"],
-        points:["线性变换 T:V→W 定义：T(u+v)=T(u)+T(v) 且 T(cv)=cT(v)（对所有 u,v∈V, 标量 c）","Fact：线性映射把零向量映到零向量，把 -v 映到 -T(v)","Theorem：线性映射保持线性组合，即 T(c₁v₁+...+cₖvₖ)=c₁T(v₁)+...+cₖT(vₖ)","Theorem：一个线性变换完全由它在一组基向量上的取值确定（知道 T(基) 就知道 T 在整个空间的作用）","判断给定映射是否为线性映射：验证加法和标量乘法两条性质（常见反例：含常数项、绝对值、平方等的映射不是线性的）","【Week 5 · Q2/Q4】标准基展开：T(x,y)=xT(e₁)+yT(e₂)，三维则加上 zT(e₃)。已知全部 T(eᵢ) 后，T 在整个空间的值唯一确定。","【Week 5 · Q2】若给 T(1,1) 和 T(1,0)，先用 (0,1)=(1,1)−(1,0)，再利用线性性求 T(0,1)。","【Week 5 · 考点】线性变换一定把原点送到原点；若题给出的某个像与由基向量算出的结果不同，结论就是 not linear。","❌ 易错：不要把 T(1,1) 当成第二个基向量的像；它是 T(e₁)+T(e₂)。"] },
+        points:["线性变换 T:V→W 定义：T(u+v)=T(u)+T(v) 且 T(cv)=cT(v)（对所有 u,v∈V, 标量 c）","Fact：线性映射把零向量映到零向量，把 -v 映到 -T(v)","Theorem：线性映射保持线性组合，即 T(c₁v₁+...+cₖvₖ)=c₁T(v₁)+...+cₖT(vₖ)","Theorem：一个线性变换完全由它在一组基向量上的取值确定（知道 T(基) 就知道 T 在整个空间的作用）","判断给定映射是否为线性映射：验证加法和标量乘法两条性质（常见反例：含常数项、绝对值、平方等的映射不是线性的）","【Week 5 · 考点】标准基展开：T(x,y)=xT(e₁)+yT(e₂)，三维则加上 zT(e₃)。已知全部 T(eᵢ) 后，T 在整个空间的值唯一确定。","【Week 5 · 技巧】若给出的不是完整标准基像，先把给定向量写成 eᵢ 的线性组合，再利用线性性补出所需的基向量像。","【Week 5 · 考点】线性变换一定把原点送到原点；若某个像与由基向量算出的结果矛盾，结论就是 not linear。","❌ 易错：不要把 T(1,1) 当成第二个基向量的像；它是 T(e₁)+T(e₂)。"] },
       { tag:"Sect8", title:"矩阵与几何 Matrices & Geometry", file:"MATH1231_ALG_2026T2-Sect8-MatricesAndGeometry.pdf",
         yt:"matrix transformations geometry rotation reflection", bili:"矩阵 几何变换 旋转 反射",
         mobius:true, mobiusLabels:["Möbius Week 5"],
-        points:["Theorem（线性映射的矩阵表示）：T:ℝⁿ→ℝᵘ 关于标准基的矩阵 A，其第 i 列 = T(eᵢ)，且 T(x)=Ax","Fact：线性变换把直线映射为直线（或退化为一点）","常见几何变换矩阵：旋转（rotation，含 cosθ, sinθ）、反射（reflection）、缩放（scaling）、投影（projection）、剪切（shear）","组合变换：先做 T₁ 再做 T₂ 对应矩阵乘法 A₂A₁（注意先后顺序）","几何例子的可视化：通过画出基向量及其像，理解矩阵对平面/空间的作用","【Week 5 · Q3/Q5/Q10/Q11】矩阵的列就是 T(e₁),T(e₂)。看房屋图先读原点、e₁、e₂ 的像，再写 A=[T(e₁) T(e₂)]，不要把列写成行。","【Week 5 · 正向/反向】正向：y=Ax；问“哪个点被送到 b”时解 Ax=b，若 A 可逆则 x=A⁻¹b。","【Week 5 · 面积】二维线性变换的面积缩放倍数是 |det A|=|ad−bc|；必须取绝对值，det 的正负只反映方向是否翻转。","【Week 5 · 图形选择】不要只看外轮廓；把屋顶、门窗、烟囱等内部点也变换，才能分辨镜像或旋转后的正确图。","【Week 5 · 特殊矩阵】−I：绕原点旋转180°；−3I：旋转180°并放大3倍。","❌ 易错：矩阵乘向量是 row × column；分数题统一分母后再相加，第二行的负号最容易漏。"] },
+        points:["Theorem（线性映射的矩阵表示）：T:ℝⁿ→ℝᵘ 关于标准基的矩阵 A，其第 i 列 = T(eᵢ)，且 T(x)=Ax","Fact：线性变换把直线映射为直线（或退化为一点）","常见几何变换矩阵：旋转（rotation，含 cosθ, sinθ）、反射（reflection）、缩放（scaling）、投影（projection）、剪切（shear）","组合变换：先做 T₁ 再做 T₂ 对应矩阵乘法 A₂A₁（注意先后顺序）","几何例子的可视化：通过画出基向量及其像，理解矩阵对平面/空间的作用","【Week 5 · 考点】矩阵的列就是 T(e₁),T(e₂)。读几何图时先找原点、e₁、e₂ 的像，再写 A=[T(e₁) T(e₂)]，不要把列写成行。","【Week 5 · 考点】正向映射：y=Ax；求原像时解 Ax=b，若 A 可逆则 x=A⁻¹b。","【Week 5 · 公式】二维线性变换的面积缩放倍数是 |det A|=|ad−bc|；必须取绝对值，det 的正负只反映方向是否翻转。","【Week 5 · 技巧】不要只看外轮廓；用内部特征点判断图形经过的是镜像、旋转还是剪切。","【Week 5 · 特殊矩阵】−I：绕原点旋转180°；−3I：旋转180°并放大3倍。","❌ 易错：矩阵乘向量是 row × column；分数题统一分母后再相加，第二行的负号最容易漏。"] },
       { tag:"Sect9", title:"像、核与秩-零度定理", file:"MATH1231_ALG_2026T2-Sect9-ImageKernelRNT.pdf",
         yt:"kernel image rank nullity theorem", bili:"核 像 秩-零度定理",
         points:["核 kernel 定义：ker(T)={v∈V : T(v)=0}；矩阵的核 = Ax=0 的解集","像 image 定义：im(T)={T(v) : v∈V}，即 T 的值域","Theorem：ker(T) 和 im(T) 都是子空间","秩 rank：im(T) 的维数 = 矩阵行简化后主元（leading）列的个数","零度 nullity：ker(T) 的维数 = 自由变量的个数（行简化后非主元列数）","Rank-Nullity Theorem（矩阵版）：rank(A)+nullity(A)=n（A 的列数）","Rank-Nullity Theorem（一般线性变换版）：dim(ker T)+dim(im T)=dim(V)","应用：用 rank/nullity 判断 Ax=b 解的存在性与唯一性（解唯一 ⇔ nullity=0）"] },
@@ -4062,6 +4071,18 @@
     ]
   };
 
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, function(character) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[character];
+    });
+  }
+
   function renderMathTopics() {
     ['calc', 'alg', 'prob', 'maple'].forEach(function(group) {
       var container = document.getElementById(group + '-topics');
@@ -4070,16 +4091,16 @@
       MATH_TOPICS[group].forEach(function(t) {
         var id = 'tc-' + group + '-' + t.tag.toLowerCase();
         var pointsHtml = '';
-        t.points.forEach(function(p){ pointsHtml += '<div class="subtopic">' + p + '</div>'; });
+        t.points.forEach(function(p){ pointsHtml += '<div class="subtopic">' + escapeHtml(p) + '</div>'; });
         var ytUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(t.yt || t.title);
         var biliUrl = 'https://search.bilibili.com/all?keyword=' + encodeURIComponent(t.bili || t.title);
         var labels = t.mobiusLabels || (t.mobius ? [t.mobiusLabel || 'Möbius Week 2'] : []);
         var mobiusTag = labels.length ? '<span class="topic-side-tags">' + labels.map(function(label) {
-          return '<span class="topic-side-tag">📝 ' + label + '</span>';
+          return '<span class="topic-side-tag">📝 ' + escapeHtml(label) + '</span>';
         }).join('') + '</span>' : '';
         html += '<div class="topic-card" id="' + id + '">';
         html += '<div class="topic-header" onclick="toggleTopic(\'' + id + '\')">';
-        html += '<div class="topic-left"><div class="topic-dot math-dot"></div><span class="topic-tag">' + t.tag + '</span><div class="topic-title">' + t.title + '</div>' + mobiusTag + '</div>';
+        html += '<div class="topic-left"><div class="topic-dot math-dot"></div><span class="topic-tag">' + escapeHtml(t.tag) + '</span><div class="topic-title">' + escapeHtml(t.title) + '</div>' + mobiusTag + '</div>';
         html += '<span class="topic-chevron">▼</span></div>';
         html += '<div class="topic-body"><div class="subtopics">' + pointsHtml + '</div>';
         html += '<div class="links-label">学习资源</div><div class="link-row">';
