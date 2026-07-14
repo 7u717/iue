@@ -9,9 +9,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-bottom-icons-1">
-  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-bottom-icons-1">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-bottom-icons-1">
+  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-inline-tabs-1">
+  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-inline-tabs-1">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-inline-tabs-1">
   <title>Orbit</title>
   <style>
     :root {
@@ -33,7 +33,7 @@
       --warn: #f0c987;
       --shadow: 0 22px 60px rgba(0,0,0,.5);
       --topbar-h: calc(58px + env(safe-area-inset-top));
-      --page-dock-space: 66px;
+      --page-dock-space: 18px;
       color-scheme: dark;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -1001,16 +1001,14 @@
       margin-top: 2px;
     }
     .quick-tabs {
-      position: fixed;
-      left: 50%;
-      bottom: calc(env(safe-area-inset-bottom) + 2px);
-      transform: translateX(-50%);
-      z-index: 18;
+      position: relative;
+      z-index: 2;
       width: min(calc(100vw - 42px), 360px);
+      margin: 20px auto max(14px, env(safe-area-inset-bottom));
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       align-items: end;
-      pointer-events: none;
+      pointer-events: auto;
     }
     .nav {
       appearance: none;
@@ -1325,6 +1323,21 @@
         </div>
         <div id="trend-cards" class="trend-stack"></div>
       </section>
+
+      <nav class="quick-tabs" aria-label="tabs">
+        <button class="nav active" data-tab="today" onclick="showTab('today')" aria-label="Today">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12h10"></path><path d="M8.5 8.5 7 12l1.5 3.5"></path><path d="M15.5 8.5 17 12l-1.5 3.5"></path></svg>
+          <small>Today</small>
+        </button>
+        <button class="nav" data-tab="log" onclick="showTab('log')" aria-label="Log">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+          <small>Log</small>
+        </button>
+        <button class="nav" data-tab="trend" onclick="showTab('trend')" aria-label="Trend">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5l3.2 2"></path><circle cx="12" cy="12" r="8.5"></circle></svg>
+          <small>Trend</small>
+        </button>
+      </nav>
     </div>
 
     <div id="drawer-mask" class="drawer-mask" onclick="toggleMailDrawer(false)"></div>
@@ -1357,26 +1370,12 @@
       </div>
     </aside>
 
-    <nav class="quick-tabs" aria-label="tabs">
-      <button class="nav active" data-tab="today" onclick="showTab('today')" aria-label="Today">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12h10"></path><path d="M8.5 8.5 7 12l1.5 3.5"></path><path d="M15.5 8.5 17 12l-1.5 3.5"></path></svg>
-        <small>Today</small>
-      </button>
-      <button class="nav" data-tab="log" onclick="showTab('log')" aria-label="Log">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
-        <small>Log</small>
-      </button>
-      <button class="nav" data-tab="trend" onclick="showTab('trend')" aria-label="Trend">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5l3.2 2"></path><circle cx="12" cy="12" r="8.5"></circle></svg>
-        <small>Trend</small>
-      </button>
-    </nav>
     <div id="toast" class="toast"></div>
   </main>
 
   <script>
     const KEY = 'life_console_v5';
-    const ORBIT_APP_VERSION = '2026-07-14-orbit-bottom-icons-1';
+    const ORBIT_APP_VERSION = '2026-07-14-orbit-inline-tabs-1';
     const ORBIT_CLOUD_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019f5e0e6766570f';
     const ORBIT_CLOUD_LAST_REMOTE_KEY = 'orbit_cloud_last_remote_saved_at';
     const ORBIT_CLOUD_LOCAL_CHANGED_KEY = 'orbit_cloud_local_changed_at';
@@ -2614,7 +2613,7 @@
     setupTabSwipe();
     lockAppZoom();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-orbit-bottom-icons-1').then(registration => registration.update()).catch(() => {});
+      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-14-orbit-inline-tabs-1').then(registration => registration.update()).catch(() => {});
     }
     startOrbitCloudSync();
     startOrbitUpdateWatcher();
