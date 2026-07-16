@@ -1373,6 +1373,71 @@
       color: var(--text);
     }
     .block-list { display: grid; gap: 12px; }
+    .block-clock {
+      margin: 12px 0 14px;
+      padding: 15px;
+      border: 1px solid rgba(143,198,255,.18);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 18% 8%, rgba(143,198,255,.16), transparent 38%),
+        linear-gradient(145deg, rgba(255,255,255,.065), rgba(255,255,255,.02));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .block-clock-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .block-clock-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .block-clock-title {
+      margin-top: 5px;
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: 0;
+      color: var(--text);
+    }
+    .block-clock-time {
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 950;
+      white-space: nowrap;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(35,126,219,.15);
+      border: 1px solid rgba(143,198,255,.22);
+    }
+    .block-clock-track {
+      height: 8px;
+      margin-top: 14px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      box-shadow: inset 0 1px 2px rgba(0,0,0,.45);
+    }
+    .block-clock-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #eaf5ff, #8fc6ff 58%, #58b4ff);
+      transition: width .35s cubic-bezier(.2,.8,.2,1);
+      box-shadow: 0 0 16px rgba(143,198,255,.32);
+    }
+    .block-clock-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+    }
     .block-card {
       padding: 14px;
       border: 1px solid var(--line-soft);
@@ -1658,6 +1723,7 @@
         </div>
         <button class="block-mini-btn primary" onclick="addBlock()">+ Block</button>
       </div>
+      <div id="block-clock"></div>
       <div id="mail-list"></div>
     </aside>
 
@@ -1666,7 +1732,7 @@
 
   <script>
     const KEY = 'life_console_v5';
-    const ORBIT_APP_VERSION = '2026-07-16-orbit-blocks-1';
+    const ORBIT_APP_VERSION = '2026-07-17-orbit-block-dot-clock-1';
     const ORBIT_CLOUD_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019f5e0e6766570f';
     const ORBIT_CLOUD_LAST_REMOTE_KEY = 'orbit_cloud_last_remote_saved_at';
     const ORBIT_CLOUD_LOCAL_CHANGED_KEY = 'orbit_cloud_local_changed_at';
@@ -1993,7 +2059,6 @@
       updateCalories();
       updateTrends(dur);
       renderBlocksDrawer();
-      document.getElementById('mail-dot').style.display = 'none';
       renderLogs();
       persist();
     }
@@ -2911,10 +2976,73 @@
       }));
       return state.blocks;
     }
+    function blockTasks(block) {
+      return (block.tasks || []).filter(task => String(task.text || '').trim());
+    }
+    function pendingBlockTasks() {
+      return normalBlocks().reduce((sum, block) => {
+        return sum + blockTasks(block).filter(task => !task.done).length;
+      }, 0);
+    }
+    function updateBlockAlert() {
+      const dot = document.getElementById('mail-dot');
+      if (!dot) return;
+      dot.style.display = pendingBlockTasks() ? 'grid' : 'none';
+    }
+    function clockFromMinutes(total) {
+      const wrapped = ((Math.round(total) % 1440) + 1440) % 1440;
+      return String(Math.floor(wrapped / 60)).padStart(2, '0') + ':' + String(wrapped % 60).padStart(2, '0');
+    }
+    function blockWindow(block, index, nowMinutes) {
+      const start = mins(block.time);
+      const hasTime = /^\d{1,2}:\d{2}$/.test(String(block.time || ''));
+      if (!hasTime) return null;
+      const end = start + 180;
+      const progress = clamp((nowMinutes - start) / 180, 0, 1);
+      const active = nowMinutes >= start && nowMinutes < end;
+      const delta = active ? 0 : ((start - nowMinutes + 1440) % 1440);
+      return { block, index, start, end, active, delta, progress };
+    }
+    function blockClockModel() {
+      const blocks = normalBlocks();
+      const now = new Date();
+      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+      const windows = blocks.map((block, index) => blockWindow(block, index, nowMinutes)).filter(Boolean);
+      if (!windows.length) return null;
+      const active = windows.find(item => item.active);
+      return active || windows.sort((a, b) => a.delta - b.delta)[0];
+    }
+    function renderBlockClock() {
+      const box = document.getElementById('block-clock');
+      if (!box) return;
+      const model = blockClockModel();
+      if (!model) {
+        box.innerHTML = '<div class="block-clock"><div class="block-clock-label">3h clock</div><div class="block-clock-title">Set block times</div><div class="block-clock-meta"><span>Pick when each mini-day starts</span><span>0/0 done</span></div></div>';
+        return;
+      }
+      const tasks = blockTasks(model.block);
+      const done = tasks.filter(task => task.done).length;
+      const total = tasks.length;
+      const remaining = model.active ? Math.max(0, model.end - (new Date().getHours() * 60 + new Date().getMinutes())) : model.delta;
+      const label = model.active ? 'Current block' : 'Next block';
+      const range = clockFromMinutes(model.start) + '–' + clockFromMinutes(model.end);
+      const progress = model.active ? Math.round(model.progress * 100) : 0;
+      box.innerHTML =
+        '<div class="block-clock">' +
+          '<div class="block-clock-top">' +
+            '<div><div class="block-clock-label">' + label + '</div><div class="block-clock-title">' + escapeHtml(model.block.name || ('Block ' + (model.index + 1))) + '</div></div>' +
+            '<div class="block-clock-time">' + range + '</div>' +
+          '</div>' +
+          '<div class="block-clock-track"><div class="block-clock-fill" style="width:' + progress + '%"></div></div>' +
+          '<div class="block-clock-meta"><span>' + (model.active ? fmtMinutes(remaining) + ' left' : 'starts in ' + fmtMinutes(remaining)) + '</span><span>' + done + '/' + total + ' done</span></div>' +
+        '</div>';
+    }
     function renderBlocksDrawer() {
       const list = document.getElementById('mail-list');
       if (!list) return;
       const blocks = normalBlocks();
+      renderBlockClock();
+      updateBlockAlert();
       list.innerHTML = '<div class="block-list">' + blocks.map((block, bi) => {
         const tasks = block.tasks.map((task, ti) =>
           '<div class="block-task-row">' +
@@ -2949,12 +3077,16 @@
       normalBlocks();
       if (!state.blocks[index]) return;
       state.blocks[index][field] = value;
+      renderBlockClock();
+      updateBlockAlert();
       persist();
     }
     function updateBlockTask(blockIndex, taskIndex, value) {
       normalBlocks();
       if (!state.blocks[blockIndex] || !state.blocks[blockIndex].tasks[taskIndex]) return;
       state.blocks[blockIndex].tasks[taskIndex].text = value;
+      renderBlockClock();
+      updateBlockAlert();
       persist();
     }
     function toggleBlockTask(blockIndex, taskIndex) {
@@ -3161,7 +3293,7 @@
     setupTabSwipe();
     lockAppZoom();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-16-orbit-total-time-ui-1').then(registration => registration.update()).catch(() => {});
+      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-17-orbit-block-dot-clock-1').then(registration => registration.update()).catch(() => {});
     }
     startOrbitCloudSync();
     startOrbitMailSync();
