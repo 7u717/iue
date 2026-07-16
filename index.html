@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-07-14-auto-update-1"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-07-16-mobius-calc-maple-1"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
@@ -294,10 +294,14 @@
       box-shadow: var(--shadow-sm);
     }
     /* Keep the study-topic cards visually separate on narrow phone screens. */
+    #calc-topics,
+    #alg-topics,
+    #prob-topics,
+    #maple-topics { display: grid; gap: 16px; }
     #calc-topics .topic-card,
     #alg-topics .topic-card,
     #prob-topics .topic-card,
-    #maple-topics .topic-card { margin-bottom: 16px; }
+    #maple-topics .topic-card { margin-bottom: 0; }
     #calc-topics .topic-card:last-child,
     #alg-topics .topic-card:last-child,
     #prob-topics .topic-card:last-child,
@@ -2905,7 +2909,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-14-auto-update-1';
+  var APP_VERSION = '2026-07-16-mobius-calc-maple-1';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
@@ -3931,6 +3935,22 @@
       { tag:"Ch3B", title:"一阶 ODE 建模 Modelling", file:"Holzer_chap3B_1231_Calculus_2026.pdf",
         yt:"differential equations modelling population growth mixing problems", bili:"微分方程建模 应用题",
         points:["建模三步：用文字描述变化率 → 写出一阶 ODE → 求解并解释结果的实际意义","常见模型：人口/细菌增长（指数增长 dy/dt=ky）、冷却/加热（牛顿冷却定律）","混合问题 mixing problems：浓度随时间变化的微分方程建立","疾病传播等模型：dx/dt 表示某变量随时间的变化率，结合实际条件写边界/初始条件","Modelling Example：完整例题，注意单位与变量含义的对应"] },
+      { tag:"Ch3R", title:"考前识别：ODE 建模、混合题与利息模型", file:"Holzer_chap3B_1231_Calculus_2026.pdf",
+        yt:"first order ode modelling mixing problem integrating factor compound interest", bili:"MATH1231 微分方程 建模 积分因子 利息",
+        mobius:true, mobiusLabels:["Möbius Calculus", "Lab Test 1"],
+        points:[
+          "【一眼识别】看到 tank / brine / mixed thoroughly / inflow / outflow：先定义 x(t)=溶质总量，算 V(t)，再写 x' = in − out。",
+          "【混合题模板】流入溶质率 = 外界浓度 × 流入流速；流出溶质率 = (x/V(t)) × 流出流速；浓度本身不是流率。",
+          "【万能模型】y'=a−by：先找平衡值 y_eq=a/b，再写 y(t)=a/b+(y0−a/b)e^(−bt)。盐水、病毒、未破案件、终端速度都可套这个结构。",
+          "【linear 与 separable】y'=a−by 既可写成 y'+by=a，也可写成 dy/(a−by)=dt；选择题不要以为只能属于一种类型。",
+          "【积分因子法】先整理成 y'+P(t)y=Q(t)，μ=e^(∫Pdt)，乘完后左边变成 (μy)'；最容易错的是 P(t) 的正负号。",
+          "【下落/终端速度】v'=g−kv，终端速度由 v'=0 得 v=g/k；初始速度只影响指数过渡项，不影响长期极限。",
+          "【速度到位置】x'=v，要再积分一次；∫e^(−kt)dt=−e^(−kt)/k，符号最容易丢。",
+          "【平衡解陷阱】分离变量时如果除以 h−x，可能丢掉 h−x=0 的平衡解；必须单独检查。",
+          "【利息模型】单利 A=P(1+rt)，离散复利 A=P(1+r/n)^(nt)，连续复利 A=A0e^(rt)；比较方案时直接算最终金额。",
+          "【持续存款/还贷】存款 A'=rA+D；贷款 L'=rL−P。固定存入/还款是速率项，不是把 5000t 直接塞进导数右边。",
+          "【长期行为】最快两招：令导数等于 0 找平衡值；或看 e^(−bt) 在 b>0 时趋近 0。"
+        ] },
       { tag:"Ch3C", title:"二阶线性常系数 ODE、振动与共振", file:"Holzer_chap3C_1231_Calculus_2026.pdf",
         yt:"second order linear differential equations resonance vibration", bili:"二阶常系数微分方程 振动 共振",
         points:["二阶线性常系数齐次方程 ay''+by'+cy=0：写出特征方程 ar²+br+c=0","三种根的情形：两个不同实根 → y=Ae^(r₁x)+Be^(r₂x)；重根 → y=(A+Bx)e^(rx)；复根 α±iβ → y=e^(αx)(Acos βx+Bsin βx)","非齐次方程的特解：待定系数法（Undetermined Coefficients），根据 RHS 形式猜测特解","若猜测特解与齐次解重复，需乘以 x（共振情形）","振动模型：质量-弹簧-阻尼系统，方程 mx''+cx'+kx=F(t)","阻尼分类：欠阻尼（振荡衰减）、临界阻尼（最快无振荡回到平衡）、过阻尼（缓慢无振荡）","共振 resonance：外力频率接近自然频率时振幅急剧增大"] },
@@ -3982,6 +4002,21 @@
         yt:"matrix transformations geometry rotation reflection", bili:"矩阵 几何变换 旋转 反射",
         mobius:true, mobiusLabels:["Möbius Week 5"],
         points:["Theorem（线性映射的矩阵表示）：T:ℝⁿ→ℝᵘ 关于标准基的矩阵 A，其第 i 列 = T(eᵢ)，且 T(x)=Ax","Fact：线性变换把直线映射为直线（或退化为一点）","常见几何变换矩阵：旋转（rotation，含 cosθ, sinθ）、反射（reflection）、缩放（scaling）、投影（projection）、剪切（shear）","组合变换：先做 T₁ 再做 T₂ 对应矩阵乘法 A₂A₁（注意先后顺序）","几何例子的可视化：通过画出基向量及其像，理解矩阵对平面/空间的作用","【Week 5 · 考点】矩阵的列就是 T(e₁),T(e₂)。读几何图时先找原点、e₁、e₂ 的像，再写 A=[T(e₁) T(e₂)]，不要把列写成行。","【Week 5 · 考点】正向映射：y=Ax；求原像时解 Ax=b，若 A 可逆则 x=A⁻¹b。","【Week 5 · 公式】二维线性变换的面积缩放倍数是 |det A|=|ad−bc|；必须取绝对值，det 的正负只反映方向是否翻转。","【Week 5 · 技巧】不要只看外轮廓；用内部特征点判断图形经过的是镜像、旋转还是剪切。","【Week 5 · 特殊矩阵】−I：绕原点旋转180°；−3I：旋转180°并放大3倍。","❌ 易错：矩阵乘向量是 row × column；分数题统一分母后再相加，第二行的负号最容易漏。"] },
+      { tag:"AlgR", title:"考前识别：线性映射、矩阵与几何变换", file:"MATH1231_ALG_2026T2-Sect8-MatricesAndGeometry.pdf",
+        yt:"linear transformation matrix representation determinant area inverse matrix", bili:"线性映射 矩阵表示 几何变换 行列式",
+        mobius:true, mobiusLabels:["Möbius Week 5", "Lab Test 1"],
+        points:[
+          "【linear map】看到 T(1,0), T(0,1)：立刻写 T(x,y)=xT(1,0)+yT(0,1)。三维同理加 zT(0,0,1)。",
+          "【非标准给法】若给 T(1,0) 和 T(1,1)，先用 T(0,1)=T(1,1)−T(1,0)，再回到标准基公式。",
+          "【矩阵表示】第一列永远是 T(e1)，第二列是 T(e2)；矩阵不是把两个像写成行。",
+          "【正向/反向】正向输出用 y=Ax；题目问哪个点被送到 b，就是反解 Ax=b，可逆时用 x=A^(-1)b。",
+          "【图形题】不要凭感觉选图；先算原点、e1、e2、关键顶点的像，再用门窗/尖角/方向判断。",
+          "【线性铁律】任何线性映射都满足 T(0)=0；如果图形原点平移了，就不是纯线性变换。",
+          "【面积题】area factor = |det(A)| = |ad−bc|；负号只表示方向翻转，面积倍数必须取绝对值。",
+          "【曲线变换】若新点 y=Ax，要求变换后的方程，先用 x=A^(-1)y 回代到旧方程。",
+          "【线性组合】把向量作为列组成矩阵 [v1 v2 v3]，解 [v1 v2 v3]c=b；系数 c 才是每个向量拿几份。",
+          "【Maple 输入】Matrix([[...],[...]]); 每个内部列表是一行；向量用 <a,b,c>；有效数字用 evalf[n](expr)。"
+        ] },
       { tag:"Sect9", title:"像、核与秩-零度定理", file:"MATH1231_ALG_2026T2-Sect9-ImageKernelRNT.pdf",
         yt:"kernel image rank nullity theorem", bili:"核 像 秩-零度定理",
         points:["核 kernel 定义：ker(T)={v∈V : T(v)=0}；矩阵的核 = Ax=0 的解集","像 image 定义：im(T)={T(v) : v∈V}，即 T 的值域","Theorem：ker(T) 和 im(T) 都是子空间","秩 rank：im(T) 的维数 = 矩阵行简化后主元（leading）列的个数","零度 nullity：ker(T) 的维数 = 自由变量的个数（行简化后非主元列数）","Rank-Nullity Theorem（矩阵版）：rank(A)+nullity(A)=n（A 的列数）","Rank-Nullity Theorem（一般线性变换版）：dim(ker T)+dim(im T)=dim(V)","应用：用 rank/nullity 判断 Ax=b 解的存在性与唯一性（解唯一 ⇔ nullity=0）"] },
@@ -4001,6 +4036,22 @@
           "【逆向恢复】N := MatrixInverse(A): Multiply(N, b); 对应 x=A⁻¹b。先确认 A 可逆，且不要把顺序写成 bA⁻¹。",
           "【有效数字】evalf[2](答案); 是保留 2 significant figures，不是小数点后两位。",
           "❌ 易错：题目只要最终向量时，不要多输入 Matrix(...)；保持题目要求的 <...>、[...] 或数值格式。"
+        ]
+      },
+      { tag:"MapleW5-Rank", title:"Maple：秩、张成、线性独立、像与核", file:"MATH1231_ALG_2026T2-Sect9-ImageKernelRNT.pdf",
+        yt:"Maple LinearAlgebra Rank NullSpace ColumnSpace LinearSolve", bili:"Maple Rank NullSpace ColumnSpace LinearSolve",
+        mobius:true, mobiusLabels:["Möbius Week 5"],
+        points:[
+          "【加载库】with(LinearAlgebra): 之后再使用 Rank、NullSpace、LinearSolve、ReducedRowEchelonForm 等指令。",
+          "【列向量矩阵】若题目给一组向量，先把它们作为列输入：A := <v1|v2|v3>; 或 Matrix([[...],[...]]); 注意不要排成行。",
+          "【Rank】Rank(A) 表示 pivot columns 的数量，也是最大线性独立列数。",
+          "【张成判定】S⊂R^m 张成 R^m 当且仅当 Rank(A)=m；比较的是目标空间维数，不是向量个数。",
+          "【线性独立】列向量线性独立当且仅当 Rank(A)=number of columns；若 rank 小于列数则相关。",
+          "【Kernel】ker(A)={x:Ax=0}，A 是 m×n 时 kernel 在 R^n 里；Maple 用 NullSpace(A)。",
+          "【Nullity】nullity = ColumnDimension(A)-Rank(A)，也就是自由变量个数。",
+          "【Image / Column space】im(A)=Col(A) 在 R^m 里；判断 y 是否在 im(A)，解 LinearSolve(A,y) 或比较 Rank(A) 与 Rank(<A|y>)。",
+          "【Rank-nullity】Rank(A)+Nullity(A)=列数 n；看到 kernel dimension / image dimension 题先写这个关系。",
+          "❌ 易错：Rank(A)=行数 才说明列张成 R^行数；Rank(A)=列数 才说明列线性独立，这两个判断不要混。"
         ]
       },
       { tag:"MapleW2-A", title:"函数定义与偏导数计算", file:"Holzer_chap1A_1231_Calculus_2026.pdf",
