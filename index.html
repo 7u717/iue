@@ -1975,6 +1975,26 @@
         <div class="subtopic">先占位。后面放期末考试题型、公式和错题整理。</div>
       </div>
     </div>
+
+    <div class="group-label">复习资料</div>
+    <div class="topic-card" style="padding:16px;">
+      <div class="link-row">
+        <a class="resource-link" href="math1231/docs/Calculus_exam_recognition.html" target="_blank" rel="noopener">
+          <span class="link-icon" style="background:var(--math-soft);color:var(--math-color);">∫</span>
+          <span>
+            <strong>Calculus 考前识别</strong>
+            <span style="display:block;color:var(--dim);font-size:12px;margin-top:2px;">ODE modelling · mixing · interest models</span>
+          </span>
+        </a>
+        <a class="resource-link" href="math1231/docs/Algebra_exam_recognition.html" target="_blank" rel="noopener">
+          <span class="link-icon" style="background:var(--math-soft);color:var(--math-color);">A</span>
+          <span>
+            <strong>Algebra 考前识别</strong>
+            <span style="display:block;color:var(--dim);font-size:12px;margin-top:2px;">linear maps · matrices · geometry</span>
+          </span>
+        </a>
+      </div>
+    </div>
   </div>
 
     <div class="group-label">Möbius 作业追踪</div>
@@ -3935,26 +3955,6 @@
       { tag:"Ch3B", title:"一阶 ODE 建模 Modelling", file:"Holzer_chap3B_1231_Calculus_2026.pdf",
         yt:"differential equations modelling population growth mixing problems", bili:"微分方程建模 应用题",
         points:["建模三步：用文字描述变化率 → 写出一阶 ODE → 求解并解释结果的实际意义","常见模型：人口/细菌增长（指数增长 dy/dt=ky）、冷却/加热（牛顿冷却定律）","混合问题 mixing problems：浓度随时间变化的微分方程建立","疾病传播等模型：dx/dt 表示某变量随时间的变化率，结合实际条件写边界/初始条件","Modelling Example：完整例题，注意单位与变量含义的对应"] },
-      { tag:"Ch3R", title:"考前识别：ODE 建模、混合题与利息模型", file:"Holzer_chap3B_1231_Calculus_2026.pdf",
-        yt:"first order ode modelling mixing problem integrating factor compound interest", bili:"MATH1231 微分方程 建模 积分因子 利息",
-        mobius:true, mobiusLabels:["Möbius Calculus", "Lab Test 1"],
-        extraLinks:[
-          { href:"math1231/docs/Calculus_exam_recognition.html", label:"📖 手机阅读版：Calculus 考试一眼识别" },
-          { href:"math1231/docs/Calculus_exam_recognition.docx", label:"📘 DOCX 下载：Calculus 原件" }
-        ],
-        points:[
-          "【一眼识别】看到 tank / brine / mixed thoroughly / inflow / outflow：先定义 x(t)=溶质总量，算 V(t)，再写 x' = in − out。",
-          "【混合题模板】流入溶质率 = 外界浓度 × 流入流速；流出溶质率 = (x/V(t)) × 流出流速；浓度本身不是流率。",
-          "【万能模型】y'=a−by：先找平衡值 y_eq=a/b，再写 y(t)=a/b+(y0−a/b)e^(−bt)。盐水、病毒、未破案件、终端速度都可套这个结构。",
-          "【linear 与 separable】y'=a−by 既可写成 y'+by=a，也可写成 dy/(a−by)=dt；选择题不要以为只能属于一种类型。",
-          "【积分因子法】先整理成 y'+P(t)y=Q(t)，μ=e^(∫Pdt)，乘完后左边变成 (μy)'；最容易错的是 P(t) 的正负号。",
-          "【下落/终端速度】v'=g−kv，终端速度由 v'=0 得 v=g/k；初始速度只影响指数过渡项，不影响长期极限。",
-          "【速度到位置】x'=v，要再积分一次；∫e^(−kt)dt=−e^(−kt)/k，符号最容易丢。",
-          "【平衡解陷阱】分离变量时如果除以 h−x，可能丢掉 h−x=0 的平衡解；必须单独检查。",
-          "【利息模型】单利 A=P(1+rt)，离散复利 A=P(1+r/n)^(nt)，连续复利 A=A0e^(rt)；比较方案时直接算最终金额。",
-          "【持续存款/还贷】存款 A'=rA+D；贷款 L'=rL−P。固定存入/还款是速率项，不是把 5000t 直接塞进导数右边。",
-          "【长期行为】最快两招：令导数等于 0 找平衡值；或看 e^(−bt) 在 b>0 时趋近 0。"
-        ] },
       { tag:"Ch3C", title:"二阶线性常系数 ODE、振动与共振", file:"Holzer_chap3C_1231_Calculus_2026.pdf",
         yt:"second order linear differential equations resonance vibration", bili:"二阶常系数微分方程 振动 共振",
         points:["二阶线性常系数齐次方程 ay''+by'+cy=0：写出特征方程 ar²+br+c=0","三种根的情形：两个不同实根 → y=Ae^(r₁x)+Be^(r₂x)；重根 → y=(A+Bx)e^(rx)；复根 α±iβ → y=e^(αx)(Acos βx+Bsin βx)","非齐次方程的特解：待定系数法（Undetermined Coefficients），根据 RHS 形式猜测特解","若猜测特解与齐次解重复，需乘以 x（共振情形）","振动模型：质量-弹簧-阻尼系统，方程 mx''+cx'+kx=F(t)","阻尼分类：欠阻尼（振荡衰减）、临界阻尼（最快无振荡回到平衡）、过阻尼（缓慢无振荡）","共振 resonance：外力频率接近自然频率时振幅急剧增大"] },
@@ -4006,25 +4006,6 @@
         yt:"matrix transformations geometry rotation reflection", bili:"矩阵 几何变换 旋转 反射",
         mobius:true, mobiusLabels:["Möbius Week 5"],
         points:["Theorem（线性映射的矩阵表示）：T:ℝⁿ→ℝᵘ 关于标准基的矩阵 A，其第 i 列 = T(eᵢ)，且 T(x)=Ax","Fact：线性变换把直线映射为直线（或退化为一点）","常见几何变换矩阵：旋转（rotation，含 cosθ, sinθ）、反射（reflection）、缩放（scaling）、投影（projection）、剪切（shear）","组合变换：先做 T₁ 再做 T₂ 对应矩阵乘法 A₂A₁（注意先后顺序）","几何例子的可视化：通过画出基向量及其像，理解矩阵对平面/空间的作用","【Week 5 · 考点】矩阵的列就是 T(e₁),T(e₂)。读几何图时先找原点、e₁、e₂ 的像，再写 A=[T(e₁) T(e₂)]，不要把列写成行。","【Week 5 · 考点】正向映射：y=Ax；求原像时解 Ax=b，若 A 可逆则 x=A⁻¹b。","【Week 5 · 公式】二维线性变换的面积缩放倍数是 |det A|=|ad−bc|；必须取绝对值，det 的正负只反映方向是否翻转。","【Week 5 · 技巧】不要只看外轮廓；用内部特征点判断图形经过的是镜像、旋转还是剪切。","【Week 5 · 特殊矩阵】−I：绕原点旋转180°；−3I：旋转180°并放大3倍。","❌ 易错：矩阵乘向量是 row × column；分数题统一分母后再相加，第二行的负号最容易漏。"] },
-      { tag:"AlgR", title:"考前识别：线性映射、矩阵与几何变换", file:"MATH1231_ALG_2026T2-Sect8-MatricesAndGeometry.pdf",
-        yt:"linear transformation matrix representation determinant area inverse matrix", bili:"线性映射 矩阵表示 几何变换 行列式",
-        mobius:true, mobiusLabels:["Möbius Week 5", "Lab Test 1"],
-        extraLinks:[
-          { href:"math1231/docs/Algebra_exam_recognition.html", label:"📖 手机阅读版：Algebra 考试一眼识别" },
-          { href:"math1231/docs/Algebra_exam_recognition.docx", label:"📘 DOCX 下载：Algebra 原件" }
-        ],
-        points:[
-          "【linear map】看到 T(1,0), T(0,1)：立刻写 T(x,y)=xT(1,0)+yT(0,1)。三维同理加 zT(0,0,1)。",
-          "【非标准给法】若给 T(1,0) 和 T(1,1)，先用 T(0,1)=T(1,1)−T(1,0)，再回到标准基公式。",
-          "【矩阵表示】第一列永远是 T(e1)，第二列是 T(e2)；矩阵不是把两个像写成行。",
-          "【正向/反向】正向输出用 y=Ax；题目问哪个点被送到 b，就是反解 Ax=b，可逆时用 x=A^(-1)b。",
-          "【图形题】不要凭感觉选图；先算原点、e1、e2、关键顶点的像，再用门窗/尖角/方向判断。",
-          "【线性铁律】任何线性映射都满足 T(0)=0；如果图形原点平移了，就不是纯线性变换。",
-          "【面积题】area factor = |det(A)| = |ad−bc|；负号只表示方向翻转，面积倍数必须取绝对值。",
-          "【曲线变换】若新点 y=Ax，要求变换后的方程，先用 x=A^(-1)y 回代到旧方程。",
-          "【线性组合】把向量作为列组成矩阵 [v1 v2 v3]，解 [v1 v2 v3]c=b；系数 c 才是每个向量拿几份。",
-          "【Maple 输入】Matrix([[...],[...]]); 每个内部列表是一行；向量用 <a,b,c>；有效数字用 evalf[n](expr)。"
-        ] },
       { tag:"Sect9", title:"像、核与秩-零度定理", file:"MATH1231_ALG_2026T2-Sect9-ImageKernelRNT.pdf",
         yt:"kernel image rank nullity theorem", bili:"核 像 秩-零度定理",
         points:["核 kernel 定义：ker(T)={v∈V : T(v)=0}；矩阵的核 = Ax=0 的解集","像 image 定义：im(T)={T(v) : v∈V}，即 T 的值域","Theorem：ker(T) 和 im(T) 都是子空间","秩 rank：im(T) 的维数 = 矩阵行简化后主元（leading）列的个数","零度 nullity：ker(T) 的维数 = 自由变量的个数（行简化后非主元列数）","Rank-Nullity Theorem（矩阵版）：rank(A)+nullity(A)=n（A 的列数）","Rank-Nullity Theorem（一般线性变换版）：dim(ker T)+dim(im T)=dim(V)","应用：用 rank/nullity 判断 Ax=b 解的存在性与唯一性（解唯一 ⇔ nullity=0）"] },
@@ -4977,6 +4958,10 @@
     return clean.slice(-1) === '/' ? clean + STATIC_CLOUD_STATE_FILE : clean.replace(/[^/]*$/, STATIC_CLOUD_STATE_FILE);
   }
 
+  function isNativeIueApp() {
+    return location.protocol === 'capacitor:';
+  }
+
   function cloudClientId() {
     var id = localStorage.getItem(CLOUD_CLIENT_KEY);
     if (!id) {
@@ -4996,6 +4981,16 @@
       localStorage.getItem('mobius_check_v1') ||
       localStorage.getItem('memo_7u')
     );
+  }
+
+  function cloudNeedsBootstrapState() {
+    try {
+      var gt = JSON.parse(localStorage.getItem('gt_v2') || '{}');
+      var mobius = JSON.parse(localStorage.getItem('mobius_check_v1') || '[]');
+      return !Object.keys(gt).length && !mobius.some(Boolean);
+    } catch(e) {
+      return !cloudHasLocalState();
+    }
   }
 
   function cloudPayloadHasProgressState(payload) {
@@ -5149,6 +5144,22 @@
     });
   }
 
+  function cloudBootstrapNativeState() {
+    if (!isNativeIueApp() || !cloudNeedsBootstrapState()) return Promise.resolve();
+    return fetch(cloudStaticStateUrl() + '?t=' + Date.now(), { cache:'no-store' })
+      .then(function(res) {
+        if (!res.ok) throw new Error('static sync unavailable');
+        return res.json();
+      })
+      .then(function(payload) {
+        if (cloudPayloadHasProgressState(payload)) {
+          cloudApply(payload);
+          cloudSetStatus('已从随包备份恢复进度。');
+        }
+      })
+      .catch(function(){});
+  }
+
   function markCloudDirty() {
     if (cloudApplying) return;
     localStorage.setItem(CLOUD_LOCAL_CHANGED_KEY, new Date().toISOString());
@@ -5171,7 +5182,9 @@
     if (!url) return;
     rememberSyncUrl(url);
     clearInterval(cloudPollTimer);
-    cloudPullNow(true).then(function() {
+    cloudBootstrapNativeState().then(function() {
+      return cloudPullNow(true);
+    }).then(function() {
       cloudSetStatus('云同步运行中。大约每 15 秒检查一次更新。');
     }).catch(function() {
       if (cloudHasLocalState()) {
@@ -5234,8 +5247,26 @@
     }, { passive: false });
   }
 
+  function makeNativeLinksOpenInPlace() {
+    if (!isNativeIueApp()) return;
+    document.addEventListener('click', function(event) {
+      var link = event.target && event.target.closest ? event.target.closest('a[href]') : null;
+      if (!link) return;
+      var href = link.getAttribute('href') || '';
+      if (!href || href.charAt(0) === '#') return;
+      if (/^(mailto:|tel:|javascript:)/i.test(href)) return;
+      event.preventDefault();
+      if (/\.docx(?:[?#].*)?$/i.test(href)) {
+        href = href.replace(/\.docx(?=([?#].*)?$)/i, '.html');
+      }
+      var url = new URL(href, location.href);
+      location.href = url.href;
+    }, true);
+  }
+
   setTimeout(function(){
     lockAppZoom();
+    makeNativeLinksOpenInPlace();
     initProfileWidgets();
     startCloudAutoSync();
     startAppUpdateWatcher();
