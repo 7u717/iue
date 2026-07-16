@@ -1732,7 +1732,8 @@
 
   <script>
     const KEY = 'life_console_v5';
-    const ORBIT_APP_VERSION = '2026-07-17-orbit-block-dot-clock-1';
+    const ORBIT_APP_VERSION = '2026-07-17-orbit-local-only-1';
+    const ORBIT_CLOUD_ENABLED = false;
     const ORBIT_CLOUD_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019f5e0e6766570f';
     const ORBIT_CLOUD_LAST_REMOTE_KEY = 'orbit_cloud_last_remote_saved_at';
     const ORBIT_CLOUD_LOCAL_CHANGED_KEY = 'orbit_cloud_local_changed_at';
@@ -1868,7 +1869,7 @@
       const next = JSON.stringify(state);
       if (localStorage.getItem(KEY) === next) return;
       localStorage.setItem(KEY, next);
-      if (!orbitCloudApplying && orbitCloudReady) markOrbitCloudDirty();
+      if (ORBIT_CLOUD_ENABLED && !orbitCloudApplying && orbitCloudReady) markOrbitCloudDirty();
     }
     function mins(time) {
       const p = String(time || '').split(':').map(Number);
@@ -2898,6 +2899,7 @@
       };
     }
     function markOrbitCloudDirty() {
+      if (!ORBIT_CLOUD_ENABLED) return;
       localStorage.setItem(ORBIT_CLOUD_LOCAL_CHANGED_KEY, new Date().toISOString());
       clearTimeout(orbitCloudPushTimer);
       orbitCloudPushTimer = setTimeout(() => orbitCloudPush(true).catch(() => {}), 900);
@@ -2941,6 +2943,11 @@
       return payload;
     }
     function startOrbitCloudSync() {
+      if (!ORBIT_CLOUD_ENABLED) {
+        orbitCloudReady = false;
+        localStorage.removeItem(ORBIT_CLOUD_LOCAL_CHANGED_KEY);
+        return;
+      }
       orbitCloudPull(true).catch(() => {}).finally(() => {
         orbitCloudReady = true;
         if (localStorage.getItem(ORBIT_CLOUD_LOCAL_CHANGED_KEY)) orbitCloudPush(true).catch(() => {});
@@ -3293,7 +3300,7 @@
     setupTabSwipe();
     lockAppZoom();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-17-orbit-block-dot-clock-1').then(registration => registration.update()).catch(() => {});
+      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-17-orbit-local-only-1').then(registration => registration.update()).catch(() => {});
     }
     startOrbitCloudSync();
     startOrbitMailSync();
