@@ -1216,10 +1216,12 @@
       }
     }
     .toast {
-      position: absolute;
+      position: fixed;
       left: 22px;
       right: 22px;
-      bottom: calc(72px + env(safe-area-inset-bottom));
+      bottom: calc(var(--bottom-nav-h) + 12px);
+      max-width: 520px;
+      margin: 0 auto;
       background: rgba(22,22,24,.94);
       border: 1px solid var(--line);
       border-radius: 18px;
@@ -1232,7 +1234,7 @@
       opacity: 0;
       pointer-events: none;
       transition: .22s ease;
-      z-index: 20;
+      z-index: 120;
     }
     .toast.show { opacity: 1; transform: none; }
     @media (max-width: 370px) {
@@ -1443,10 +1445,11 @@
       border: 1px solid var(--line-soft);
       border-radius: 22px;
       background: linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.018));
+      overflow: hidden;
     }
     .block-row {
       display: grid;
-      grid-template-columns: 1fr 82px;
+      grid-template-columns: minmax(0, 1fr) 118px;
       gap: 10px;
       align-items: center;
       margin-bottom: 10px;
@@ -1455,6 +1458,7 @@
     .block-time-input,
     .block-task-input {
       width: 100%;
+      min-width: 0;
       border: 1px solid rgba(255,255,255,.09);
       border-radius: 14px;
       background: rgba(0,0,0,.22);
@@ -1465,7 +1469,41 @@
       outline: none;
       box-sizing: border-box;
     }
-    .block-time-input { text-align: center; color: var(--blue); }
+    .block-time-input {
+      text-align: center;
+      color: var(--blue);
+      min-height: 46px;
+      max-width: 100%;
+      padding-left: 8px;
+      padding-right: 8px;
+      font-variant-numeric: tabular-nums;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .block-time-input::-webkit-calendar-picker-indicator {
+      filter: invert(80%) sepia(39%) saturate(926%) hue-rotate(175deg) brightness(103%) contrast(103%);
+      opacity: .9;
+    }
+    .block-time-tools {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: -2px 0 10px;
+    }
+    .block-time-tool {
+      border: 1px solid rgba(143,198,255,.18);
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(143,198,255,.12), rgba(255,255,255,.035));
+      color: var(--muted);
+      font-weight: 1000;
+      padding: 8px 10px;
+      min-height: 36px;
+    }
+    .block-time-tool:active {
+      transform: scale(.97);
+      color: var(--blue);
+      border-color: rgba(143,198,255,.38);
+    }
     .block-task-row {
       display: grid;
       grid-template-columns: 28px 1fr;
@@ -1565,9 +1603,9 @@
             <span class="pill" id="mood-pill">steady</span>
           </div>
           <div class="slider-row">
-            <div class="slider-line"><span>Mood</span><input id="mood" type="range" min="1" max="10" value="5" oninput="saveInputs()"><strong id="mood-num">5</strong></div>
+            <div class="slider-line"><span>Mood</span><input id="mood" type="range" min="1" max="10" step="0.1" value="5" oninput="saveInputs()"><strong id="mood-num">5.0</strong></div>
             <div class="slider-line"><span>Energy</span><input id="energy" type="range" min="1" max="10" value="5" disabled><strong id="energy-num">5</strong></div>
-            <div class="slider-line"><span>Stress</span><input id="stress" type="range" min="1" max="10" value="5" oninput="saveInputs()"><strong id="stress-num">5</strong></div>
+            <div class="slider-line"><span>Stress</span><input id="stress" type="range" min="1" max="10" step="0.1" value="5" oninput="saveInputs()"><strong id="stress-num">5.0</strong></div>
           </div>
         </div>
 
@@ -1732,7 +1770,7 @@
 
   <script>
     const KEY = 'life_console_v5';
-    const ORBIT_APP_VERSION = '2026-07-17-orbit-local-only-1';
+    const ORBIT_APP_VERSION = '2026-07-17-orbit-reminders-2';
     const ORBIT_CLOUD_ENABLED = false;
     const ORBIT_CLOUD_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019f5e0e6766570f';
     const ORBIT_CLOUD_LAST_REMOTE_KEY = 'orbit_cloud_last_remote_saved_at';
@@ -1772,6 +1810,7 @@
       baselineMood: 7,
       baselineStress: 5,
       logsExpanded: false,
+      lastDayKey: '',
       sleepRecords: [],
       moodEvents: [],
       waterEvents: [],
@@ -1784,6 +1823,22 @@
     let orbitCloudPushTimer = null;
     let orbitCloudPollTimer = null;
     let orbitMailBusy = false;
+    let orbitNotificationTimer = null;
+    let orbitNotificationBusy = false;
+    const ORBIT_NOTIFICATION_IDS = {
+      blockBase: 7100,
+      blockEndBase: 7110,
+      sedentaryBase: 7120,
+      water: 7201,
+      mealNoon: 7202,
+      mealNight: 7203,
+      moodAfternoon: 7204,
+      moodEvening: 7205,
+      sleepLate: 7206,
+      mealLate: 7207,
+      dailyReview: 7208,
+      lowProtection: 7209
+    };
     if (state.hydrationBasinVersion !== 3) {
       // The old overflow renderer could leave a stale hidden state behind.
       state.waterSpillHidden = false;
@@ -1870,11 +1925,19 @@
       if (localStorage.getItem(KEY) === next) return;
       localStorage.setItem(KEY, next);
       if (ORBIT_CLOUD_ENABLED && !orbitCloudApplying && orbitCloudReady) markOrbitCloudDirty();
+      queueOrbitNotifications('state-change');
     }
     function mins(time) {
       const p = String(time || '').split(':').map(Number);
       if (!Number.isFinite(p[0]) || !Number.isFinite(p[1])) return 0;
       return p[0] * 60 + p[1];
+    }
+    function decimal(value, fallback = 0) {
+      const n = Number(value);
+      return Number.isFinite(n) ? Math.round(n * 10) / 10 : fallback;
+    }
+    function oneDecimal(value, fallback = 0) {
+      return decimal(value, fallback).toFixed(1);
     }
     function fmtMinutes(total) {
       total = Math.max(0, Math.round(total));
@@ -1883,6 +1946,266 @@
       if (!h && !m) return '0 min';
       if (!h) return m + ' min';
       return h + ' hr ' + (m ? m + ' min' : '');
+    }
+    function localNotificationsPlugin() {
+      return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.LocalNotifications;
+    }
+    function isNativeOrbit() {
+      return location.protocol === 'capacitor:' || document.documentElement.classList.contains('native-shell');
+    }
+    async function ensureNotificationPermission(plugin) {
+      if (!plugin || !plugin.checkPermissions || !plugin.requestPermissions) return false;
+      try {
+        const current = await plugin.checkPermissions();
+        if (current && current.display === 'granted') return true;
+        const requested = await plugin.requestPermissions();
+        return requested && requested.display === 'granted';
+      } catch (error) {
+        return false;
+      }
+    }
+    function todayAt(hour, minute = 0) {
+      const date = new Date();
+      date.setHours(hour, minute, 0, 0);
+      return date;
+    }
+    function nextAt(hour, minute = 0) {
+      const date = todayAt(hour, minute);
+      if (!notificationIsFuture(date)) date.setDate(date.getDate() + 1);
+      return date;
+    }
+    function todayAtMinute(totalMinutes) {
+      const date = todayAt(0, 0);
+      date.setMinutes(totalMinutes);
+      return date;
+    }
+    function notificationIsFuture(date) {
+      return date && date.getTime && date.getTime() > Date.now() + 15000;
+    }
+    function hasWaterOrWorkoutBetween(start, end) {
+      const from = start && start.getTime ? start.getTime() : 0;
+      const to = end && end.getTime ? end.getTime() : Date.now();
+      const hasWater = (state.waterEvents || []).some(item => {
+        const t = new Date(item.iso || 0).getTime();
+        return t >= from && t < to && (+item.ml || 0) > 0;
+      });
+      if (hasWater) return true;
+      return (state.logs || []).some(item => {
+        const t = new Date(item.iso || 0).getTime();
+        return t >= from && t < to && (+item.burn || 0) > 0;
+      });
+    }
+    function caloriesTouchedToday() {
+      return !!((+state.intake || 0) || (+state.burn || 0) || (+state.protein || 0));
+    }
+    function lowProtectionActive() {
+      return (+state.mood || 0) < 6 && (+state.energy || 0) <= 3 && (+state.stress || 0) >= 7;
+    }
+    function dailyReviewText() {
+      const sleep = fmtMinutes(sleepDuration());
+      const water = oneDecimal((+state.water || 0) / 1000, 0) + 'L';
+      const done = normalBlocks().reduce((sum, block) => sum + (block.tasks || []).filter(task => task.done).length, 0);
+      const kcal = energyValue();
+      return '今天复盘：睡眠 ' + sleep + '，喝水 ' + water + '，净热量 ' + kcal + 'kcal，完成 ' + done + ' 件事。辛苦啦。';
+    }
+    function buildNotification(id, title, body, at) {
+      return {
+        id,
+        title,
+        body,
+        sound: 'default',
+        schedule: { at }
+      };
+    }
+    function blockNotifyDate(block) {
+      if (!/^\d{1,2}:\d{2}$/.test(String(block.time || ''))) return null;
+      const start = mins(block.time);
+      const notifyAt = (start - 10 + 1440) % 1440;
+      return todayAt(Math.floor(notifyAt / 60), notifyAt % 60);
+    }
+    async function scheduleOrbitNotifications(reason = 'auto') {
+      if (orbitNotificationBusy || !isNativeOrbit()) return;
+      const plugin = localNotificationsPlugin();
+      if (!plugin) return;
+      orbitNotificationBusy = true;
+      try {
+        if (!(await ensureNotificationPermission(plugin))) return;
+        const cancelIds = [
+          ...[0, 1, 2].flatMap(index => [
+            ORBIT_NOTIFICATION_IDS.blockBase + index,
+            ORBIT_NOTIFICATION_IDS.blockEndBase + index,
+            ORBIT_NOTIFICATION_IDS.sedentaryBase + index
+          ]),
+          ORBIT_NOTIFICATION_IDS.water,
+          ORBIT_NOTIFICATION_IDS.mealNoon,
+          ORBIT_NOTIFICATION_IDS.mealLate,
+          ORBIT_NOTIFICATION_IDS.mealNight,
+          ORBIT_NOTIFICATION_IDS.moodAfternoon,
+          ORBIT_NOTIFICATION_IDS.moodEvening,
+          ORBIT_NOTIFICATION_IDS.sleepLate,
+          ORBIT_NOTIFICATION_IDS.dailyReview,
+          ORBIT_NOTIFICATION_IDS.lowProtection
+        ];
+        await plugin.cancel({ notifications: cancelIds.map(id => ({ id })) }).catch(() => {});
+        ensureDailyRollover();
+        const notifications = [];
+        normalBlocks().forEach((block, index) => {
+          const at = blockNotifyDate(block);
+          const name = String(block.name || ('Block ' + (index + 1))).trim();
+          if (notificationIsFuture(at)) {
+            notifications.push(buildNotification(
+              ORBIT_NOTIFICATION_IDS.blockBase + index,
+              '小co',
+              lowProtectionActive()
+                ? name + ' 10分钟后开始。今天先降级，喝水、吃饭、休息也算认真完成呀。'
+                : name + ' 10分钟后开始。该休息休息准备做该做的啦 加油呀！',
+              at
+            ));
+          }
+          if (/^\d{1,2}:\d{2}$/.test(String(block.time || ''))) {
+            const startMinutes = mins(block.time);
+            const startAt = todayAtMinute(startMinutes);
+            const endAt = todayAtMinute(startMinutes + 180);
+            const sitAt = todayAtMinute(startMinutes + 90);
+            if (notificationIsFuture(endAt)) {
+              notifications.push(buildNotification(
+                ORBIT_NOTIFICATION_IDS.blockEndBase + index,
+                '小co',
+                name + ' 结束啦，勾一下完成的任务，然后休息一下呀。',
+                endAt
+              ));
+            }
+            if (notificationIsFuture(sitAt) && !hasWaterOrWorkoutBetween(startAt, new Date())) {
+              notifications.push(buildNotification(
+                ORBIT_NOTIFICATION_IDS.sedentaryBase + index,
+                '小co',
+                '坐太久啦，站起来活动两分钟，喝口水呀。',
+                sitAt
+              ));
+            }
+          }
+        });
+        if (!state.sleeping) {
+          notifications.push(buildNotification(
+            ORBIT_NOTIFICATION_IDS.sleepLate,
+            '小co',
+            '快睡觉啦 今天辛苦啦 要好好休息休息',
+            nextAt(2, 0)
+          ));
+        }
+        const reviewAt = todayAt(24, 0);
+        notifications.push(buildNotification(
+          ORBIT_NOTIFICATION_IDS.dailyReview,
+          '小co',
+          dailyReviewText(),
+          notificationIsFuture(reviewAt) ? reviewAt : nextAt(0, 0)
+        ));
+        const protectAt = todayAt(21, 0);
+        if (notificationIsFuture(protectAt) && lowProtectionActive()) {
+          notifications.push(buildNotification(
+            ORBIT_NOTIFICATION_IDS.lowProtection,
+            '小co',
+            '今天状态有点低，先保底恢复就好。洗澡、吃饭、睡觉，都是正经任务呀。',
+            protectAt
+          ));
+        }
+        const waterTarget = Math.max(500, +state.waterTarget || 2200);
+        const waterAt = todayAt(18, 0);
+        if (notificationIsFuture(waterAt) && (+state.water || 0) < waterTarget * 0.5) {
+          notifications.push(buildNotification(
+            ORBIT_NOTIFICATION_IDS.water,
+            '小co',
+            '要记得多喝水呀 今天水喝的好少',
+            waterAt
+          ));
+        }
+        const noonMealAt = todayAt(12, 0);
+        if (notificationIsFuture(noonMealAt) && !caloriesTouchedToday()) {
+          notifications.push(buildNotification(
+            ORBIT_NOTIFICATION_IDS.mealNoon,
+            '小co',
+            '再怎么样也要记得按时吃饭！辛苦啦现在还没吃 快去吃点',
+            noonMealAt
+          ));
+        }
+        const lateMealAt = todayAt(15, 0);
+        if (notificationIsFuture(lateMealAt) && !caloriesTouchedToday()) {
+          notifications.push(buildNotification(
+            ORBIT_NOTIFICATION_IDS.mealLate,
+            '小co',
+            '再怎么样也要记得按时吃饭！辛苦啦现在还没吃 快去吃点',
+            lateMealAt
+          ));
+        }
+        const nightMealAt = todayAt(20, 0);
+        if (notificationIsFuture(nightMealAt) && !caloriesTouchedToday()) {
+          notifications.push(buildNotification(
+            ORBIT_NOTIFICATION_IDS.mealNight,
+            '小co',
+            '再怎么样也要记得按时吃饭！辛苦啦现在还没吃 快去吃点',
+            nightMealAt
+          ));
+        }
+        const moodAfternoonAt = todayAt(16, 0);
+        if (notificationIsFuture(moodAfternoonAt) && (+state.mood || 0) < 6) {
+          notifications.push(buildNotification(
+            ORBIT_NOTIFICATION_IDS.moodAfternoon,
+            '小co',
+            '今天怎么啦 看你心情不好 有我在 我陪着你',
+            moodAfternoonAt
+          ));
+        }
+        const moodEveningAt = todayAt(20, 0);
+        if (notificationIsFuture(moodEveningAt) && (+state.mood || 0) < 6) {
+          notifications.push(buildNotification(
+            ORBIT_NOTIFICATION_IDS.moodEvening,
+            '小co',
+            '今天怎么啦 看你心情不好 有我在 我陪着你',
+            moodEveningAt
+          ));
+        }
+        if (notifications.length) await plugin.schedule({ notifications });
+      } finally {
+        orbitNotificationBusy = false;
+      }
+    }
+    function queueOrbitNotifications(reason = 'auto') {
+      clearTimeout(orbitNotificationTimer);
+      orbitNotificationTimer = setTimeout(() => scheduleOrbitNotifications(reason), 350);
+    }
+    async function sendMoodTestNotification() {
+      if (!isNativeOrbit()) return;
+      const plugin = localNotificationsPlugin();
+      if (!plugin) return;
+      if (!(await ensureNotificationPermission(plugin))) return;
+      await plugin.schedule({
+        notifications: [buildNotification(
+          7299,
+          '小co',
+          '今天怎么啦 看你心情不好 有我在 我陪着你',
+          new Date(Date.now() + 5000)
+        )]
+      });
+    }
+    async function sendAllTestNotifications() {
+      if (!isNativeOrbit()) return;
+      const plugin = localNotificationsPlugin();
+      if (!plugin) return;
+      if (!(await ensureNotificationPermission(plugin))) return;
+      const now = Date.now();
+      await plugin.cancel({ notifications: [7299, 7300, 7301, 7302, 7303, 7304, 7305, 7306, 7307].map(id => ({ id })) }).catch(() => {});
+      await plugin.schedule({
+        notifications: [
+          buildNotification(7300, '小co', '该休息休息准备做该做的啦 加油呀！', new Date(now + 5000)),
+          buildNotification(7301, '小co', '要记得多喝水呀 今天水喝的好少', new Date(now + 9000)),
+          buildNotification(7302, '小co', '再怎么样也要记得按时吃饭！辛苦啦现在还没吃 快去吃点', new Date(now + 13000)),
+          buildNotification(7303, '小co', '今天怎么啦 看你心情不好 有我在 我陪着你', new Date(now + 17000)),
+          buildNotification(7304, '小co', '快睡觉啦 今天辛苦啦 要好好休息休息', new Date(now + 21000)),
+          buildNotification(7305, '小co', '坐太久啦，站起来活动两分钟，喝口水呀。', new Date(now + 25000)),
+          buildNotification(7306, '小co', '这一轮结束啦，勾一下完成的任务，然后休息一下呀。', new Date(now + 29000)),
+          buildNotification(7307, '小co', '今天复盘：睡眠 7 hr，喝水 2.0L，净热量 0kcal，完成 3 件事。辛苦啦。', new Date(now + 33000))
+        ]
+      });
     }
     function sleepDurationMarkup(total) {
       total = Math.max(0, Math.round(total));
@@ -1893,6 +2216,42 @@
     }
     function localDayKey(date) {
       return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+    }
+    function latestDailyActivityKey() {
+      const stamps = [];
+      (state.logs || []).forEach(item => { if (item.iso) stamps.push(item.iso); });
+      (state.waterEvents || []).forEach(item => { if (item.iso) stamps.push(item.iso); });
+      stamps.sort();
+      if (!stamps.length) return '';
+      const latest = new Date(stamps[stamps.length - 1]);
+      return Number.isNaN(latest.getTime()) ? '' : localDayKey(latest);
+    }
+    function todayLogsWithIndex() {
+      const start = startOfDay();
+      const end = endOfDay();
+      return (state.logs || []).map((item, index) => ({ item, index })).filter(entry => {
+        const date = new Date(entry.item.iso || Date.now());
+        return date >= start && date < end;
+      });
+    }
+    function recalcTodayCounters() {
+      const start = startOfDay();
+      const end = endOfDay();
+      const todayLogs = todayLogsWithIndex().map(entry => entry.item);
+      state.intake = todayLogs.reduce((sum, item) => sum + (+item.intake || 0), 0);
+      state.burn = todayLogs.reduce((sum, item) => sum + (+item.burn || 0), 0);
+      state.protein = todayLogs.reduce((sum, item) => sum + (+item.protein || 0), 0);
+      state.water = inRangeEvents(state.waterEvents, start, end, item => item.iso).reduce((sum, item) => sum + (+item.ml || 0), 0);
+    }
+    function ensureDailyRollover() {
+      const today = localDayKey(new Date());
+      if (!state.lastDayKey) state.lastDayKey = latestDailyActivityKey() || today;
+      if (state.lastDayKey !== today) {
+        state.lastDayKey = today;
+        state.logsExpanded = false;
+        state.waterSpillHidden = false;
+      }
+      recalcTodayCounters();
     }
     function todaySleepRecords() {
       const today = localDayKey(new Date());
@@ -1979,16 +2338,15 @@
     }
     function renderLogs() {
       const el = document.getElementById('parsed-list');
-      if (!state.logs.length) {
+      const todayEntries = todayLogsWithIndex();
+      if (!todayEntries.length) {
         el.innerHTML = '<div class="subline">No records yet.</div>';
         return;
       }
-      const entries = state.logs.map(function(item, index) {
-        return { item, index };
-      }).slice(state.logsExpanded ? 0 : -3).reverse();
+      const entries = todayEntries.slice(state.logsExpanded ? 0 : -3).reverse();
       el.innerHTML = entries.map(entry => (
         '<div class="log-swipe" data-index="' + entry.index + '" ontouchstart="logTouchStart(event,this)" ontouchmove="logTouchMove(event,this)" ontouchend="logTouchEnd(event,this)"><button class="log-delete" onclick="deleteLog(' + entry.index + ')">Delete</button><div class="log-item"><div class="log-dot">' + escapeHtml(entry.item.icon || '•') + '</div><div class="log-text"><strong>' + escapeHtml(entry.item.text) + '</strong><span>' + escapeHtml(entry.item.meta || '') + '</span>' + logChips(entry.item) + '</div></div></div>'
-      )).join('') + (state.logs.length > 3 ? '<button class="log-toggle" onclick="toggleLogs()">' + (state.logsExpanded ? 'Collapse' : 'Show all ' + state.logs.length) + '</button>' : '');
+      )).join('') + (todayEntries.length > 3 ? '<button class="log-toggle" onclick="toggleLogs()">' + (state.logsExpanded ? 'Collapse' : 'Show all ' + todayEntries.length) + '</button>' : '');
     }
     function toggleLogs() {
       state.logsExpanded = !state.logsExpanded;
@@ -2008,6 +2366,7 @@
       return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
     }
     function render() {
+      ensureDailyRollover();
       document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-AU', { weekday:'short', month:'short', day:'numeric' });
       const labels = lastSleepLabels();
       document.getElementById('bed-label').textContent = labels.bed;
@@ -2046,12 +2405,15 @@
       waterFlow.lastWater = state.water;
       updateWaterOverflow(waterRatio > 0, showSpill, overflowMl, waterRatio);
       document.getElementById('burn-control-total').textContent = Math.round(state.burn) + ' kcal';
+      applyAutoStress();
+      state.mood = decimal(state.mood, defaults.mood);
+      state.stress = decimal(state.stress, defaults.stress);
       document.getElementById('mood').value = state.mood;
       document.getElementById('energy').value = state.energy;
       document.getElementById('stress').value = state.stress;
-      document.getElementById('mood-num').textContent = state.mood;
+      document.getElementById('mood-num').textContent = oneDecimal(state.mood, defaults.mood);
       document.getElementById('energy-num').textContent = state.energy;
-      document.getElementById('stress-num').textContent = state.stress;
+      document.getElementById('stress-num').textContent = oneDecimal(state.stress, defaults.stress);
       const recovery = recoveryScore(dur);
       document.getElementById('recovery-score').textContent = recovery;
       document.getElementById('recovery-label').textContent = recovery ? (recovery >= 70 ? 'usable day' : 'go softer') : 'not enough data';
@@ -2068,8 +2430,8 @@
       const net = (+state.intake || 0) - (+state.burn || 0);
       return [
         { key: 'sleep', label: 'Sleep', value: Math.round(clamp(dur / 510, 0, 1) * 34), max: 34, hint: fmtMinutes(dur) },
-        { key: 'mood', label: 'Mood', value: Math.round(clamp((+state.mood || 0) / 10, 0, 1) * 18), max: 18, hint: (+state.mood || 0) + '/10' },
-        { key: 'stress', label: 'Stress', value: Math.round((1 - clamp((+state.stress || 0) / 10, 0, 1)) * 14), max: 14, hint: (+state.stress || 0) + '/10' },
+        { key: 'mood', label: 'Mood', value: Math.round(clamp((+state.mood || 0) / 10, 0, 1) * 18), max: 18, hint: oneDecimal(state.mood) + '/10' },
+        { key: 'stress', label: 'Stress', value: Math.round((1 - clamp((+state.stress || 0) / 10, 0, 1)) * 14), max: 14, hint: oneDecimal(state.stress) + '/10' },
         { key: 'water', label: 'Water', value: Math.round(clamp((+state.water || 0) / waterTarget, 0, 1) * 12), max: 12, hint: (state.water / 1000).toFixed(1) + 'L' },
         { key: 'fuel', label: 'Fuel', value: net < -700 ? 2 : (net < -350 ? 6 : (net > 1500 ? 5 : (net > 900 ? 8 : 10))), max: 10, hint: net + ' kcal' },
         { key: 'move', label: 'Move', value: Math.round(clamp((+state.burn || 0) / 350, 0, 1) * 10), max: 10, hint: (+state.burn || 0) + ' kcal' }
@@ -2267,8 +2629,8 @@
       render();
     }
     function saveInputs() {
-      state.mood = +document.getElementById('mood').value;
-      state.stress = +document.getElementById('stress').value;
+      state.mood = decimal(document.getElementById('mood').value, state.mood);
+      state.stress = decimal(document.getElementById('stress').value, state.stress);
       state.energy = energyAtTime(new Date());
       state.moodEvents.push({ iso: new Date().toISOString(), mood: state.mood, stress: state.stress, energy: state.energy });
       state.moodEvents = state.moodEvents.slice(-240);
@@ -2478,8 +2840,10 @@
       waterFlow.raf = requestAnimationFrame(drawWaterOverflow);
     }
     function addWater(n) {
+      ensureDailyRollover();
       state.water = Math.max(0, state.water + n);
       state.waterEvents.push({ iso: new Date().toISOString(), ml: n });
+      state.lastDayKey = localDayKey(new Date());
       toast('Water +' + n + 'ml');
       render();
     }
@@ -2492,8 +2856,10 @@
       render();
     }
     function addBurn(n, label = 'Workout') {
+      ensureDailyRollover();
       state.burn += n;
       state.logs.push({ text: label, meta: 'manual workout', intake: 0, burn: n, protein: 0, water: 0, icon: '⚡', iso: new Date().toISOString() });
+      state.lastDayKey = localDayKey(new Date());
       toast('Active burn +' + n + ' kcal');
       render();
     }
@@ -2724,6 +3090,7 @@
       }
     }
     async function parseLog() {
+      ensureDailyRollover();
       const text = document.getElementById('free-log').value.trim();
       if (!text) { toast('先写一句今天吃了什么呀'); return; }
       const localEstimate = estimateEntry(text);
@@ -2736,6 +3103,7 @@
       state.water += water;
       if (water) state.waterEvents.push({ iso: new Date().toISOString(), ml: water });
       state.logs.push({ text, meta: estimate.review ? 'unknown item, not counted' : estimate.meta, intake, burn, protein, water, icon: estimate.icon, foodKey: estimate.foodKey || '', review: estimate.review, iso: new Date().toISOString() });
+      state.lastDayKey = localDayKey(new Date());
       document.getElementById('free-log').value = '';
       toast(estimate.review ? 'Needs review, not counted' : 'Added');
       render();
@@ -2968,7 +3336,7 @@
       });
     }
     function normalBlocks() {
-      if (!Array.isArray(state.blocks) || !state.blocks.length) state.blocks = defaults.blocks.map(block => ({
+      if (!Array.isArray(state.blocks)) state.blocks = defaults.blocks.map(block => ({
         name: block.name,
         time: block.time,
         tasks: block.tasks.map(task => ({ text: task.text, done: !!task.done }))
@@ -2991,14 +3359,33 @@
         return sum + blockTasks(block).filter(task => !task.done).length;
       }, 0);
     }
+    function autoStressFromBlocks() {
+      const pending = pendingBlockTasks();
+      if (!pending) return 0;
+      return Math.min(8, decimal(4.2 + pending * .45));
+    }
+    function applyAutoStress() {
+      const autoStress = autoStressFromBlocks();
+      const current = decimal(state.stress, defaults.stress);
+      state.stress = Math.max(current, autoStress);
+    }
     function updateBlockAlert() {
       const dot = document.getElementById('mail-dot');
       if (!dot) return;
       dot.style.display = pendingBlockTasks() ? 'grid' : 'none';
+      applyAutoStress();
+      const stressInput = document.getElementById('stress');
+      const stressNum = document.getElementById('stress-num');
+      if (stressInput) stressInput.value = state.stress;
+      if (stressNum) stressNum.textContent = oneDecimal(state.stress, defaults.stress);
     }
     function clockFromMinutes(total) {
       const wrapped = ((Math.round(total) % 1440) + 1440) % 1440;
       return String(Math.floor(wrapped / 60)).padStart(2, '0') + ':' + String(wrapped % 60).padStart(2, '0');
+    }
+    function roundedNowMinutes(step = 15) {
+      const now = new Date();
+      return Math.round((now.getHours() * 60 + now.getMinutes()) / step) * step;
     }
     function blockWindow(block, index, nowMinutes) {
       const start = mins(block.time);
@@ -3060,11 +3447,15 @@
         return '<div class="block-card">' +
           '<div class="block-row">' +
             '<input class="block-title-input" value="' + escapeHtml(block.name) + '" placeholder="Block name" oninput="updateBlock(' + bi + ', &quot;name&quot;, this.value)">' +
-            '<input class="block-time-input" value="' + escapeHtml(block.time) + '" placeholder="time" oninput="updateBlock(' + bi + ', &quot;time&quot;, this.value)">' +
+            '<input class="block-time-input" type="time" step="900" value="' + escapeHtml(block.time) + '" placeholder="time" onchange="updateBlock(' + bi + ', &quot;time&quot;, this.value)" oninput="updateBlock(' + bi + ', &quot;time&quot;, this.value)">' +
+          '</div>' +
+          '<div class="block-time-tools">' +
+            '<button class="block-time-tool" onclick="shiftBlockTime(' + bi + ', -30)">-30</button>' +
+            '<button class="block-time-tool" onclick="setBlockNow(' + bi + ')">Now</button>' +
+            '<button class="block-time-tool" onclick="shiftBlockTime(' + bi + ', 30)">+30</button>' +
           '</div>' +
           tasks +
           '<div class="block-actions">' +
-            '<button class="block-mini-btn" onclick="clearBlockDone(' + bi + ')">Reset</button>' +
             '<button class="block-mini-btn" onclick="deleteBlock(' + bi + ')">Remove</button>' +
           '</div>' +
         '</div>';
@@ -3086,6 +3477,21 @@
       state.blocks[index][field] = value;
       renderBlockClock();
       updateBlockAlert();
+      persist();
+    }
+    function shiftBlockTime(index, deltaMinutes) {
+      normalBlocks();
+      if (!state.blocks[index]) return;
+      const base = /^\d{1,2}:\d{2}$/.test(String(state.blocks[index].time || '')) ? mins(state.blocks[index].time) : roundedNowMinutes();
+      state.blocks[index].time = clockFromMinutes(base + deltaMinutes);
+      renderBlocksDrawer();
+      persist();
+    }
+    function setBlockNow(index) {
+      normalBlocks();
+      if (!state.blocks[index]) return;
+      state.blocks[index].time = clockFromMinutes(roundedNowMinutes());
+      renderBlocksDrawer();
       persist();
     }
     function updateBlockTask(blockIndex, taskIndex, value) {
@@ -3256,6 +3662,20 @@
       setTimeout(checkForNewVersion, 1200);
       setInterval(checkForNewVersion, 20000);
     }
+    function startOrbitNotifications() {
+      queueOrbitNotifications('startup');
+      const testKey = 'orbit_test_push_2026_07_17_all_3';
+      if (isNativeOrbit() && localStorage.getItem(testKey) !== 'done') {
+        localStorage.setItem(testKey, 'done');
+        setTimeout(() => sendAllTestNotifications().catch(() => {}), 900);
+      }
+      function refreshNotifications() {
+        if (!document.hidden) queueOrbitNotifications('foreground');
+      }
+      window.addEventListener('pageshow', refreshNotifications);
+      window.addEventListener('focus', refreshNotifications);
+      document.addEventListener('visibilitychange', refreshNotifications);
+    }
     function toast(msg) {
       const el = document.getElementById('toast');
       el.textContent = msg;
@@ -3294,17 +3714,21 @@
       updateBlockTask,
       toggleBlockTask,
       clearBlockDone,
-      deleteBlock
+      deleteBlock,
+      scheduleOrbitNotifications,
+      sendMoodTestNotification,
+      sendAllTestNotifications
     });
     setupKeyboardMode();
     setupTabSwipe();
     lockAppZoom();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-17-orbit-local-only-1').then(registration => registration.update()).catch(() => {});
+      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-17-orbit-reminders-2').then(registration => registration.update()).catch(() => {});
     }
     startOrbitCloudSync();
     startOrbitMailSync();
     startOrbitUpdateWatcher();
+    startOrbitNotifications();
     render();
   </script>
 </body>
