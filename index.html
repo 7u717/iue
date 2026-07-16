@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-07-16-mobius-calc-maple-1"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-07-17-docx-links-1"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
@@ -2909,7 +2909,7 @@
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-16-mobius-calc-maple-1';
+  var APP_VERSION = '2026-07-17-docx-links-1';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
@@ -3938,6 +3938,7 @@
       { tag:"Ch3R", title:"考前识别：ODE 建模、混合题与利息模型", file:"Holzer_chap3B_1231_Calculus_2026.pdf",
         yt:"first order ode modelling mixing problem integrating factor compound interest", bili:"MATH1231 微分方程 建模 积分因子 利息",
         mobius:true, mobiusLabels:["Möbius Calculus", "Lab Test 1"],
+        extraLinks:[{ href:"math1231/docs/Calculus_exam_recognition.docx", label:"📘 DOCX 原件：Calculus 考试一眼识别" }],
         points:[
           "【一眼识别】看到 tank / brine / mixed thoroughly / inflow / outflow：先定义 x(t)=溶质总量，算 V(t)，再写 x' = in − out。",
           "【混合题模板】流入溶质率 = 外界浓度 × 流入流速；流出溶质率 = (x/V(t)) × 流出流速；浓度本身不是流率。",
@@ -4005,6 +4006,7 @@
       { tag:"AlgR", title:"考前识别：线性映射、矩阵与几何变换", file:"MATH1231_ALG_2026T2-Sect8-MatricesAndGeometry.pdf",
         yt:"linear transformation matrix representation determinant area inverse matrix", bili:"线性映射 矩阵表示 几何变换 行列式",
         mobius:true, mobiusLabels:["Möbius Week 5", "Lab Test 1"],
+        extraLinks:[{ href:"math1231/docs/Algebra_exam_recognition.docx", label:"📘 DOCX 原件：Algebra 考试一眼识别" }],
         points:[
           "【linear map】看到 T(1,0), T(0,1)：立刻写 T(x,y)=xT(1,0)+yT(0,1)。三维同理加 zT(0,0,1)。",
           "【非标准给法】若给 T(1,0) 和 T(1,1)，先用 T(0,1)=T(1,1)−T(1,0)，再回到标准基公式。",
@@ -4164,6 +4166,11 @@
         html += '<div class="link-text">Bilibili \u76f8\u5173\u8bb2\u89e3\u641c\u7d22<span class="link-src">中文 · 点击查看搜索结果</span></div>';
         html += '<span class="link-arrow">↗</span></a></div>';
         html += '<a class="pdf-link" href="math1231/pdfs/' + t.file + '" target="_blank" rel="noopener">📄 PDF 原件</a>';
+        if (Array.isArray(t.extraLinks)) {
+          t.extraLinks.forEach(function(link) {
+            html += '<a class="pdf-link" href="' + escapeHtml(link.href) + '" target="_blank" rel="noopener">' + escapeHtml(link.label) + '</a>';
+          });
+        }
         html += '</div></div>';
       });
       container.innerHTML = html;
