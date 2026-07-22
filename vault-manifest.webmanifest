@@ -1,7 +1,8 @@
 {
   "name": "Vault",
   "short_name": "Vault",
-  "start_url": "/iue/budget-tracker.html",
+  "start_url": "/iue/budget-tracker.html?v=2026-07-23-vault-sync-2",
+  "scope": "/iue/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",

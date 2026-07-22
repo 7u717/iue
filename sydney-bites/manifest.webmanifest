@@ -1,7 +1,8 @@
 {
   "name": "Crave",
   "short_name": "Crave",
-  "start_url": "/iue/sydney-bites/",
+  "start_url": "/iue/sydney-bites/?v=2026-07-23-crave-sync-2",
+  "scope": "/iue/sydney-bites/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",

@@ -163,6 +163,7 @@
   </nav>
 
 <script>
+const APP_VERSION='2026-07-23-vault-sync-2';
 const LIMIT=2500,CYCLE_DAY=28,KEY='bt_txs_95566_full_2026_07_23_v1',SG_KEY='bt_sg',BUY_KEY='vault_buy_list_v1';
 const cats=[
   ['Food','🍔','#ff8f70',/(umall|online grocery|supermarket|grocer|mcd|kfc|hungry|subway|woolworth|coles|aldi|iga|restaurant|cafe|food|饭|餐|超市|线上超市|麦当劳|肯德基|奶茶|外卖|寿司|面|burger|pizza)/i],
@@ -634,7 +635,20 @@ function bindSwipeDeletes(){
 function closeSwipeRows(except){document.querySelectorAll('.swipe-row.open,.swipe-row.dragging').forEach(row=>{if(row!==except){row.classList.remove('open','dragging');const content=row.querySelector('.tx');if(content)content.style.transform=''}})}
 function go(tab){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(tab).classList.add('active');document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));if(tab==='stats')renderStats();if(tab==='add'){$('date').value=today();renderHistory();renderCats()}window.scrollTo({top:0,behavior:'smooth'})}
 function renderAll(){renderCats();renderHome();renderHistory();if($('stats').classList.contains('active'))renderStats()}
+function checkFreshBuild(){
+  try{
+    localStorage.setItem('vault_app_version',APP_VERSION);
+    fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'})
+      .then(r=>r.text())
+      .then(html=>{
+        const match=html.match(/const APP_VERSION='([^']+)'/);
+        if(match&&match[1]!==APP_VERSION)location.reload();
+      })
+      .catch(()=>{});
+  }catch{}
+}
 $('date').value=today();renderAll();
+setTimeout(checkFreshBuild,1200);
 </script>
 </body>
 </html>
