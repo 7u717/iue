@@ -43,7 +43,7 @@
   .ghost{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.035);color:var(--text);padding:13px 14px;font-weight:900}
   .catgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.cat{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.035);padding:12px 5px;text-align:center;color:var(--muted);font-weight:850}.cat.active{border-color:rgba(143,202,255,.55);background:rgba(143,202,255,.13);color:var(--blue)}
   .cat b{display:block;font-size:22px;margin-bottom:5px}.cat span{font-size:11px}
-  .swipe-row{position:relative;overflow:hidden;border-radius:18px;touch-action:pan-y}.swipe-delete{position:absolute;right:0;top:0;bottom:0;width:92px;border:0;border-radius:18px;background:linear-gradient(180deg,#ff5b63,#e73444);color:white;font-weight:950;font-size:14px;display:grid;place-items:center}.tx{position:relative;z-index:1;display:flex;align-items:center;gap:13px;padding:14px 0;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#111,#0f0f10);transition:transform .22s cubic-bezier(.2,.8,.2,1);will-change:transform}.tx:last-child{border-bottom:0}.swipe-row.open .tx{transform:translateX(-92px)}.txicon{width:42px;height:42px;border-radius:14px;background:#1b1d21;display:grid;place-items:center;font-size:20px;flex:0 0 auto}.txbody{min-width:0}.txname{font-size:17px;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.txsub{font-size:13px;color:var(--muted);font-weight:800;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.txamt{margin-left:auto;color:#ff6b7b;font-weight:950;font-size:17px;font-variant-numeric:tabular-nums;flex:0 0 auto}.txamt.refund{color:#67d9a5}
+  #recent,#history{display:grid;gap:10px;overflow:hidden;contain:paint}.swipe-row{position:relative;overflow:hidden;border-radius:22px;touch-action:pan-y;background:#0f1011;isolation:isolate;contain:paint;transform:translateZ(0);border:1px solid rgba(255,255,255,.035)}.swipe-delete{position:absolute;right:-1px;top:0;bottom:0;width:94px;border:0;border-radius:0 22px 22px 0;background:linear-gradient(180deg,#ff5b63,#e73444);color:white;font-weight:950;font-size:14px;display:grid;place-items:center;opacity:0;transition:opacity .12s ease}.swipe-row.open .swipe-delete,.swipe-row.dragging .swipe-delete{opacity:1}.tx{position:relative;z-index:1;display:flex;align-items:center;gap:13px;padding:14px;background:linear-gradient(180deg,#111,#0f0f10);transition:transform .22s cubic-bezier(.2,.8,.2,1);will-change:transform;border-radius:22px;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}.swipe-row.open .tx{transform:translateX(-92px)}.txicon{width:42px;height:42px;border-radius:14px;background:#1b1d21;display:grid;place-items:center;font-size:20px;flex:0 0 auto}.txbody{min-width:0}.txname{font-size:17px;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.txsub{font-size:13px;color:var(--muted);font-weight:800;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.txamt{margin-left:auto;color:#ff6b7b;font-weight:950;font-size:17px;font-variant-numeric:tabular-nums;flex:0 0 auto}.txamt.refund{color:#67d9a5}
   .drop{border:1px dashed rgba(143,202,255,.38);background:linear-gradient(180deg,rgba(143,202,255,.12),rgba(255,255,255,.035));border-radius:24px;padding:18px;text-align:center}.drop input{display:none}.drop strong{display:block;font-size:18px}.drop span{display:block;color:var(--muted);font-weight:800;margin-top:6px;font-size:13px}
   .ocrbox{display:none;margin-top:14px}.ocrbox.show{display:block}.ocr-text{white-space:pre-wrap;max-height:150px;overflow:auto;font-size:12px;color:var(--muted);line-height:1.45;border:1px solid var(--line);border-radius:16px;padding:12px;background:#0c0d0f}
   .sms-card{padding:18px}.sms-input{min-height:82px;border-radius:22px;background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.08);font-size:14px}.sms-preview{display:none;margin-top:12px;border:1px solid rgba(143,202,255,.22);background:linear-gradient(135deg,rgba(143,202,255,.12),rgba(255,255,255,.035));border-radius:22px;padding:14px}.sms-preview.show{display:block;animation:rise .26s ease both}.sms-preview-head{display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:12px}.sms-icon{width:42px;height:42px;border-radius:15px;background:rgba(143,202,255,.12);display:grid;place-items:center;font-size:21px}.sms-name{font-size:18px;font-weight:950}.sms-sub{margin-top:3px;color:var(--muted);font-size:12px;font-weight:850}.sms-amt{font-size:21px;font-weight:950;color:#ff7b88;font-variant-numeric:tabular-nums}.sms-actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}.small-primary,.small-ghost{border-radius:17px;padding:12px 13px;font-size:14px;font-weight:950}.small-primary{border:0;background:linear-gradient(135deg,#eaf5ff,#5bb8ff);color:#06101b}.small-ghost{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);color:var(--text)}
@@ -87,7 +87,7 @@
     <h1 class="section-title">Log</h1>
     <section class="card sms-card">
       <div class="row" style="margin-bottom:10px"><div><div class="label">Smart entry</div><h2 style="margin:0;font-size:23px">Bank SMS</h2></div><span class="pill" id="sms-status">ready</span></div>
-      <textarea id="sms-quick" class="textarea sms-input" placeholder="Paste bank SMS here" oninput="parseDashboardText()" onpaste="setTimeout(parseDashboardText,0)"></textarea>
+      <textarea id="sms-quick" class="textarea sms-input" placeholder="Bank SMS" oninput="parseDashboardText()" onpaste="setTimeout(parseDashboardText,0)"></textarea>
       <small class="entry-hint" id="entry-hint"></small>
       <div id="sms-preview" class="sms-preview">
         <div class="sms-preview-head">
@@ -163,7 +163,8 @@ const DEFAULT_TXS=[
   {"amount":25.21,"currency":"AUD","description":"HUNGRY","category":"Food","date":"2026-07-18","raw":"您的信用卡3500VISA Apple Pay于2026年07月18日，在HUNGRY消费AUD25.21元。【中国银行】","id":2026071801},
   {"amount":6.98,"currency":"AUD","description":"IGA WA","category":"Food","date":"2026-07-15","raw":"您的信用卡3500VISA Apple Pay于2026年07月15日，在IGA WA消费AUD6.98元。【中国银行】","id":2026071502},
   {"amount":35.53,"currency":"AUD","description":"BA THO","category":"Food","date":"2026-07-15","raw":"您的信用卡3500VISA Apple Pay于2026年07月15日，在BA THO消费AUD35.53元。【中国银行】","id":2026071501},
-  {"amount":64.13,"currency":"AUD","description":"UMALL","category":"Shopping","date":"2026-07-13","raw":"您的信用卡3500VISA Apple Pay于2026年07月13日，在UMALL消费AUD64.13元。【中国银行】","id":2026071301},
+  {"amount":64.13,"currency":"AUD","description":"UMALL","category":"Food","date":"2026-07-13","raw":"您的信用卡3500VISA Apple Pay于2026年07月13日，在UMALL消费AUD64.13元。【中国银行】","id":2026071301},
+  {"amount":141.65,"currency":"AUD","description":"COLES","category":"Food","date":"2026-07-13","raw":"您的信用卡3500VISA Apple Pay于2026年07月13日，在COLES消费AUD141.65元。【中国银行】","id":2026071302},
   {"amount":6.99,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-07-12","raw":"您的信用卡3500于2026年07月12日，在PAYPAL消费AUD6.99元。【中国银行】","id":2026071202},
   {"amount":39.59,"currency":"AUD","description":"BA THO","category":"Food","date":"2026-07-12","raw":"您的信用卡3500VISA Apple Pay于2026年07月12日，在BA THO消费AUD39.59元。【中国银行】","id":2026071201},
   {"amount":15.46,"currency":"AUD","description":"UBER *","category":"Transport","date":"2026-07-11","raw":"您的信用卡3500VISA Apple Pay于2026年07月11日，在UBER *消费AUD15.46元。【中国银行】","id":2026071103},
@@ -178,10 +179,11 @@ const DEFAULT_TXS=[
   {"amount":29.89,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-07-06","raw":"您的信用卡3500于2026年07月06日，在PAYPAL消费AUD29.89元。【中国银行】","id":2026070603},
   {"amount":63.95,"currency":"AUD","description":"YUM YA","category":"Food","date":"2026-07-06","raw":"您的信用卡3500VISA Apple Pay于2026年07月06日，在YUM YA消费AUD63.95元。【中国银行】","id":2026070602},
   {"amount":34.79,"currency":"AUD","description":"IGA WA","category":"Food","date":"2026-07-06","raw":"您的信用卡3500VISA Apple Pay于2026年07月06日，在IGA WA消费AUD34.79元。【中国银行】","id":2026070601},
-  {"amount":92.81,"currency":"AUD","description":"UMALL","category":"Shopping","date":"2026-07-05","raw":"您的信用卡3500VISA Apple Pay于2026年07月05日，在UMALL消费AUD92.81元。【中国银行】","id":2026070501},
+  {"amount":92.81,"currency":"AUD","description":"UMALL","category":"Food","date":"2026-07-05","raw":"您的信用卡3500VISA Apple Pay于2026年07月05日，在UMALL消费AUD92.81元。【中国银行】","id":2026070501},
   {"amount":18.8,"currency":"AUD","description":"SUSHI","category":"Food","date":"2026-07-04","raw":"您的信用卡3500VISA Apple Pay于2026年07月04日，在SUSHI消费AUD18.80元。【中国银行】","id":2026070403},
   {"amount":29.25,"currency":"AUD","description":"SQ *MA","category":"Food","date":"2026-07-04","raw":"您的信用卡3500VISA Apple Pay于2026年07月04日，在SQ *MA消费AUD29.25元。【中国银行】","id":2026070402},
   {"amount":9.57,"currency":"AUD","description":"IC MAR","category":"Bills","date":"2026-07-04","raw":"您的信用卡3500VISA Apple Pay于2026年07月04日，在IC MAR消费AUD9.57元。【中国银行】","id":2026070401},
+  {"amount":238.99,"currency":"AUD","description":"PAYPAL","category":"Education","date":"2026-07-03","raw":"您的信用卡3500于2026年07月03日，在PAYPAL消费AUD238.99元。【中国银行】","id":2026070302},
   {"amount":-18.0,"currency":"AUD","description":"Card return","category":"Refund","date":"2026-07-03","raw":"您的信用卡3500于2026年07月03日成功退货AUD18.00元【中国银行】","id":2026070301},
   {"amount":47.22,"currency":"AUD","description":"Domino","category":"Food","date":"2026-07-02","raw":"您的信用卡3500VISA Apple Pay于2026年07月02日，在Domino消费AUD47.22元。【中国银行】","id":2026070201},
   {"amount":4.27,"currency":"AUD","description":"IGLU L","category":"Bills","date":"2026-07-01","raw":"您的信用卡3500VISA Apple Pay于2026年07月01日，在IGLU L消费AUD4.27元。【中国银行】","id":2026070102},
@@ -198,7 +200,7 @@ const DEFAULT_TXS=[
   {"amount":10.0,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-06-25","raw":"您的信用卡3500于2026年06月25日，在PAYPAL消费AUD10.00元。【中国银行】","id":2026062501},
   {"amount":98.15,"currency":"AUD","description":"YAYOI","category":"Food","date":"2026-06-22","raw":"您的信用卡3500VISA Apple Pay于2026年06月22日，在YAYOI消费AUD98.15元。【中国银行】","id":2026062202},
   {"amount":8.08,"currency":"AUD","description":"SMP*He","category":"Bills","date":"2026-06-22","raw":"您的信用卡3500VISA Apple Pay于2026年06月22日，在SMP*He消费AUD8.08元。【中国银行】","id":2026062201},
-  {"amount":158.4,"currency":"AUD","description":"UMALL","category":"Shopping","date":"2026-06-21","raw":"您的信用卡3500于2026年06月21日，在UMALL消费AUD158.40元。【中国银行】","id":2026062102},
+  {"amount":158.4,"currency":"AUD","description":"UMALL","category":"Food","date":"2026-06-21","raw":"您的信用卡3500于2026年06月21日，在UMALL消费AUD158.40元。【中国银行】","id":2026062102},
   {"amount":67.0,"currency":"AUD","description":"Aesop","category":"Bills","date":"2026-06-21","raw":"您的信用卡3500VISA Apple Pay于2026年06月21日，在Aesop消费AUD67.00元。【中国银行】","id":2026062101},
   {"amount":17.8,"currency":"AUD","description":"FORTUN","category":"Food","date":"2026-06-20","raw":"您的信用卡3500VISA Apple Pay于2026年06月20日，在FORTUN消费AUD17.80元。【中国银行】","id":2026062001},
   {"amount":29.99,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-06-18","raw":"您的信用卡3500于2026年06月18日，在PAYPAL消费AUD29.99元。【中国银行】","id":2026061802},
@@ -206,7 +208,7 @@ const DEFAULT_TXS=[
   {"amount":20.85,"currency":"AUD","description":"McDona","category":"Food","date":"2026-06-17","raw":"您的信用卡3500VISA Apple Pay于2026年06月17日，在McDona消费AUD20.85元。【中国银行】","id":2026061701},
   {"amount":21.05,"currency":"AUD","description":"SUNGRO","category":"Bills","date":"2026-06-16","raw":"您的信用卡3500VISA Apple Pay于2026年06月16日，在SUNGRO消费AUD21.05元。【中国银行】","id":2026061601},
   {"amount":11.86,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-06-13","raw":"您的信用卡3500于2026年06月13日，在PAYPAL消费AUD11.86元。【中国银行】","id":2026061303},
-  {"amount":96.79,"currency":"AUD","description":"UMALL","category":"Shopping","date":"2026-06-13","raw":"您的信用卡3500VISA Apple Pay于2026年06月13日，在UMALL消费AUD96.79元。【中国银行】","id":2026061302},
+  {"amount":96.79,"currency":"AUD","description":"UMALL","category":"Food","date":"2026-06-13","raw":"您的信用卡3500VISA Apple Pay于2026年06月13日，在UMALL消费AUD96.79元。【中国银行】","id":2026061302},
   {"amount":28.16,"currency":"AUD","description":"IGA WA","category":"Food","date":"2026-06-13","raw":"您的信用卡3500VISA Apple Pay于2026年06月13日，在IGA WA消费AUD28.16元。【中国银行】","id":2026061301},
   {"amount":25.49,"currency":"AUD","description":"AMAZON","category":"Shopping","date":"2026-06-12","raw":"您的信用卡3500于2026年06月12日，在AMAZON消费AUD25.49元。【中国银行】","id":2026061203},
   {"amount":-18.0,"currency":"AUD","description":"Card return","category":"Refund","date":"2026-06-12","raw":"您的信用卡3500于2026年06月12日成功退货AUD18.00元【中国银行】","id":2026061202},
@@ -390,7 +392,8 @@ const DEFAULT_TXS=[
 ].sort((a,b)=>String(b.date).localeCompare(String(a.date))||b.id-a.id);
 try{
   const stored=localStorage.getItem(KEY);
-  txs=(stored?JSON.parse(stored):DEFAULT_TXS.slice()).map(normalizeTx);
+  const storedTxs=stored?JSON.parse(stored):null;
+  txs=mergeDefaultTxs(storedTxs).map(normalizeTx);
   localStorage.removeItem('bt_txs');
   save();
 }catch{txs=DEFAULT_TXS.slice();save()}
@@ -411,6 +414,12 @@ const displayMoney=t=>{
   return `${cur} ${Math.abs(+t.amount||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`;
 };
 function save(){localStorage.setItem(KEY,JSON.stringify(txs))}
+function mergeDefaultTxs(storedTxs){
+  if(!Array.isArray(storedTxs))return DEFAULT_TXS.slice();
+  const byId=new Map(DEFAULT_TXS.map(t=>[String(t.id),t]));
+  storedTxs.forEach(t=>byId.set(String(t.id),{...(byId.get(String(t.id))||{}),...t}));
+  return [...byId.values()].sort((a,b)=>String(b.date).localeCompare(String(a.date))||(+b.id||0)-(+a.id||0));
+}
 function setSavingGoal(value){saving=Math.max(0,+value||0);localStorage.setItem(SG_KEY,String(saving));renderHome();if($('stats').classList.contains('active'))renderStats()}
 function cycle(){const now=new Date();now.setHours(0,0,0,0);const s=now.getDate()>=CYCLE_DAY?new Date(now.getFullYear(),now.getMonth(),CYCLE_DAY):new Date(now.getFullYear(),now.getMonth()-1,CYCLE_DAY);const e=new Date(s);e.setMonth(e.getMonth()+1);return{start:s,end:e,left:Math.max(1,Math.ceil((e-now)/864e5)),passed:Math.max(0,Math.floor((now-s)/864e5))}}
 function inCycle(){const c=cycle();return txs.filter(t=>{const d=new Date((t.date||today())+'T00:00:00');return d>=c.start&&d<c.end})}
@@ -566,6 +575,7 @@ function bindSwipeDeletes(){
       if(e.target.closest('button'))return;
       closeSwipeRows(row);
       startX=e.clientX;startY=e.clientY;last=row.classList.contains('open')?-92:0;dragging=true;
+      row.classList.add('dragging');
       content.style.transition='none';
       row.setPointerCapture?.(e.pointerId);
     });
@@ -581,6 +591,7 @@ function bindSwipeDeletes(){
     const end=()=>{
       if(!dragging)return;
       dragging=false;
+      row.classList.remove('dragging');
       content.style.transition='';
       const open=(+(row.dataset.offset||last))<-46;
       row.classList.toggle('open',open);
@@ -591,8 +602,8 @@ function bindSwipeDeletes(){
     row.addEventListener('pointercancel',end);
   });
 }
-function closeSwipeRows(except){document.querySelectorAll('.swipe-row.open').forEach(row=>{if(row!==except)row.classList.remove('open')})}
-function go(tab){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(tab).classList.add('active');document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));if(tab==='stats')renderStats();if(tab==='add'){$('date').value=today();renderHistory();renderCats();setTimeout(tryClipboardFill,80)}window.scrollTo({top:0,behavior:'smooth'})}
+function closeSwipeRows(except){document.querySelectorAll('.swipe-row.open,.swipe-row.dragging').forEach(row=>{if(row!==except){row.classList.remove('open','dragging');const content=row.querySelector('.tx');if(content)content.style.transform=''}})}
+function go(tab){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(tab).classList.add('active');document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));if(tab==='stats')renderStats();if(tab==='add'){$('date').value=today();renderHistory();renderCats()}window.scrollTo({top:0,behavior:'smooth'})}
 function renderAll(){renderCats();renderHome();renderHistory();if($('stats').classList.contains('active'))renderStats()}
 $('date').value=today();renderAll();
 </script>
