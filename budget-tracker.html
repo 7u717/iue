@@ -128,7 +128,7 @@
       <div class="stat-chips">
         <div class="stat-chip"><span>Avg/day</span><strong id="stats-avg">$0</strong></div>
         <div class="stat-chip"><span>High day</span><strong id="stats-high">$0</strong></div>
-        <div class="stat-chip"><span>Items</span><strong id="stats-count">0</strong></div>
+        <div class="stat-chip"><span>Days left</span><strong id="stats-days">0</strong></div>
       </div>
     </section>
     <section class="card chart-card"><div class="chart-head"><div class="chart-title">Daily spending</div><div class="chart-total" id="daily-total">$0</div></div><div style="height:220px"><canvas id="daily-chart"></canvas></div></section>
@@ -144,7 +144,7 @@
 <script>
 const LIMIT=2500,CYCLE_DAY=28,KEY='bt_txs_95566_full_2026_07_23_v1',SG_KEY='bt_sg';
 const cats=[
-  ['Food','🍔','#ff8f70',/(mcd|kfc|hungry|subway|woolworth|coles|aldi|iga|restaurant|cafe|food|饭|餐|麦当劳|肯德基|奶茶|外卖|寿司|面|burger|pizza)/i],
+  ['Food','🍔','#ff8f70',/(umall|online grocery|supermarket|grocer|mcd|kfc|hungry|subway|woolworth|coles|aldi|iga|restaurant|cafe|food|饭|餐|超市|线上超市|麦当劳|肯德基|奶茶|外卖|寿司|面|burger|pizza)/i],
   ['Transport','🚗','#8fcaff',/(uber|taxi|train|bus|opal|petrol|bp|shell|transport|滴滴|地铁|公交|加油)/i],
   ['Shopping','🛍️','#c7b8ff',/(amazon|taobao|jd|kmart|target|myer|zara|uniqlo|shopping|mall|商场|淘宝|京东)/i],
   ['Entertain','🎮','#ffd27d',/(steam|cinema|hoyts|netflix|spotify|game|电影|游戏|娱乐)/i],
@@ -388,7 +388,7 @@ const DEFAULT_TXS=[
 ].sort((a,b)=>String(b.date).localeCompare(String(a.date))||b.id-a.id);
 try{
   const stored=localStorage.getItem(KEY);
-  txs=stored?JSON.parse(stored):DEFAULT_TXS.slice();
+  txs=(stored?JSON.parse(stored):DEFAULT_TXS.slice()).map(normalizeTx);
   localStorage.removeItem('bt_txs');
   save();
 }catch{txs=DEFAULT_TXS.slice();save()}
@@ -412,6 +412,11 @@ function save(){localStorage.setItem(KEY,JSON.stringify(txs))}
 function setSavingGoal(value){saving=Math.max(0,+value||0);localStorage.setItem(SG_KEY,String(saving));renderHome();if($('stats').classList.contains('active'))renderStats()}
 function cycle(){const now=new Date();now.setHours(0,0,0,0);const s=now.getDate()>=CYCLE_DAY?new Date(now.getFullYear(),now.getMonth(),CYCLE_DAY):new Date(now.getFullYear(),now.getMonth()-1,CYCLE_DAY);const e=new Date(s);e.setMonth(e.getMonth()+1);return{start:s,end:e,left:Math.max(1,Math.ceil((e-now)/864e5)),passed:Math.max(0,Math.floor((now-s)/864e5))}}
 function inCycle(){const c=cycle();return txs.filter(t=>{const d=new Date((t.date||today())+'T00:00:00');return d>=c.start&&d<c.end})}
+function normalizeTx(t){
+  const hay=`${t.description||''} ${t.raw||''}`;
+  if(/umall|online grocery|supermarket|grocer|超市|线上超市/i.test(hay)) return {...t,category:'Food'};
+  return t;
+}
 function classify(text){return (cats.find(c=>c[3].test(text||''))||cats.at(-1))[0]}
 function parseExpenseText(text){
   text=String(text||'').trim(); if(!text) return null;
@@ -461,7 +466,7 @@ function renderHome(){const b=budgetState(),over=b.saveLeft<0;$('cycle-label').t
 function row(t){const c=cats.find(x=>x[0]===t.category)||cats.at(-1),refund=(+t.amount||0)<0,foreign=!isAUD(t),sub=[refund?'':t.category,t.date,foreign?'not in AUD budget':''].filter(Boolean).join(' · ');return`<div class="swipe-row" data-id="${t.id}"><button class="swipe-delete" onclick="delTx(${t.id})">Delete</button><div class="tx"><div class="txicon" style="color:${c[2]}">${c[1]}</div><div class="txbody"><div class="txname">${esc(t.description)}</div><div class="txsub">${esc(sub)}</div></div><div class="txamt ${refund?'refund':''}">${refund?'+':'-'}${displayMoney(t)}</div></div></div>`}
 function renderHistory(){const rows=txs.filter(t=>audValue(t)>0);$('history-count').textContent=rows.length;$('history').innerHTML=rows.length?rows.map(row).join(''):'<div class="empty">No records yet.</div>';bindSwipeDeletes()}
 function delTx(id){txs=txs.filter(t=>t.id!==id);save();renderAll()}
-function addTx(data){txs.unshift({id:Date.now(),amount:+data.amount,description:data.description||'Expense',category:data.category||sel,date:data.date||today()});save();renderAll();go('home')}
+function addTx(data){txs.unshift(normalizeTx({id:Date.now(),amount:+data.amount,description:data.description||'Expense',category:data.category||sel,date:data.date||today()}));save();renderAll();go('home')}
 function addManual(){const amount=Math.max(0,+$('amount').value||0);if(!amount)return;$('amount').value=amount;addTx({amount,description:$('desc').value,category:sel,date:$('date').value||today(),currency:'AUD'});$('amount').value='';$('desc').value='';$('sms-quick').value='';clearDashboardText(false)}
 function showParsed(p){parsed=p;$('ocrbox').classList.add('show');$('ocr-amount').textContent=(p.amount<0?'+':'')+money(p.amount);$('ocr-name').textContent=p.description;$('ocr-cat').textContent=p.category;$('ocr-text').textContent=p.raw||''}
 function applyParsed(){if(parsed)addTx(parsed)}
@@ -536,10 +541,10 @@ function renderStats(){
   const values=byDay.map(x=>x.value),high=Math.max(0,...values),avg=c.passed>=0?spent/(c.passed+1):0;
   $('stats-spent').textContent=money(spent);
   $('stats-caption').textContent=spent?`${pct.toFixed(0)}% of save-plan budget used, ${money(Math.max(0,b.saveLeft))} left for saving plan.`:'Paste a bank SMS or add your first expense.';
-  $('stats-left').textContent=`${c.left} days`;
+  $('stats-left').textContent=`${pct.toFixed(0)}% used`;
   $('stats-avg').textContent=money(avg);
   $('stats-high').textContent=money(high);
-  $('stats-count').textContent=list.length;
+  $('stats-days').textContent=`${c.left} days`;
   $('daily-total').textContent=money(spent);
   if(dailyChart)dailyChart.destroy();
   dailyChart=new Chart($('daily-chart'),{type:'bar',data:{labels:byDay.map(x=>x.label),datasets:[{data:values,backgroundColor:(ctx)=>{const chart=ctx.chart,area=chart.chartArea;if(!area)return '#8fcaff';const g=chart.ctx.createLinearGradient(0,area.top,0,area.bottom);g.addColorStop(0,'#eaf5ff');g.addColorStop(.48,'#8fcaff');g.addColorStop(1,'#227cc3');return g},borderRadius:12,borderSkipped:false,barPercentage:.72,categoryPercentage:.72}]},options:chartOptions()});
