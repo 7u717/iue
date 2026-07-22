@@ -1,50 +1,229 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#f6f2e9" />
-  <title>Sydney Bites · 悉尼吃什么</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>Sydney Bites</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap');
-    :root{--ink:#1e2d25;--muted:#718078;--paper:#f7f4ed;--cream:#fffdf9;--line:#e7e1d5;--coral:#ed7656;--coral-d:#c9563c;--sage:#dce7d8;--sun:#f5c96d;--shadow:0 12px 32px rgba(30,45,37,.08)}
-    *{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font-family:"DM Sans","Noto Sans SC",system-ui,sans-serif}.shell{max-width:720px;margin:auto;min-height:100vh;background:var(--cream);padding:0 20px 100px}
-    header{padding:28px 4px 18px;display:flex;align-items:flex-start;justify-content:space-between}.eyebrow{color:var(--coral-d);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.brand{font:600 35px/1 "Playfair Display","Noto Sans SC",serif;letter-spacing:-.04em;margin:5px 0 3px}.tagline{color:var(--muted);font-size:14px;margin:0}.add{border:0;border-radius:50%;background:var(--ink);color:white;width:46px;height:46px;font-size:27px;line-height:1;cursor:pointer;box-shadow:var(--shadow)}
-    .hero{background:var(--sage);border-radius:25px;padding:20px;margin-bottom:22px;position:relative;overflow:hidden}.hero:after{content:"✦";font:100px Georgia;color:#b1c7aa;position:absolute;right:10px;bottom:-38px}.hero h2{font:600 23px/1.25 "Playfair Display","Noto Sans SC",serif;margin:0 0 8px;max-width:360px}.hero p{margin:0;color:#526458;font-size:14px;max-width:350px}.search{margin-top:16px;display:flex;align-items:center;gap:9px;background:#fffdf9;border:1px solid rgba(30,45,37,.08);border-radius:14px;padding:12px 14px;position:relative}.search input{border:0;outline:0;background:transparent;width:100%;font:14px inherit;color:var(--ink)}
-    .tabs{display:flex;gap:8px;margin:12px 0 20px}.tab{border:1px solid var(--line);color:var(--muted);background:transparent;border-radius:999px;padding:9px 15px;font:600 13px inherit;cursor:pointer}.tab.active{background:var(--ink);color:#fff;border-color:var(--ink)}.count{opacity:.65;margin-left:3px}
-    .section-title{font:600 15px "Noto Sans SC",sans-serif;margin:2px 0 10px;color:var(--ink)}.list{display:grid;gap:11px}.card{display:flex;gap:14px;text-decoration:none;color:inherit;padding:13px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 3px 10px rgba(30,45,37,.025);cursor:pointer;transition:.2s}.card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}.photo{width:76px;height:76px;border-radius:14px;flex:none;display:grid;place-items:center;background:#f8e4da;font-size:29px;overflow:hidden}.photo img{width:100%;height:100%;object-fit:cover}.card-info{min-width:0;flex:1}.name-line{display:flex;justify-content:space-between;gap:8px;align-items:center}.name{font:700 17px "DM Sans","Noto Sans SC",sans-serif}.pill{color:var(--coral-d);background:#fff0ea;border-radius:999px;padding:3px 8px;font-size:10px;font-weight:700;white-space:nowrap}.meta{color:var(--muted);font-size:12px;margin:2px 0 7px}.dish{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.empty{padding:50px 25px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:18px}
-    dialog{border:0;border-radius:25px;padding:0;width:min(560px,calc(100% - 30px));box-shadow:0 20px 80px rgba(0,0,0,.25);background:var(--cream)}dialog::backdrop{background:rgba(30,45,37,.42);backdrop-filter:blur(2px)}.modal-head{padding:22px 22px 12px;display:flex;justify-content:space-between;align-items:center}.modal-head h3{margin:0;font:600 25px "Playfair Display","Noto Sans SC",serif}.close{border:0;background:#eee9de;border-radius:50%;width:32px;height:32px;font-size:20px;cursor:pointer}.modal-content{padding:8px 22px 24px}.detail-image{width:100%;height:180px;border-radius:18px;background:var(--sage);display:grid;place-items:center;font-size:60px;overflow:hidden;margin-bottom:18px}.detail-image img{height:100%;width:100%;object-fit:cover}.recommend{color:var(--coral-d);font-weight:700;margin:5px 0 12px}.note{color:var(--muted);font-size:14px;line-height:1.7}.map{display:flex;align-items:center;justify-content:center;text-decoration:none;background:var(--ink);color:#fff;border-radius:14px;padding:13px;margin-top:18px;font-weight:700;font-size:14px}.upload{display:block;background:#fff0ea;color:var(--coral-d);border:1px dashed #e5a692;border-radius:14px;padding:13px;text-align:center;font-weight:700;font-size:14px;margin-top:10px;cursor:pointer}.upload input{display:none}
-    form{display:grid;gap:11px}label{font-size:12px;font-weight:700;color:var(--muted)}input,textarea,select{display:block;width:100%;margin-top:4px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px;font:14px inherit;color:var(--ink);outline-color:var(--coral)}textarea{resize:vertical;min-height:64px}.save{border:0;background:var(--coral);color:#fff;padding:13px;border-radius:13px;font:700 14px inherit;cursor:pointer;margin-top:3px}.small{font-size:12px;color:var(--muted);margin-top:10px}.hidden{display:none}
-    @media(max-width:450px){.shell{padding-left:15px;padding-right:15px}.brand{font-size:32px}header{padding-top:22px}.hero{border-radius:22px}.card{padding:11px}.photo{width:68px;height:68px}}
+    *,*::before,*::after{box-sizing:border-box}
+    :root{--bg:#000;--card:#111214;--panel:#17181b;--line:rgba(255,255,255,.09);--text:#f4f6f8;--muted:#8d9199;--blue:#8fcaff;--pink:#ff8fb8;--green:#77ddb1;--dock:calc(60px + env(safe-area-inset-bottom));--top:calc(72px + env(safe-area-inset-top));--w:430px}
+    html,body{margin:0;min-height:100%;background:#000;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter","Noto Sans SC",sans-serif;overflow-x:hidden;-webkit-text-size-adjust:100%;touch-action:pan-y}
+    body{max-width:var(--w);margin:0 auto;border-left:1px solid rgba(255,255,255,.075);border-right:1px solid rgba(255,255,255,.075)}
+    button,input,textarea,select{font:inherit}button{-webkit-tap-highlight-color:transparent}
+    .top{position:fixed;z-index:50;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:var(--w);height:var(--top);padding:calc(env(safe-area-inset-top) + 13px) 18px 12px;display:grid;grid-template-columns:44px 1fr 44px;align-items:center;background:#000;border-bottom:1px solid rgba(255,255,255,.075)}
+    .avatar{width:37px;height:37px;border-radius:50%;overflow:hidden;background:#050505}.avatar img{width:100%;height:100%;object-fit:cover}.title{text-align:center}.title b{display:block;font-size:21px;line-height:1;font-weight:950}.title span{display:block;margin-top:5px;color:var(--muted);font-size:12px;font-weight:850}.icon{width:39px;height:39px;border-radius:50%;border:1px solid rgba(255,255,255,.09);background:linear-gradient(145deg,#1c1d20,#0d0d0f);color:rgba(245,246,248,.8);display:grid;place-items:center;font-size:20px}
+    main{display:none;min-height:100dvh;padding:calc(var(--top) + 16px) 18px calc(var(--dock) + 20px)}main.active{display:block}
+    .hero{padding:0 2px 18px}.hero h1{font-size:44px;line-height:.98;margin:0 0 8px;font-weight:950;letter-spacing:-.4px}.hero p{margin:0;color:var(--muted);font-weight:820;font-size:14px}.search{margin-top:15px;border:1px solid rgba(255,255,255,.08);border-radius:22px;background:linear-gradient(180deg,#18191b,#0f1011);display:flex;align-items:center;gap:10px;padding:13px 15px;color:var(--muted)}.search input{min-width:0;flex:1;border:0;outline:0;background:transparent;color:var(--text);font-weight:850}.chipbar{display:flex;gap:9px;overflow-x:auto;padding:0 2px 14px;scrollbar-width:none}.chipbar::-webkit-scrollbar{display:none}.chip{flex:0 0 auto;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);color:var(--muted);border-radius:999px;padding:9px 14px;font-weight:950;font-size:13px}.chip.active{border-color:rgba(143,202,255,.42);background:rgba(143,202,255,.14);color:var(--blue)}
+    .section-head{display:flex;justify-content:space-between;align-items:end;margin:4px 2px 12px}.label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:2.7px;font-weight:950}.count{color:var(--blue);font-weight:950}.list{display:grid;gap:12px}.card{border:1px solid rgba(255,255,255,.085);border-radius:26px;background:linear-gradient(180deg,#151618,#0d0e0f);padding:13px;display:grid;grid-template-columns:76px 1fr;gap:13px;align-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}.thumb{width:76px;height:76px;border-radius:21px;background:linear-gradient(145deg,#24272b,#101113);display:grid;place-items:center;font-size:33px;overflow:hidden}.thumb img{width:100%;height:100%;object-fit:cover}.name{font-size:20px;font-weight:950;line-height:1.1}.meta{margin-top:4px;color:var(--muted);font-size:13px;font-weight:830;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dish{margin-top:8px;font-size:13px;font-weight:900;color:#dcecff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tags{margin-top:9px;display:flex;gap:6px;flex-wrap:wrap}.tag{font-size:10px;font-weight:950;border-radius:999px;padding:5px 8px;background:rgba(143,202,255,.11);color:var(--blue);border:1px solid rgba(143,202,255,.18)}.empty{padding:36px 16px;text-align:center;color:var(--muted);border:1px dashed rgba(255,255,255,.11);border-radius:24px;font-weight:850}
+    #map{height:calc(100dvh - var(--top) - var(--dock) - 38px);border-radius:30px;overflow:hidden;border:1px solid rgba(255,255,255,.09);background:#101113}.leaflet-container{background:#101113;font-family:inherit}.leaflet-control-attribution{display:none}.leaflet-tile{filter:invert(1) hue-rotate(180deg) saturate(.65) brightness(.78) contrast(1.08)}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#111214;color:var(--text);border:1px solid rgba(255,255,255,.09)}.pin{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#111;border:2px solid #fff;box-shadow:0 8px 24px rgba(0,0,0,.5);font-size:18px}.pin.eaten{width:58px;height:48px;border-radius:15px;border:3px solid white;overflow:hidden;background:#111}.pin.eaten img{width:100%;height:100%;object-fit:cover}.pin.eaten:after{content:"";position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:9px solid white}
+    dialog{width:min(392px,calc(100% - 28px));border:0;border-radius:30px;padding:0;background:#151619;color:var(--text);box-shadow:0 24px 90px rgba(0,0,0,.6);overflow:hidden}dialog::backdrop{background:rgba(0,0,0,.45);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.sheet{padding:18px}.handle{width:50px;height:5px;border-radius:99px;background:rgba(255,255,255,.22);margin:0 auto 18px}.detail-photo{height:190px;border-radius:24px;background:linear-gradient(145deg,#22252a,#101113);display:grid;place-items:center;font-size:62px;overflow:hidden;margin-bottom:16px}.detail-photo img{width:100%;height:100%;object-fit:cover}.detail-title{font-size:30px;font-weight:950;line-height:1;margin:0 0 6px}.detail-note{color:var(--muted);font-weight:820;line-height:1.55;margin:12px 0}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.btn{border:1px solid rgba(255,255,255,.09);border-radius:18px;background:rgba(255,255,255,.04);color:var(--text);padding:13px 12px;font-weight:950;text-align:center;text-decoration:none}.btn.primary{border:0;background:linear-gradient(135deg,#f1f8ff,#5dbaff);color:#05101b}.upload input{display:none}.form{display:grid;gap:10px}.field{border:1px solid rgba(255,255,255,.08);border-radius:18px;background:#101113;color:var(--text);outline:0;padding:14px 15px;font-weight:850}.field:focus{border-color:rgba(143,202,255,.55);box-shadow:0 0 0 4px rgba(143,202,255,.08)}textarea.field{min-height:76px;resize:vertical}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .dock{position:fixed;z-index:60;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:var(--w);height:var(--dock);padding:5px 36px max(5px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(3,1fr);align-items:center;background:linear-gradient(180deg,rgba(255,255,255,.05),transparent 1px),rgba(0,0,0,.93);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,255,255,.055)}.nav{border:0;background:transparent;color:rgba(245,246,248,.62);display:grid;place-items:center;gap:2px;font-size:11px;font-weight:950}.nav svg{width:27px;height:27px;stroke-width:1.85}.nav.active{color:var(--blue);filter:drop-shadow(0 0 14px rgba(143,202,255,.28))}.nav.add{width:58px;height:50px;border-radius:19px;margin:auto;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.07);color:rgba(245,246,248,.85)}.nav.add.active{background:linear-gradient(180deg,rgba(143,202,255,.17),rgba(255,255,255,.04));color:var(--blue)}
+    @media(max-width:430px){body,.top,.dock{max-width:none}.hero h1{font-size:40px}.card{grid-template-columns:70px 1fr}.thumb{width:70px;height:70px}.name{font-size:18px}}
   </style>
 </head>
-<body><main class="shell">
-  <header><div><div class="eyebrow">Sydney food diary</div><h1 class="brand">Sydney Bites</h1><p class="tagline">宝宝的悉尼美食地图 · 慢慢吃遍这座城</p></div><button class="add" id="addBtn" aria-label="新增餐厅">+</button></header>
-  <section class="hero"><h2>今天想吃点什么呀？</h2><p>从深夜泰餐到海边意面，把每一次好好吃饭都收藏起来。</p><div class="search">⌕ <input id="search" placeholder="搜店名、区域、菜系…" /></div></section>
-  <nav class="tabs"><button class="tab active" data-tab="want">想吃 <span class="count" id="wantCount"></span></button><button class="tab" data-tab="done">吃过 <span class="count" id="doneCount"></span></button></nav>
-  <div class="section-title" id="sectionTitle">这份清单值得慢慢吃</div><section class="list" id="list"></section>
-</main>
-<dialog id="detailModal"><div class="modal-head"><h3 id="detailName"></h3><button class="close" onclick="detailModal.close()">×</button></div><div class="modal-content"><div class="detail-image" id="detailImage">🍽️</div><div class="meta" id="detailMeta"></div><div class="recommend" id="detailDish"></div><p class="note" id="detailNote"></p><a id="mapLink" class="map" target="_blank">在 Apple Maps 打开地址 ↗</a><label class="upload" id="photoLabel">上传这次吃的照片，标记为吃过<input id="photoInput" type="file" accept="image/*"></label><p class="small" id="source"></p></div></dialog>
-<dialog id="addModal"><div class="modal-head"><h3>收藏一家店</h3><button class="close" onclick="addModal.close()">×</button></div><div class="modal-content"><form id="addForm"><label>店名<input name="name" required></label><label>区域<input name="suburb" required placeholder="例如 Haymarket"></label><label>菜系<input name="cuisine" required placeholder="例如 泰国"></label><label>推荐菜<input name="dish" required></label><label>地址<input name="address" required></label><label>小备注<textarea name="note" placeholder="为什么想吃它？"></textarea></label><label>状态<select name="visited"><option value="false">还没吃，放进想吃清单</option><option value="true">已经吃过啦</option></select></label><button class="save">保存到美食地图</button></form></div></dialog>
-<script>
-const seed=[
- ['Ho Jiak','Haymarket','马来西亚','炒粿条 / 咸蛋黄鸡翅','92 Hay St, Haymarket NSW 2000','槟城风味，适合带朋友一起点很多盘呀。','🍜','Broadsheet 精选'],
- ['Chat Thai','Haymarket','泰国','船面 / 芒果糯米饭','20 Campbell St, Haymarket NSW 2000','想吃泰餐时的安全牌，深夜也很合适。','🥭','Broadsheet / Time Out'],
- ['Firedoor','Surry Hills','柴火料理','当日柴火海鲜 / 牛排','23-33 Mary St, Surry Hills NSW 2010','坐吧台看火焰和厨师忙碌，会是很特别的一晚。','🔥','Broadsheet 精选'],
- ['Ester','Chippendale','现代澳洲','发酵土豆面包','46-52 Meagher St, Chippendale NSW 2008','低调但很有水准，庆祝小日子首选。','🥖','Broadsheet 精选'],
- ['Pellegrino 2000','Surry Hills','意大利','奶油伏特加意面','80 Campbell St, Surry Hills NSW 2010','氛围特别热闹，提前订位比较稳。','🍝','社媒热门'],
- ['Lankan Filling Station','Darlinghurst','斯里兰卡','Hoppers / 咖喱套餐','58 Riley St, Darlinghurst NSW 2010','薄脆 Hopper 配浓郁咖喱，值得专程去。','🥥','本地指南'],
- ['Cibaria','Manly','意大利','手工意面 / Gelato','55 North Steyne, Manly NSW 2095','海边散步后去吃，周末感拉满。','🌊','Time Out 2026 提名'],
- ['Tan Viet','Cabramatta','越南','脆皮鸡配番茄饭','100 John St, Cabramatta NSW 2166','西区宝藏，脆皮鸡是绝对主角。','🍗','社媒热门']
-].map((x,i)=>({id:'seed'+i,name:x[0],suburb:x[1],cuisine:x[2],dish:x[3],address:x[4],note:x[5],emoji:x[6],source:x[7],visited:false,photo:null}));
-let places=JSON.parse(localStorage.getItem('sydney-bites-v1')||'null')||seed, active='want', selected=null;
-const $=s=>document.querySelector(s), list=$('#list');
-function save(){localStorage.setItem('sydney-bites-v1',JSON.stringify(places))}
-function esc(s){return s.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-function render(){let q=$('#search').value.trim().toLowerCase();let items=places.filter(p=>p.visited===(active==='done')&&[p.name,p.suburb,p.cuisine,p.dish].join(' ').toLowerCase().includes(q));$('#wantCount').textContent=places.filter(p=>!p.visited).length;$('#doneCount').textContent=places.filter(p=>p.visited).length;$('#sectionTitle').textContent=active==='want'?'这份清单值得慢慢吃':'宝宝已经好好吃过啦';list.innerHTML=items.length?items.map(p=>`<article class="card" data-id="${p.id}"><div class="photo">${p.photo?`<img src="${p.photo}">`:p.emoji}</div><div class="card-info"><div class="name-line"><div class="name">${esc(p.name)}</div><span class="pill">${esc(p.cuisine)}</span></div><div class="meta">${esc(p.suburb)} · ${esc(p.address.split(',')[0])}</div><div class="dish">✦ ${esc(p.dish)}</div></div></article>`).join(''):'<div class="empty">这里还空着呢～<br>去发现下一家值得吃的店吧。</div>';document.querySelectorAll('.card').forEach(c=>c.onclick=()=>openDetail(c.dataset.id))}
-function openDetail(id){selected=places.find(p=>p.id===id);$('#detailName').textContent=selected.name;$('#detailMeta').textContent=`${selected.suburb} · ${selected.cuisine}`;$('#detailDish').textContent=`✦ 推荐：${selected.dish}`;$('#detailNote').textContent=selected.note;$('#source').textContent=`灵感来源：${selected.source}`;$('#detailImage').innerHTML=selected.photo?`<img src="${selected.photo}">`:selected.emoji;$('#mapLink').href='https://maps.apple.com/?q='+encodeURIComponent(selected.address);$('#photoLabel').classList.toggle('hidden',selected.visited);detailModal.showModal()}
-document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{active=t.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===t));render()});$('#search').oninput=render;$('#addBtn').onclick=()=>addModal.showModal();
-$('#photoInput').onchange=e=>{let file=e.target.files[0];if(!file||!selected)return;let r=new FileReader();r.onload=()=>{selected.photo=r.result;selected.visited=true;save();detailModal.close();active='done';document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab==='done'));render()};r.readAsDataURL(file)};
-$('#addForm').onsubmit=e=>{e.preventDefault();let d=new FormData(e.target);places.unshift({id:Date.now().toString(),name:d.get('name'),suburb:d.get('suburb'),cuisine:d.get('cuisine'),dish:d.get('dish'),address:d.get('address'),note:d.get('note')||'等宝宝来留下这次的味道。',emoji:'🍽️',source:'宝宝亲自收藏',visited:d.get('visited')==='true',photo:null});save();e.target.reset();addModal.close();render()};render();
-</script></body></html>
-
+<body>
+  <header class="top">
+    <div class="avatar"><img src="../icons/avatar.jpg" alt=""></div>
+    <div class="title"><b>Sydney Bites</b><span id="subtitle">想吃清单</span></div>
+    <button class="icon" id="shuffle">⌘</button>
+  </header>
+  <main id="home" class="active">
+    <section class="hero">
+      <h1>今天吃哪里呀</h1>
+      <p>收藏想吃的店，吃过后上传照片，它会变成地图上的回忆 pin。</p>
+      <label class="search">⌕<input id="search" placeholder="搜店名、区域、菜系、推荐菜"></label>
+    </section>
+    <div class="chipbar" id="filters"></div>
+    <div class="section-head"><div><div class="label" id="sectionLabel">WANT TO TRY</div></div><div class="count" id="count">0</div></div>
+    <section class="list" id="list"></section>
+  </main>
+  <main id="mapPage"><div id="map"></div></main>
+  <main id="addPage">
+    <section class="hero"><h1>加一家店</h1><p>宝宝自己发现的店也可以放进地图里。</p></section>
+    <section class="card" style="display:block">
+      <form class="form" id="placeForm">
+        <input class="field" name="name" placeholder="店名" required>
+        <div class="two"><input class="field" name="area" placeholder="区域" required><input class="field" name="cuisine" placeholder="菜系" required></div>
+        <input class="field" name="dish" placeholder="推荐菜" required>
+        <input class="field" name="address" placeholder="地址" required>
+        <div class="two"><input class="field" name="lat" placeholder="纬度 可选"><input class="field" name="lng" placeholder="经度 可选"></div>
+        <textarea class="field" name="note" placeholder="备注"></textarea>
+        <select class="field" name="visited"><option value="false">还没吃</option><option value="true">吃过了</option></select>
+        <button class="btn primary" type="submit">保存</button>
+      </form>
+    </section>
+  </main>
+  <nav class="dock">
+    <button class="nav active" data-page="home" aria-label="list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg><span>List</span></button>
+    <button class="nav add" data-page="addPage" aria-label="add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg><span>Add</span></button>
+    <button class="nav" data-page="mapPage" aria-label="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3z"/><path d="M9 3v15M15 6v15"/></svg><span>Map</span></button>
+  </nav>
+  <dialog id="detail"><div class="sheet"><div class="handle"></div><div class="detail-photo" id="dPhoto"></div><h2 class="detail-title" id="dName"></h2><div class="meta" id="dMeta"></div><div class="dish" id="dDish"></div><p class="detail-note" id="dNote"></p><div class="tags" id="dTags"></div><div class="actions"><a class="btn primary" id="dMap" target="_blank">Apple Maps</a><label class="btn upload" id="dUpload">上传照片<input type="file" accept="image/*" id="photoInput"></label><button class="btn" id="dClose">关闭</button><button class="btn" id="dToggle">标记吃过</button></div></div></dialog>
+  <script>
+    const KEY='sydney-bites-v3';
+    const rawPlaces=`saint-peter|Saint Peter|Paddington|Seafood|Dry-aged fish, sea urchin crumpet|161 Underwood St, Paddington NSW 2021|-33.8849|151.2266|🐟|fin-to-scale seafood; special occasion|Broadsheet
+ester|Ester|Chippendale|Modern Australian|Potato bread, roasted oysters|46-52 Meagher St, Chippendale NSW 2008|-33.8866|151.2005|🥖|quietly excellent wood-fired room|Broadsheet
+firedoor|Firedoor|Surry Hills|Fire cooking|Wood-fired seafood, steak|23-33 Mary St, Surry Hills NSW 2010|-33.8817|151.2091|🔥|watch the fire, order slowly|Broadsheet
+hojiak|Ho Jiak|Haymarket|Malaysian|Char kway teow, salted egg chicken|92 Hay St, Haymarket NSW 2000|-33.8803|151.2031|🍜|rich Malaysian plates for a group order|Broadsheet
+pellegrino|Pellegrino 2000|Surry Hills|Italian|Vodka pasta, tiramisu|80 Campbell St, Surry Hills NSW 2010|-33.8798|151.2123|🍝|date-night energy; book ahead|Time Out
+lankan|Lankan Filling Station|Darlinghurst|Sri Lankan|Hoppers, sambols, curry|58 Riley St, Darlinghurst NSW 2010|-33.8751|151.2154|🥥|bright spices and good sharing plates|Time Out
+mamak|Mamak|Haymarket|Malaysian|Roti canai, satay|15 Goulburn St, Haymarket NSW 2000|-33.8784|151.2051|🫓|late-night comfort near the city|Urban List
+chat-thai|Chat Thai|Haymarket|Thai|Boat noodles, mango sticky rice|20 Campbell St, Haymarket NSW 2000|-33.8799|151.2061|🥭|safe Thai pick when the brain is tired|Time Out
+gumshara|Gumshara|Haymarket|Ramen|Tonkotsu ramen|25-29 Dixon St, Haymarket NSW 2000|-33.8797|151.2036|🍜|heavy broth; go hungry|Urban List
+marrickville-pork-roll|Marrickville Pork Roll|Marrickville|Vietnamese|Pork roll|236 Illawarra Rd, Marrickville NSW 2204|-33.9113|151.1559|🥖|cheap, fast, worth the line|Urban List
+bella-brutta|Bella Brutta|Newtown|Pizza|Clam pizza, pepperoni|135 King St, Newtown NSW 2042|-33.8932|151.1831|🍕|easy group dinner|Broadsheet
+bar-luca|Bar Luca|CBD|Burgers|Blame Canada burger|52 Phillip St, Sydney NSW 2000|-33.8647|151.2113|🍔|burger craving solution|Urban List
+ap-bakery|A.P Bakery|Surry Hills|Bakery|Pastries, sausage roll|2/410 Crown St, Surry Hills NSW 2010|-33.8845|151.2142|🥐|morning walk reward|Gourmet Traveller
+kiln|Kiln|Surry Hills|Rooftop|Grilled dishes, snacks|53 Foy Ln, Surry Hills NSW 2010|-33.8792|151.2101|🌃|view plus food, not just vibes|Gourmet Traveller
+shell-house|Shell House|CBD|Modern Australian|Seafood, pasta, cocktails|37 Margaret St, Sydney NSW 2000|-33.8652|151.2072|🦪|pretty room, good for visitors|Urban List
+cibaria|Cibaria|Manly|Italian|Pasta, gelato|55 N Steyne, Manly NSW 2095|-33.7963|151.2882|🌊|beach day food plan|Time Out
+mr-wong|Mr. Wong|CBD|Cantonese|Dim sum, roast duck|3 Bridge Ln, Sydney NSW 2000|-33.8639|151.2086|🥟|big room, classic Sydney dinner|Good Food
+restaurant-hubert|Restaurant Hubert|CBD|French|Chicken fricassee, oysters|15 Bligh St, Sydney NSW 2000|-33.8652|151.2107|🥂|cosy basement, jazz mood|Good Food
+nomad|NOMAD|Surry Hills|Middle Eastern|Wood-fired flatbread, burrata|16 Foster St, Surry Hills NSW 2010|-33.8798|151.2108|🍷|share plates that feel easy|Broadsheet
+albertos|Alberto's Lounge|Surry Hills|Italian|Pasta, anchovy toast|17-19 Alberta St, Sydney NSW 2000|-33.8793|151.2107|🍝|small, loud, properly fun|Broadsheet
+poly|Poly|Surry Hills|Wine Bar|Flatbread, grilled snacks|74-76 Commonwealth St, Surry Hills NSW 2010|-33.8794|151.2119|🍷|snacks that turn into dinner|Broadsheet
+franca|Franca Brasserie|Potts Point|French|Steak frites, seafood|81 Macleay St, Potts Point NSW 2011|-33.8690|151.2253|🥩|polished room for a slow night|Good Food
+cho-cho-san|Cho Cho San|Potts Point|Japanese|Pork katsu, kingfish|73 Macleay St, Potts Point NSW 2011|-33.8692|151.2251|🍱|clean Japanese sharing plates|Broadsheet
+yellow|Yellow|Potts Point|Vegetarian|Plant-based tasting menu|57 Macleay St, Potts Point NSW 2011|-33.8694|151.2252|🥬|veg food that still feels luxe|Time Out
+ragazzi|Ragazzi|CBD|Italian|Pasta, wine|1 Angel Pl, Sydney NSW 2000|-33.8671|151.2079|🍝|tiny pasta bar near Town Hall|Broadsheet
+de-vine|de Vine Food & Wine|CBD|Italian|Pasta, wine|32 Market St, Sydney NSW 2000|-33.8701|151.2058|🍷|easy city pasta backup|Good Food
+the-gantry|The Gantry|Walsh Bay|Modern Australian|Seafood, tasting menu|11 Hickson Rd, Walsh Bay NSW 2000|-33.8565|151.2028|🌉|harbour-side special dinner|Good Food
+orpheus|Orpheus|CBD|Greek|Souvlaki, seafood|York St, Sydney NSW 2000|-33.8691|151.2060|🫒|Greek comfort in the city|Local guide
+tokki|Tokki|Surry Hills|Korean|Korean snacks, soju|44 Foveaux St, Surry Hills NSW 2010|-33.8816|151.2105|🍶|Korean night out energy|Broadsheet
+sang-by-mabasa|Sang by Mabasa|Surry Hills|Korean|Bibimbap, banchan|98 Fitzroy St, Surry Hills NSW 2010|-33.8862|151.2133|🍚|gentle Korean homestyle food|Broadsheet
+tokyo-lamington|Tokyo Lamington|Newtown|Bakery|Lamingtons, coffee|277 Australia St, Newtown NSW 2042|-33.8983|151.1760|🍰|sweet stop after uni wandering|Urban List
+continental-deli|Continental Deli|Newtown|Deli|Tinned cocktails, deli plates|210 Australia St, Newtown NSW 2042|-33.8956|151.1791|🥫|snacky, charming, very Newtown|Broadsheet
+marys|Mary's|Newtown|Burgers|Mary's burger, fried chicken|6 Mary St, Newtown NSW 2042|-33.8962|151.1804|🍔|messy burger, loud room|Urban List
+hartsyard|Hartsyard|Newtown|Modern Australian|Fried chicken, tasting menu|33 Enmore Rd, Newtown NSW 2042|-33.8990|151.1742|🍗|comfort food with more polish|Good Food
+emma-snack-bar|Emma's Snack Bar|Enmore|Lebanese|Mezze, lamb shoulder|59 Liberty St, Enmore NSW 2042|-33.8987|151.1718|🧆|warm Lebanese table food|Broadsheet
+cairo-takeaway|Cairo Takeaway|Enmore|Egyptian|Koshari, falafel|81 Enmore Rd, Enmore NSW 2042|-33.8994|151.1722|🧆|casual and very satisfying|Broadsheet
+stanbuli|Stanbuli|Enmore|Turkish|Meze, seafood|135 Enmore Rd, Enmore NSW 2042|-33.8996|151.1706|🐟|colourful Turkish dinner|Good Food
+baba-wu|Baba Wu's|Surry Hills|Asian Bakery|Egg tarts, pineapple bun|Surry Hills NSW 2010|-33.8850|151.2120|🥧|quick sweet snack stop|Local guide
+shwarmama|Shwarmama|Surry Hills|Middle Eastern|Shawarma, fries|106 Commonwealth St, Surry Hills NSW 2010|-33.8809|151.2125|🌯|good cheap wrap mission|Broadsheet
+humble-bakery|Humble Bakery|Surry Hills|Bakery|Finger buns, sausage rolls|50 Holt St, Surry Hills NSW 2010|-33.8856|151.2109|🥐|pink bakery, easy treat|Broadsheet
+lode-pies|Lode Pies|Surry Hills|Bakery|Croissant pie, tart|487 Crown St, Surry Hills NSW 2010|-33.8866|151.2133|🥧|rich pastries when you deserve it|Urban List
+bourke-street-bakery|Bourke Street Bakery|Surry Hills|Bakery|Ginger brulee tart, pies|633 Bourke St, Surry Hills NSW 2010|-33.8876|151.2157|🥐|classic bakery run|Local guide
+bills|Bills|Darlinghurst|Brunch|Ricotta hotcakes, scrambled eggs|433 Liverpool St, Darlinghurst NSW 2010|-33.8780|151.2200|🥞|brunch that visitors recognise|Local guide
+yasaka-ramen|Yasaka Ramen|CBD|Ramen|Tonkotsu ramen, gyoza|126 Liverpool St, Sydney NSW 2000|-33.8770|151.2076|🍜|city ramen without overthinking|Local guide
+yasaka-chatswood|Yasaka Ramen|Chatswood|Ramen|Tonkotsu ramen, karaage|9/13 Victoria Ave, Chatswood NSW 2067|-33.7979|151.1815|🍜|north shore ramen fix|Local guide
+haidilao|Haidilao Hot Pot|Haymarket|Hot Pot|Tomato soup, beef, noodles|Level 5, 188 Pitt St, Sydney NSW 2000|-33.8704|151.2089|🍲|reliable hotpot with service|Local guide
+dolar-shop|The Dolar Shop|Haymarket|Hot Pot|Individual hotpot, wagyu|Market City, Haymarket NSW 2000|-33.8792|151.2032|🍲|hotpot but more polished|Local guide
+spice-world|Spice World|Haymarket|Hot Pot|Sichuan hotpot, skewers|405-411 Sussex St, Haymarket NSW 2000|-33.8795|151.2041|🌶️|spicy group dinner|Local guide
+red-chilli|Red Chilli Sichuan|Haymarket|Sichuan|Water-boiled fish, mapo tofu|8 Dixon St, Haymarket NSW 2000|-33.8780|151.2038|🌶️|big Sichuan comfort|Local guide
+xi-an-cuisine|Xi'an Cuisine|Haymarket|Chinese Noodles|Biang biang noodles, roujiamo|Haymarket NSW 2000|-33.8794|151.2046|🍜|carb-heavy and cheap|Local guide
+chinese-noodle|Chinese Noodle Restaurant|Haymarket|Dumplings|Pan-fried dumplings, lamb noodles|8 Quay St, Haymarket NSW 2000|-33.8826|151.2028|🥟|student-friendly dumpling classic|Local guide
+happy-chef|Happy Chef|Haymarket|Chinese Noodles|Laksa, wonton noodle soup|Sussex Centre, Haymarket NSW 2000|-33.8786|151.2041|🍜|food-court comfort bowl|Local guide
+bbq-king|BBQ King|Haymarket|Cantonese BBQ|Roast duck, char siu rice|76-78 Liverpool St, Sydney NSW 2000|-33.8768|151.2064|🍖|Cantonese roast meat craving|Local guide
+emperor-puffs|Emperor's Garden Cake & Bakery|Haymarket|Bakery|Cream puffs|96-100 Hay St, Haymarket NSW 2000|-33.8799|151.2037|🧁|tiny hot cream puffs|Local guide
+nakano-darling|Nakano Darling|Haymarket|Japanese Bar|Karaage, highballs|14 Steam Mill Ln, Haymarket NSW 2000|-33.8790|151.2039|🍗|izakaya after class|Local guide
+ramen-zundo|Ramen Zundo|World Square|Ramen|Tonkotsu, spicy ramen|World Square, Sydney NSW 2000|-33.8766|151.2071|🍜|central ramen fallback|Local guide
+ippudo|Ippudo|CBD|Ramen|Akamaru, pork buns|Westfield Sydney, Sydney NSW 2000|-33.8707|151.2089|🍜|mall ramen that works|Local guide
+yasaka-cbd|Yasaka Ramen|CBD|Ramen|Black garlic ramen|126 Liverpool St, Sydney NSW 2000|-33.8769|151.2077|🍜|easy after city errands|Local guide
+khao-soi|Khao Soi|Haymarket|Thai|Khao soi, Thai tea|Haymarket NSW 2000|-33.8796|151.2052|🍛|northern Thai noodle comfort|Local guide
+doodee-paidang|Doodee Paidang|Haymarket|Thai|Tom yum noodles, pork skewers|37 Ultimo Rd, Haymarket NSW 2000|-33.8799|151.2034|🍜|spicy noodle soup mission|Local guide
+boon-cafe|Boon Cafe|Haymarket|Thai|Thai breakfast, pandan sweets|1/425 Pitt St, Haymarket NSW 2000|-33.8793|151.2063|☕|Thai cafe with groceries nearby|Broadsheet
+kepos-street-kitchen|Kepos Street Kitchen|Redfern|Brunch|Middle Eastern brunch, shakshuka|96 Kepos St, Redfern NSW 2016|-33.8924|151.2107|🍳|nearby calm brunch|Local guide
+ra-ra-redfern|RaRa Ramen|Redfern|Ramen|Tonkotsu, vegan ramen|66b Regent St, Redfern NSW 2016|-33.8916|151.2002|🍜|close-to-campus ramen|Broadsheet
+flyover-fritterie|Flyover Fritterie|Redfern|Indian Street Food|Vada pav, fritters|88 Regent St, Redfern NSW 2016|-33.8921|151.1999|🥔|vegetarian snack stop|Broadsheet
+kindred|Kindred|Darlington|Italian|Pasta, focaccia|137 Cleveland St, Darlington NSW 2008|-33.8896|151.1962|🍝|near uni, comforting pasta|Good Food
+golden-age|Golden Age Cinema Bar|Surry Hills|Bar Food|Jaffles, cocktails|80 Commonwealth St, Surry Hills NSW 2010|-33.8799|151.2120|🍿|film night plus snack|Local guide
+reuben-hills|Reuben Hills|Surry Hills|Cafe|Brisket, coffee|61 Albion St, Surry Hills NSW 2010|-33.8811|151.2114|☕|study-day brunch fuel|Local guide
+single-o|Single O|Surry Hills|Cafe|Coffee, brunch|60-64 Reservoir St, Surry Hills NSW 2010|-33.8806|151.2111|☕|serious coffee stop|Local guide
+paramount-coffee|Paramount Coffee Project|Surry Hills|Cafe|Fried chicken waffle, coffee|80 Commonwealth St, Surry Hills NSW 2010|-33.8798|151.2120|☕|brunch with a big table|Local guide
+mecca|Mecca Coffee|CBD|Cafe|Coffee, breakfast roll|67 King St, Sydney NSW 2000|-33.8693|151.2061|☕|city coffee backup|Local guide
+edition-roasters|Edition Roasters|Haymarket|Cafe|Matcha, Japanese brunch|60 Darling Dr, Haymarket NSW 2000|-33.8764|151.1992|🍵|quiet Japanese cafe mood|Local guide
+devon|Devon Cafe|Barangaroo|Cafe|Breakfast with a twist|19/200 Barangaroo Ave, Barangaroo NSW 2000|-33.8617|151.2018|🍳|sweet brunch when near harbour|Local guide
+cirrus|Cirrus|Barangaroo|Seafood|Oysters, fish, prawns|23 Barangaroo Ave, Barangaroo NSW 2000|-33.8619|151.2016|🦐|waterfront seafood dinner|Good Food
+untied|Untied|Barangaroo|Rooftop|Tacos, cocktails|400 Barangaroo Ave, Barangaroo NSW 2000|-33.8634|151.2010|🍹|casual rooftop with friends|Local guide
+zushi|Zushi|Barangaroo|Japanese|Sushi, kingfish, miso cod|10/33 Barangaroo Ave, Barangaroo NSW 2000|-33.8630|151.2015|🍣|easy waterfront Japanese|Local guide
+lotus-dumpling|Lotus Dumpling Bar|Walsh Bay|Dumplings|Xiao long bao, dumplings|16 Hickson Rd, Dawes Point NSW 2000|-33.8565|151.2031|🥟|pre-theatre dumplings|Good Food
+fratelli-paradiso|Fratelli Paradiso|Potts Point|Italian|Scampi pasta, tiramisu|12-16 Challis Ave, Potts Point NSW 2011|-33.8678|151.2249|🍝|Sydney institution energy|Broadsheet
+the-apollo|The Apollo|Potts Point|Greek|Saganaki, lamb shoulder|44 Macleay St, Potts Point NSW 2011|-33.8698|151.2256|🫒|group Greek dinner|Broadsheet
+carbon-mexican|Carbon Mexican Woodfire|Bondi|Mexican|Tacos, grilled corn|288 Bondi Rd, Bondi NSW 2026|-33.8935|151.2637|🌮|beach night dinner|Local guide
+icebergs|Icebergs Dining Room|Bondi|Italian Seafood|Seafood, pasta|1 Notts Ave, Bondi Beach NSW 2026|-33.8915|151.2771|🌊|big view special meal|Good Food
+seans|Sean's|Bondi|Modern Australian|Seasonal set menu|270 Campbell Parade, North Bondi NSW 2026|-33.8898|151.2820|🍽️|warm room near the beach|Broadsheet
+bills-bondi|Bills|Bondi|Brunch|Ricotta hotcakes, corn fritters|79 Hall St, Bondi Beach NSW 2026|-33.8890|151.2745|🥞|post-beach brunch|Local guide
+tottis|Totti's|Bondi|Italian|Wood-fired bread, antipasti|283 Bondi Rd, Bondi NSW 2026|-33.8934|151.2635|🍞|bread, burrata, big table|Broadsheet
+el-jannah-newtown|El Jannah|Newtown|Lebanese Chicken|Charcoal chicken, garlic sauce|156 Missenden Rd, Newtown NSW 2042|-33.8921|151.1800|🍗|cheap protein comfort|Local guide
+golden-lotus|Golden Lotus|Newtown|Vegan Vietnamese|Vegan pho, crispy chicken|341 King St, Newtown NSW 2042|-33.8992|151.1743|🌱|good vegetarian backup|Local guide
+hakiki|Hakiki|Newtown|Turkish Dessert|Baklava, ice cream|63-71 Enmore Rd, Newtown NSW 2042|-33.8992|151.1730|🍦|sweet walk stop|Local guide
+black-star|Black Star Pastry|Newtown|Bakery|Strawberry watermelon cake|325 King St, Newtown NSW 2042|-33.8987|151.1760|🍰|iconic cake slice|Local guide
+sixpenny|Sixpenny|Stanmore|Fine Dining|Tasting menu|83 Percival Rd, Stanmore NSW 2048|-33.8926|151.1641|⭐|very special occasion|Good Food
+212-blu|212 Blu|Newtown|Cafe|Coffee, breakfast roll|212 Australia St, Newtown NSW 2042|-33.8957|151.1792|☕|small Newtown coffee stop|Local guide
+rising-sun-workshop|Rising Sun Workshop|Newtown|Ramen Cafe|Breakfast ramen, coffee|1C Whateley St, Newtown NSW 2042|-33.8971|151.1784|🍜|ramen in a workshop space|Broadsheet
+ante|Ante|Newtown|Japanese Bar|Sake, katsu sando|146 King St, Newtown NSW 2042|-33.8935|151.1823|🍶|music, sake, snacks|Broadsheet
+two-chaps|Two Chaps|Marrickville|Bakery Cafe|Pastries, pasta nights|122 Chapel St, Marrickville NSW 2204|-33.9100|151.1570|🥐|bakery by day, pasta by night|Broadsheet
+gelato-messina|Gelato Messina|Darlinghurst|Gelato|Pistachio praline, specials|241 Victoria St, Darlinghurst NSW 2010|-33.8784|151.2206|🍨|late dessert walk|Local guide
+cow-and-moon|Cow and the Moon|Enmore|Gelato|Mandorla affogato gelato|181 Enmore Rd, Enmore NSW 2042|-33.8994|151.1694|🍨|award-winning gelato classic|Local guide
+kurumac|Kurumac|Marrickville|Japanese Cafe|Onigiri, curry rice|107 Addison Rd, Marrickville NSW 2204|-33.9038|151.1624|🍙|gentle Japanese lunch|Broadsheet
+valentina|Valentina's|Marrickville|Diner|Pancakes, burgers|132 Livingstone Rd, Marrickville NSW 2204|-33.9120|151.1549|🥞|retro brunch mood|Local guide
+inatomo|Inatomo|Chatswood|Japanese|Sushi, tempura|1 Railway St, Chatswood NSW 2067|-33.7967|151.1801|🍣|north shore Japanese classic|Local guide
+new-shanghai|New Shanghai|Chatswood|Dumplings|Xiao long bao, pan-fried buns|1 Anderson St, Chatswood NSW 2067|-33.7959|151.1831|🥟|dumplings when in Chatswood|Local guide
+mamak-chatswood|Mamak|Chatswood|Malaysian|Roti canai, mee goreng|Shop P9, 1 Anderson St, Chatswood NSW 2067|-33.7957|151.1830|🫓|north shore roti fix|Local guide
+chinatown-noodle-king|Noodle King|Chatswood|Chinese Noodles|Beef noodles, dumplings|Victoria Ave, Chatswood NSW 2067|-33.7975|151.1825|🍜|fast noodle option|Local guide
+manpuku|Manpuku|Chatswood|Ramen|Tonkotsu ramen|226 Victoria Ave, Chatswood NSW 2067|-33.7973|151.1836|🍜|Chatswood ramen pick|Local guide
+yangs-dumpling|Yang's Dumpling|Burwood|Dumplings|Shengjian bao|170 Burwood Rd, Burwood NSW 2134|-33.8750|151.1035|🥟|pan-fried soup bun run|Local guide
+yang-guo-fu|Yang Guo Fu Malatang|Burwood|Malatang|Build-your-own malatang|127 Burwood Rd, Burwood NSW 2134|-33.8762|151.1037|🍲|spicy bowl for indecisive days|Local guide
+lan-zhou|1915 Lanzhou Beef Noodles|Burwood|Chinese Noodles|Hand-pulled beef noodles|Burwood Rd, Burwood NSW 2134|-33.8768|151.1041|🍜|simple noodle comfort|Local guide
+burwood-chinatown|Burwood Chinatown Eats|Burwood|Food Court|Skewers, dumplings, bubble tea|121-133 Burwood Rd, Burwood NSW 2134|-33.8756|151.1042|🍢|many tiny choices in one stop|Local guide
+niuda|Niuda Noodles|Burwood|Chinese Noodles|Beef noodles, skewers|Burwood NSW 2134|-33.8761|151.1040|🍜|quick carb-heavy dinner|Local guide
+pho-tau-bay|Pho Tau Bay|Cabramatta|Vietnamese|Pho dac biet|12/117 John St, Cabramatta NSW 2166|-33.8949|150.9350|🍜|classic Cabramatta pho|Urban List
+tan-viet|Tan Viet|Cabramatta|Vietnamese|Crispy skin chicken rice|100 John St, Cabramatta NSW 2166|-33.8942|150.9356|🍗|crispy chicken destination|Urban List
+bau-truong|Bau Truong|Cabramatta|Vietnamese|Canh chua, bo la lot|42 John St, Cabramatta NSW 2166|-33.8946|150.9362|🍲|bring friends and order widely|Urban List
+vinata|Vinata's Hot Bread|Cabramatta|Bakery|Banh mi|Cabramatta NSW 2166|-33.8945|150.9357|🥖|cheap banh mi mission|Local guide
+hai-au|Hai Au Lang Nuong|Canley Vale|Vietnamese BBQ|Grilled meats, hot pot|48 Canley Vale Rd, Canley Vale NSW 2166|-33.8873|150.9432|🔥|Vietnamese BBQ group dinner|Local guide
+phamish|Phamish|Darlinghurst|Vietnamese|Rice paper rolls, shaking beef|248 Palmer St, Darlinghurst NSW 2010|-33.8806|151.2166|🥢|easy Vietnamese near city|Local guide
+harajuku-gyoza|Harajuku Gyoza|Darling Harbour|Japanese|Gyoza, beer|Darling Harbour NSW 2000|-33.8728|151.2007|🥟|casual dumplings by water|Local guide
+anzu|Anzu|Rhodes|Japanese|Katsu, curry|Rhodes NSW 2138|-33.8349|151.0858|🍛|shopping-day Japanese comfort|Local guide
+chaco-ramen|Chaco Ramen|Darlinghurst|Ramen|Yuzu scallop ramen, gyoza|238 Crown St, Darlinghurst NSW 2010|-33.8786|151.2153|🍜|strong ramen and yakitori energy|Broadsheet
+yasaka-neutral|Ryo's Noodles|Crows Nest|Ramen|Tonkotsu ramen|125 Falcon St, Crows Nest NSW 2065|-33.8264|151.2010|🍜|north side ramen classic|Local guide
+the-blue-door|The Blue Door|Surry Hills|Modern Australian|Set menu, local produce|8/38 Waterloo St, Surry Hills NSW 2010|-33.8812|151.2109|🍽️|small seasonal restaurant|Good Food
+porcine|Porcine|Paddington|French Bistro|Pork terrine, duck|268 Oxford St, Paddington NSW 2021|-33.8850|151.2250|🥩|French-ish comfort with edge|Broadsheet
+freds|Fred's|Paddington|Modern Australian|Seasonal plates, pasta|380 Oxford St, Paddington NSW 2021|-33.8864|151.2290|🌿|warm open-kitchen dinner|Good Food
+10-william|10 William St|Paddington|Italian Wine Bar|Pretzel, pasta, wine|10 William St, Paddington NSW 2021|-33.8849|151.2293|🍷|tiny wine bar classic|Broadsheet
+monopole|Monopole|CBD|Wine Bar|Oysters, pasta, wine|20 Curtin Pl, Sydney NSW 2000|-33.8664|151.2096|🍷|city wine-bar dinner|Good Food
+bentley|Bentley Restaurant & Bar|CBD|Fine Dining|Tasting menu, wine|27 O'Connell St, Sydney NSW 2000|-33.8655|151.2098|⭐|polished special occasion|Good Food
+quina|Quay|The Rocks|Fine Dining|Snow egg style desserts, tasting menu|Upper Level, Overseas Passenger Terminal, The Rocks NSW 2000|-33.8570|151.2103|🌉|harbour fine dining|Good Food
+arca|Aria|Circular Quay|Fine Dining|Tasting menu, seafood|1 Macquarie St, Sydney NSW 2000|-33.8591|151.2130|⭐|Opera House view dinner|Good Food
+six-head|6HEAD|The Rocks|Steakhouse|Steak, seafood|7-27 Circular Quay W, The Rocks NSW 2000|-33.8585|151.2096|🥩|steak with harbour view|Local guide
+kenji|Kenjis Kitchen|Kensington|Japanese|Katsu curry, donburi|Kensington NSW 2033|-33.9173|151.2250|🍛|near UNSW comfort bowl|Local guide
+kokoroya|Kokoroya|Maroubra|Japanese|Sushi, bento|665 Anzac Parade, Maroubra NSW 2035|-33.9401|151.2398|🍣|south-east Japanese family spot|Local guide
+itacate|Itacate|Redfern|Mexican|Tacos, quesabirria|Redfern NSW 2016|-33.8922|151.2003|🌮|taco craving near home|Local guide
+la-farmacia|La Farmacia|Darlinghurst|Mexican|Tacos, margarita|302 Liverpool St, Darlinghurst NSW 2010|-33.8783|151.2192|🌮|cosy Mexican bar|Local guide
+rokku|Rokku Ramen|Kensington|Ramen|Miso ramen, karaage|Kensington NSW 2033|-33.9180|151.2245|🍜|easy UNSW ramen stop|Local guide
+little-lagos|Little Lagos|Enmore|Nigerian|Jollof rice, suya|125 Enmore Rd, Enmore NSW 2042|-33.8995|151.1708|🍚|try something different|Urban List
+flyover|Flyover Fritterie|CBD|Indian Street Food|Vada pav, chai|88 Regent St, Redfern NSW 2016|-33.8921|151.1999|🥔|snackable vegetarian food|Broadsheet
+saya|SAYA Thai|Surry Hills|Thai|Pad see ew, curry|Surry Hills NSW 2010|-33.8830|151.2120|🍛|simple Thai dinner backup|Local guide
+abb-air|Abb Air Thai|CBD|Thai|Boat noodles, pork skewers|Haymarket NSW 2000|-33.8790|151.2047|🍜|Thai street-food energy|Local guide
+milk-bar-by-cafeish|Cafeish|Redfern|Cafe|Breakfast roll, coffee|Redfern NSW 2016|-33.8924|151.2000|☕|close, quick, easy|Local guide
+good-ways-deli|Good Ways Deli|Redfern|Deli|Native ingredient sandwiches|Redfern NSW 2016|-33.8931|151.2012|🥪|local sandwich mission|Broadsheet
+maiz|Maiz Mexican Street Food|Newtown|Mexican|Tostadas, tacos|415 King St, Newtown NSW 2042|-33.9014|151.1726|🌮|colourful corn-based plates|Broadsheet
+odd-culture|Odd Culture|Newtown|Bar Food|Ferments, fries, wine|266 King St, Newtown NSW 2042|-33.8975|151.1786|🍺|fermented things and late snacks|Broadsheet
+pino|Pino's Vino e Cucina|Alexandria|Italian|Pasta, salumi|199 Lawrence St, Alexandria NSW 2015|-33.8995|151.1955|🍝|neighbourhood Italian|Good Food
+the-grounds|The Grounds of Alexandria|Alexandria|Cafe|Brunch, pastries|7a/2 Huntley St, Alexandria NSW 2015|-33.9105|151.1933|🌿|big brunch campus|Local guide
+black-star-rosebery|Black Star Pastry|Rosebery|Bakery|Watermelon cake|85-113 Dunning Ave, Rosebery NSW 2018|-33.9162|151.2040|🍰|dessert stop near east|Local guide
+gelato-messina-rosebery|Gelato Messina|Rosebery|Gelato|Specials, pistachio|61 Mentmore Ave, Rosebery NSW 2018|-33.9165|151.2027|🍨|warehouse gelato run|Local guide`;
+    const seed=rawPlaces.trim().split('\n').map(line=>{const x=line.split('|');return{id:x[0],name:x[1],area:x[2],cuisine:x[3],dish:x[4],address:x[5],lat:+x[6],lng:+x[7],emoji:x[8],note:x[9],source:x[10],visited:false,photo:''}});
+    let places=JSON.parse(localStorage.getItem(KEY)||'null')||seed, mode='want', filter='All', selected=null, map=null, markers=[];
+    const $=id=>document.getElementById(id);
+    function save(){localStorage.setItem(KEY,JSON.stringify(places))}
+    function esc(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+    function visible(){const q=$('search').value.trim().toLowerCase();return places.filter(p=>(mode==='done'?p.visited:!p.visited)&&(filter==='All'||p.cuisine===filter)&&[p.name,p.area,p.cuisine,p.dish,p.address].join(' ').toLowerCase().includes(q))}
+    function renderFilters(){const cuisines=['All',...new Set(places.map(p=>p.cuisine))];$('filters').innerHTML=cuisines.map(c=>`<button class="chip ${filter===c?'active':''}" data-c="${esc(c)}">${esc(c)}</button>`).join('');document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{filter=b.dataset.c;render()})}
+    function render(){renderFilters();const items=visible();$('sectionLabel').textContent=mode==='done'?'EATEN':'WANT TO TRY';$('subtitle').textContent=mode==='done'?'吃过地图':'想吃清单';$('count').textContent=`${items.length} places`;$('list').innerHTML=items.length?items.map(p=>`<article class="card" data-id="${p.id}"><div class="thumb">${p.photo?`<img src="${p.photo}">`:p.emoji}</div><div><div class="name">${esc(p.name)}</div><div class="meta">${esc(p.area)} · ${esc(p.address)}</div><div class="dish">✦ ${esc(p.dish)}</div><div class="tags"><span class="tag">${esc(p.cuisine)}</span><span class="tag">${p.visited?'eaten':'want'}</span></div></div></article>`).join(''):'<div class="empty">这里暂时空着呀，换个筛选试试看。</div>';document.querySelectorAll('.card').forEach(c=>c.onclick=()=>openPlace(c.dataset.id));refreshMap()}
+    function openPlace(id){selected=places.find(p=>p.id===id);if(!selected)return;$('dPhoto').innerHTML=selected.photo?`<img src="${selected.photo}">`:selected.emoji;$('dName').textContent=selected.name;$('dMeta').textContent=`${selected.area} · ${selected.cuisine}`;$('dDish').textContent=`✦ ${selected.dish}`;$('dNote').textContent=selected.note;$('dTags').innerHTML=`<span class="tag">${selected.source}</span><span class="tag">${selected.visited?'eaten':'want to try'}</span>`;$('dMap').href=`https://maps.apple.com/?q=${encodeURIComponent(selected.name+' '+selected.address)}&ll=${selected.lat},${selected.lng}`;$('dUpload').style.display=selected.visited?'none':'block';$('dToggle').textContent=selected.visited?'放回想吃':'标记吃过';detail.showModal()}
+    $('dClose').onclick=()=>detail.close();$('dToggle').onclick=()=>{if(selected){selected.visited=!selected.visited;save();detail.close();mode=selected.visited?'done':'want';setPage('home');render()}};
+    $('photoInput').onchange=e=>{const file=e.target.files[0];if(!file||!selected)return;const r=new FileReader();r.onload=()=>{selected.photo=r.result;selected.visited=true;save();detail.close();mode='done';setPage('home');render()};r.readAsDataURL(file)};
+    function setupMap(){if(map)return;map=L.map('map',{zoomControl:false}).setView([-33.875,151.21],12);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map)}
+    function refreshMap(){if(!map)return;markers.forEach(m=>m.remove());markers=[];places.forEach(p=>{const html=p.visited&&p.photo?`<div class="pin eaten"><img src="${p.photo}"></div>`:`<div class="pin">${p.emoji}</div>`;const icon=L.divIcon({html,className:'',iconSize:p.visited&&p.photo?[58,56]:[34,34],iconAnchor:p.visited&&p.photo?[29,56]:[17,17]});const m=L.marker([p.lat,p.lng],{icon}).addTo(map).on('click',()=>openPlace(p.id));markers.push(m)})}
+    function setPage(page){document.querySelectorAll('main').forEach(m=>m.classList.toggle('active',m.id===page));document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.page===page));if(page==='mapPage'){setupMap();setTimeout(()=>{map.invalidateSize();refreshMap()},70)}}
+    document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>setPage(b.dataset.page));$('search').oninput=render;$('shuffle').onclick=()=>{const pool=visible();if(pool.length)openPlace(pool[Math.floor(Math.random()*pool.length)].id)};
+    $('placeForm').onsubmit=e=>{e.preventDefault();const d=new FormData(e.target),name=d.get('name');places.unshift({id:Date.now().toString(),name,area:d.get('area'),cuisine:d.get('cuisine'),dish:d.get('dish'),address:d.get('address'),lat:+d.get('lat')||-33.875,lng:+d.get('lng')||151.21,emoji:'🍽️',note:d.get('note')||'宝宝自己收藏的店，等吃完再补照片。',source:'custom',visited:d.get('visited')==='true',photo:''});save();e.target.reset();mode='want';setPage('home');render()};
+    let lastTap=0;document.querySelector('.title').onclick=()=>{const now=Date.now();if(now-lastTap<320){mode=mode==='want'?'done':'want';render()}lastTap=now};
+    render();
+  </script>
+</body>
+</html>
