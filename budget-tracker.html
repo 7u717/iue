@@ -29,6 +29,7 @@
   .card{border:1px solid rgba(255,255,255,.09);border-radius:28px;background:linear-gradient(180deg,#151618,#0d0d0e);box-shadow:inset 0 1px 0 rgba(255,255,255,.04);padding:20px;margin-bottom:16px;overflow:hidden}
   .label{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:3px;font-weight:900;margin-bottom:8px}
   .hero{font-size:58px;line-height:.9;font-weight:950;letter-spacing:0;margin:0}.hero small{font-size:20px;color:var(--muted)}
+  .money-display{display:flex;align-items:flex-start;gap:3px;font-variant-numeric:tabular-nums;letter-spacing:-.5px}.money-display .sign{font-size:.62em;line-height:1.05;color:rgba(245,246,248,.86);padding-top:.05em}.money-display .currency{font-size:.38em;line-height:1.2;color:rgba(245,246,248,.72);padding-top:.18em}.money-display .amount{line-height:.9}.money-display.negative .amount,.money-display.negative .sign{color:#ff7b88}
   .row{display:flex;align-items:center;justify-content:space-between;gap:12px}.muted{color:var(--muted);font-weight:800}.pill{border:1px solid rgba(143,202,255,.38);background:rgba(143,202,255,.12);color:var(--blue);border-radius:999px;padding:8px 13px;font-weight:900;font-size:13px}
   .track{height:9px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#f3f8ff,#5cb8ff);border-radius:inherit;transition:width .35s ease}
   .meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.mini{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:12px}.mini span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:1.7px;font-weight:900}.mini strong{display:block;margin-top:5px;font-size:17px}
@@ -41,10 +42,13 @@
   .tx{position:relative;display:flex;align-items:center;gap:13px;padding:14px 0;border-bottom:1px solid var(--line)}.tx:last-child{border-bottom:0}.txicon{width:42px;height:42px;border-radius:14px;background:#1b1d21;display:grid;place-items:center;font-size:20px}.txname{font-size:17px;font-weight:950}.txsub{font-size:13px;color:var(--muted);font-weight:800;margin-top:4px}.txamt{margin-left:auto;color:#ff6b7b;font-weight:950;font-size:17px}.delete{border:1px solid rgba(255,77,97,.24);background:rgba(255,77,97,.08);color:#ff8995;border-radius:999px;padding:8px 10px;font-weight:950;font-size:12px}
   .drop{border:1px dashed rgba(143,202,255,.38);background:linear-gradient(180deg,rgba(143,202,255,.12),rgba(255,255,255,.035));border-radius:24px;padding:18px;text-align:center}.drop input{display:none}.drop strong{display:block;font-size:18px}.drop span{display:block;color:var(--muted);font-weight:800;margin-top:6px;font-size:13px}
   .ocrbox{display:none;margin-top:14px}.ocrbox.show{display:block}.ocr-text{white-space:pre-wrap;max-height:150px;overflow:auto;font-size:12px;color:var(--muted);line-height:1.45;border:1px solid var(--line);border-radius:16px;padding:12px;background:#0c0d0f}
+  .sms-card{padding:18px}.sms-input{min-height:74px;border-radius:22px;background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.08);font-size:14px}.sms-preview{display:none;margin-top:12px;border:1px solid rgba(143,202,255,.22);background:linear-gradient(135deg,rgba(143,202,255,.12),rgba(255,255,255,.035));border-radius:22px;padding:14px}.sms-preview.show{display:block;animation:rise .26s ease both}.sms-preview-head{display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:12px}.sms-icon{width:42px;height:42px;border-radius:15px;background:rgba(143,202,255,.12);display:grid;place-items:center;font-size:21px}.sms-name{font-size:18px;font-weight:950}.sms-sub{margin-top:3px;color:var(--muted);font-size:12px;font-weight:850}.sms-amt{font-size:21px;font-weight:950;color:#ff7b88;font-variant-numeric:tabular-nums}.sms-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.small-primary,.small-ghost{border-radius:17px;padding:12px 13px;font-size:14px;font-weight:950}.small-primary{border:0;background:linear-gradient(135deg,#eaf5ff,#5bb8ff);color:#06101b}.small-ghost{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);color:var(--text)}
+  .stats-hero{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:end}.stats-number{font-size:52px;font-weight:950;line-height:.92;font-variant-numeric:tabular-nums}.stats-caption{color:var(--muted);font-size:13px;font-weight:850;margin-top:8px}.stat-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}.stat-chip{border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.035);border-radius:17px;padding:11px}.stat-chip span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:950}.stat-chip strong{display:block;margin-top:5px;font-size:16px;font-weight:950;font-variant-numeric:tabular-nums}.chart-card{padding:18px}.chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.chart-title{font-size:22px;font-weight:950}.chart-total{color:var(--blue);font-weight:950;font-variant-numeric:tabular-nums}.cat-list{display:grid;gap:9px;margin-top:14px}.cat-row{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:10px}.cat-dot{width:30px;height:30px;border-radius:11px;display:grid;place-items:center;background:rgba(255,255,255,.045)}.cat-name{font-weight:900}.cat-bar{height:7px;margin-top:6px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden}.cat-bar i{display:block;height:100%;width:0;border-radius:inherit;transition:width .55s cubic-bezier(.2,.8,.2,1)}.cat-money{font-size:13px;color:var(--muted);font-weight:950;font-variant-numeric:tabular-nums}
+  @keyframes rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
   canvas{max-width:100%}.empty{color:var(--muted);font-weight:850;padding:24px 0;text-align:center}
   .tabs{position:fixed;left:50%;bottom:0;transform:translateX(-50%);z-index:40;width:100%;max-width:var(--phone-width);min-height:var(--dock);padding:4px 34px max(3px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(3,1fr);align-items:center;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,0) 1px),rgba(0,0,0,.92);backdrop-filter:blur(24px) saturate(1.2);-webkit-backdrop-filter:blur(24px) saturate(1.2);border-top:1px solid rgba(255,255,255,.055);box-shadow:0 -10px 30px rgba(0,0,0,.68)}
   .nav{position:relative;min-height:50px;height:50px;border:0;background:transparent;color:rgba(231,233,234,.62);display:flex;align-items:center;justify-content:center;font-weight:900;transition:color .18s,transform .18s,filter .18s}.nav:active{transform:scale(.985)}.nav.active{color:var(--blue);filter:drop-shadow(0 0 14px rgba(143,202,255,.25))}.nav svg{width:29px;height:29px;stroke-width:1.85;opacity:.9}.nav.add{width:58px;height:50px;min-height:50px;margin:0 auto;border-radius:19px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.06);color:rgba(231,233,234,.82);box-shadow:0 18px 40px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.055)}.nav.add svg{width:25px;height:25px}.nav.add.active{background:linear-gradient(180deg,rgba(29,155,240,.17),rgba(255,255,255,.04));border-color:rgba(255,255,255,.08);color:#8cc8ff;box-shadow:0 16px 40px rgba(29,155,240,.13),inset 0 1px 0 rgba(255,255,255,.08)}
-  @media(max-width:520px){:root{--top:calc(57px + env(safe-area-inset-top));--dock:calc(58px + env(safe-area-inset-bottom))}body{max-width:none}.topbar,.tabs{max-width:none}.page{padding-left:18px;padding-right:18px}.card{border-radius:26px}.catgrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.cat{padding:11px 3px}.cat span{font-size:10px}.hero{font-size:52px}.section-title{font-size:38px}}
+  @media(max-width:520px){:root{--top:calc(57px + env(safe-area-inset-top));--dock:calc(58px + env(safe-area-inset-bottom))}body{max-width:none}.topbar,.tabs{max-width:none}.page{padding-left:18px;padding-right:18px}.card{border-radius:26px}.catgrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.cat{padding:11px 3px}.cat span{font-size:10px}.hero{font-size:52px}.section-title{font-size:38px}.stat-chips{grid-template-columns:1fr 1fr}.stat-chips .stat-chip:last-child{grid-column:1/-1}.stats-number{font-size:48px}}
 </style>
 </head>
 <body>
@@ -57,12 +61,30 @@
   <main id="home" class="page active">
     <section class="card">
       <div class="label">Remaining</div>
-      <div class="row"><h1 class="hero" id="remaining">$0</h1><span class="pill" id="left-days">—</span></div>
+      <div class="row"><h1 class="hero money-display" id="remaining">$0</h1><span class="pill" id="left-days">—</span></div>
       <div class="track" style="margin-top:18px"><div class="fill" id="budget-fill"></div></div>
       <div class="meta">
         <div class="mini"><span>Spent</span><strong id="spent">$0</strong></div>
         <div class="mini"><span>Daily</span><strong id="daily">$0</strong></div>
         <div class="mini"><span>Save</span><strong id="saving">$0</strong></div>
+      </div>
+    </section>
+    <section class="card sms-card">
+      <div class="row" style="margin-bottom:10px"><div><div class="label">Bank SMS</div><h2 style="margin:0;font-size:23px">Paste to recognize</h2></div><span class="pill" id="sms-status">ready</span></div>
+      <textarea id="sms-quick" class="textarea sms-input" placeholder="例如：您的信用卡3500VISA Apple Pay于2026年07月19日，在HUNGRY消费AUD33.67元。【中国银行】" oninput="parseDashboardText()"></textarea>
+      <div id="sms-preview" class="sms-preview">
+        <div class="sms-preview-head">
+          <div class="sms-icon" id="sms-icon">💰</div>
+          <div>
+            <div class="sms-name" id="sms-name">—</div>
+            <div class="sms-sub" id="sms-sub">—</div>
+          </div>
+          <div class="sms-amt" id="sms-amount">—</div>
+        </div>
+        <div class="sms-actions">
+          <button class="small-ghost" onclick="clearDashboardText()">Cancel</button>
+          <button class="small-primary" onclick="applyDashboardParsed()">Add expense</button>
+        </div>
       </div>
     </section>
     <section class="card">
@@ -113,8 +135,23 @@
 
   <main id="stats" class="page">
     <h1 class="section-title">Stats</h1>
-    <section class="card"><div class="label">Daily spending</div><div style="height:210px"><canvas id="daily-chart"></canvas></div></section>
-    <section class="card"><div class="label">Category</div><div style="height:220px"><canvas id="cat-chart"></canvas></div></section>
+    <section class="card">
+      <div class="label">Cycle overview</div>
+      <div class="stats-hero">
+        <div>
+          <div class="stats-number" id="stats-spent">$0</div>
+          <div class="stats-caption" id="stats-caption">No spending yet.</div>
+        </div>
+        <span class="pill" id="stats-left">—</span>
+      </div>
+      <div class="stat-chips">
+        <div class="stat-chip"><span>Average</span><strong id="stats-avg">$0</strong></div>
+        <div class="stat-chip"><span>Highest day</span><strong id="stats-high">$0</strong></div>
+        <div class="stat-chip"><span>Transactions</span><strong id="stats-count">0</strong></div>
+      </div>
+    </section>
+    <section class="card chart-card"><div class="chart-head"><div class="chart-title">Daily spending</div><div class="chart-total" id="daily-total">$0</div></div><div style="height:220px"><canvas id="daily-chart"></canvas></div></section>
+    <section class="card chart-card"><div class="chart-head"><div class="chart-title">Category mix</div><div class="chart-total" id="cat-total">$0</div></div><div style="height:228px"><canvas id="cat-chart"></canvas></div><div class="cat-list" id="cat-list"></div></section>
   </main>
 
   <nav class="tabs">
@@ -135,11 +172,15 @@ const cats=[
   ['Bills','📱','#ff8a9a',/(bill|water|electric|gas|internet|telstra|optus|账单|话费|电费)/i],
   ['Other','💰','#a8abb3',/.*/]
 ];
-let txs=[],saving=1000,sel='Food',parsed=null,dailyChart=null,catChart=null;
+let txs=[],saving=1000,sel='Food',parsed=null,dashboardParsed=null,dailyChart=null,catChart=null;
 try{txs=JSON.parse(localStorage.getItem(KEY)||'[]')}catch{txs=[]}
 try{saving=+localStorage.getItem(SG_KEY)||1000}catch{}
 const $=id=>document.getElementById(id);
 const money=n=>'$'+Math.abs(+n||0).toFixed(2);
+function moneyHTML(n){
+  const value=+(n||0),abs=Math.abs(value).toFixed(2),[whole,cents]=abs.split('.');
+  return `<span class="sign">${value<0?'-':''}</span><span class="currency">$</span><span class="amount">${whole}<small>.${cents}</small></span>`;
+}
 const today=()=>new Date().toISOString().slice(0,10);
 const esc=s=>String(s||'').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
 function save(){localStorage.setItem(KEY,JSON.stringify(txs))}
@@ -148,6 +189,7 @@ function inCycle(){const c=cycle();return txs.filter(t=>{const d=new Date((t.dat
 function classify(text){return (cats.find(c=>c[3].test(text||''))||cats.at(-1))[0]}
 function parseExpenseText(text){
   text=String(text||'').trim(); if(!text) return null;
+  const bankSpend=text.match(/(?:在|于)\s*([A-Za-z0-9&.'\- ]{2,36}?)\s*(?:消费|支出|支付|扣款|交易)\s*(?:AUD|A\$|\$|RMB|¥|人民币)?\s*([0-9]{1,4}(?:,[0-9]{3})*(?:\.[0-9]{1,2})|[0-9]{1,5}(?:\.[0-9]{1,2})?)\s*(?:元|澳元|aud)?/i);
   const moneyToken=/([0-9]{1,4}(?:,[0-9]{3})*(?:\.[0-9]{1,2})|[0-9]{1,5}(?:\.[0-9]{1,2})?)/g;
   const currencyAmounts=[...text.matchAll(/(?:AUD|A\$|\$|RMB|¥|人民币)\s*([0-9]{1,4}(?:,[0-9]{3})*(?:\.[0-9]{1,2})|[0-9]{1,5}(?:\.[0-9]{1,2})?)/gi)]
     .map(m=>+m[1].replace(/,/g,'')).filter(n=>n>0.5&&n<10000);
@@ -162,19 +204,19 @@ function parseExpenseText(text){
     if (/[-/.年月日]\s*$/.test(text.slice(0,item.index)) || /^\s*[-/.年月日]/.test(text.slice(item.index + item.raw.length))) return false;
     return true;
   }).map(item=>+item.raw.replace(/,/g,''));
-  const pool=currencyAmounts.length?currencyAmounts:(decimalAmounts.length?decimalAmounts:looseAmounts);
+  const pool=bankSpend?[+bankSpend[2].replace(/,/g,'')]:(currencyAmounts.length?currencyAmounts:(decimalAmounts.length?decimalAmounts:looseAmounts));
   const amount=pool.length?Math.max(...pool):0;
   if(!amount)return null;
   const lines=text.split(/\n+/).map(s=>s.trim()).filter(Boolean);
   const bad=/(total|amount|visa|mastercard|approved|receipt|date|time|subtotal|gst|aud|\$|rmb|balance|available|支付|交易|消费|扣款|金额)/i;
-  const merchant=(lines.find(l=>l.length>2&&l.length<42&&!bad.test(l))||lines[0]||'Expense').replace(/[^\w\s\u4e00-\u9fa5&.'-]/g,' ').trim();
+  const merchant=(bankSpend?bankSpend[1]:(lines.find(l=>l.length>2&&l.length<42&&!bad.test(l))||lines[0]||'Expense')).replace(/[^\w\s\u4e00-\u9fa5&.'-]/g,' ').trim();
   const dateMatch=text.match(/(20\d{2})[-/年.](\d{1,2})[-/月.](\d{1,2})/)||text.match(/(\d{1,2})[-/月.](\d{1,2})/);
   let date=today();
   if(dateMatch){const y=dateMatch.length===4?dateMatch[1]:new Date().getFullYear();const m=dateMatch.length===4?dateMatch[2]:dateMatch[1];const d=dateMatch.length===4?dateMatch[3]:dateMatch[2];date=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`}
   return{amount,description:merchant||'Expense',category:classify(text+' '+merchant),date,raw:text};
 }
 function renderCats(){ $('catgrid').innerHTML=cats.map(c=>`<button class="cat ${sel===c[0]?'active':''}" onclick="sel='${c[0]}';renderCats()"><b>${c[1]}</b><span>${c[0]}</span></button>`).join('') }
-function renderHome(){const c=cycle(),list=inCycle(),spent=list.reduce((s,t)=>s+(+t.amount||0),0),left=LIMIT-spent,pct=Math.min(100,spent/LIMIT*100);$('cycle-label').textContent=`${c.left} days left`;$('left-days').textContent=`${pct.toFixed(0)}% / $${LIMIT}`;$('remaining').textContent=(left<0?'-':'')+money(left);$('spent').textContent=money(spent);$('daily').textContent=money(Math.max(0,left/c.left));$('saving').textContent=money(Math.max(0,(left-saving)/c.left));$('budget-fill').style.width=pct+'%';$('tx-count').textContent=list.length+' items';$('recent').innerHTML=list.length?list.slice(0,8).map(row).join(''):'<div class="empty">No expenses yet.</div>'}
+function renderHome(){const c=cycle(),list=inCycle(),spent=list.reduce((s,t)=>s+(+t.amount||0),0),left=LIMIT-spent,pct=Math.min(100,spent/LIMIT*100);$('cycle-label').textContent=`${c.left} days left`;$('left-days').textContent=`${pct.toFixed(0)}% / $${LIMIT}`;$('remaining').classList.toggle('negative',left<0);$('remaining').innerHTML=moneyHTML(left);$('spent').textContent=money(spent);$('daily').textContent=money(Math.max(0,left/c.left));$('saving').textContent=money(Math.max(0,(left-saving)/c.left));$('budget-fill').style.width=pct+'%';$('tx-count').textContent=list.length+' items';$('recent').innerHTML=list.length?list.slice(0,8).map(row).join(''):'<div class="empty">No expenses yet.</div>'}
 function row(t){const c=cats.find(x=>x[0]===t.category)||cats.at(-1);return`<div class="tx"><div class="txicon" style="color:${c[2]}">${c[1]}</div><div><div class="txname">${esc(t.description)}</div><div class="txsub">${esc(t.category)} · ${esc(t.date)}</div></div><div class="txamt">-${money(t.amount)}</div><button class="delete" onclick="delTx(${t.id})">Delete</button></div>`}
 function renderHistory(){$('history').innerHTML=txs.length?txs.map(row).join(''):'<div class="empty">No records yet.</div>'}
 function delTx(id){txs=txs.filter(t=>t.id!==id);save();renderAll()}
@@ -182,11 +224,59 @@ function addTx(data){txs.unshift({id:Date.now(),amount:+data.amount,description:
 function addManual(){const amount=+$('amount').value;if(!amount)return;addTx({amount,description:$('desc').value,category:sel,date:$('date').value||today()});$('amount').value='';$('desc').value=''}
 function showParsed(p){parsed=p;$('ocrbox').classList.add('show');$('ocr-amount').textContent=money(p.amount);$('ocr-name').textContent=p.description;$('ocr-cat').textContent=p.category;$('ocr-text').textContent=p.raw||''}
 function applyParsed(){if(parsed)addTx(parsed)}
+function showDashboardParsed(p){
+  dashboardParsed=p;
+  const c=cats.find(x=>x[0]===p.category)||cats.at(-1);
+  $('sms-preview').classList.add('show');
+  $('sms-status').textContent='found';
+  $('sms-icon').textContent=c[1];
+  $('sms-icon').style.color=c[2];
+  $('sms-name').textContent=p.description;
+  $('sms-sub').textContent=`${p.category} · ${p.date}`;
+  $('sms-amount').textContent='-'+money(p.amount);
+}
+function parseDashboardText(){
+  const value=$('sms-quick').value.trim();
+  if(!value){clearDashboardText(false);return}
+  const p=parseExpenseText(value);
+  if(p)showDashboardParsed(p);
+  else{$('sms-preview').classList.remove('show');$('sms-status').textContent='no amount'}
+}
+function clearDashboardText(clearInput=true){
+  if(clearInput)$('sms-quick').value='';
+  dashboardParsed=null;
+  $('sms-preview').classList.remove('show');
+  $('sms-status').textContent='ready';
+}
+function applyDashboardParsed(){if(dashboardParsed){addTx(dashboardParsed);clearDashboardText()}}
 function parseQuick(){const p=parseExpenseText($('quick').value);if(p)showParsed(p);else $('ocr-status').textContent='No amount found. Try a clearer screenshot or text.'}
 async function readScreenshot(file){if(!file)return;$('ocr-status').textContent='Reading screenshot...';try{const res=await Tesseract.recognize(file,'eng+chi_sim',{logger:m=>{if(m.status)$('ocr-status').textContent=m.status.replace(/_/g,' ')}});const text=res.data.text||'';const p=parseExpenseText(text);if(p){showParsed(p);$('ocr-status').textContent='Screenshot parsed.'}else{$('ocrbox').classList.add('show');$('ocr-text').textContent=text;$('ocr-status').textContent='Text found, but amount needs manual check.'}}catch(e){$('ocr-status').textContent='OCR failed. Paste text instead.'}}
 function clearText(){$('quick').value='';$('ocrbox').classList.remove('show');parsed=null}
-function renderStats(){const list=inCycle(),c=cycle();const byDay=[];for(let i=0;i<=c.passed;i++){const d=new Date(c.start);d.setDate(d.getDate()+i);const key=d.toISOString().slice(0,10);byDay.push({label:(d.getMonth()+1)+'/'+d.getDate(),value:list.filter(t=>t.date===key).reduce((s,t)=>s+(+t.amount||0),0)})}if(dailyChart)dailyChart.destroy();dailyChart=new Chart($('daily-chart'),{type:'bar',data:{labels:byDay.map(x=>x.label),datasets:[{data:byDay.map(x=>x.value),backgroundColor:'#8fcaff',borderRadius:8}]},options:chartOptions()});const byCat=cats.map(c=>({label:c[0],color:c[2],value:list.filter(t=>t.category===c[0]).reduce((s,t)=>s+(+t.amount||0),0)})).filter(x=>x.value);if(catChart)catChart.destroy();catChart=new Chart($('cat-chart'),{type:'doughnut',data:{labels:byCat.map(x=>x.label),datasets:[{data:byCat.map(x=>x.value),backgroundColor:byCat.map(x=>x.color),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'66%',plugins:{legend:{labels:{color:'#8f929a'}}}}})}
-function chartOptions(){return{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#8f929a'},grid:{display:false},border:{display:false}},y:{ticks:{color:'#8f929a'},grid:{color:'rgba(255,255,255,.07)'},border:{display:false}}}}}
+function renderStats(){
+  const list=inCycle(),c=cycle(),spent=list.reduce((s,t)=>s+(+t.amount||0),0),left=LIMIT-spent,pct=Math.min(100,spent/LIMIT*100);
+  const byDay=[];
+  for(let i=0;i<=Math.max(c.passed,0);i++){
+    const d=new Date(c.start);d.setDate(d.getDate()+i);
+    const key=d.toISOString().slice(0,10);
+    byDay.push({label:(d.getMonth()+1)+'/'+d.getDate(),value:list.filter(t=>t.date===key).reduce((s,t)=>s+(+t.amount||0),0)});
+  }
+  const values=byDay.map(x=>x.value),high=Math.max(0,...values),avg=c.passed>=0?spent/(c.passed+1):0;
+  $('stats-spent').textContent=money(spent);
+  $('stats-caption').textContent=spent?`${pct.toFixed(0)}% of this cycle used, ${money(Math.max(0,left))} left.`:'Paste a bank SMS or add your first expense.';
+  $('stats-left').textContent=`${c.left} days`;
+  $('stats-avg').textContent=money(avg);
+  $('stats-high').textContent=money(high);
+  $('stats-count').textContent=list.length;
+  $('daily-total').textContent=money(spent);
+  if(dailyChart)dailyChart.destroy();
+  dailyChart=new Chart($('daily-chart'),{type:'bar',data:{labels:byDay.map(x=>x.label),datasets:[{data:values,backgroundColor:(ctx)=>{const chart=ctx.chart,area=chart.chartArea;if(!area)return '#8fcaff';const g=chart.ctx.createLinearGradient(0,area.top,0,area.bottom);g.addColorStop(0,'#eaf5ff');g.addColorStop(.48,'#8fcaff');g.addColorStop(1,'#227cc3');return g},borderRadius:12,borderSkipped:false,barPercentage:.72,categoryPercentage:.72}]},options:chartOptions()});
+  const byCat=cats.map(c=>({label:c[0],icon:c[1],color:c[2],value:list.filter(t=>t.category===c[0]).reduce((s,t)=>s+(+t.amount||0),0)})).filter(x=>x.value);
+  $('cat-total').textContent=money(spent);
+  $('cat-list').innerHTML=byCat.length?byCat.map(x=>`<div class="cat-row"><div class="cat-dot" style="color:${x.color}">${x.icon}</div><div><div class="cat-name">${x.label}</div><div class="cat-bar"><i style="width:${spent?Math.max(6,x.value/spent*100):0}%;background:${x.color}"></i></div></div><div class="cat-money">${money(x.value)}</div></div>`).join(''):'<div class="empty" style="padding:8px 0 0">No categories yet.</div>';
+  if(catChart)catChart.destroy();
+  catChart=new Chart($('cat-chart'),{type:'doughnut',data:{labels:byCat.map(x=>x.label),datasets:[{data:byCat.map(x=>x.value),backgroundColor:byCat.map(x=>x.color),borderColor:'#111',borderWidth:4,hoverOffset:8,spacing:2}]},options:{responsive:true,maintainAspectRatio:false,cutout:'68%',animation:{animateRotate:true,animateScale:true,duration:780,easing:'easeOutQuart'},plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(16,17,19,.94)',titleColor:'#f5f6f8',bodyColor:'#aeb1b8',borderColor:'rgba(255,255,255,.12)',borderWidth:1,padding:12,cornerRadius:14,callbacks:{label:(ctx)=>`${ctx.label}: ${money(ctx.raw)}`}}}}})
+}
+function chartOptions(){return{responsive:true,maintainAspectRatio:false,animation:{duration:720,easing:'easeOutQuart'},plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(16,17,19,.94)',titleColor:'#f5f6f8',bodyColor:'#aeb1b8',borderColor:'rgba(255,255,255,.12)',borderWidth:1,padding:12,cornerRadius:14,callbacks:{label:(ctx)=>money(ctx.raw)}}},scales:{x:{ticks:{color:'#8f929a',maxRotation:0,autoSkip:true},grid:{display:false},border:{display:false}},y:{beginAtZero:true,ticks:{color:'#8f929a',callback:v=>'$'+v},grid:{color:'rgba(255,255,255,.06)'},border:{display:false}}}}}
 function go(tab){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(tab).classList.add('active');document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));if(tab==='stats')renderStats();if(tab==='add'){$('date').value=today();renderHistory();renderCats()}window.scrollTo({top:0,behavior:'smooth'})}
 function renderAll(){renderCats();renderHome();renderHistory();if($('stats').classList.contains('active'))renderStats()}
 $('date').value=today();renderAll();
