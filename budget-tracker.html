@@ -39,7 +39,7 @@
   .ghost{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.035);color:var(--text);padding:13px 14px;font-weight:900}
   .catgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.cat{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.035);padding:12px 5px;text-align:center;color:var(--muted);font-weight:850}.cat.active{border-color:rgba(143,202,255,.55);background:rgba(143,202,255,.13);color:var(--blue)}
   .cat b{display:block;font-size:22px;margin-bottom:5px}.cat span{font-size:11px}
-  .tx{position:relative;display:flex;align-items:center;gap:13px;padding:14px 0;border-bottom:1px solid var(--line)}.tx:last-child{border-bottom:0}.txicon{width:42px;height:42px;border-radius:14px;background:#1b1d21;display:grid;place-items:center;font-size:20px}.txname{font-size:17px;font-weight:950}.txsub{font-size:13px;color:var(--muted);font-weight:800;margin-top:4px}.txamt{margin-left:auto;color:#ff6b7b;font-weight:950;font-size:17px}.delete{border:1px solid rgba(255,77,97,.24);background:rgba(255,77,97,.08);color:#ff8995;border-radius:999px;padding:8px 10px;font-weight:950;font-size:12px}
+  .tx{position:relative;display:flex;align-items:center;gap:13px;padding:14px 0;border-bottom:1px solid var(--line)}.tx:last-child{border-bottom:0}.txicon{width:42px;height:42px;border-radius:14px;background:#1b1d21;display:grid;place-items:center;font-size:20px}.txname{font-size:17px;font-weight:950}.txsub{font-size:13px;color:var(--muted);font-weight:800;margin-top:4px}.txamt{margin-left:auto;color:#ff6b7b;font-weight:950;font-size:17px;font-variant-numeric:tabular-nums}.txamt.refund{color:#67d9a5}.delete{border:1px solid rgba(255,77,97,.24);background:rgba(255,77,97,.08);color:#ff8995;border-radius:999px;padding:8px 10px;font-weight:950;font-size:12px}
   .drop{border:1px dashed rgba(143,202,255,.38);background:linear-gradient(180deg,rgba(143,202,255,.12),rgba(255,255,255,.035));border-radius:24px;padding:18px;text-align:center}.drop input{display:none}.drop strong{display:block;font-size:18px}.drop span{display:block;color:var(--muted);font-weight:800;margin-top:6px;font-size:13px}
   .ocrbox{display:none;margin-top:14px}.ocrbox.show{display:block}.ocr-text{white-space:pre-wrap;max-height:150px;overflow:auto;font-size:12px;color:var(--muted);line-height:1.45;border:1px solid var(--line);border-radius:16px;padding:12px;background:#0c0d0f}
   .sms-card{padding:18px}.sms-input{min-height:74px;border-radius:22px;background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.08);font-size:14px}.sms-preview{display:none;margin-top:12px;border:1px solid rgba(143,202,255,.22);background:linear-gradient(135deg,rgba(143,202,255,.12),rgba(255,255,255,.035));border-radius:22px;padding:14px}.sms-preview.show{display:block;animation:rise .26s ease both}.sms-preview-head{display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:12px}.sms-icon{width:42px;height:42px;border-radius:15px;background:rgba(143,202,255,.12);display:grid;place-items:center;font-size:21px}.sms-name{font-size:18px;font-weight:950}.sms-sub{margin-top:3px;color:var(--muted);font-size:12px;font-weight:850}.sms-amt{font-size:21px;font-weight:950;color:#ff7b88;font-variant-numeric:tabular-nums}.sms-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.small-primary,.small-ghost{border-radius:17px;padding:12px 13px;font-size:14px;font-weight:950}.small-primary{border:0;background:linear-gradient(135deg,#eaf5ff,#5bb8ff);color:#06101b}.small-ghost{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);color:var(--text)}
@@ -161,7 +161,7 @@
   </nav>
 
 <script>
-const LIMIT=2500,CYCLE_DAY=28,KEY='bt_txs',SG_KEY='bt_sg';
+const LIMIT=2500,CYCLE_DAY=28,KEY='bt_txs_95566_2026_06_07_v1',SG_KEY='bt_sg';
 const cats=[
   ['Food','🍔','#ff8f70',/(mcd|kfc|hungry|subway|woolworth|coles|aldi|iga|restaurant|cafe|food|饭|餐|麦当劳|肯德基|奶茶|外卖|寿司|面|burger|pizza)/i],
   ['Transport','🚗','#8fcaff',/(uber|taxi|train|bus|opal|petrol|bp|shell|transport|滴滴|地铁|公交|加油)/i],
@@ -170,10 +170,32 @@ const cats=[
   ['Health','💊','#94e5c1',/(chemist|pharmacy|doctor|clinic|health|药|医院|诊所)/i],
   ['Education','📚','#9dc8ff',/(unsw|moodle|university|school|book|education|学费|学校|书)/i],
   ['Bills','📱','#ff8a9a',/(bill|water|electric|gas|internet|telstra|optus|账单|话费|电费)/i],
+  ['Refund','↩️','#67d9a5',/(refund|reversal|return|撤销|退货|退款)/i],
   ['Other','💰','#a8abb3',/.*/]
 ];
 let txs=[],saving=1000,sel='Food',parsed=null,dashboardParsed=null,dailyChart=null,catChart=null;
-try{txs=JSON.parse(localStorage.getItem(KEY)||'[]')}catch{txs=[]}
+const DEFAULT_TXS=[
+  {id:2026061001,amount:39.59,description:'YUM YA',category:'Food',date:'2026-06-10',raw:'您的信用卡3500VISA Apple Pay于2026年06月10日，在YUM YA消费AUD39.59元。【中国银行】'},
+  {id:2026061101,amount:1.00,description:'PAYPAL',category:'Other',date:'2026-06-11',raw:'您的信用卡3500于2026年06月11日，在PAYPAL消费AUD1.00元。【中国银行】'},
+  {id:2026061102,amount:-1.00,description:'PAYPAL reversal',category:'Refund',date:'2026-06-11',raw:'您的信用卡3500于2026年06月11日，在PAYPAL撤销AUD1.00元。【中国银行】'},
+  {id:2026061103,amount:33.99,description:'PAYPAL',category:'Other',date:'2026-06-11',raw:'您的信用卡3500于2026年06月11日，在PAYPAL消费AUD33.99元。【中国银行】'},
+  {id:2026061104,amount:25.90,description:'SQ *RA',category:'Food',date:'2026-06-11',raw:'您的信用卡3500VISA Apple Pay于2026年06月11日，在SQ *RA消费AUD25.90元。【中国银行】'},
+  {id:2026061105,amount:10.60,description:'IGA WA',category:'Food',date:'2026-06-11',raw:'您的信用卡3500VISA Apple Pay于2026年06月11日，在IGA WA消费AUD10.60元。【中国银行】'},
+  {id:2026061201,amount:13.90,description:'McDona',category:'Food',date:'2026-06-12',raw:'您的信用卡3500VISA Apple Pay于2026年06月12日，在McDona消费AUD13.90元。【中国银行】'},
+  {id:2026061202,amount:25.49,description:'AMAZON',category:'Shopping',date:'2026-06-12',raw:'您的信用卡3500于2026年06月12日，在AMAZON消费AUD25.49元。【中国银行】'},
+  {id:2026061203,amount:-18.00,description:'Card return',category:'Refund',date:'2026-06-12',raw:'您的信用卡3500于2026年06月12日成功退货AUD18.00元【中国银行】'},
+  {id:2026061301,amount:96.79,description:'UMALL',category:'Shopping',date:'2026-06-13',raw:'您的信用卡3500VISA Apple Pay于2026年06月13日，在UMALL消费AUD96.79元。【中国银行】'},
+  {id:2026061302,amount:28.16,description:'IGA WA',category:'Food',date:'2026-06-13',raw:'您的信用卡3500VISA Apple Pay于2026年06月13日，在IGA WA消费AUD28.16元。【中国银行】'},
+  {id:2026061303,amount:11.86,description:'PAYPAL',category:'Other',date:'2026-06-13',raw:'您的信用卡3500于2026年06月13日，在PAYPAL消费AUD11.86元。【中国银行】'},
+  {id:2026062701,amount:18.00,description:'AMAZON',category:'Shopping',date:'2026-06-27',raw:'您的信用卡3500于2026年06月27日，在AMAZON消费AUD18.00元。【中国银行】'},
+  {id:2026071901,amount:33.67,description:'HUNGRY',category:'Food',date:'2026-07-19',raw:'您的信用卡3500VISA Apple Pay于2026年07月19日，在HUNGRY消费AUD33.67元。【中国银行】'}
+].sort((a,b)=>String(b.date).localeCompare(String(a.date))||b.id-a.id);
+try{
+  const stored=localStorage.getItem(KEY);
+  txs=stored?JSON.parse(stored):DEFAULT_TXS.slice();
+  localStorage.removeItem('bt_txs');
+  save();
+}catch{txs=DEFAULT_TXS.slice();save()}
 try{saving=+localStorage.getItem(SG_KEY)||1000}catch{}
 const $=id=>document.getElementById(id);
 const money=n=>'$'+Math.abs(+n||0).toFixed(2);
@@ -190,6 +212,7 @@ function classify(text){return (cats.find(c=>c[3].test(text||''))||cats.at(-1))[
 function parseExpenseText(text){
   text=String(text||'').trim(); if(!text) return null;
   const bankSpend=text.match(/(?:在|于)\s*([A-Za-z0-9&.'\- ]{2,36}?)\s*(?:消费|支出|支付|扣款|交易)\s*(?:AUD|A\$|\$|RMB|¥|人民币)?\s*([0-9]{1,4}(?:,[0-9]{3})*(?:\.[0-9]{1,2})|[0-9]{1,5}(?:\.[0-9]{1,2})?)\s*(?:元|澳元|aud)?/i);
+  const bankRefund=text.match(/(?:在|于)?\s*([A-Za-z0-9&.'\- ]{2,36}?)?\s*(?:撤销|退货|退款|返还)\s*(?:AUD|A\$|\$|RMB|¥|人民币)?\s*([0-9]{1,4}(?:,[0-9]{3})*(?:\.[0-9]{1,2})|[0-9]{1,5}(?:\.[0-9]{1,2})?)\s*(?:元|澳元|aud)?/i);
   const moneyToken=/([0-9]{1,4}(?:,[0-9]{3})*(?:\.[0-9]{1,2})|[0-9]{1,5}(?:\.[0-9]{1,2})?)/g;
   const currencyAmounts=[...text.matchAll(/(?:AUD|A\$|\$|RMB|¥|人民币)\s*([0-9]{1,4}(?:,[0-9]{3})*(?:\.[0-9]{1,2})|[0-9]{1,5}(?:\.[0-9]{1,2})?)/gi)]
     .map(m=>+m[1].replace(/,/g,'')).filter(n=>n>0.5&&n<10000);
@@ -204,25 +227,27 @@ function parseExpenseText(text){
     if (/[-/.年月日]\s*$/.test(text.slice(0,item.index)) || /^\s*[-/.年月日]/.test(text.slice(item.index + item.raw.length))) return false;
     return true;
   }).map(item=>+item.raw.replace(/,/g,''));
-  const pool=bankSpend?[+bankSpend[2].replace(/,/g,'')]:(currencyAmounts.length?currencyAmounts:(decimalAmounts.length?decimalAmounts:looseAmounts));
-  const amount=pool.length?Math.max(...pool):0;
-  if(!amount)return null;
+  const pool=(bankSpend||bankRefund)?[+(bankSpend?.[2]||bankRefund?.[2]).replace(/,/g,'')]:(currencyAmounts.length?currencyAmounts:(decimalAmounts.length?decimalAmounts:looseAmounts));
+  const amountAbs=pool.length?Math.max(...pool):0;
+  if(!amountAbs)return null;
+  const isRefund=!!bankRefund || /(撤销|退货|退款|refund|reversal|return)/i.test(text);
+  const amount=isRefund?-amountAbs:amountAbs;
   const lines=text.split(/\n+/).map(s=>s.trim()).filter(Boolean);
   const bad=/(total|amount|visa|mastercard|approved|receipt|date|time|subtotal|gst|aud|\$|rmb|balance|available|支付|交易|消费|扣款|金额)/i;
-  const merchant=(bankSpend?bankSpend[1]:(lines.find(l=>l.length>2&&l.length<42&&!bad.test(l))||lines[0]||'Expense')).replace(/[^\w\s\u4e00-\u9fa5&.'-]/g,' ').trim();
+  const merchant=(bankSpend?bankSpend[1]:(bankRefund&&bankRefund[1]?bankRefund[1]:(lines.find(l=>l.length>2&&l.length<42&&!bad.test(l))||lines[0]||(isRefund?'Refund':'Expense')))).replace(/[^\w\s\u4e00-\u9fa5&.'-]/g,' ').trim();
   const dateMatch=text.match(/(20\d{2})[-/年.](\d{1,2})[-/月.](\d{1,2})/)||text.match(/(\d{1,2})[-/月.](\d{1,2})/);
   let date=today();
   if(dateMatch){const y=dateMatch.length===4?dateMatch[1]:new Date().getFullYear();const m=dateMatch.length===4?dateMatch[2]:dateMatch[1];const d=dateMatch.length===4?dateMatch[3]:dateMatch[2];date=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`}
-  return{amount,description:merchant||'Expense',category:classify(text+' '+merchant),date,raw:text};
+  return{amount,description:merchant||'Expense',category:isRefund?'Refund':classify(text+' '+merchant),date,raw:text};
 }
 function renderCats(){ $('catgrid').innerHTML=cats.map(c=>`<button class="cat ${sel===c[0]?'active':''}" onclick="sel='${c[0]}';renderCats()"><b>${c[1]}</b><span>${c[0]}</span></button>`).join('') }
-function renderHome(){const c=cycle(),list=inCycle(),spent=list.reduce((s,t)=>s+(+t.amount||0),0),left=LIMIT-spent,pct=Math.min(100,spent/LIMIT*100);$('cycle-label').textContent=`${c.left} days left`;$('left-days').textContent=`${pct.toFixed(0)}% / $${LIMIT}`;$('remaining').classList.toggle('negative',left<0);$('remaining').innerHTML=moneyHTML(left);$('spent').textContent=money(spent);$('daily').textContent=money(Math.max(0,left/c.left));$('saving').textContent=money(Math.max(0,(left-saving)/c.left));$('budget-fill').style.width=pct+'%';$('tx-count').textContent=list.length+' items';$('recent').innerHTML=list.length?list.slice(0,8).map(row).join(''):'<div class="empty">No expenses yet.</div>'}
-function row(t){const c=cats.find(x=>x[0]===t.category)||cats.at(-1);return`<div class="tx"><div class="txicon" style="color:${c[2]}">${c[1]}</div><div><div class="txname">${esc(t.description)}</div><div class="txsub">${esc(t.category)} · ${esc(t.date)}</div></div><div class="txamt">-${money(t.amount)}</div><button class="delete" onclick="delTx(${t.id})">Delete</button></div>`}
+function renderHome(){const c=cycle(),list=inCycle(),spent=list.reduce((s,t)=>s+(+t.amount||0),0),left=LIMIT-spent,pct=Math.max(0,Math.min(100,spent/LIMIT*100));$('cycle-label').textContent=`${c.left} days left`;$('left-days').textContent=`${pct.toFixed(0)}% / $${LIMIT}`;$('remaining').classList.toggle('negative',left<0);$('remaining').innerHTML=moneyHTML(left);$('spent').textContent=money(spent);$('daily').textContent=money(Math.max(0,left/c.left));$('saving').textContent=money(Math.max(0,(left-saving)/c.left));$('budget-fill').style.width=pct+'%';$('tx-count').textContent=list.length+' items';$('recent').innerHTML=list.length?list.slice(0,8).map(row).join(''):'<div class="empty">No expenses yet.</div>'}
+function row(t){const c=cats.find(x=>x[0]===t.category)||cats.at(-1),refund=(+t.amount||0)<0;return`<div class="tx"><div class="txicon" style="color:${c[2]}">${c[1]}</div><div><div class="txname">${esc(t.description)}</div><div class="txsub">${esc(t.category)} · ${esc(t.date)}</div></div><div class="txamt ${refund?'refund':''}">${refund?'+':'-'}${money(t.amount)}</div><button class="delete" onclick="delTx(${t.id})">Delete</button></div>`}
 function renderHistory(){$('history').innerHTML=txs.length?txs.map(row).join(''):'<div class="empty">No records yet.</div>'}
 function delTx(id){txs=txs.filter(t=>t.id!==id);save();renderAll()}
 function addTx(data){txs.unshift({id:Date.now(),amount:+data.amount,description:data.description||'Expense',category:data.category||sel,date:data.date||today()});save();renderAll();go('home')}
 function addManual(){const amount=+$('amount').value;if(!amount)return;addTx({amount,description:$('desc').value,category:sel,date:$('date').value||today()});$('amount').value='';$('desc').value=''}
-function showParsed(p){parsed=p;$('ocrbox').classList.add('show');$('ocr-amount').textContent=money(p.amount);$('ocr-name').textContent=p.description;$('ocr-cat').textContent=p.category;$('ocr-text').textContent=p.raw||''}
+function showParsed(p){parsed=p;$('ocrbox').classList.add('show');$('ocr-amount').textContent=(p.amount<0?'+':'')+money(p.amount);$('ocr-name').textContent=p.description;$('ocr-cat').textContent=p.category;$('ocr-text').textContent=p.raw||''}
 function applyParsed(){if(parsed)addTx(parsed)}
 function showDashboardParsed(p){
   dashboardParsed=p;
@@ -233,7 +258,8 @@ function showDashboardParsed(p){
   $('sms-icon').style.color=c[2];
   $('sms-name').textContent=p.description;
   $('sms-sub').textContent=`${p.category} · ${p.date}`;
-  $('sms-amount').textContent='-'+money(p.amount);
+  $('sms-amount').textContent=(p.amount<0?'+':'-')+money(p.amount);
+  $('sms-amount').style.color=p.amount<0?'#67d9a5':'#ff7b88';
 }
 function parseDashboardText(){
   const value=$('sms-quick').value.trim();
@@ -270,7 +296,7 @@ function renderStats(){
   $('daily-total').textContent=money(spent);
   if(dailyChart)dailyChart.destroy();
   dailyChart=new Chart($('daily-chart'),{type:'bar',data:{labels:byDay.map(x=>x.label),datasets:[{data:values,backgroundColor:(ctx)=>{const chart=ctx.chart,area=chart.chartArea;if(!area)return '#8fcaff';const g=chart.ctx.createLinearGradient(0,area.top,0,area.bottom);g.addColorStop(0,'#eaf5ff');g.addColorStop(.48,'#8fcaff');g.addColorStop(1,'#227cc3');return g},borderRadius:12,borderSkipped:false,barPercentage:.72,categoryPercentage:.72}]},options:chartOptions()});
-  const byCat=cats.map(c=>({label:c[0],icon:c[1],color:c[2],value:list.filter(t=>t.category===c[0]).reduce((s,t)=>s+(+t.amount||0),0)})).filter(x=>x.value);
+  const byCat=cats.filter(c=>c[0]!=='Refund').map(c=>({label:c[0],icon:c[1],color:c[2],value:list.filter(t=>t.category===c[0]&&(+t.amount||0)>0).reduce((s,t)=>s+(+t.amount||0),0)})).filter(x=>x.value>0);
   $('cat-total').textContent=money(spent);
   $('cat-list').innerHTML=byCat.length?byCat.map(x=>`<div class="cat-row"><div class="cat-dot" style="color:${x.color}">${x.icon}</div><div><div class="cat-name">${x.label}</div><div class="cat-bar"><i style="width:${spent?Math.max(6,x.value/spent*100):0}%;background:${x.color}"></i></div></div><div class="cat-money">${money(x.value)}</div></div>`).join(''):'<div class="empty" style="padding:8px 0 0">No categories yet.</div>';
   if(catChart)catChart.destroy();
