@@ -161,7 +161,7 @@
   </nav>
 
 <script>
-const LIMIT=2500,CYCLE_DAY=28,KEY='bt_txs_95566_2026_06_07_v1',SG_KEY='bt_sg';
+const LIMIT=2500,CYCLE_DAY=28,KEY='bt_txs_95566_full_2026_07_23_v1',SG_KEY='bt_sg';
 const cats=[
   ['Food','🍔','#ff8f70',/(mcd|kfc|hungry|subway|woolworth|coles|aldi|iga|restaurant|cafe|food|饭|餐|麦当劳|肯德基|奶茶|外卖|寿司|面|burger|pizza)/i],
   ['Transport','🚗','#8fcaff',/(uber|taxi|train|bus|opal|petrol|bp|shell|transport|滴滴|地铁|公交|加油)/i],
@@ -175,20 +175,235 @@ const cats=[
 ];
 let txs=[],saving=1000,sel='Food',parsed=null,dashboardParsed=null,dailyChart=null,catChart=null;
 const DEFAULT_TXS=[
-  {id:2026061001,amount:39.59,description:'YUM YA',category:'Food',date:'2026-06-10',raw:'您的信用卡3500VISA Apple Pay于2026年06月10日，在YUM YA消费AUD39.59元。【中国银行】'},
-  {id:2026061101,amount:1.00,description:'PAYPAL',category:'Other',date:'2026-06-11',raw:'您的信用卡3500于2026年06月11日，在PAYPAL消费AUD1.00元。【中国银行】'},
-  {id:2026061102,amount:-1.00,description:'PAYPAL reversal',category:'Refund',date:'2026-06-11',raw:'您的信用卡3500于2026年06月11日，在PAYPAL撤销AUD1.00元。【中国银行】'},
-  {id:2026061103,amount:33.99,description:'PAYPAL',category:'Other',date:'2026-06-11',raw:'您的信用卡3500于2026年06月11日，在PAYPAL消费AUD33.99元。【中国银行】'},
-  {id:2026061104,amount:25.90,description:'SQ *RA',category:'Food',date:'2026-06-11',raw:'您的信用卡3500VISA Apple Pay于2026年06月11日，在SQ *RA消费AUD25.90元。【中国银行】'},
-  {id:2026061105,amount:10.60,description:'IGA WA',category:'Food',date:'2026-06-11',raw:'您的信用卡3500VISA Apple Pay于2026年06月11日，在IGA WA消费AUD10.60元。【中国银行】'},
-  {id:2026061201,amount:13.90,description:'McDona',category:'Food',date:'2026-06-12',raw:'您的信用卡3500VISA Apple Pay于2026年06月12日，在McDona消费AUD13.90元。【中国银行】'},
-  {id:2026061202,amount:25.49,description:'AMAZON',category:'Shopping',date:'2026-06-12',raw:'您的信用卡3500于2026年06月12日，在AMAZON消费AUD25.49元。【中国银行】'},
-  {id:2026061203,amount:-18.00,description:'Card return',category:'Refund',date:'2026-06-12',raw:'您的信用卡3500于2026年06月12日成功退货AUD18.00元【中国银行】'},
-  {id:2026061301,amount:96.79,description:'UMALL',category:'Shopping',date:'2026-06-13',raw:'您的信用卡3500VISA Apple Pay于2026年06月13日，在UMALL消费AUD96.79元。【中国银行】'},
-  {id:2026061302,amount:28.16,description:'IGA WA',category:'Food',date:'2026-06-13',raw:'您的信用卡3500VISA Apple Pay于2026年06月13日，在IGA WA消费AUD28.16元。【中国银行】'},
-  {id:2026061303,amount:11.86,description:'PAYPAL',category:'Other',date:'2026-06-13',raw:'您的信用卡3500于2026年06月13日，在PAYPAL消费AUD11.86元。【中国银行】'},
-  {id:2026062701,amount:18.00,description:'AMAZON',category:'Shopping',date:'2026-06-27',raw:'您的信用卡3500于2026年06月27日，在AMAZON消费AUD18.00元。【中国银行】'},
-  {id:2026071901,amount:33.67,description:'HUNGRY',category:'Food',date:'2026-07-19',raw:'您的信用卡3500VISA Apple Pay于2026年07月19日，在HUNGRY消费AUD33.67元。【中国银行】'}
+  {"amount":33.67,"currency":"AUD","description":"HUNGRY","category":"Food","date":"2026-07-19","raw":"您的信用卡3500VISA Apple Pay于2026年07月19日，在HUNGRY消费AUD33.67元。【中国银行】","id":2026071901},
+  {"amount":29.99,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-07-18","raw":"您的信用卡3500于2026年07月18日，在PAYPAL消费AUD29.99元。【中国银行】","id":2026071802},
+  {"amount":25.21,"currency":"AUD","description":"HUNGRY","category":"Food","date":"2026-07-18","raw":"您的信用卡3500VISA Apple Pay于2026年07月18日，在HUNGRY消费AUD25.21元。【中国银行】","id":2026071801},
+  {"amount":6.98,"currency":"AUD","description":"IGA WA","category":"Food","date":"2026-07-15","raw":"您的信用卡3500VISA Apple Pay于2026年07月15日，在IGA WA消费AUD6.98元。【中国银行】","id":2026071502},
+  {"amount":35.53,"currency":"AUD","description":"BA THO","category":"Food","date":"2026-07-15","raw":"您的信用卡3500VISA Apple Pay于2026年07月15日，在BA THO消费AUD35.53元。【中国银行】","id":2026071501},
+  {"amount":64.13,"currency":"AUD","description":"UMALL","category":"Shopping","date":"2026-07-13","raw":"您的信用卡3500VISA Apple Pay于2026年07月13日，在UMALL消费AUD64.13元。【中国银行】","id":2026071301},
+  {"amount":6.99,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-07-12","raw":"您的信用卡3500于2026年07月12日，在PAYPAL消费AUD6.99元。【中国银行】","id":2026071202},
+  {"amount":39.59,"currency":"AUD","description":"BA THO","category":"Food","date":"2026-07-12","raw":"您的信用卡3500VISA Apple Pay于2026年07月12日，在BA THO消费AUD39.59元。【中国银行】","id":2026071201},
+  {"amount":15.46,"currency":"AUD","description":"UBER *","category":"Transport","date":"2026-07-11","raw":"您的信用卡3500VISA Apple Pay于2026年07月11日，在UBER *消费AUD15.46元。【中国银行】","id":2026071103},
+  {"amount":-12.69,"currency":"AUD","description":"UBER *","category":"Refund","date":"2026-07-11","raw":"您的信用卡3500VISA Apple Pay于2026年07月11日，在UBER *撤销AUD12.69元。【中国银行】","id":2026071102},
+  {"amount":20.33,"currency":"AUD","description":"LS Mar","category":"Food","date":"2026-07-11","raw":"您的信用卡3500VISA Apple Pay于2026年07月11日，在LS Mar消费AUD20.33元。【中国银行】","id":2026071101},
+  {"amount":80.45,"currency":"AUD","description":"JD.com","category":"Shopping","date":"2026-07-10","raw":"您的信用卡3500VISA Apple Pay于2026年07月10日，在JD.com消费AUD80.45元。【中国银行】","id":2026071001},
+  {"amount":22.75,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-07-09","raw":"您的信用卡3500于2026年07月09日，在PAYPAL消费AUD22.75元。【中国银行】","id":2026070901},
+  {"amount":59.45,"currency":"AUD","description":"Pillow","category":"Shopping","date":"2026-07-08","raw":"您的信用卡3500VISA Apple Pay于2026年07月08日，在Pillow消费AUD59.45元。【中国银行】","id":2026070801},
+  {"amount":14.95,"currency":"AUD","description":"AMAZON","category":"Shopping","date":"2026-07-07","raw":"您的信用卡3500于2026年07月07日，在AMAZON消费AUD14.95元。【中国银行】","id":2026070703},
+  {"amount":25.0,"currency":"AUD","description":"MITCHE","category":"Food","date":"2026-07-07","raw":"您的信用卡3500VISA Apple Pay于2026年07月07日，在MITCHE消费AUD25.00元。【中国银行】","id":2026070702},
+  {"amount":4.27,"currency":"AUD","description":"IGLU L","category":"Bills","date":"2026-07-07","raw":"您的信用卡3500VISA Apple Pay于2026年07月07日，在IGLU L消费AUD4.27元。【中国银行】","id":2026070701},
+  {"amount":29.89,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-07-06","raw":"您的信用卡3500于2026年07月06日，在PAYPAL消费AUD29.89元。【中国银行】","id":2026070603},
+  {"amount":63.95,"currency":"AUD","description":"YUM YA","category":"Food","date":"2026-07-06","raw":"您的信用卡3500VISA Apple Pay于2026年07月06日，在YUM YA消费AUD63.95元。【中国银行】","id":2026070602},
+  {"amount":34.79,"currency":"AUD","description":"IGA WA","category":"Food","date":"2026-07-06","raw":"您的信用卡3500VISA Apple Pay于2026年07月06日，在IGA WA消费AUD34.79元。【中国银行】","id":2026070601},
+  {"amount":92.81,"currency":"AUD","description":"UMALL","category":"Shopping","date":"2026-07-05","raw":"您的信用卡3500VISA Apple Pay于2026年07月05日，在UMALL消费AUD92.81元。【中国银行】","id":2026070501},
+  {"amount":18.8,"currency":"AUD","description":"SUSHI","category":"Food","date":"2026-07-04","raw":"您的信用卡3500VISA Apple Pay于2026年07月04日，在SUSHI消费AUD18.80元。【中国银行】","id":2026070403},
+  {"amount":29.25,"currency":"AUD","description":"SQ *MA","category":"Food","date":"2026-07-04","raw":"您的信用卡3500VISA Apple Pay于2026年07月04日，在SQ *MA消费AUD29.25元。【中国银行】","id":2026070402},
+  {"amount":9.57,"currency":"AUD","description":"IC MAR","category":"Bills","date":"2026-07-04","raw":"您的信用卡3500VISA Apple Pay于2026年07月04日，在IC MAR消费AUD9.57元。【中国银行】","id":2026070401},
+  {"amount":-18.0,"currency":"AUD","description":"Card return","category":"Refund","date":"2026-07-03","raw":"您的信用卡3500于2026年07月03日成功退货AUD18.00元【中国银行】","id":2026070301},
+  {"amount":47.22,"currency":"AUD","description":"Domino","category":"Food","date":"2026-07-02","raw":"您的信用卡3500VISA Apple Pay于2026年07月02日，在Domino消费AUD47.22元。【中国银行】","id":2026070201},
+  {"amount":4.27,"currency":"AUD","description":"IGLU L","category":"Bills","date":"2026-07-01","raw":"您的信用卡3500VISA Apple Pay于2026年07月01日，在IGLU L消费AUD4.27元。【中国银行】","id":2026070102},
+  {"amount":26.95,"currency":"AUD","description":"HJs Ci","category":"Bills","date":"2026-07-01","raw":"您的信用卡3500VISA Apple Pay于2026年07月01日，在HJs Ci消费AUD26.95元。【中国银行】","id":2026070101},
+  {"amount":12.8,"currency":"AUD","description":"FORTUN","category":"Food","date":"2026-06-29","raw":"您的信用卡3500VISA Apple Pay于2026年06月29日，在FORTUN消费AUD12.80元。【中国银行】","id":2026062901},
+  {"amount":25.0,"currency":"AUD","description":"Hungry","category":"Food","date":"2026-06-28","raw":"您的信用卡3500VISA Apple Pay于2026年06月28日，在Hungry消费AUD25.00元。【中国银行】","id":2026062801},
+  {"amount":18.0,"currency":"AUD","description":"AMAZON","category":"Shopping","date":"2026-06-27","raw":"您的信用卡3500于2026年06月27日，在AMAZON消费AUD18.00元。【中国银行】","id":2026062701},
+  {"amount":44.0,"currency":"AUD","description":"VODAFO","category":"Bills","date":"2026-06-26","raw":"您的信用卡3500于2026年06月26日，在VODAFO消费AUD44.00元。【中国银行】","id":2026062605},
+  {"amount":-18.0,"currency":"AUD","description":"Card return","category":"Refund","date":"2026-06-26","raw":"您的信用卡3500于2026年06月26日成功退货AUD18.00元【中国银行】","id":2026062604},
+  {"amount":55.36,"currency":"AUD","description":"RIBS *","category":"Food","date":"2026-06-26","raw":"您的信用卡3500VISA Apple Pay于2026年06月26日，在RIBS *消费AUD55.36元。【中国银行】","id":2026062603},
+  {"amount":7.57,"currency":"AUD","description":"HAN HO","category":"Bills","date":"2026-06-26","raw":"您的信用卡3500VISA Apple Pay于2026年06月26日，在HAN HO消费AUD7.57元。【中国银行】","id":2026062602},
+  {"amount":11.4,"currency":"AUD","description":"COLES","category":"Food","date":"2026-06-26","raw":"您的信用卡3500VISA Apple Pay于2026年06月26日，在COLES消费AUD11.40元。【中国银行】","id":2026062601},
+  {"amount":44.95,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-06-25","raw":"您的信用卡3500于2026年06月25日，在PAYPAL消费AUD44.95元。【中国银行】","id":2026062502},
+  {"amount":10.0,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-06-25","raw":"您的信用卡3500于2026年06月25日，在PAYPAL消费AUD10.00元。【中国银行】","id":2026062501},
+  {"amount":98.15,"currency":"AUD","description":"YAYOI","category":"Food","date":"2026-06-22","raw":"您的信用卡3500VISA Apple Pay于2026年06月22日，在YAYOI消费AUD98.15元。【中国银行】","id":2026062202},
+  {"amount":8.08,"currency":"AUD","description":"SMP*He","category":"Bills","date":"2026-06-22","raw":"您的信用卡3500VISA Apple Pay于2026年06月22日，在SMP*He消费AUD8.08元。【中国银行】","id":2026062201},
+  {"amount":158.4,"currency":"AUD","description":"UMALL","category":"Shopping","date":"2026-06-21","raw":"您的信用卡3500于2026年06月21日，在UMALL消费AUD158.40元。【中国银行】","id":2026062102},
+  {"amount":67.0,"currency":"AUD","description":"Aesop","category":"Bills","date":"2026-06-21","raw":"您的信用卡3500VISA Apple Pay于2026年06月21日，在Aesop消费AUD67.00元。【中国银行】","id":2026062101},
+  {"amount":17.8,"currency":"AUD","description":"FORTUN","category":"Food","date":"2026-06-20","raw":"您的信用卡3500VISA Apple Pay于2026年06月20日，在FORTUN消费AUD17.80元。【中国银行】","id":2026062001},
+  {"amount":29.99,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-06-18","raw":"您的信用卡3500于2026年06月18日，在PAYPAL消费AUD29.99元。【中国银行】","id":2026061802},
+  {"amount":18.0,"currency":"AUD","description":"AMAZON","category":"Shopping","date":"2026-06-18","raw":"您的信用卡3500于2026年06月18日，在AMAZON消费AUD18.00元。【中国银行】","id":2026061801},
+  {"amount":20.85,"currency":"AUD","description":"McDona","category":"Food","date":"2026-06-17","raw":"您的信用卡3500VISA Apple Pay于2026年06月17日，在McDona消费AUD20.85元。【中国银行】","id":2026061701},
+  {"amount":21.05,"currency":"AUD","description":"SUNGRO","category":"Bills","date":"2026-06-16","raw":"您的信用卡3500VISA Apple Pay于2026年06月16日，在SUNGRO消费AUD21.05元。【中国银行】","id":2026061601},
+  {"amount":11.86,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-06-13","raw":"您的信用卡3500于2026年06月13日，在PAYPAL消费AUD11.86元。【中国银行】","id":2026061303},
+  {"amount":96.79,"currency":"AUD","description":"UMALL","category":"Shopping","date":"2026-06-13","raw":"您的信用卡3500VISA Apple Pay于2026年06月13日，在UMALL消费AUD96.79元。【中国银行】","id":2026061302},
+  {"amount":28.16,"currency":"AUD","description":"IGA WA","category":"Food","date":"2026-06-13","raw":"您的信用卡3500VISA Apple Pay于2026年06月13日，在IGA WA消费AUD28.16元。【中国银行】","id":2026061301},
+  {"amount":25.49,"currency":"AUD","description":"AMAZON","category":"Shopping","date":"2026-06-12","raw":"您的信用卡3500于2026年06月12日，在AMAZON消费AUD25.49元。【中国银行】","id":2026061203},
+  {"amount":-18.0,"currency":"AUD","description":"Card return","category":"Refund","date":"2026-06-12","raw":"您的信用卡3500于2026年06月12日成功退货AUD18.00元【中国银行】","id":2026061202},
+  {"amount":13.9,"currency":"AUD","description":"McDona","category":"Food","date":"2026-06-12","raw":"您的信用卡3500VISA Apple Pay于2026年06月12日，在McDona消费AUD13.90元。【中国银行】","id":2026061201},
+  {"amount":33.99,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-06-11","raw":"您的信用卡3500于2026年06月11日，在PAYPAL消费AUD33.99元。【中国银行】","id":2026061105},
+  {"amount":1.0,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-06-11","raw":"您的信用卡3500于2026年06月11日，在PAYPAL消费AUD1.00元。【中国银行】","id":2026061104},
+  {"amount":-1.0,"currency":"AUD","description":"PAYPAL","category":"Refund","date":"2026-06-11","raw":"您的信用卡3500于2026年06月11日，在PAYPAL撤销AUD1.00元。【中国银行】","id":2026061103},
+  {"amount":25.9,"currency":"AUD","description":"SQ *RA","category":"Food","date":"2026-06-11","raw":"您的信用卡3500VISA Apple Pay于2026年06月11日，在SQ *RA消费AUD25.90元。【中国银行】","id":2026061102},
+  {"amount":10.6,"currency":"AUD","description":"IGA WA","category":"Food","date":"2026-06-11","raw":"您的信用卡3500VISA Apple Pay于2026年06月11日，在IGA WA消费AUD10.60元。【中国银行】","id":2026061101},
+  {"amount":39.59,"currency":"AUD","description":"YUM YA","category":"Food","date":"2026-06-10","raw":"您的信用卡3500VISA Apple Pay于2026年06月10日，在YUM YA消费AUD39.59元。【中国银行】","id":2026061002},
+  {"amount":18.38,"currency":"AUD","description":"CHEMIS","category":"Health","date":"2026-06-10","raw":"您的信用卡3500VISA Apple Pay于2026年06月10日，在CHEMIS消费AUD18.38元。【中国银行】","id":2026061001},
+  {"amount":14.8,"currency":"AUD","description":"FORTUN","category":"Food","date":"2026-06-09","raw":"您的信用卡3500VISA Apple Pay于2026年06月09日，在FORTUN消费AUD14.80元。【中国银行】","id":2026060901},
+  {"amount":101.13,"currency":"AUD","description":"JD.com","category":"Shopping","date":"2026-06-08","raw":"您的信用卡3500VISA Apple Pay于2026年06月08日，在JD.com消费AUD101.13元。【中国银行】","id":2026060801},
+  {"amount":18.0,"currency":"AUD","description":"AMAZON","category":"Shopping","date":"2026-06-07","raw":"您的信用卡3500于2026年06月07日，在AMAZON消费AUD18.00元。【中国银行】","id":2026060702},
+  {"amount":20.85,"currency":"AUD","description":"McDona","category":"Food","date":"2026-06-07","raw":"您的信用卡3500VISA Apple Pay于2026年06月07日，在McDona消费AUD20.85元。【中国银行】","id":2026060701},
+  {"amount":26.73,"currency":"AUD","description":"HUNGRY","category":"Food","date":"2026-06-06","raw":"您的信用卡3500VISA Apple Pay于2026年06月06日，在HUNGRY消费AUD26.73元。【中国银行】","id":2026060601},
+  {"amount":17.85,"currency":"AUD","description":"McDona","category":"Food","date":"2026-06-04","raw":"您的信用卡3500VISA Apple Pay于2026年06月04日，在McDona消费AUD17.85元。【中国银行】","id":2026060403},
+  {"amount":1.4,"currency":"AUD","description":"McDona","category":"Food","date":"2026-06-04","raw":"您的信用卡3500VISA Apple Pay于2026年06月04日，在McDona消费AUD1.40元。【中国银行】","id":2026060402},
+  {"amount":4.27,"currency":"AUD","description":"IGLU L","category":"Bills","date":"2026-06-04","raw":"您的信用卡3500VISA Apple Pay于2026年06月04日，在IGLU L消费AUD4.27元。【中国银行】","id":2026060401},
+  {"amount":91.36,"currency":"AUD","description":"JD.com","category":"Shopping","date":"2026-06-03","raw":"您的信用卡3500VISA Apple Pay于2026年06月03日，在JD.com消费AUD91.36元。【中国银行】","id":2026060301},
+  {"amount":206.8,"currency":"RMB","description":"JD.com","category":"Shopping","date":"2026-06-02","raw":"您的信用卡3500VISA Apple Pay于2026年06月02日，在JD.com消费RMB206.80元。【中国银行】","id":2026060202},
+  {"amount":33.91,"currency":"AUD","description":"HUNGRY","category":"Food","date":"2026-06-02","raw":"您的信用卡3500VISA Apple Pay于2026年06月02日，在HUNGRY消费AUD33.91元。【中国银行】","id":2026060201},
+  {"amount":10.0,"currency":"AUD","description":"IGA WA","category":"Food","date":"2026-06-01","raw":"您的信用卡3500VISA Apple Pay于2026年06月01日，在IGA WA消费AUD10.00元。【中国银行】","id":2026060102},
+  {"amount":29.6,"currency":"AUD","description":"FORTUN","category":"Food","date":"2026-06-01","raw":"您的信用卡3500VISA Apple Pay于2026年06月01日，在FORTUN消费AUD29.60元。【中国银行】","id":2026060101},
+  {"amount":6.95,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-05-31","raw":"您的信用卡3500VISA Apple Pay于2026年05月31日，在MCDONA消费AUD6.95元。【中国银行】","id":2026053102},
+  {"amount":25.35,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-05-31","raw":"您的信用卡3500VISA Apple Pay于2026年05月31日，在MCDONA消费AUD25.35元。【中国银行】","id":2026053101},
+  {"amount":9183.0,"currency":"JPY","description":"KA)ART","category":"Other","date":"2026-05-30","raw":"您的信用卡3500于2026年05月30日，在KA)ART消费JPY9,183元。【中国银行】","id":2026053002},
+  {"amount":12.0,"currency":"AUD","description":"LS Ani","category":"Shopping","date":"2026-05-30","raw":"您的信用卡3500VISA Apple Pay于2026年05月30日，在LS Ani消费AUD12.00元。【中国银行】","id":2026053001},
+  {"amount":41.95,"currency":"AUD","description":"VODAFO","category":"Bills","date":"2026-05-26","raw":"您的信用卡3500于2026年05月26日，在VODAFO消费AUD41.95元。【中国银行】","id":2026052601},
+  {"amount":12.45,"currency":"AUD","description":"McDona","category":"Food","date":"2026-05-17","raw":"您的信用卡3500VISA Apple Pay于2026年05月17日，在McDona消费AUD12.45元。【中国银行】","id":2026051701},
+  {"amount":6.25,"currency":"AUD","description":"WOOLWO","category":"Food","date":"2026-05-16","raw":"您的信用卡3500VISA Apple Pay于2026年05月16日，在WOOLWO消费AUD6.25元。【中国银行】","id":2026051603},
+  {"amount":2.86,"currency":"AUD","description":"SWEET_","category":"Food","date":"2026-05-16","raw":"您的信用卡3500VISA Apple Pay于2026年05月16日，在SWEET_消费AUD2.86元。【中国银行】","id":2026051602},
+  {"amount":23.96,"currency":"AUD","description":"NORTH","category":"Bills","date":"2026-05-16","raw":"您的信用卡3500VISA Apple Pay于2026年05月16日，在NORTH消费AUD23.96元。【中国银行】","id":2026051601},
+  {"amount":13.9,"currency":"AUD","description":"McDona","category":"Food","date":"2026-05-13","raw":"您的信用卡3500VISA Apple Pay于2026年05月13日，在McDona消费AUD13.90元。【中国银行】","id":2026051302},
+  {"amount":1254.0,"currency":"AUD","description":"08 TEA","category":"Food","date":"2026-05-13","raw":"您的信用卡3500VISA Apple Pay于2026年05月13日，在08 TEA消费AUD1,254.00元。【中国银行】","id":2026051301},
+  {"amount":13.85,"currency":"USD","description":"1688.c","category":"Shopping","date":"2026-05-11","raw":"您的信用卡3500VISA Apple Pay于2026年05月11日，在1688.c消费USD13.85元。【中国银行】","id":2026051101},
+  {"amount":5.5,"currency":"AUD","description":"SUNGRO","category":"Bills","date":"2026-05-10","raw":"您的信用卡3500VISA Apple Pay于2026年05月10日，在SUNGRO消费AUD5.50元。【中国银行】","id":2026051003},
+  {"amount":10.75,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-05-10","raw":"您的信用卡3500VISA Apple Pay于2026年05月10日，在MCDONA消费AUD10.75元。【中国银行】","id":2026051002},
+  {"amount":4.27,"currency":"AUD","description":"IGLU L","category":"Bills","date":"2026-05-10","raw":"您的信用卡3500VISA Apple Pay于2026年05月10日，在IGLU L消费AUD4.27元。【中国银行】","id":2026051001},
+  {"amount":2.0,"currency":"AUD","description":"PHARMA","category":"Health","date":"2026-05-08","raw":"您的信用卡3500VISA Apple Pay于2026年05月08日，在PHARMA消费AUD2.00元。【中国银行】","id":2026050802},
+  {"amount":14.8,"currency":"AUD","description":"FORTUN","category":"Food","date":"2026-05-08","raw":"您的信用卡3500VISA Apple Pay于2026年05月08日，在FORTUN消费AUD14.80元。【中国银行】","id":2026050801},
+  {"amount":7.84,"currency":"AUD","description":"UBER *","category":"Transport","date":"2026-05-06","raw":"您的信用卡3500VISA Apple Pay于2026年05月06日，在UBER *消费AUD7.84元。【中国银行】","id":2026050602},
+  {"amount":135.0,"currency":"AUD","description":"Crown","category":"Entertain","date":"2026-05-06","raw":"您的信用卡3500VISA Apple Pay于2026年05月06日，在Crown消费AUD135.00元。【中国银行】","id":2026050601},
+  {"amount":49.15,"currency":"AUD","description":"KMART","category":"Shopping","date":"2026-05-05","raw":"您的信用卡3500VISA Apple Pay于2026年05月05日，在KMART消费AUD49.15元。【中国银行】","id":2026050501},
+  {"amount":10.98,"currency":"AUD","description":"CBD UR","category":"Food","date":"2026-05-04","raw":"您的信用卡3500VISA Apple Pay于2026年05月04日，在CBD UR消费AUD10.98元。【中国银行】","id":2026050401},
+  {"amount":6.95,"currency":"AUD","description":"McDona","category":"Food","date":"2026-05-02","raw":"您的信用卡3500VISA Apple Pay于2026年05月02日，在McDona消费AUD6.95元。【中国银行】","id":2026050201},
+  {"amount":3.0,"currency":"AUD","description":"MUJI R","category":"Shopping","date":"2026-04-30","raw":"您的信用卡3500VISA Apple Pay于2026年04月30日，在MUJI R消费AUD3.00元。【中国银行】","id":2026043004},
+  {"amount":71.48,"currency":"AUD","description":"ICHI-B","category":"Bills","date":"2026-04-30","raw":"您的信用卡3500VISA Apple Pay于2026年04月30日，在ICHI-B消费AUD71.48元。【中国银行】","id":2026043003},
+  {"amount":5.08,"currency":"AUD","description":"EMPERO","category":"Food","date":"2026-04-30","raw":"您的信用卡3500VISA Apple Pay于2026年04月30日，在EMPERO消费AUD5.08元。【中国银行】","id":2026043002},
+  {"amount":29.0,"currency":"AUD","description":"APPLE","category":"Bills","date":"2026-04-30","raw":"您的信用卡3500VISA Apple Pay于2026年04月30日，在APPLE消费AUD29.00元。【中国银行】","id":2026043001},
+  {"amount":14.8,"currency":"AUD","description":"FORTUN","category":"Food","date":"2026-04-29","raw":"您的信用卡3500VISA Apple Pay于2026年04月29日，在FORTUN消费AUD14.80元。【中国银行】","id":2026042901},
+  {"amount":41.93,"currency":"AUD","description":"VODAFO","category":"Bills","date":"2026-04-28","raw":"您的信用卡3500于2026年04月28日，在VODAFO消费AUD41.93元。【中国银行】","id":2026042802},
+  {"amount":52.61,"currency":"AUD","description":"UMALL","category":"Shopping","date":"2026-04-28","raw":"您的信用卡3500VISA Apple Pay于2026年04月28日，在UMALL消费AUD52.61元。【中国银行】","id":2026042801},
+  {"amount":6.95,"currency":"AUD","description":"McDona","category":"Food","date":"2026-04-26","raw":"您的信用卡3500VISA Apple Pay于2026年04月26日，在McDona消费AUD6.95元。【中国银行】","id":2026042601},
+  {"amount":20100.0,"currency":"JPY","description":"TOKYO","category":"Shopping","date":"2026-04-24","raw":"您的信用卡3500于2026年04月24日，在TOKYO消费JPY20,100元。【中国银行】","id":2026042401},
+  {"amount":6.9,"currency":"AUD","description":"SQ *CA","category":"Food","date":"2026-04-23","raw":"您的信用卡3500VISA Apple Pay于2026年04月23日，在SQ *CA消费AUD6.90元。【中国银行】","id":2026042302},
+  {"amount":4.27,"currency":"AUD","description":"IGLU L","category":"Bills","date":"2026-04-23","raw":"您的信用卡3500VISA Apple Pay于2026年04月23日，在IGLU L消费AUD4.27元。【中国银行】","id":2026042301},
+  {"amount":164.99,"currency":"AUD","description":"SP JB","category":"Shopping","date":"2026-04-21","raw":"您的信用卡3500于2026年04月21日，在SP JB消费AUD164.99元。【中国银行】","id":2026042105},
+  {"amount":-164.99,"currency":"AUD","description":"SP JB","category":"Refund","date":"2026-04-21","raw":"您的信用卡3500于2026年04月21日，在SP JB撤销AUD164.99元。【中国银行】","id":2026042104},
+  {"amount":198.98,"currency":"AUD","description":"SP JB","category":"Shopping","date":"2026-04-21","raw":"您的信用卡3500VISA Apple Pay于2026年04月21日，在SP JB消费AUD198.98元。【中国银行】","id":2026042103},
+  {"amount":-198.98,"currency":"AUD","description":"SP JB","category":"Refund","date":"2026-04-21","raw":"您的信用卡3500VISA Apple Pay于2026年04月21日，在SP JB撤销AUD198.98元。【中国银行】","id":2026042102},
+  {"amount":6.95,"currency":"AUD","description":"McDona","category":"Food","date":"2026-04-21","raw":"您的信用卡3500VISA Apple Pay于2026年04月21日，在McDona消费AUD6.95元。【中国银行】","id":2026042101},
+  {"amount":13.9,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-04-20","raw":"您的信用卡3500VISA Apple Pay于2026年04月20日，在MCDONA消费AUD13.90元。【中国银行】","id":2026042001},
+  {"amount":17.26,"currency":"AUD","description":"YUM YA","category":"Food","date":"2026-04-15","raw":"您的信用卡3500VISA Apple Pay于2026年04月15日，在YUM YA消费AUD17.26元。【中国银行】","id":2026041501},
+  {"amount":10.35,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-04-13","raw":"您的信用卡3500VISA Apple Pay于2026年04月13日，在MCDONA消费AUD10.35元。【中国银行】","id":2026041301},
+  {"amount":26.33,"currency":"AUD","description":"KENSIN","category":"Bills","date":"2026-04-11","raw":"您的信用卡3500VISA Apple Pay于2026年04月11日，在KENSIN消费AUD26.33元。【中国银行】","id":2026041103},
+  {"amount":4.95,"currency":"AUD","description":"GONG G","category":"Food","date":"2026-04-11","raw":"您的信用卡3500VISA Apple Pay于2026年04月11日，在GONG G消费AUD4.95元。【中国银行】","id":2026041102},
+  {"amount":10.0,"currency":"AUD","description":"COSMOS","category":"Entertain","date":"2026-04-11","raw":"您的信用卡3500VISA Apple Pay于2026年04月11日，在COSMOS消费AUD10.00元。【中国银行】","id":2026041101},
+  {"amount":17.9,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-04-10","raw":"您的信用卡3500VISA Apple Pay于2026年04月10日，在MCDONA消费AUD17.90元。【中国银行】","id":2026041001},
+  {"amount":14.8,"currency":"AUD","description":"FORTUN","category":"Food","date":"2026-04-09","raw":"您的信用卡3500VISA Apple Pay于2026年04月09日，在FORTUN消费AUD14.80元。【中国银行】","id":2026040901},
+  {"amount":-89.97,"currency":"AUD","description":"Card return","category":"Refund","date":"2026-04-08","raw":"您的信用卡3500于2026年04月08日成功退货AUD89.97元【中国银行】","id":2026040801},
+  {"amount":15.85,"currency":"AUD","description":"TSG DI","category":"Bills","date":"2026-04-06","raw":"您的信用卡3500VISA Apple Pay于2026年04月06日，在TSG DI消费AUD15.85元。【中国银行】","id":2026040604},
+  {"amount":184.41,"currency":"AUD","description":"GYUNIK","category":"Food","date":"2026-04-06","raw":"您的信用卡3500VISA Apple Pay于2026年04月06日，在GYUNIK消费AUD184.41元。【中国银行】","id":2026040603},
+  {"amount":89.97,"currency":"AUD","description":"CHEMIS","category":"Health","date":"2026-04-06","raw":"您的信用卡3500VISA Apple Pay于2026年04月06日，在CHEMIS消费AUD89.97元。【中国银行】","id":2026040602},
+  {"amount":2.0,"currency":"AUD","description":"7-ELEV","category":"Bills","date":"2026-04-06","raw":"您的信用卡3500VISA Apple Pay于2026年04月06日，在7-ELEV消费AUD2.00元。【中国银行】","id":2026040601},
+  {"amount":18.55,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-04-05","raw":"您的信用卡3500VISA Apple Pay于2026年04月05日，在MCDONA消费AUD18.55元。【中国银行】","id":2026040501},
+  {"amount":44.36,"currency":"AUD","description":"ZLR*Na","category":"Shopping","date":"2026-04-03","raw":"您的信用卡3500VISA Apple Pay于2026年04月03日，在ZLR*Na消费AUD44.36元。【中国银行】","id":2026040303},
+  {"amount":16.25,"currency":"AUD","description":"SQ *PH","category":"Bills","date":"2026-04-03","raw":"您的信用卡3500VISA Apple Pay于2026年04月03日，在SQ *PH消费AUD16.25元。【中国银行】","id":2026040302},
+  {"amount":7.45,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-04-03","raw":"您的信用卡3500VISA Apple Pay于2026年04月03日，在MCDONA消费AUD7.45元。【中国银行】","id":2026040301},
+  {"amount":47.95,"currency":"AUD","description":"UNSW B","category":"Education","date":"2026-04-02","raw":"您的信用卡3500VISA Apple Pay于2026年04月02日，在UNSW B消费AUD47.95元。【中国银行】","id":2026040203},
+  {"amount":17.65,"currency":"AUD","description":"Subway","category":"Food","date":"2026-04-02","raw":"您的信用卡3500VISA Apple Pay于2026年04月02日，在Subway消费AUD17.65元。【中国银行】","id":2026040202},
+  {"amount":3.0,"currency":"AUD","description":"PHARMA","category":"Health","date":"2026-04-02","raw":"您的信用卡3500VISA Apple Pay于2026年04月02日，在PHARMA消费AUD3.00元。【中国银行】","id":2026040201},
+  {"amount":4.27,"currency":"AUD","description":"IGLU L","category":"Bills","date":"2026-03-31","raw":"您的信用卡3500VISA Apple Pay于2026年03月31日，在IGLU L消费AUD4.27元。【中国银行】","id":2026033101},
+  {"amount":200.0,"currency":"AUD","description":"APM Sy","category":"Bills","date":"2026-03-30","raw":"您的信用卡3500VISA Apple Pay于2026年03月30日，在APM Sy消费AUD200.00元。【中国银行】","id":2026033002},
+  {"amount":49.95,"currency":"AUD","description":"7093_W","category":"Bills","date":"2026-03-30","raw":"您的信用卡3500VISA Apple Pay于2026年03月30日，在7093_W消费AUD49.95元。【中国银行】","id":2026033001},
+  {"amount":119.0,"currency":"AUD","description":"RALPH","category":"Shopping","date":"2026-03-29","raw":"您的信用卡3500VISA Apple Pay于2026年03月29日，在RALPH消费AUD119.00元。【中国银行】","id":2026032901},
+  {"amount":101.15,"currency":"AUD","description":"Calvin","category":"Shopping","date":"2026-03-28","raw":"您的信用卡3500VISA Apple Pay于2026年03月28日，在Calvin消费AUD101.15元。【中国银行】","id":2026032801},
+  {"amount":6.95,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-03-26","raw":"您的信用卡3500VISA Apple Pay于2026年03月26日，在MCDONA消费AUD6.95元。【中国银行】","id":2026032601},
+  {"amount":41.0,"currency":"AUD","description":"VODAFO","category":"Bills","date":"2026-03-25","raw":"您的信用卡3500于2026年03月25日，在VODAFO消费AUD41.00元。【中国银行】","id":2026032504},
+  {"amount":45.29,"currency":"AUD","description":"UMALL","category":"Shopping","date":"2026-03-25","raw":"您的信用卡3500VISA Apple Pay于2026年03月25日，在UMALL消费AUD45.29元。【中国银行】","id":2026032503},
+  {"amount":6.95,"currency":"AUD","description":"McDona","category":"Food","date":"2026-03-25","raw":"您的信用卡3500VISA Apple Pay于2026年03月25日，在McDona消费AUD6.95元。【中国银行】","id":2026032502},
+  {"amount":0.5,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-03-25","raw":"您的信用卡3500VISA Apple Pay于2026年03月25日，在MCDONA消费AUD0.50元。【中国银行】","id":2026032501},
+  {"amount":202.0,"currency":"AUD","description":"IRACQU","category":"Bills","date":"2026-03-23","raw":"您的信用卡3500VISA Apple Pay于2026年03月23日，在IRACQU消费AUD202.00元。【中国银行】","id":2026032302},
+  {"amount":45.52,"currency":"AUD","description":"Hungry","category":"Food","date":"2026-03-23","raw":"您的信用卡3500VISA Apple Pay于2026年03月23日，在Hungry消费AUD45.52元。【中国银行】","id":2026032301},
+  {"amount":7.27,"currency":"AUD","description":"UBER *","category":"Transport","date":"2026-03-22","raw":"您的信用卡3500VISA Apple Pay于2026年03月22日，在UBER *消费AUD7.27元。【中国银行】","id":2026032204},
+  {"amount":4.75,"currency":"AUD","description":"OFFICE","category":"Education","date":"2026-03-22","raw":"您的信用卡3500VISA Apple Pay于2026年03月22日，在OFFICE消费AUD4.75元。【中国银行】","id":2026032203},
+  {"amount":11.7,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-03-22","raw":"您的信用卡3500VISA Apple Pay于2026年03月22日，在MCDONA消费AUD11.70元。【中国银行】","id":2026032202},
+  {"amount":4.74,"currency":"AUD","description":"BEST M","category":"Food","date":"2026-03-22","raw":"您的信用卡3500VISA Apple Pay于2026年03月22日，在BEST M消费AUD4.74元。【中国银行】","id":2026032201},
+  {"amount":9.95,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-03-21","raw":"您的信用卡3500VISA Apple Pay于2026年03月21日，在MCDONA消费AUD9.95元。【中国银行】","id":2026032101},
+  {"amount":6.5,"currency":"AUD","description":"PHARMA","category":"Health","date":"2026-03-20","raw":"您的信用卡3500VISA Apple Pay于2026年03月20日，在PHARMA消费AUD6.50元。【中国银行】","id":2026032001},
+  {"amount":15.9,"currency":"AUD","description":"JR MOC","category":"Food","date":"2026-03-19","raw":"您的信用卡3500VISA Apple Pay于2026年03月19日，在JR MOC消费AUD15.90元。【中国银行】","id":2026031901},
+  {"amount":81.0,"currency":"AUD","description":"UNSW L","category":"Education","date":"2026-03-18","raw":"您的信用卡3500VISA Apple Pay于2026年03月18日，在UNSW L消费AUD81.00元。【中国银行】","id":2026031804},
+  {"amount":3.0,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-03-18","raw":"您的信用卡3500VISA Apple Pay于2026年03月18日，在MCDONA消费AUD3.00元。【中国银行】","id":2026031803},
+  {"amount":10.95,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-03-18","raw":"您的信用卡3500VISA Apple Pay于2026年03月18日，在MCDONA消费AUD10.95元。【中国银行】","id":2026031802},
+  {"amount":1.5,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-03-18","raw":"您的信用卡3500VISA Apple Pay于2026年03月18日，在MCDONA消费AUD1.50元。【中国银行】","id":2026031801},
+  {"amount":14.4,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-03-16","raw":"您的信用卡3500VISA Apple Pay于2026年03月16日，在MCDONA消费AUD14.40元。【中国银行】","id":2026031601},
+  {"amount":15.9,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-03-15","raw":"您的信用卡3500VISA Apple Pay于2026年03月15日，在MCDONA消费AUD15.90元。【中国银行】","id":2026031501},
+  {"amount":4.35,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-03-14","raw":"您的信用卡3500VISA Apple Pay于2026年03月14日，在MCDONA消费AUD4.35元。【中国银行】","id":2026031405},
+  {"amount":10.15,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-03-14","raw":"您的信用卡3500VISA Apple Pay于2026年03月14日，在MCDONA消费AUD10.15元。【中国银行】","id":2026031404},
+  {"amount":15.0,"currency":"AUD","description":"HELLO","category":"Food","date":"2026-03-14","raw":"您的信用卡3500VISA Apple Pay于2026年03月14日，在HELLO消费AUD15.00元。【中国银行】","id":2026031403},
+  {"amount":-1.0,"currency":"AUD","description":"HELLO","category":"Refund","date":"2026-03-14","raw":"您的信用卡3500VISA Apple Pay于2026年03月14日，在HELLO撤销AUD1.00元。【中国银行】","id":2026031402},
+  {"amount":5.0,"currency":"AUD","description":"FREECH","category":"Food","date":"2026-03-14","raw":"您的信用卡3500VISA Apple Pay于2026年03月14日，在FREECH消费AUD5.00元。【中国银行】","id":2026031401},
+  {"amount":2398.0,"currency":"JPY","description":"WORLDS","category":"Shopping","date":"2026-03-12","raw":"您的信用卡3500于2026年03月12日，在WORLDS消费JPY2,398元。【中国银行】","id":2026031202},
+  {"amount":14.8,"currency":"AUD","description":"ALLEYW","category":"Food","date":"2026-03-12","raw":"您的信用卡3500VISA Apple Pay于2026年03月12日，在ALLEYW消费AUD14.80元。【中国银行】","id":2026031201},
+  {"amount":5.0,"currency":"AUD","description":"The Tr","category":"Bills","date":"2026-03-11","raw":"您的信用卡3500VISA Apple Pay于2026年03月11日，在The Tr消费AUD5.00元。【中国银行】","id":2026031105},
+  {"amount":60.0,"currency":"AUD","description":"SQ *CA","category":"Food","date":"2026-03-11","raw":"您的信用卡3500VISA Apple Pay于2026年03月11日，在SQ *CA消费AUD60.00元。【中国银行】","id":2026031104},
+  {"amount":4.45,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-03-11","raw":"您的信用卡3500VISA Apple Pay于2026年03月11日，在MCDONA消费AUD4.45元。【中国银行】","id":2026031103},
+  {"amount":15.15,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-03-11","raw":"您的信用卡3500VISA Apple Pay于2026年03月11日，在MCDONA消费AUD15.15元。【中国银行】","id":2026031102},
+  {"amount":5.11,"currency":"AUD","description":"GEORGE","category":"Bills","date":"2026-03-11","raw":"您的信用卡3500VISA Apple Pay于2026年03月11日，在GEORGE消费AUD5.11元。【中国银行】","id":2026031101},
+  {"amount":-24.21,"currency":"AUD","description":"Card return","category":"Refund","date":"2026-03-10","raw":"您的信用卡3500于2026年03月10日成功退货AUD24.21元【中国银行】","id":2026031002},
+  {"amount":6.95,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-03-10","raw":"您的信用卡3500VISA Apple Pay于2026年03月10日，在MCDONA消费AUD6.95元。【中国银行】","id":2026031001},
+  {"amount":36.13,"currency":"AUD","description":"WORLDS","category":"Shopping","date":"2026-03-09","raw":"您的信用卡3500于2026年03月09日，在WORLDS消费AUD36.13元。【中国银行】","id":2026030902},
+  {"amount":7.95,"currency":"AUD","description":"HUXTAB","category":"Food","date":"2026-03-09","raw":"您的信用卡3500VISA Apple Pay于2026年03月09日，在HUXTAB消费AUD7.95元。【中国银行】","id":2026030901},
+  {"amount":36.33,"currency":"AUD","description":"UMALL","category":"Shopping","date":"2026-03-08","raw":"您的信用卡3500VISA Apple Pay于2026年03月08日，在UMALL消费AUD36.33元。【中国银行】","id":2026030803},
+  {"amount":6.95,"currency":"AUD","description":"McDona","category":"Food","date":"2026-03-08","raw":"您的信用卡3500VISA Apple Pay于2026年03月08日，在McDona消费AUD6.95元。【中国银行】","id":2026030802},
+  {"amount":5.99,"currency":"AUD","description":"McDona","category":"Food","date":"2026-03-08","raw":"您的信用卡3500VISA Apple Pay于2026年03月08日，在McDona消费AUD5.99元。【中国银行】","id":2026030801},
+  {"amount":1.0,"currency":"USD","description":"WeChat","category":"Other","date":"2026-03-07","raw":"您的信用卡3500于2026年03月07日，在WeChat消费USD1.00元。【中国银行】","id":2026030704},
+  {"amount":-1.0,"currency":"USD","description":"WeChat","category":"Refund","date":"2026-03-07","raw":"您的信用卡3500于2026年03月07日，在WeChat撤销USD1.00元。【中国银行】","id":2026030703},
+  {"amount":41.0,"currency":"AUD","description":"VODAFO","category":"Bills","date":"2026-03-07","raw":"您的信用卡3500VISA Apple Pay于2026年03月07日，在VODAFO消费AUD41.00元。【中国银行】","id":2026030702},
+  {"amount":3.75,"currency":"AUD","description":"Benlei","category":"Food","date":"2026-03-07","raw":"您的信用卡3500VISA Apple Pay于2026年03月07日，在Benlei消费AUD3.75元。【中国银行】","id":2026030701},
+  {"amount":34.31,"currency":"AUD","description":"UMALL","category":"Shopping","date":"2026-03-06","raw":"您的信用卡3500VISA Apple Pay于2026年03月06日，在UMALL消费AUD34.31元。【中国银行】","id":2026030602},
+  {"amount":14.26,"currency":"AUD","description":"SQ *RE","category":"Bills","date":"2026-03-06","raw":"您的信用卡3500VISA Apple Pay于2026年03月06日，在SQ *RE消费AUD14.26元。【中国银行】","id":2026030601},
+  {"amount":4.0,"currency":"AUD","description":"PHARMA","category":"Health","date":"2026-03-05","raw":"您的信用卡3500VISA Apple Pay于2026年03月05日，在PHARMA消费AUD4.00元。【中国银行】","id":2026030502},
+  {"amount":14.8,"currency":"AUD","description":"FORTUN","category":"Food","date":"2026-03-05","raw":"您的信用卡3500VISA Apple Pay于2026年03月05日，在FORTUN消费AUD14.80元。【中国银行】","id":2026030501},
+  {"amount":27.25,"currency":"AUD","description":"HUXTAB","category":"Food","date":"2026-03-04","raw":"您的信用卡3500VISA Apple Pay于2026年03月04日，在HUXTAB消费AUD27.25元。【中国银行】","id":2026030401},
+  {"amount":12.0,"currency":"AUD","description":"ZLR*So","category":"Shopping","date":"2026-03-03","raw":"您的信用卡3500VISA Apple Pay于2026年03月03日，在ZLR*So消费AUD12.00元。【中国银行】","id":2026030302},
+  {"amount":133.0,"currency":"AUD","description":"JB HI","category":"Shopping","date":"2026-03-03","raw":"您的信用卡3500VISA Apple Pay于2026年03月03日，在JB HI消费AUD133.00元。【中国银行】","id":2026030301},
+  {"amount":-11.0,"currency":"AUD","description":"Card return","category":"Refund","date":"2026-03-02","raw":"您的信用卡3500于2026年03月02日成功退货AUD11.00元【中国银行】","id":2026030205},
+  {"amount":4.0,"currency":"AUD","description":"ZLR*Hu","category":"Shopping","date":"2026-03-02","raw":"您的信用卡3500VISA Apple Pay于2026年03月02日，在ZLR*Hu消费AUD4.00元。【中国银行】","id":2026030204},
+  {"amount":9.0,"currency":"AUD","description":"JB HI","category":"Shopping","date":"2026-03-02","raw":"您的信用卡3500VISA Apple Pay于2026年03月02日，在JB HI消费AUD9.00元。【中国银行】","id":2026030203},
+  {"amount":379.74,"currency":"AUD","description":"IRACQU","category":"Bills","date":"2026-03-02","raw":"您的信用卡3500VISA Apple Pay于2026年03月02日，在IRACQU消费AUD379.74元。【中国银行】","id":2026030202},
+  {"amount":38.95,"currency":"AUD","description":"HUXTAB","category":"Food","date":"2026-03-02","raw":"您的信用卡3500VISA Apple Pay于2026年03月02日，在HUXTAB消费AUD38.95元。【中国银行】","id":2026030201},
+  {"amount":13.69,"currency":"AUD","description":"Noddle","category":"Food","date":"2026-03-01","raw":"您的信用卡3500VISA Apple Pay于2026年03月01日，在Noddle消费AUD13.69元。【中国银行】","id":2026030102},
+  {"amount":48.75,"currency":"AUD","description":"COLES","category":"Food","date":"2026-03-01","raw":"您的信用卡3500VISA Apple Pay于2026年03月01日，在COLES消费AUD48.75元。【中国银行】","id":2026030101},
+  {"amount":10.98,"currency":"AUD","description":"HAYMAR","category":"Food","date":"2026-02-27","raw":"您的信用卡3500VISA Apple Pay于2026年02月27日，在HAYMAR消费AUD10.98元。【中国银行】","id":2026022701},
+  {"amount":20.0,"currency":"AUD","description":"UNSW B","category":"Education","date":"2026-02-25","raw":"您的信用卡3500VISA Apple Pay于2026年02月25日，在UNSW B消费AUD20.00元。【中国银行】","id":2026022504},
+  {"amount":11.18,"currency":"AUD","description":"Sushi","category":"Food","date":"2026-02-25","raw":"您的信用卡3500VISA Apple Pay于2026年02月25日，在Sushi消费AUD11.18元。【中国银行】","id":2026022503},
+  {"amount":4.24,"currency":"AUD","description":"MC RET","category":"Bills","date":"2026-02-25","raw":"您的信用卡3500VISA Apple Pay于2026年02月25日，在MC RET消费AUD4.24元。【中国银行】","id":2026022502},
+  {"amount":29.77,"currency":"AUD","description":"Domino","category":"Food","date":"2026-02-25","raw":"您的信用卡3500VISA Apple Pay于2026年02月25日，在Domino消费AUD29.77元。【中国银行】","id":2026022501},
+  {"amount":33.0,"currency":"AUD","description":"SOUTHE","category":"Food","date":"2026-02-24","raw":"您的信用卡3500VISA Apple Pay于2026年02月24日，在SOUTHE消费AUD33.00元。【中国银行】","id":2026022401},
+  {"amount":22.99,"currency":"AUD","description":"Domino","category":"Food","date":"2026-02-21","raw":"您的信用卡3500VISA Apple Pay于2026年02月21日，在Domino消费AUD22.99元。【中国银行】","id":2026022101},
+  {"amount":6.95,"currency":"AUD","description":"McDona","category":"Food","date":"2026-02-20","raw":"您的信用卡3500VISA Apple Pay于2026年02月20日，在McDona消费AUD6.95元。【中国银行】","id":2026022002},
+  {"amount":30.0,"currency":"AUD","description":"MITCHE","category":"Food","date":"2026-02-20","raw":"您的信用卡3500VISA Apple Pay于2026年02月20日，在MITCHE消费AUD30.00元。【中国银行】","id":2026022001},
+  {"amount":32.0,"currency":"AUD","description":"TEMU.C","category":"Shopping","date":"2026-02-19","raw":"您的信用卡3500VISA Apple Pay于2026年02月19日，在TEMU.C消费AUD32.00元。【中国银行】","id":2026021903},
+  {"amount":1.42,"currency":"AUD","description":"TEMU.C","category":"Shopping","date":"2026-02-19","raw":"您的信用卡3500VISA Apple Pay于2026年02月19日，在TEMU.C消费AUD1.42元。【中国银行】","id":2026021902},
+  {"amount":8.45,"currency":"AUD","description":"McDona","category":"Food","date":"2026-02-19","raw":"您的信用卡3500VISA Apple Pay于2026年02月19日，在McDona消费AUD8.45元。【中国银行】","id":2026021901},
+  {"amount":4.27,"currency":"AUD","description":"TANGER","category":"Food","date":"2026-02-18","raw":"您的信用卡3500VISA Apple Pay于2026年02月18日，在TANGER消费AUD4.27元。【中国银行】","id":2026021802},
+  {"amount":6.95,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-02-18","raw":"您的信用卡3500VISA Apple Pay于2026年02月18日，在MCDONA消费AUD6.95元。【中国银行】","id":2026021801},
+  {"amount":18.27,"currency":"AUD","description":"YUM YA","category":"Food","date":"2026-02-17","raw":"您的信用卡3500VISA Apple Pay于2026年02月17日，在YUM YA消费AUD18.27元。【中国银行】","id":2026021701},
+  {"amount":60.0,"currency":"AUD","description":"UNSW B","category":"Education","date":"2026-02-16","raw":"您的信用卡3500VISA Apple Pay于2026年02月16日，在UNSW B消费AUD60.00元。【中国银行】","id":2026021605},
+  {"amount":45.0,"currency":"AUD","description":"UNSW B","category":"Education","date":"2026-02-16","raw":"您的信用卡3500VISA Apple Pay于2026年02月16日，在UNSW B消费AUD45.00元。【中国银行】","id":2026021604},
+  {"amount":18.0,"currency":"AUD","description":"UNSW B","category":"Education","date":"2026-02-16","raw":"您的信用卡3500VISA Apple Pay于2026年02月16日，在UNSW B消费AUD18.00元。【中国银行】","id":2026021603},
+  {"amount":21.0,"currency":"AUD","description":"SOUTHE","category":"Food","date":"2026-02-16","raw":"您的信用卡3500VISA Apple Pay于2026年02月16日，在SOUTHE消费AUD21.00元。【中国银行】","id":2026021602},
+  {"amount":28.22,"currency":"AUD","description":"Ribs a","category":"Food","date":"2026-02-16","raw":"您的信用卡3500VISA Apple Pay于2026年02月16日，在Ribs a消费AUD28.22元。【中国银行】","id":2026021601},
+  {"amount":16.37,"currency":"AUD","description":"HUNGRY","category":"Food","date":"2026-02-14","raw":"您的信用卡3500于2026年02月14日，在HUNGRY消费AUD16.37元。【中国银行】","id":2026021402},
+  {"amount":150.0,"currency":"USD","description":"08 CLU","category":"Food","date":"2026-02-14","raw":"您的信用卡3500VISA Apple Pay于2026年02月14日，在08 CLU消费USD150.00元。【中国银行】","id":2026021401},
+  {"amount":15.5,"currency":"AUD","description":"MAD ME","category":"Food","date":"2026-02-13","raw":"您的信用卡3500VISA Apple Pay于2026年02月13日，在MAD ME消费AUD15.50元。【中国银行】","id":2026021302},
+  {"amount":16.4,"currency":"AUD","description":"COLES","category":"Food","date":"2026-02-13","raw":"您的信用卡3500VISA Apple Pay于2026年02月13日，在COLES消费AUD16.40元。【中国银行】","id":2026021301},
+  {"amount":11.0,"currency":"AUD","description":"COLES","category":"Food","date":"2026-02-12","raw":"您的信用卡3500VISA Apple Pay于2026年02月12日，在COLES消费AUD11.00元。【中国银行】","id":2026021202},
+  {"amount":75.95,"currency":"AUD","description":"ARC AT","category":"Entertain","date":"2026-02-12","raw":"您的信用卡3500VISA Apple Pay于2026年02月12日，在ARC AT消费AUD75.95元。【中国银行】","id":2026021201},
+  {"amount":7.99,"currency":"USD","description":"Hong K","category":"Other","date":"2026-02-11","raw":"您的信用卡3500于2026年02月11日，在Hong K消费USD7.99元。【中国银行】","id":2026021104},
+  {"amount":6.95,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-02-11","raw":"您的信用卡3500VISA Apple Pay于2026年02月11日，在MCDONA消费AUD6.95元。【中国银行】","id":2026021103},
+  {"amount":1.25,"currency":"AUD","description":"COLES","category":"Food","date":"2026-02-11","raw":"您的信用卡3500VISA Apple Pay于2026年02月11日，在COLES消费AUD1.25元。【中国银行】","id":2026021102},
+  {"amount":49.0,"currency":"AUD","description":"APPLE","category":"Bills","date":"2026-02-11","raw":"您的信用卡3500VISA Apple Pay于2026年02月11日，在APPLE消费AUD49.00元。【中国银行】","id":2026021101},
+  {"amount":12.35,"currency":"AUD","description":"ZLR*Vi","category":"Shopping","date":"2026-02-10","raw":"您的信用卡3500VISA Apple Pay于2026年02月10日，在ZLR*Vi消费AUD12.35元。【中国银行】","id":2026021006},
+  {"amount":5.5,"currency":"AUD","description":"STARBU","category":"Bills","date":"2026-02-10","raw":"您的信用卡3500VISA Apple Pay于2026年02月10日，在STARBU消费AUD5.50元。【中国银行】","id":2026021005},
+  {"amount":6.0,"currency":"AUD","description":"MAD ME","category":"Food","date":"2026-02-10","raw":"您的信用卡3500VISA Apple Pay于2026年02月10日，在MAD ME消费AUD6.00元。【中国银行】","id":2026021004},
+  {"amount":20.1,"currency":"AUD","description":"KOWLOO","category":"Food","date":"2026-02-10","raw":"您的信用卡3500VISA Apple Pay于2026年02月10日，在KOWLOO消费AUD20.10元。【中国银行】","id":2026021003},
+  {"amount":29.55,"currency":"AUD","description":"COLES","category":"Food","date":"2026-02-10","raw":"您的信用卡3500VISA Apple Pay于2026年02月10日，在COLES消费AUD29.55元。【中国银行】","id":2026021002},
+  {"amount":28.3,"currency":"AUD","description":"COLES","category":"Food","date":"2026-02-10","raw":"您的信用卡3500VISA Apple Pay于2026年02月10日，在COLES消费AUD28.30元。【中国银行】","id":2026021001}
 ].sort((a,b)=>String(b.date).localeCompare(String(a.date))||b.id-a.id);
 try{
   const stored=localStorage.getItem(KEY);
@@ -205,16 +420,25 @@ function moneyHTML(n){
 }
 const today=()=>new Date().toISOString().slice(0,10);
 const esc=s=>String(s||'').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+const isAUD=t=>(t.currency||'AUD')==='AUD';
+const audValue=t=>isAUD(t)?(+t.amount||0):0;
+const displayMoney=t=>{
+  const cur=t.currency||'AUD';
+  if(cur==='AUD')return money(t.amount);
+  return `${cur} ${Math.abs(+t.amount||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+};
 function save(){localStorage.setItem(KEY,JSON.stringify(txs))}
 function cycle(){const now=new Date();now.setHours(0,0,0,0);const s=now.getDate()>=CYCLE_DAY?new Date(now.getFullYear(),now.getMonth(),CYCLE_DAY):new Date(now.getFullYear(),now.getMonth()-1,CYCLE_DAY);const e=new Date(s);e.setMonth(e.getMonth()+1);return{start:s,end:e,left:Math.max(1,Math.ceil((e-now)/864e5)),passed:Math.max(0,Math.floor((now-s)/864e5))}}
 function inCycle(){const c=cycle();return txs.filter(t=>{const d=new Date((t.date||today())+'T00:00:00');return d>=c.start&&d<c.end})}
 function classify(text){return (cats.find(c=>c[3].test(text||''))||cats.at(-1))[0]}
 function parseExpenseText(text){
   text=String(text||'').trim(); if(!text) return null;
-  const bankSpend=text.match(/(?:在|于)\s*([A-Za-z0-9&.'\- ]{2,36}?)\s*(?:消费|支出|支付|扣款|交易)\s*(?:AUD|A\$|\$|RMB|¥|人民币)?\s*([0-9]{1,4}(?:,[0-9]{3})*(?:\.[0-9]{1,2})|[0-9]{1,5}(?:\.[0-9]{1,2})?)\s*(?:元|澳元|aud)?/i);
-  const bankRefund=text.match(/(?:在|于)?\s*([A-Za-z0-9&.'\- ]{2,36}?)?\s*(?:撤销|退货|退款|返还)\s*(?:AUD|A\$|\$|RMB|¥|人民币)?\s*([0-9]{1,4}(?:,[0-9]{3})*(?:\.[0-9]{1,2})|[0-9]{1,5}(?:\.[0-9]{1,2})?)\s*(?:元|澳元|aud)?/i);
+  const bankSpend=text.match(/(?:在|于)\s*([A-Za-z0-9&.'\- ]{2,36}?)\s*(?:消费|支出|支付|扣款|交易)\s*(?:AUD|USD|JPY|RMB|A\$|\$|¥|人民币)?\s*([0-9]{1,4}(?:,[0-9]{3})*(?:\.[0-9]{1,2})|[0-9]{1,5}(?:\.[0-9]{1,2})?)\s*(?:元|澳元|aud)?/i);
+  const bankRefund=text.match(/(?:在|于)?\s*([A-Za-z0-9&.'\- ]{2,36}?)?\s*(?:撤销|退货|退款|返还)\s*(?:AUD|USD|JPY|RMB|A\$|\$|¥|人民币)?\s*([0-9]{1,4}(?:,[0-9]{3})*(?:\.[0-9]{1,2})|[0-9]{1,5}(?:\.[0-9]{1,2})?)\s*(?:元|澳元|aud)?/i);
+  const currencyMatch=text.match(/\b(AUD|USD|JPY|RMB)\b|人民币|澳元|A\$/i);
+  const currency=currencyMatch?(currencyMatch[0].toUpperCase().replace('人民币','RMB').replace('澳元','AUD').replace('A$','AUD')):'AUD';
   const moneyToken=/([0-9]{1,4}(?:,[0-9]{3})*(?:\.[0-9]{1,2})|[0-9]{1,5}(?:\.[0-9]{1,2})?)/g;
-  const currencyAmounts=[...text.matchAll(/(?:AUD|A\$|\$|RMB|¥|人民币)\s*([0-9]{1,4}(?:,[0-9]{3})*(?:\.[0-9]{1,2})|[0-9]{1,5}(?:\.[0-9]{1,2})?)/gi)]
+  const currencyAmounts=[...text.matchAll(/(?:AUD|USD|JPY|RMB|A\$|\$|¥|人民币)\s*([0-9]{1,4}(?:,[0-9]{3})*(?:\.[0-9]{1,2})|[0-9]{1,5}(?:\.[0-9]{1,2})?)/gi)]
     .map(m=>+m[1].replace(/,/g,'')).filter(n=>n>0.5&&n<10000);
   const decimalAmounts=[...text.matchAll(moneyToken)].map(m=>m[1]).filter(raw=>raw.includes('.'))
     .map(raw=>+raw.replace(/,/g,'')).filter(n=>n>0.5&&n<10000);
@@ -238,11 +462,11 @@ function parseExpenseText(text){
   const dateMatch=text.match(/(20\d{2})[-/年.](\d{1,2})[-/月.](\d{1,2})/)||text.match(/(\d{1,2})[-/月.](\d{1,2})/);
   let date=today();
   if(dateMatch){const y=dateMatch.length===4?dateMatch[1]:new Date().getFullYear();const m=dateMatch.length===4?dateMatch[2]:dateMatch[1];const d=dateMatch.length===4?dateMatch[3]:dateMatch[2];date=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`}
-  return{amount,description:merchant||'Expense',category:isRefund?'Refund':classify(text+' '+merchant),date,raw:text};
+  return{amount,description:merchant||'Expense',category:isRefund?'Refund':classify(text+' '+merchant),date,raw:text,currency};
 }
 function renderCats(){ $('catgrid').innerHTML=cats.map(c=>`<button class="cat ${sel===c[0]?'active':''}" onclick="sel='${c[0]}';renderCats()"><b>${c[1]}</b><span>${c[0]}</span></button>`).join('') }
-function renderHome(){const c=cycle(),list=inCycle(),spent=list.reduce((s,t)=>s+(+t.amount||0),0),left=LIMIT-spent,pct=Math.max(0,Math.min(100,spent/LIMIT*100));$('cycle-label').textContent=`${c.left} days left`;$('left-days').textContent=`${pct.toFixed(0)}% / $${LIMIT}`;$('remaining').classList.toggle('negative',left<0);$('remaining').innerHTML=moneyHTML(left);$('spent').textContent=money(spent);$('daily').textContent=money(Math.max(0,left/c.left));$('saving').textContent=money(Math.max(0,(left-saving)/c.left));$('budget-fill').style.width=pct+'%';$('tx-count').textContent=list.length+' items';$('recent').innerHTML=list.length?list.slice(0,8).map(row).join(''):'<div class="empty">No expenses yet.</div>'}
-function row(t){const c=cats.find(x=>x[0]===t.category)||cats.at(-1),refund=(+t.amount||0)<0;return`<div class="tx"><div class="txicon" style="color:${c[2]}">${c[1]}</div><div><div class="txname">${esc(t.description)}</div><div class="txsub">${esc(t.category)} · ${esc(t.date)}</div></div><div class="txamt ${refund?'refund':''}">${refund?'+':'-'}${money(t.amount)}</div><button class="delete" onclick="delTx(${t.id})">Delete</button></div>`}
+function renderHome(){const c=cycle(),list=inCycle(),spent=list.reduce((s,t)=>s+audValue(t),0),left=LIMIT-spent,pct=Math.max(0,Math.min(100,spent/LIMIT*100));$('cycle-label').textContent=`${c.left} days left`;$('left-days').textContent=`${pct.toFixed(0)}% / $${LIMIT}`;$('remaining').classList.toggle('negative',left<0);$('remaining').innerHTML=moneyHTML(left);$('spent').textContent=money(spent);$('daily').textContent=money(Math.max(0,left/c.left));$('saving').textContent=money(Math.max(0,(left-saving)/c.left));$('budget-fill').style.width=pct+'%';$('tx-count').textContent=list.length+' items';$('recent').innerHTML=list.length?list.slice(0,8).map(row).join(''):'<div class="empty">No expenses yet.</div>'}
+function row(t){const c=cats.find(x=>x[0]===t.category)||cats.at(-1),refund=(+t.amount||0)<0,foreign=!isAUD(t);return`<div class="tx"><div class="txicon" style="color:${c[2]}">${c[1]}</div><div><div class="txname">${esc(t.description)}</div><div class="txsub">${esc(t.category)} · ${esc(t.date)}${foreign?' · not in AUD budget':''}</div></div><div class="txamt ${refund?'refund':''}">${refund?'+':'-'}${displayMoney(t)}</div><button class="delete" onclick="delTx(${t.id})">Delete</button></div>`}
 function renderHistory(){$('history').innerHTML=txs.length?txs.map(row).join(''):'<div class="empty">No records yet.</div>'}
 function delTx(id){txs=txs.filter(t=>t.id!==id);save();renderAll()}
 function addTx(data){txs.unshift({id:Date.now(),amount:+data.amount,description:data.description||'Expense',category:data.category||sel,date:data.date||today()});save();renderAll();go('home')}
@@ -258,7 +482,7 @@ function showDashboardParsed(p){
   $('sms-icon').style.color=c[2];
   $('sms-name').textContent=p.description;
   $('sms-sub').textContent=`${p.category} · ${p.date}`;
-  $('sms-amount').textContent=(p.amount<0?'+':'-')+money(p.amount);
+  $('sms-amount').textContent=(p.amount<0?'+':'-')+displayMoney(p);
   $('sms-amount').style.color=p.amount<0?'#67d9a5':'#ff7b88';
 }
 function parseDashboardText(){
@@ -279,12 +503,12 @@ function parseQuick(){const p=parseExpenseText($('quick').value);if(p)showParsed
 async function readScreenshot(file){if(!file)return;$('ocr-status').textContent='Reading screenshot...';try{const res=await Tesseract.recognize(file,'eng+chi_sim',{logger:m=>{if(m.status)$('ocr-status').textContent=m.status.replace(/_/g,' ')}});const text=res.data.text||'';const p=parseExpenseText(text);if(p){showParsed(p);$('ocr-status').textContent='Screenshot parsed.'}else{$('ocrbox').classList.add('show');$('ocr-text').textContent=text;$('ocr-status').textContent='Text found, but amount needs manual check.'}}catch(e){$('ocr-status').textContent='OCR failed. Paste text instead.'}}
 function clearText(){$('quick').value='';$('ocrbox').classList.remove('show');parsed=null}
 function renderStats(){
-  const list=inCycle(),c=cycle(),spent=list.reduce((s,t)=>s+(+t.amount||0),0),left=LIMIT-spent,pct=Math.min(100,spent/LIMIT*100);
+  const list=inCycle(),c=cycle(),spent=list.reduce((s,t)=>s+audValue(t),0),left=LIMIT-spent,pct=Math.min(100,spent/LIMIT*100);
   const byDay=[];
   for(let i=0;i<=Math.max(c.passed,0);i++){
     const d=new Date(c.start);d.setDate(d.getDate()+i);
     const key=d.toISOString().slice(0,10);
-    byDay.push({label:(d.getMonth()+1)+'/'+d.getDate(),value:list.filter(t=>t.date===key).reduce((s,t)=>s+(+t.amount||0),0)});
+    byDay.push({label:(d.getMonth()+1)+'/'+d.getDate(),value:list.filter(t=>t.date===key).reduce((s,t)=>s+audValue(t),0)});
   }
   const values=byDay.map(x=>x.value),high=Math.max(0,...values),avg=c.passed>=0?spent/(c.passed+1):0;
   $('stats-spent').textContent=money(spent);
@@ -296,7 +520,7 @@ function renderStats(){
   $('daily-total').textContent=money(spent);
   if(dailyChart)dailyChart.destroy();
   dailyChart=new Chart($('daily-chart'),{type:'bar',data:{labels:byDay.map(x=>x.label),datasets:[{data:values,backgroundColor:(ctx)=>{const chart=ctx.chart,area=chart.chartArea;if(!area)return '#8fcaff';const g=chart.ctx.createLinearGradient(0,area.top,0,area.bottom);g.addColorStop(0,'#eaf5ff');g.addColorStop(.48,'#8fcaff');g.addColorStop(1,'#227cc3');return g},borderRadius:12,borderSkipped:false,barPercentage:.72,categoryPercentage:.72}]},options:chartOptions()});
-  const byCat=cats.filter(c=>c[0]!=='Refund').map(c=>({label:c[0],icon:c[1],color:c[2],value:list.filter(t=>t.category===c[0]&&(+t.amount||0)>0).reduce((s,t)=>s+(+t.amount||0),0)})).filter(x=>x.value>0);
+  const byCat=cats.filter(c=>c[0]!=='Refund').map(c=>({label:c[0],icon:c[1],color:c[2],value:list.filter(t=>t.category===c[0]&&audValue(t)>0).reduce((s,t)=>s+audValue(t),0)})).filter(x=>x.value>0);
   $('cat-total').textContent=money(spent);
   $('cat-list').innerHTML=byCat.length?byCat.map(x=>`<div class="cat-row"><div class="cat-dot" style="color:${x.color}">${x.icon}</div><div><div class="cat-name">${x.label}</div><div class="cat-bar"><i style="width:${spent?Math.max(6,x.value/spent*100):0}%;background:${x.color}"></i></div></div><div class="cat-money">${money(x.value)}</div></div>`).join(''):'<div class="empty" style="padding:8px 0 0">No categories yet.</div>';
   if(catChart)catChart.destroy();
