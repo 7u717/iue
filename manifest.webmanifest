@@ -2,7 +2,7 @@
   "name": "iue",
   "short_name": "iue",
   "description": "Personal study system",
-  "start_url": "./",
+  "start_url": "./?v=2026-07-26-labtest2-maple-1",
   "scope": "./",
   "display": "standalone",
   "background_color": "#000000",
