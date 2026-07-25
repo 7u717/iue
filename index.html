@@ -838,6 +838,14 @@
       display: block; width: 100%; height: auto; border-radius: 10px;
       background: #fff;
     }
+    .maple-code {
+      margin: 8px 0 12px; padding: 12px 13px;
+      border: 1px solid var(--border); border-radius: 14px;
+      background: #0b0d10; color: #c8d2df;
+      font-family: "SFMono-Regular", "JetBrains Mono", Menlo, Consolas, monospace;
+      font-size: 11px; line-height: 1.55; white-space: pre-wrap;
+      overflow-x: auto;
+    }
     @media (max-width: 640px) {
       .test-split, .test-type-grid { grid-template-columns: 1fr; }
       .test-type-front { padding: 12px; }
@@ -1859,6 +1867,55 @@
         <div class="subtopic">🖥️ product(x^2+k+9*x, k=190..1500)　← 连乘 Π；也可用 mul(...)</div>
         <div class="subtopic">🖥️ coeff(series(exp(4*x)/(1-x), x=0, 8), x, 7)　← 取 Taylor 展开中 x^7 的系数</div>
 
+        <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:10px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">递推 · 求和 · 程序模板</div>
+        <div class="subtopic">🖥️ 一阶递推：从 a[0] 开始，每次用上一项生成下一项，最后输出 a[m]</div>
+        <pre class="maple-code">a[0] := c:
+
+for i from 1 to m do
+    a[i] := g(a[i-1]);
+end do:
+
+a[m];</pre>
+        <div class="subtopic">🖥️ 三阶递推：先给 a[1], a[2], a[3]，再用公式推出 a[m]</div>
+        <pre class="maple-code">a[1] := 初值1:
+a[2] := 初值2:
+a[3] := 初值3:
+
+for n from 3 to m-1 do
+    a[n+1] := a[n] - 3*a[n-1] + a[n-2];
+end do:
+
+a[m];</pre>
+        <div class="subtopic">🖥️ 有限和数值循环：每个 k 都计算一次小数形式的和</div>
+        <pre class="maple-code">for k from 1 to m do
+    evalf(add(表达式, n=下限..上限));
+end do;</pre>
+        <div class="subtopic">🖥️ proc 模板：把过程打包成 f(m)，题目要函数时直接套</div>
+        <pre class="maple-code">f := proc(m)
+    local a, i;
+
+    程序内容
+
+end proc;</pre>
+        <div class="subtopic">🖥️ 高精度收敛判断：Digits 先提高精度，不收敛就输出 -1</div>
+        <pre class="maple-code">Digits := 30;
+
+f := proc(m)
+    local a, i;
+
+    a[0] := 初值;
+
+    for i from 1 to m do
+        a[i] := evalf(递推公式);
+    end do;
+
+    if abs(a[m]-a[m-1]) &lt; 10^(-10) then
+        a[m]
+    else
+        -1
+    end if
+end proc;</pre>
+
         <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:10px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">❌ 常见错误</div>
         <div class="subtopic">❌ 乘法漏写 *：6x^5 要写 6*x^5，sin(9x-y) 要写 sin(9*x-y)</div>
         <div class="subtopic">❌ 幂次用错：x² 要写 x^2，不能写 x2 或 x²</div>
@@ -1962,7 +2019,39 @@
         <span class="topic-chevron">▼</span>
       </div>
       <div class="topic-body">
-        <div class="subtopic">先占位。后面放 Lab Test 2 的 Algebra / Calculus 题型库。</div>
+        <div class="subtopic">考试题型库：点开卡片查看题目和解析图。这里只放题型资料，不写长篇题目讲解。</div>
+        <div class="test-split">
+          <div class="test-panel clickable" id="lab-test-2-algebra-panel" onclick="toggleTestSection('lab-test-2-algebra')">
+            <div class="test-panel-head">
+              <div>
+                <div class="test-panel-title">Algebra</div>
+                <div class="test-panel-note">12 个题型已放入。点开卡片看完整图片。</div>
+              </div>
+              <span class="test-panel-chevron">▼</span>
+            </div>
+          </div>
+          <div class="test-panel">
+            <div class="test-panel-title">Calculus</div>
+            <div class="test-panel-note">先占位，等你把微积分题型图片放进来再补。</div>
+          </div>
+        </div>
+        <div class="test-type-section" id="lab-test-2-algebra">
+          <div style="font-size:12px;font-weight:800;color:var(--math-color);padding:2px 0 10px;">Algebra 题型</div>
+          <div class="test-type-grid">
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 1</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/algebra/algebra-01.png" alt="Lab Test 2 Algebra 题型 1"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 2</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/algebra/algebra-02.png" alt="Lab Test 2 Algebra 题型 2"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 3</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/algebra/algebra-03.png" alt="Lab Test 2 Algebra 题型 3"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 4</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/algebra/algebra-04.png" alt="Lab Test 2 Algebra 题型 4"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 5</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/algebra/algebra-05.png" alt="Lab Test 2 Algebra 题型 5"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 6</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/algebra/algebra-06.png" alt="Lab Test 2 Algebra 题型 6"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 7</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/algebra/algebra-07.png" alt="Lab Test 2 Algebra 题型 7"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 8</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/algebra/algebra-08.png" alt="Lab Test 2 Algebra 题型 8"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 9</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/algebra/algebra-09.png" alt="Lab Test 2 Algebra 题型 9"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 10</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/algebra/algebra-10.png" alt="Lab Test 2 Algebra 题型 10"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 11</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/algebra/algebra-11.png" alt="Lab Test 2 Algebra 题型 11"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 12</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/algebra/algebra-12.png" alt="Lab Test 2 Algebra 题型 12"></div></div>
+          </div>
+        </div>
       </div>
     </div>
 
