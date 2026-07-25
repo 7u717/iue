@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#000000" />
+  <title>Atlas</title>
+  <link rel="manifest" href="atlas-manifest.webmanifest" />
+  <style>
+    :root {
+      --ink: #f5f7fb;
+      --muted: #8e949f;
+      --soft: #c8d0dc;
+      --line: rgba(255,255,255,.105);
+      --blue: #8ec9ff;
+      --violet: #b9a8d3;
+      --rose: #ffb8c5;
+      --amber: #efd27a;
+      --mint: #92d7c4;
+      --top: calc(92px + env(safe-area-inset-top));
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      color: var(--ink);
+    }
+    body { touch-action: manipulation; }
+    button { border: 0; cursor: pointer; color: inherit; font: inherit; }
+    .app {
+      width: min(100vw, 440px);
+      height: 100dvh;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% -14%, rgba(142,201,255,.18), transparent 34%),
+        radial-gradient(circle at 15% 78%, rgba(185,168,211,.12), transparent 28%),
+        linear-gradient(#000, #020202);
+      border-left: 1px solid rgba(255,255,255,.07);
+      border-right: 1px solid rgba(255,255,255,.07);
+    }
+    .topbar {
+      position: fixed;
+      z-index: 50;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(100vw, 440px);
+      height: var(--top);
+      padding: calc(env(safe-area-inset-top) + 16px) 22px 14px;
+      display: grid;
+      grid-template-columns: 52px 1fr 52px;
+      align-items: end;
+      background: rgba(0,0,0,.88);
+      border-bottom: 1px solid rgba(255,255,255,.085);
+      backdrop-filter: blur(22px);
+    }
+    .avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; display: block; }
+    .title { text-align: center; line-height: 1.05; }
+    .title strong { display: block; font-size: 25px; letter-spacing: 0; }
+    .title span { display: block; margin-top: 7px; font-size: 12px; font-weight: 850; color: var(--muted); }
+    .count-pill {
+      width: 43px;
+      height: 43px;
+      justify-self: end;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(142,201,255,.18), transparent 58%),
+        linear-gradient(180deg, #202126, #111214);
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--blue);
+      font-size: 15px;
+      font-weight: 950;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .tree-page {
+      position: absolute;
+      inset: var(--top) 0 0;
+      overflow: hidden;
+      padding: 12px 14px 18px;
+    }
+    .map {
+      position: relative;
+      height: 100%;
+      border-radius: 34px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(142,201,255,.12), transparent 35%),
+        radial-gradient(circle at 50% 50%, transparent 0 21%, rgba(255,255,255,.035) 21.2% 21.6%, transparent 21.8% 37%, rgba(255,255,255,.026) 37.2% 37.6%, transparent 37.8%),
+        linear-gradient(180deg, rgba(26,28,32,.54), rgba(8,9,10,.86));
+      border: 1px solid rgba(255,255,255,.09);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.055);
+    }
+    .map::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.032) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(circle at center, black, transparent 78%);
+      pointer-events: none;
+    }
+    .link-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .link-layer line {
+      stroke: rgba(142,201,255,.25);
+      stroke-width: 1.2;
+      stroke-linecap: round;
+    }
+    .link-layer line.soft { stroke: rgba(255,255,255,.12); stroke-width: 1; }
+    .node {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      transform: translate(-50%, -50%);
+      min-width: var(--w, 82px);
+      max-width: 138px;
+      padding: 11px 12px;
+      border-radius: 22px;
+      text-align: left;
+      background:
+        radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--c) 20%, transparent), transparent 48%),
+        linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.026));
+      border: 1px solid color-mix(in srgb, var(--c) 34%, rgba(255,255,255,.08));
+      box-shadow: 0 18px 42px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.075);
+      color: var(--ink);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .node:active {
+      transform: translate(-50%, -50%) scale(.96);
+    }
+    .node.center {
+      --w: 118px;
+      padding: 16px;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(142,201,255,.24), transparent 55%),
+        linear-gradient(145deg, rgba(39,43,49,.98), rgba(10,11,13,.98));
+      border-color: rgba(142,201,255,.34);
+    }
+    .node .mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 8px;
+      background: rgba(255,255,255,.075);
+      color: var(--c);
+      font-size: 12px;
+      font-weight: 950;
+    }
+    .node b {
+      display: block;
+      font-size: 15px;
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .node.center b { font-size: 25px; }
+    .node span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      line-height: 1.18;
+    }
+    .node.small {
+      min-width: 76px;
+      padding: 9px 10px;
+      border-radius: 19px;
+    }
+    .node.small .mark { display: none; }
+    .node.small b { font-size: 12px; }
+    .node.small span { display: none; }
+    .detail {
+      position: fixed;
+      z-index: 120;
+      inset: 0;
+      width: min(100vw, 440px);
+      margin: 0 auto;
+      display: grid;
+      align-items: end;
+      background: rgba(0,0,0,.54);
+      backdrop-filter: blur(16px);
+      opacity: 1;
+      transition: opacity .22s ease;
+    }
+    .detail.hidden { opacity: 0; pointer-events: none; }
+    .sheet {
+      max-height: calc(100dvh - env(safe-area-inset-top) - 44px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 14px 18px calc(env(safe-area-inset-bottom) + 22px);
+      border-radius: 34px 34px 0 0;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(142,201,255,.14), transparent 33%),
+        linear-gradient(180deg, rgba(29,31,35,.98), rgba(10,11,12,.99));
+      border: 1px solid rgba(255,255,255,.11);
+      border-bottom: 0;
+      box-shadow: 0 -22px 70px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.07);
+      transform: translateY(0);
+      transition: transform .28s cubic-bezier(.2,.85,.22,1);
+    }
+    .detail.hidden .sheet { transform: translateY(18px); }
+    .grabber {
+      width: 56px;
+      height: 5px;
+      margin: 0 auto 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.22);
+    }
+    .sheet-head {
+      display: grid;
+      grid-template-columns: 54px 1fr 42px;
+      gap: 12px;
+      align-items: center;
+    }
+    .sheet-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 19px;
+      display: grid;
+      place-items: center;
+      background: rgba(142,201,255,.12);
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 950;
+    }
+    .sheet h2 { margin: 0; font-size: 30px; line-height: 1; }
+    .sheet p { margin: 7px 0 0; color: var(--muted); font-size: 12px; font-weight: 850; }
+    .close {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--soft);
+      font-size: 24px;
+    }
+    .fields {
+      display: grid;
+      gap: 9px;
+      margin-top: 16px;
+    }
+    .field {
+      min-height: 58px;
+      padding: 12px 13px;
+      display: grid;
+      grid-template-columns: 108px 1fr;
+      gap: 10px;
+      align-items: center;
+      border-radius: 18px;
+      background: rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.075);
+    }
+    .field span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+    .field b {
+      font-size: 15px;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+    .note {
+      margin-top: 14px;
+      padding: 13px 14px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.045);
+      border: 1px solid rgba(255,255,255,.075);
+      color: var(--soft);
+      font-weight: 780;
+      line-height: 1.42;
+    }
+    .identity-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .mini-stat {
+      min-height: 58px;
+      padding: 10px 11px;
+      border-radius: 17px;
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.07);
+    }
+    .mini-stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .mini-stat b {
+      display: block;
+      margin-top: 7px;
+      font-size: 14px;
+      line-height: 1.1;
+    }
+    @media (max-width: 380px) {
+      .node { max-width: 124px; padding: 9px 10px; }
+      .node b { font-size: 13px; }
+      .node.center b { font-size: 22px; }
+      .field { grid-template-columns: 92px 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <img class="avatar" src="icons/avatar.jpg" alt="avatar" />
+      <div class="title"><strong>Atlas</strong><span>personal graph</span></div>
+      <button class="count-pill" id="nodeCount" aria-label="nodes">--</button>
+    </header>
+
+    <main class="tree-page">
+      <section class="map" id="map">
+        <svg class="link-layer" id="links"></svg>
+      </section>
+    </main>
+
+    <div class="detail hidden" id="detail" aria-hidden="true">
+      <section class="sheet" role="dialog" aria-modal="true">
+        <div class="grabber"></div>
+        <div id="detailContent"></div>
+      </section>
+    </div>
+  </div>
+
+  <script src="private/atlas-private-seed.js"></script>
+  <script>
+    const VERSION = "2026-07-26-atlas-2d-personal-tree-1";
+    const COLORS = {
+      core: "#f5f7fb",
+      identity: "#ffb8c5",
+      contact: "#92d7c4",
+      finance: "#efd27a",
+      secure: "#b9a8d3",
+      academic: "#8ec9ff",
+      address: "#aeb8c7",
+      future: "#9fcfff"
+    };
+    const roots = [
+      root("identity-root", "Identity", "ID", "identity", "passport · ID · visa", 50, 18),
+      root("contact-root", "Contact", "@", "contact", "phone · WeChat · email", 20, 36),
+      root("finance-root", "Finance", "$", "finance", "bank card · records", 80, 36),
+      root("address-root", "Address", "⌂", "address", "Shanghai · Sydney", 18, 65),
+      root("academic-root", "UNSW", "U", "academic", "COE · offer · insurance", 82, 65),
+      root("secure-root", "Secure", "••", "secure", "accounts · password index", 50, 82)
+    ];
+    const nodePositions = {
+      "personal-profile": [50, 50],
+      "id-card": [35, 28],
+      "passport": [65, 28],
+      "visa": [50, 30],
+      "wechat-qr": [23, 49],
+      "bank-cards": [77, 49],
+      "birth-certificate": [30, 18],
+      "coe": [70, 71],
+      "health-insurance": [85, 77],
+      "unsw-offer": [68, 58],
+      "steam-account": [50, 69],
+      "student-card": [38, 67],
+      "notes-pdf": [18, 80]
+    };
+    function root(id, name, icon, group, hint, x, y) {
+      return { id, name, icon, group, hint, x, y, root: true, fields: [["Type", name], ["Role", hint]] };
+    }
+    function privateDocs() {
+      return Array.isArray(window.ATLAS_PRIVATE_DOCS) ? window.ATLAS_PRIVATE_DOCS : [];
+    }
+    function groupFor(doc) {
+      const id = doc.id || "";
+      const cat = (doc.cat || doc.area || "").toLowerCase();
+      if (id.includes("wechat") || id.includes("profile")) return "contact";
+      if (id.includes("bank")) return "finance";
+      if (id.includes("steam") || cat.includes("secure")) return "secure";
+      if (id.includes("coe") || id.includes("offer") || id.includes("insurance") || id.includes("student") || cat.includes("academic")) return "academic";
+      if (id.includes("address")) return "address";
+      return "identity";
+    }
+    function rootFor(group) {
+      return ({
+        identity: "identity-root",
+        contact: "contact-root",
+        finance: "finance-root",
+        secure: "secure-root",
+        academic: "academic-root",
+        address: "address-root"
+      })[group] || "identity-root";
+    }
+    function escapeHtml(value = "") {
+      return String(value).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+    function simplifyName(name = "") {
+      return name
+        .replace("Personal profile", "Me")
+        .replace("UNSW COE", "COE")
+        .replace("Health insurance", "OSHC")
+        .replace("UNSW offer", "Offer")
+        .replace("Birth certificate", "Birth")
+        .replace("Steam account", "Steam")
+        .replace("WeChat QR", "WeChat");
+    }
+    function hintFor(doc) {
+      const first = (doc.fields || [])[0];
+      if (doc.id === "personal-profile") return "core profile";
+      if (doc.id === "id-card") return "Chinese ID";
+      if (doc.id === "passport") return "travel identity";
+      if (doc.id === "wechat-qr") return "scan code";
+      if (doc.id === "bank-cards") return "card index";
+      if (doc.id === "steam-account") return "login";
+      return first ? first[1] : (doc.area || doc.cat || "filed");
+    }
+    function buildNodes() {
+      const docs = privateDocs().map((doc, index) => {
+        const group = groupFor(doc);
+        const pos = nodePositions[doc.id] || fallbackPosition(group, index);
+        return { ...doc, group, x: pos[0], y: pos[1], hint: hintFor(doc), root: false };
+      });
+      return [...roots, ...docs];
+    }
+    function fallbackPosition(group, index) {
+      const center = roots.find(r => r.group === group) || roots[0];
+      const angle = (index % 6) / 6 * Math.PI * 2;
+      return [center.x + Math.cos(angle) * 12, center.y + Math.sin(angle) * 10];
+    }
+    function render() {
+      localStorage.setItem("atlas_app_version", VERSION);
+      const map = document.getElementById("map");
+      const svg = document.getElementById("links");
+      map.querySelectorAll(".node").forEach(n => n.remove());
+      svg.innerHTML = "";
+      const nodes = buildNodes();
+      document.getElementById("nodeCount").textContent = nodes.length;
+      const links = [
+        ...roots.map(r => ["personal-profile", r.id, false]),
+        ...nodes.filter(n => !n.root && n.id !== "personal-profile").map(n => [rootFor(n.group), n.id, true])
+      ];
+      links.forEach(([a, b, soft]) => drawLine(svg, nodeById(nodes, a), nodeById(nodes, b), soft));
+      nodes.forEach(n => map.insertAdjacentHTML("beforeend", nodeHtml(n)));
+      map.querySelectorAll(".node").forEach(btn => {
+        btn.onclick = () => openNode(nodes.find(n => n.id === btn.dataset.id));
+      });
+    }
+    function nodeById(nodes, id) { return nodes.find(n => n.id === id); }
+    function drawLine(svg, a, b, soft) {
+      if (!a || !b) return;
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", `${a.x}%`);
+      line.setAttribute("y1", `${a.y}%`);
+      line.setAttribute("x2", `${b.x}%`);
+      line.setAttribute("y2", `${b.y}%`);
+      if (soft) line.classList.add("soft");
+      svg.appendChild(line);
+    }
+    function nodeHtml(n) {
+      const color = COLORS[n.group] || COLORS.core;
+      const small = !n.root && n.id !== "personal-profile" ? " small" : "";
+      const center = n.id === "personal-profile" ? " center" : "";
+      return `
+        <button class="node${small}${center}" data-id="${escapeHtml(n.id)}" style="--x:${n.x}%;--y:${n.y}%;--c:${color}">
+          <span class="mark">${escapeHtml(n.icon || "•")}</span>
+          <b>${escapeHtml(simplifyName(n.name))}</b>
+          <span>${escapeHtml(n.hint || n.area || "")}</span>
+        </button>
+      `;
+    }
+    function openNode(n) {
+      if (!n) return;
+      const fields = visibleFields(n);
+      const quickStats = n.id === "personal-profile" ? identityStrip(fields) : "";
+      document.getElementById("detailContent").innerHTML = `
+        <div class="sheet-head">
+          <div class="sheet-icon">${escapeHtml(n.icon || "•")}</div>
+          <div>
+            <h2>${escapeHtml(n.name)}</h2>
+            <p>${escapeHtml((n.area || n.group || "").toString())}</p>
+          </div>
+          <button class="close" id="closeDetail" aria-label="close">×</button>
+        </div>
+        ${quickStats}
+        <div class="fields">
+          ${fields.map(([k, v]) => `<div class="field"><span>${escapeHtml(k)}</span><b>${escapeHtml(v)}</b></div>`).join("")}
+        </div>
+      `;
+      const detail = document.getElementById("detail");
+      detail.classList.remove("hidden");
+      detail.setAttribute("aria-hidden", "false");
+      document.getElementById("closeDetail").onclick = closeNode;
+    }
+    function visibleFields(n) {
+      const hiddenKeys = new Set(["file", "source", "path", "details"]);
+      const hiddenValues = ["open original", "local image", "filed locally", "not synced"];
+      const fields = Array.isArray(n.fields) ? n.fields : [];
+      const filtered = fields.filter(([k, v]) => {
+        const key = String(k || "").trim().toLowerCase();
+        const value = String(v || "").trim().toLowerCase();
+        return !hiddenKeys.has(key) && !hiddenValues.some(x => value.includes(x));
+      });
+      return filtered.length ? filtered : [["Status", "Ready"], ["Area", n.area || n.group || "Personal"]];
+    }
+    function identityStrip(fields) {
+      const picks = fields.slice(0, 3);
+      return `
+        <div class="identity-strip">
+          ${picks.map(([k, v]) => `<div class="mini-stat"><span>${escapeHtml(k)}</span><b>${escapeHtml(v)}</b></div>`).join("")}
+        </div>
+      `;
+    }
+    function closeNode() {
+      const detail = document.getElementById("detail");
+      detail.classList.add("hidden");
+      detail.setAttribute("aria-hidden", "true");
+    }
+    document.getElementById("detail").addEventListener("click", e => {
+      if (e.target.id === "detail") closeNode();
+    });
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") closeNode();
+    });
+    render();
+  </script>
+</body>
+</html>

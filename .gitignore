@@ -1,0 +1,5 @@
+orbit-native/node_modules/
+orbit-native/www/
+orbit-native/ios/App/Pods/
+orbit-native/ios/App/Podfile.lock
+private/

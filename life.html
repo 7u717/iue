@@ -50,7 +50,7 @@
       --page-dock-space: calc(var(--bottom-nav-h) + 8px);
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Inter, Arial, sans-serif; }
+    html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Inter, Arial, sans-serif; }
     body { overflow: hidden; touch-action: pan-y; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
     input, textarea { -webkit-user-select: text; user-select: text; }
     button, input, textarea { font: inherit; color: inherit; }
@@ -59,9 +59,11 @@
       width: min(100vw, 430px);
       height: 100vh;
       height: 100dvh;
-      margin: 0 auto;
+      margin: 0;
       background: #000;
-      position: relative;
+      position: fixed;
+      inset: 0 auto 0 50%;
+      transform: translateX(-50%);
       overflow: hidden;
       border-left: 1px solid rgba(255,255,255,.05);
       border-right: 1px solid rgba(255,255,255,.05);
@@ -84,12 +86,12 @@
     .app:has(textarea:focus) .page { padding-bottom: 22px; }
     .page::-webkit-scrollbar { display: none; }
     .topbar {
-      position: fixed;
+      position: absolute;
       top: 0;
-      left: 50%;
-      right: auto;
-      width: min(100vw, 430px);
-      transform: translateX(-50%);
+      left: 0;
+      right: 0;
+      width: 100%;
+      transform: none;
       z-index: 18;
       display: flex;
       align-items: center;
@@ -153,6 +155,30 @@
       align-items: center;
       justify-content: center;
       font-size: 18px;
+    }
+    .week-date-btn {
+      position: relative;
+      color: var(--blue);
+      font-size: 15px;
+      font-weight: 950;
+      background:
+        conic-gradient(from -90deg, rgba(143,198,255,.95) calc(var(--week-lit, 0) * 51.428deg), rgba(255,255,255,.08) 0),
+        linear-gradient(145deg, rgba(143,198,255,.16), rgba(255,255,255,.035));
+      border-color: rgba(143,198,255,.26);
+      box-shadow: 0 0 20px rgba(143,198,255,.1), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    .week-date-btn::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: inherit;
+      background: linear-gradient(145deg,#1b1c1f,#0d0d0f);
+      z-index: 0;
+    }
+    .week-date-btn span {
+      position: relative;
+      z-index: 1;
+      font-variant-numeric: tabular-nums;
     }
     .section { display: none; animation: lift .25s ease both; }
     .section.active { display: block; min-height: calc(100dvh - var(--topbar-h) - var(--page-dock-space) - env(safe-area-inset-bottom) - 16px); }
@@ -228,12 +254,22 @@
     .metric-label { color: var(--muted); font-size: 12px; font-weight: 800; }
     .metric-value { font-size: 27px; font-weight: 850; letter-spacing: 0; }
     .metric-value small { color: var(--muted); font-size: 13px; font-weight: 800; }
-    .sleep-card { overflow: hidden; }
+    .sleep-card {
+      overflow: hidden;
+      touch-action: pan-y;
+      transition: transform .16s ease, border-color .16s ease;
+    }
+    .sleep-card.hold-ready {
+      transform: scale(.995);
+      border-color: rgba(140,200,255,.2);
+    }
     .sleep-top {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
       margin-bottom: 8px;
+      cursor: pointer;
+      touch-action: manipulation;
     }
     .sleep-time {
       min-height: 82px;
@@ -249,6 +285,14 @@
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: .07em;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+    .sleep-top:active .sleep-time {
+      transform: scale(.985);
+      border-color: rgba(140,200,255,.18);
+      background:
+        radial-gradient(circle at 22% 0%, rgba(140,200,255,.14), transparent 34%),
+        linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.018));
     }
     .sleep-time strong {
       display: block;
@@ -788,6 +832,194 @@
     .quality.good.active, .quality.good:hover { background: rgba(140,200,255,.2); border-color: rgba(140,200,255,.48); color: #bfe2ff; }
     .quality.mid.active, .quality.mid:hover { background: rgba(185,176,200,.2); border-color: rgba(185,176,200,.5); color: #d9d2e6; }
     .quality.bad.active, .quality.bad:hover { background: rgba(215,162,180,.18); border-color: rgba(215,162,180,.5); color: #f0c4d1; }
+    .manual-sleep-mask {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0,0,0,.45);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 18px 18px calc(var(--bottom-nav-h) + 14px);
+    }
+    .manual-sleep-mask.show { display: flex; }
+    .manual-sleep-panel {
+      width: min(calc(100vw - 36px), 520px);
+      max-width: calc(100vw - 36px);
+      max-height: min(72dvh, 520px);
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 32px;
+      background: linear-gradient(180deg, rgba(25,26,29,.97), rgba(12,13,15,.98));
+      box-shadow: 0 -22px 60px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.05);
+      padding: 20px;
+      transform: translateY(8px);
+      animation: sleepPanelIn .18s ease forwards;
+    }
+    @keyframes sleepPanelIn { to { transform: translateY(0); } }
+    .manual-sleep-panel .handle {
+      width: 54px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.24);
+      margin: 0 auto 16px;
+    }
+    .manual-sleep-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 14px;
+      margin-bottom: 14px;
+      min-width: 0;
+    }
+    .manual-sleep-head .eyebrow,
+    .manual-sleep-head .card-title {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+    .manual-sleep-chip {
+      min-width: 72px;
+      height: 38px;
+      padding: 0 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(29,155,240,.16);
+      border: 1px solid rgba(140,200,255,.24);
+      color: #a8d6ff;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .sleep-form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin: 14px 0;
+    }
+    .sleep-form-item {
+      display: grid;
+      gap: 7px;
+      min-width: 0;
+    }
+    .sleep-form-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding-left: 4px;
+    }
+    .sleep-form-field {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      box-sizing: border-box;
+      min-width: 0;
+      max-width: 100%;
+      height: 58px;
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 18px;
+      background: rgba(0,0,0,.22);
+      color: var(--text);
+      padding: 0 16px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 1.25;
+      outline: none;
+      color-scheme: dark;
+      text-align: center;
+    }
+    .manual-sleep-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    @media (min-width: 560px) {
+      .manual-sleep-panel { width: min(390px, calc(100vw - 36px)); }
+    }
+    @media (max-width: 420px) {
+      .manual-sleep-mask {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+      .manual-sleep-panel {
+        width: calc(100vw - 28px);
+        max-width: calc(100vw - 28px);
+        padding: 18px;
+        border-radius: 28px;
+      }
+      .manual-sleep-head {
+        gap: 10px;
+      }
+      .manual-sleep-chip {
+        min-width: 64px;
+        height: 34px;
+        padding: 0 12px;
+        font-size: 12px;
+      }
+    }
+    .manual-sleep-panel input.sleep-form-field {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      height: 58px;
+      padding: 0 16px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+    .time-stepper {
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr) 52px;
+      align-items: stretch;
+      gap: 10px;
+      min-width: 0;
+    }
+    .time-stepper-btn {
+      width: 52px;
+      min-width: 52px;
+      height: 58px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.025));
+      color: rgba(244,245,247,.9);
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.045);
+    }
+    .time-display {
+      min-width: 0;
+      height: 58px;
+      border-radius: 18px;
+      border: 1px solid rgba(140,200,255,.16);
+      background: rgba(0,0,0,.22);
+      display: grid;
+      place-items: center;
+      color: var(--text);
+      font-size: 24px;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+    }
+    .time-stepper-meta {
+      margin-top: 6px;
+      min-height: 16px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+      text-align: center;
+    }
     .field {
       display: grid;
       gap: 7px;
@@ -1093,7 +1325,7 @@
       margin-top: 2px;
     }
     .orbit-tabs {
-      position: fixed;
+      position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
@@ -1102,8 +1334,9 @@
       grid-template-columns: repeat(3, 1fr);
       align-items: center;
       width: 100%;
-      max-width: min(100vw, 430px);
-      min-height: var(--bottom-nav-h);
+      max-width: none;
+      height: var(--bottom-nav-h);
+      min-height: 0;
       margin: 0 auto;
       padding: 4px 34px max(3px, env(safe-area-inset-bottom));
       background:
@@ -1115,17 +1348,10 @@
       -webkit-backdrop-filter: blur(24px) saturate(1.2);
     }
     html.native-shell .orbit-tabs {
-      min-height: var(--bottom-nav-h);
-      height: auto;
+      height: var(--bottom-nav-h);
+      min-height: 0;
       padding: 4px 34px calc(var(--native-safe-bottom) + 3px);
       transform: translateZ(0);
-    }
-    @supports (left: max(0px)) {
-      .orbit-tabs {
-        left: max(0px, calc((100vw - 430px) / 2));
-        right: max(0px, calc((100vw - 430px) / 2));
-        width: auto;
-      }
     }
     .nav {
       appearance: none;
@@ -1210,8 +1436,8 @@
       .nav svg { width: 28px; height: 28px; }
       .nav[data-tab="log"] { width: 58px; height: 50px; min-height: 50px; }
       html.native-shell .orbit-tabs {
-        height: auto;
-        min-height: var(--bottom-nav-h);
+        height: var(--bottom-nav-h);
+        min-height: 0;
         padding: 4px 34px calc(var(--native-safe-bottom) + 3px);
       }
     }
@@ -1551,22 +1777,22 @@
 </head>
 <body>
   <main class="app">
-    <div class="page">
-      <header class="topbar">
-        <button class="avatar-btn" onclick="toggleMailDrawer()" aria-label="blocks">
-          <img src="icons/avatar.jpg" alt="avatar">
-          <span id="mail-dot" class="badge"></span>
-        </button>
-        <div class="top-title">
-          <strong>Today</strong>
-          <span id="today-date">Life console</span>
-        </div>
-        <button class="icon-btn" onclick="resetDemo()" aria-label="reset">↻</button>
-      </header>
+    <header class="topbar">
+      <button class="avatar-btn" onclick="toggleMailDrawer()" aria-label="blocks">
+        <img src="icons/avatar.jpg" alt="avatar">
+        <span id="mail-dot" class="badge"></span>
+      </button>
+      <div class="top-title">
+        <strong>Orbit</strong>
+        <span id="today-date">Life console</span>
+      </div>
+      <button class="icon-btn week-date-btn" id="week-date-btn" aria-label="date"><span id="week-date-number">--</span></button>
+    </header>
 
+    <div class="page">
       <section id="today" class="section active">
-        <div class="card sleep-card">
-          <div class="sleep-top">
+        <div class="card sleep-card" id="sleep-card" onpointerdown="manualSleepHoldStart(event)" onpointermove="manualSleepHoldMove(event)" onpointerup="manualSleepHoldCancel()" onpointercancel="manualSleepHoldCancel()" oncontextmenu="openManualSleep(event)">
+          <div class="sleep-top" id="manual-sleep-opener" onclick="openManualSleep(event)" aria-label="add sleep manually">
             <div id="bed-time-card" class="sleep-time">Last sleep<strong id="bed-label">01:20</strong><span id="bed-sub">start</span></div>
             <div id="wake-time-card" class="sleep-time">Last wake<strong id="wake-label">09:10</strong><span id="wake-sub">end</span></div>
           </div>
@@ -1765,12 +1991,48 @@
       <div id="mail-list"></div>
     </aside>
 
+    <div id="manual-sleep-mask" class="manual-sleep-mask" onclick="closeManualSleep(event)">
+      <div class="manual-sleep-panel" onclick="event.stopPropagation()">
+        <div class="handle"></div>
+        <div class="manual-sleep-head">
+          <div>
+            <div class="eyebrow">Hidden</div>
+            <div class="card-title">Add sleep</div>
+          </div>
+          <span class="manual-sleep-chip">manual</span>
+        </div>
+        <div class="sleep-form-grid">
+          <div class="sleep-form-item">
+            <span class="sleep-form-label">Start</span>
+            <div class="time-stepper" role="group" aria-label="sleep start">
+              <button class="time-stepper-btn" onclick="stepManualSleep('start', -5)">−</button>
+              <button class="time-display" id="manual-sleep-start-display" onclick="stepManualSleep('start', 5)">--:--</button>
+              <button class="time-stepper-btn" onclick="stepManualSleep('start', 5)">+</button>
+            </div>
+            <div class="time-stepper-meta" id="manual-sleep-start-meta"></div>
+          </div>
+          <div class="sleep-form-item">
+            <span class="sleep-form-label">End</span>
+            <div class="time-stepper" role="group" aria-label="sleep end">
+              <button class="time-stepper-btn" onclick="stepManualSleep('end', -5)">−</button>
+              <button class="time-display" id="manual-sleep-end-display" onclick="stepManualSleep('end', 5)">--:--</button>
+              <button class="time-stepper-btn" onclick="stepManualSleep('end', 5)">+</button>
+            </div>
+            <div class="time-stepper-meta" id="manual-sleep-end-meta"></div>
+          </div>
+        </div>
+        <div class="manual-sleep-actions">
+          <button class="sleep-action" onclick="closeManualSleep()">Cancel</button>
+          <button class="sleep-action primary-soft" onclick="saveManualSleep()">Save sleep</button>
+        </div>
+      </div>
+    </div>
     <div id="toast" class="toast"></div>
   </main>
 
   <script>
     const KEY = 'life_console_v5';
-    const ORBIT_APP_VERSION = '2026-07-17-orbit-reminders-2';
+    const ORBIT_APP_VERSION = '2026-07-26-orbit-header-date-1';
     const ORBIT_CLOUD_ENABLED = false;
     const ORBIT_CLOUD_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019f5e0e6766570f';
     const ORBIT_CLOUD_LAST_REMOTE_KEY = 'orbit_cloud_last_remote_saved_at';
@@ -1869,6 +2131,11 @@
       { keys: ['咖喱饭', 'curry rice'], kcal100: 155, protein100: 5, defaultGram: 560, units: { bowl: 560, serving: 560 }, icon: '🍛' },
       { keys: ['炸猪排', '猪排', 'pork cutlet', 'tonkatsu', 'katsu'], exclude: ['猪排饭', '炸猪排饭', 'pork cutlet rice', 'katsu rice'], kcal100: 310, protein100: 17, defaultGram: 180, units: { piece: 180, serving: 180 }, icon: '🥩' },
       { keys: ['牛排', 'steak', 'beef steak'], exclude: ['牛排饭', 'steak rice'], kcal100: 271, protein100: 25, defaultGram: 180, units: { piece: 180, serving: 180 }, icon: '🥩' },
+      { keys: ['煎饺', '锅贴', 'fried dumpling', 'potsticker'], kcal100: 245, protein100: 8, defaultGram: 200, units: { piece: 24, serving: 200 }, icon: '🥟' },
+      { keys: ['水饺', '蒸饺', '饺子', 'dumpling', 'dumplings'], exclude: ['煎饺', '锅贴', 'fried dumpling', 'potsticker'], kcal100: 210, protein100: 8, defaultGram: 200, units: { piece: 20, serving: 200 }, icon: '🥟' },
+      { keys: ['馄饨', '云吞', 'wonton'], kcal100: 165, protein100: 7, defaultGram: 250, units: { bowl: 250, serving: 250, piece: 12 }, icon: '🥟' },
+      { keys: ['小笼包', '汤包', 'xiaolongbao'], kcal100: 230, protein100: 9, defaultGram: 160, units: { piece: 32, serving: 160 }, icon: '🥟' },
+      { keys: ['包子', 'baozi', 'bun'], exclude: ['小笼包', '汤包', 'xiaolongbao'], kcal100: 220, protein100: 8, defaultGram: 180, units: { piece: 90, serving: 180 }, icon: '🥟' },
       { keys: ['蛋炒饭', 'fried rice'], kcal100: 190, protein100: 5.4, defaultGram: 350, units: { bowl: 350 }, icon: '🍚' },
       { keys: ['米饭', '饭', 'rice'], exclude: ['蛋炒饭', 'fried rice', '小炒肉拌饭', '小炒肉饭', '猪排饭', '炸猪排饭', '鸡排饭', '炸鸡排饭', '牛肉饭', '牛排饭', '咖喱饭'], kcal100: 130, protein100: 2.7, defaultGram: 200, units: { bowl: 200 }, icon: '🍚' },
       { keys: ['面', 'noodle', 'noodles', 'pasta'], kcal100: 160, protein100: 5, defaultGram: 300, units: { bowl: 300 }, icon: '🍜' },
@@ -1897,6 +2164,11 @@
       { keys: ['牛肉饭'], query: 'beef rice bowl', must: ['beef'], kcal100: 150, gram: 520, icon: '🍱' },
       { keys: ['牛排饭'], query: 'steak rice bowl', must: ['beef', 'steak'], kcal100: 170, gram: 560, icon: '🍱' },
       { keys: ['牛排', 'steak'], query: 'beef steak', must: ['beef', 'steak'], kcal100: 271, gram: 180, icon: '🥩' },
+      { keys: ['煎饺', '锅贴'], query: 'fried dumpling potsticker', must: ['dumpling'], kcal100: 245, gram: 200, icon: '🥟' },
+      { keys: ['水饺', '蒸饺', '饺子'], query: 'chinese dumpling', must: ['dumpling'], kcal100: 210, gram: 200, icon: '🥟' },
+      { keys: ['馄饨', '云吞'], query: 'wonton', must: ['wonton'], kcal100: 165, gram: 250, icon: '🥟' },
+      { keys: ['小笼包', '汤包'], query: 'xiaolongbao soup dumpling', must: ['dumpling'], kcal100: 230, gram: 160, icon: '🥟' },
+      { keys: ['包子'], query: 'baozi steamed bun', must: ['bun'], kcal100: 220, gram: 180, icon: '🥟' },
       { keys: ['咖喱饭'], query: 'curry rice', must: ['curry', 'rice'], kcal100: 155, gram: 560, icon: '🍛' },
       { keys: ['奥利奥'], query: 'oreo cookies', kcal100: 480, gram: 21, icon: '🍪' },
       { keys: ['冰激凌', '冰淇淋', '雪糕', 'ice cream'], query: 'ice cream', must: ['ice cream'], kcal100: 207, gram: 100, icon: '🍦' },
@@ -2075,7 +2347,7 @@
                 endAt
               ));
             }
-            if (notificationIsFuture(sitAt) && !hasWaterOrWorkoutBetween(startAt, new Date())) {
+            if (!state.sleeping && notificationIsFuture(sitAt) && !hasWaterOrWorkoutBetween(startAt, new Date())) {
               notifications.push(buildNotification(
                 ORBIT_NOTIFICATION_IDS.sedentaryBase + index,
                 '小co',
@@ -2253,13 +2525,6 @@
       }
       recalcTodayCounters();
     }
-    function todaySleepRecords() {
-      const today = localDayKey(new Date());
-      return (state.sleepRecords || []).filter(function(record) {
-        const anchor = new Date(record.end || record.start || Date.now());
-        return localDayKey(anchor) === today;
-      });
-    }
     function startOfDay(date = new Date()) {
       return new Date(date.getFullYear(), date.getMonth(), date.getDate());
     }
@@ -2275,6 +2540,55 @@
         return date >= start && date < end;
       });
     }
+    function sleepOverlapMinutes(record, rangeStart, rangeEnd) {
+      if (!record || !record.start || !rangeStart || !rangeEnd) return 0;
+      const start = new Date(record.start);
+      const end = new Date(record.end || Date.now());
+      if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return 0;
+      const left = Math.max(start.getTime(), rangeStart.getTime());
+      const right = Math.min(end.getTime(), rangeEnd.getTime());
+      return Math.max(0, Math.round((right - left) / 60000));
+    }
+    function sleepRecordsOverlapping(rangeStart, rangeEnd) {
+      return (state.sleepRecords || []).filter(record => sleepOverlapMinutes(record, rangeStart, rangeEnd) > 0);
+    }
+    function sleepRecordsWithActive() {
+      const records = (state.sleepRecords || []).slice();
+      if (state.sleeping && state.sleepStartIso) {
+        records.push({ start: state.sleepStartIso, end: new Date().toISOString() });
+      }
+      return records;
+    }
+    function sleepIntervalsInRange(rangeStart, rangeEnd) {
+      const safeEnd = new Date(Math.min(rangeEnd.getTime(), Date.now()));
+      if (safeEnd <= rangeStart) return [];
+      const intervals = sleepRecordsWithActive().map(record => {
+        if (!record || !record.start) return null;
+        const start = new Date(record.start);
+        const end = new Date(record.end || Date.now());
+        if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return null;
+        const left = Math.max(start.getTime(), rangeStart.getTime());
+        const right = Math.min(end.getTime(), safeEnd.getTime());
+        if (right <= left) return null;
+        return { start: left, end: right };
+      }).filter(Boolean).sort((a, b) => a.start - b.start);
+      const merged = [];
+      intervals.forEach(interval => {
+        const last = merged[merged.length - 1];
+        if (!last || interval.start > last.end) {
+          merged.push({ start: interval.start, end: interval.end });
+        } else {
+          last.end = Math.max(last.end, interval.end);
+        }
+      });
+      return merged;
+    }
+    function sleepMinutesInRange(rangeStart, rangeEnd) {
+      return sleepIntervalsInRange(rangeStart, rangeEnd).reduce((sum, interval) => sum + Math.round((interval.end - interval.start) / 60000), 0);
+    }
+    function todaySleepRecords() {
+      return sleepRecordsOverlapping(startOfDay(), new Date());
+    }
     function elapsedSleepMinutes(startDate, endDate) {
       const raw = Math.round((endDate - startDate) / 60000);
       if (raw <= 0) return 1;
@@ -2283,14 +2597,8 @@
       return Math.max(1, clockDelta);
     }
     function sleepDuration() {
-      let total = todaySleepRecords().reduce((sum, record) => sum + (+record.minutes || 0), 0);
-      if (state.sleeping && state.sleepStartIso) {
-        total += elapsedSleepMinutes(new Date(state.sleepStartIso), new Date());
-      }
-      if (total > 0) return total;
-      let b = mins(state.bed), w = mins(state.wake);
-      if (w < b) w += 1440;
-      return Math.max(0, w - b);
+      const dayStart = startOfDay();
+      return sleepMinutesInRange(dayStart, new Date());
     }
     function lastSleepLabels() {
       const records = state.sleepRecords || [];
@@ -2311,13 +2619,14 @@
     function updateSleepArc() {
       const strip = document.getElementById('sleep-strip-fill');
       if (!strip) return;
-      const records = todaySleepRecords().slice();
-      if (state.sleeping && state.sleepStartIso) {
-        records.push({ start: state.sleepStartIso, end: new Date().toISOString(), minutes: elapsedSleepMinutes(new Date(state.sleepStartIso), new Date()) });
-      }
+      const dayStart = startOfDay();
+      const records = sleepIntervalsInRange(dayStart, new Date()).map(interval => ({
+        start: new Date(interval.start).toISOString(),
+        end: new Date(interval.end).toISOString()
+      }));
       strip.innerHTML = records.map(record => {
         const start = new Date(record.start);
-        const end = new Date(record.end || Date.now());
+        const end = new Date(record.end);
         const left = mins(timeLabel(start)) / 1440 * 100;
         const rawWidth = Math.max(0.6, elapsedSleepMinutes(start, end) / 1440 * 100);
         return '<span style="left:' + left + '%;width:' + rawWidth + '%"></span>';
@@ -2367,7 +2676,14 @@
     }
     function render() {
       ensureDailyRollover();
-      document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-AU', { weekday:'short', month:'short', day:'numeric' });
+      const nowForHeader = new Date();
+      document.getElementById('today-date').textContent = nowForHeader.toLocaleDateString('en-AU', { weekday:'short', month:'short', day:'numeric' });
+      const weekBtn = document.getElementById('week-date-btn');
+      if (weekBtn) {
+        const day = nowForHeader.getDay() || 7;
+        weekBtn.style.setProperty('--week-lit', day);
+        document.getElementById('week-date-number').textContent = String(nowForHeader.getDate());
+      }
       const labels = lastSleepLabels();
       document.getElementById('bed-label').textContent = labels.bed;
       document.getElementById('wake-label').textContent = labels.wake;
@@ -2505,14 +2821,14 @@
       if (hourly && start > now) return 0;
       const effectiveEnd = end > now ? now : end;
       if (!hourly && startOfDay(start) < startOfDay(now) && (kind === 'mood' || kind === 'recovery')) {
-        const hasEvents = inRangeEvents(state.moodEvents, start, end, r => r.iso).length || inRangeEvents(state.sleepRecords, start, end, r => r.end || r.start).length;
+        const hasEvents = inRangeEvents(state.moodEvents, start, end, r => r.iso).length || sleepRecordsOverlapping(start, end).length;
         if (!hasEvents) return 0;
       }
       if (!hourly && startOfDay(start).getTime() === startOfDay(now).getTime() && (kind === 'mood' || kind === 'recovery')) {
         end = effectiveEnd;
       }
       if (kind === 'sleep') {
-        return inRangeEvents(state.sleepRecords, start, effectiveEnd, r => r.end || r.start).reduce((sum, r) => sum + (+r.minutes || 0), 0) / 60;
+        return sleepMinutesInRange(start, effectiveEnd) / 60;
       }
       if (kind === 'calories') {
         return inRangeEvents(state.logs, start, effectiveEnd, r => r.iso || new Date().toISOString()).reduce((sum, r) => sum + (+r.intake || 0) - (+r.burn || 0), 0);
@@ -2574,15 +2890,15 @@
     }
     function recoveryAtTime(time) {
       const dayStart = startOfDay(time);
-      const sleepHours = inRangeEvents(state.sleepRecords, dayStart, time, r => r.end || r.start).reduce((sum, r) => sum + (+r.minutes || 0), 0);
+      const sleepMinutes = sleepMinutesInRange(dayStart, time);
       const mood = valueAtTime('mood', time);
-      const energy = energyAtTime(time, sleepHours);
+      const energy = energyAtTime(time, sleepMinutes);
       const stress = valueAtTime('stress', time) || state.stress;
       const water = inRangeEvents(state.waterEvents, dayStart, time, r => r.iso).reduce((sum, r) => sum + (+r.ml || 0), 0);
       const logs = inRangeEvents(state.logs, dayStart, time, r => r.iso || new Date().toISOString());
       const intake = logs.reduce((sum, r) => sum + (+r.intake || 0), 0);
       const burn = logs.reduce((sum, r) => sum + (+r.burn || 0), 0);
-      return recoveryFormula({ sleepMinutes: sleepHours, mood, stress, energy, water, intake, burn });
+      return recoveryFormula({ sleepMinutes, mood, stress, energy, water, intake, burn });
     }
     function averageRecovery(start, end) {
       const hours = Math.max(1, Math.ceil((end - start) / 3600000));
@@ -2638,6 +2954,183 @@
     }
     function timeLabel(date) {
       return String(date.getHours()).padStart(2, '0') + ':' + String(date.getMinutes()).padStart(2, '0');
+    }
+    function datetimeLocalValue(date) {
+      return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0') + 'T' + timeLabel(date);
+    }
+    function normalizeTimeText(value) {
+      const raw = String(value || '').trim();
+      if (/^\d{1,2}:\d{2}$/.test(raw)) {
+        const [h, m] = raw.split(':').map(Number);
+        if (h >= 0 && h <= 23 && m >= 0 && m <= 59) return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+      }
+      const digits = raw.replace(/\D/g, '').slice(0, 4);
+      if (digits.length === 3) {
+        const h = Number(digits.slice(0, 1));
+        const m = Number(digits.slice(1));
+        if (h >= 0 && h <= 9 && m >= 0 && m <= 59) return '0' + h + ':' + String(m).padStart(2, '0');
+      }
+      if (digits.length === 4) {
+        const h = Number(digits.slice(0, 2));
+        const m = Number(digits.slice(2));
+        if (h >= 0 && h <= 23 && m >= 0 && m <= 59) return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+      }
+      return '';
+    }
+    function setupManualSleepInputs() {
+      ['manual-sleep-start', 'manual-sleep-end'].forEach(id => {
+        const input = document.getElementById(id);
+        if (!input) return;
+        input.addEventListener('blur', () => {
+          const next = normalizeTimeText(input.value);
+          if (next) input.value = next;
+        });
+      });
+    }
+    function setupManualSleepOpeners() {
+      const opener = document.getElementById('manual-sleep-opener');
+      if (!opener || opener.dataset.bound === '1') return;
+      opener.dataset.bound = '1';
+      const open = event => {
+        event.preventDefault();
+        event.stopPropagation();
+        openManualSleep(event);
+      };
+      opener.addEventListener('click', open);
+      opener.addEventListener('touchend', open, { passive: false });
+      opener.addEventListener('pointerup', event => {
+        if (manualSleepHoldTimer) return;
+        open(event);
+      });
+    }
+    let manualSleepDraft = { start: null, end: null };
+    function clampManualSleepDraft() {
+      const now = new Date();
+      const min = new Date(now.getTime() - 24 * 60 * 60000);
+      if (!manualSleepDraft.end || manualSleepDraft.end > now) manualSleepDraft.end = now;
+      if (manualSleepDraft.end < min) manualSleepDraft.end = new Date(min);
+      if (!manualSleepDraft.start) manualSleepDraft.start = new Date(manualSleepDraft.end.getTime() - 90 * 60000);
+      if (manualSleepDraft.start < min) manualSleepDraft.start = new Date(min);
+      if (manualSleepDraft.start > manualSleepDraft.end.getTime() - 5 * 60000) {
+        manualSleepDraft.start = new Date(manualSleepDraft.end.getTime() - 5 * 60000);
+      }
+      if (manualSleepDraft.start < min) {
+        manualSleepDraft.start = new Date(min);
+        manualSleepDraft.end = new Date(Math.min(now.getTime(), manualSleepDraft.start.getTime() + 5 * 60000));
+      }
+    }
+    function agoLabel(date) {
+      const mins = Math.max(0, Math.round((Date.now() - date.getTime()) / 60000));
+      if (mins < 2) return 'now';
+      if (mins < 60) return mins + 'm ago';
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      return h + 'h' + (m ? ' ' + m + 'm' : '') + ' ago';
+    }
+    function renderManualSleepPicker() {
+      clampManualSleepDraft();
+      const startDisplay = document.getElementById('manual-sleep-start-display');
+      const endDisplay = document.getElementById('manual-sleep-end-display');
+      const startMeta = document.getElementById('manual-sleep-start-meta');
+      const endMeta = document.getElementById('manual-sleep-end-meta');
+      if (!startDisplay || !endDisplay) return;
+      const mins = elapsedSleepMinutes(manualSleepDraft.start, manualSleepDraft.end);
+      startDisplay.textContent = timeLabel(manualSleepDraft.start);
+      endDisplay.textContent = timeLabel(manualSleepDraft.end);
+      startMeta.textContent = agoLabel(manualSleepDraft.start);
+      endMeta.textContent = agoLabel(manualSleepDraft.end) + ' · ' + formatMinutes(mins);
+    }
+    function stepManualSleep(which, minutes) {
+      const key = which === 'end' ? 'end' : 'start';
+      manualSleepDraft[key] = new Date((manualSleepDraft[key] || new Date()).getTime() + minutes * 60000);
+      renderManualSleepPicker();
+    }
+    function recentTimeCandidates(value, now = new Date()) {
+      value = normalizeTimeText(value);
+      if (!value || !/^\d{2}:\d{2}$/.test(value)) return [];
+      const [hour, minute] = value.split(':').map(Number);
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute);
+      return [today, new Date(today.getTime() - 24 * 60 * 60000)];
+    }
+    function resolveManualSleepWindow(startValue, endValue) {
+      const now = new Date();
+      const min = new Date(now.getTime() - 24 * 60 * 60000);
+      const starts = recentTimeCandidates(startValue, now);
+      const ends = recentTimeCandidates(endValue, now);
+      let best = null;
+      starts.forEach(start => {
+        ends.forEach(end => {
+          if (end <= start) return;
+          if (start < min || end < min || start > now || end > now) return;
+          const minutes = Math.round((end - start) / 60000);
+          if (minutes < 5 || minutes > 24 * 60) return;
+          if (!best || end > best.end) best = { start, end, minutes };
+        });
+      });
+      return best;
+    }
+    let manualSleepHoldTimer = null;
+    let manualSleepHoldPoint = null;
+    function manualSleepHoldStart(event) {
+      if (event && event.target && event.target.closest && event.target.closest('button, input, textarea, .quality-row')) return;
+      manualSleepHoldCancel();
+      manualSleepHoldPoint = event ? { x: event.clientX || 0, y: event.clientY || 0 } : null;
+      document.getElementById('sleep-card')?.classList.add('hold-ready');
+      manualSleepHoldTimer = setTimeout(() => openManualSleep(event), 420);
+    }
+    function manualSleepHoldCancel() {
+      clearTimeout(manualSleepHoldTimer);
+      manualSleepHoldTimer = null;
+      manualSleepHoldPoint = null;
+      document.getElementById('sleep-card')?.classList.remove('hold-ready');
+    }
+    function manualSleepHoldMove(event) {
+      if (!manualSleepHoldTimer || !manualSleepHoldPoint || !event) return;
+      const dx = Math.abs((event.clientX || 0) - manualSleepHoldPoint.x);
+      const dy = Math.abs((event.clientY || 0) - manualSleepHoldPoint.y);
+      if (dx > 12 || dy > 12) manualSleepHoldCancel();
+    }
+    function openManualSleep(event) {
+      if (event) event.preventDefault();
+      manualSleepHoldCancel();
+      const end = new Date();
+      const start = new Date(end.getTime() - 90 * 60000);
+      manualSleepDraft = { start, end };
+      renderManualSleepPicker();
+      document.getElementById('manual-sleep-mask').classList.add('show');
+    }
+    function closeManualSleep(event) {
+      if (event && event.target && event.target.id !== 'manual-sleep-mask') return;
+      document.getElementById('manual-sleep-mask').classList.remove('show');
+    }
+    function saveManualSleep() {
+      clampManualSleepDraft();
+      if (!manualSleepDraft.start || !manualSleepDraft.end) {
+        toast('Pick start and end');
+        return;
+      }
+      let start = manualSleepDraft.start;
+      let end = manualSleepDraft.end;
+      const minutes = elapsedSleepMinutes(start, end);
+      if (minutes < 5) {
+        toast('Too short, ignored');
+        return;
+      }
+      state.sleepRecords.push({
+        start: start.toISOString(),
+        end: end.toISOString(),
+        minutes,
+        feeling: ''
+      });
+      state.sleepRecords = state.sleepRecords.slice(-30);
+      state.bed = timeLabel(start);
+      state.wake = timeLabel(end);
+      state.sleepEndIso = end.toISOString();
+      state.energy = energyAtTime(new Date(), sleepDuration());
+      state.moodEvents.push({ iso: new Date().toISOString(), mood: state.mood, stress: state.stress, energy: state.energy });
+      closeManualSleep();
+      toast('Sleep added');
+      render();
     }
     function startSleep() {
       if (state.sleeping) {
@@ -3715,15 +4208,22 @@
       toggleBlockTask,
       clearBlockDone,
       deleteBlock,
+      stepManualSleep,
+      manualSleepHoldStart,
+      manualSleepHoldMove,
+      manualSleepHoldCancel,
+      openManualSleep,
       scheduleOrbitNotifications,
       sendMoodTestNotification,
       sendAllTestNotifications
     });
     setupKeyboardMode();
     setupTabSwipe();
+    setupManualSleepInputs();
+    setupManualSleepOpeners();
     lockAppZoom();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-17-orbit-reminders-2').then(registration => registration.update()).catch(() => {});
+      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-17-orbit-food-dumpling-1').then(registration => registration.update()).catch(() => {});
     }
     startOrbitCloudSync();
     startOrbitMailSync();

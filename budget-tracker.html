@@ -35,6 +35,9 @@
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
   .title{text-align:center;line-height:1.05;position:absolute;left:76px;right:76px;pointer-events:none}.title strong{display:block;font-size:17px;line-height:1;font-weight:950;letter-spacing:.2px}.title span{display:block;margin-top:5px;color:var(--muted);font-size:12px;font-weight:850}
   .icon-btn{width:38px;height:38px;border-radius:999px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(145deg,#1c1d20,#0d0d0f);color:rgba(231,233,234,.72);display:grid;place-items:center;font-size:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05);flex:0 0 auto}
+  .cycle-btn{position:relative;color:var(--blue);font-size:16px;font-weight:950;background:linear-gradient(145deg,rgba(143,202,255,.16),rgba(255,255,255,.035));border-color:rgba(143,202,255,.26)}
+  .cycle-popover{position:absolute;z-index:60;right:18px;top:calc(var(--topbar-h) - 2px);width:min(278px,calc(100vw - 36px));border:1px solid rgba(143,202,255,.22);border-radius:21px;background:linear-gradient(180deg,rgba(22,24,28,.98),rgba(10,11,13,.98));box-shadow:0 22px 70px rgba(0,0,0,.58);padding:14px 15px;color:var(--text);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+  .cycle-popover[hidden]{display:none}.cycle-popover b{display:block;font-size:15px;font-weight:950}.cycle-popover span{display:block;margin-top:6px;color:var(--muted);font-size:12px;line-height:1.45;font-weight:820}
   .page{display:none;position:absolute;z-index:1;top:var(--topbar-h);bottom:var(--dock);left:0;right:0;transform:none;width:100%;padding:14px 18px 18px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
   .page.active{display:block}
   .section-title{font-size:40px;line-height:.98;margin:0 0 18px;font-weight:950;letter-spacing:0}
@@ -63,7 +66,7 @@
   .tabs{position:absolute;left:0;right:0;bottom:0;transform:none;z-index:40;width:100%;max-width:none;height:var(--dock);min-height:0;padding:4px 34px max(3px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(3,1fr);align-items:center;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,0) 1px),rgba(0,0,0,.92);backdrop-filter:blur(24px) saturate(1.2);-webkit-backdrop-filter:blur(24px) saturate(1.2);border-top:1px solid rgba(255,255,255,.055);box-shadow:0 -10px 30px rgba(0,0,0,.68);touch-action:manipulation}
   html.native-shell .tabs{height:var(--dock);min-height:0;padding:4px 34px max(3px,env(safe-area-inset-bottom));transform:translateZ(0)}
   .nav{position:relative;min-height:50px;width:58px;height:50px;padding:0;justify-self:center;border:0;background:transparent;color:rgba(231,233,234,.62);display:flex;align-items:center;justify-content:center;font-weight:900;transition:color .18s,transform .18s,filter .18s}.nav:active{transform:scale(.985)}.nav.active{color:var(--blue);filter:drop-shadow(0 0 14px rgba(143,202,255,.25))}.nav svg{width:28px;height:28px;stroke-width:1.85;opacity:.9}.nav.add{width:58px;height:50px;min-height:50px;margin:0 auto;border-radius:19px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.06);color:rgba(231,233,234,.82);box-shadow:0 18px 40px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.055)}.nav.add svg{width:25px;height:25px}.nav.add.active{background:linear-gradient(180deg,rgba(29,155,240,.17),rgba(255,255,255,.04));border-color:rgba(255,255,255,.08);color:#8cc8ff;box-shadow:0 16px 40px rgba(29,155,240,.13),inset 0 1px 0 rgba(255,255,255,.08)}
-  .sheet-dialog{width:min(392px,calc(100vw - 28px));max-height:calc(100dvh - 26px);border:0;border-radius:30px;padding:0;background:linear-gradient(180deg,#191a1d,#101113);color:var(--text);box-shadow:0 24px 90px rgba(0,0,0,.62);overflow:hidden}.sheet-dialog::backdrop{background:rgba(0,0,0,.48);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.sheet-inner{padding:18px}.sheet-handle{width:50px;height:5px;border-radius:99px;background:rgba(255,255,255,.22);margin:0 auto 18px}.buy-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}.buy-head h2{margin:0;font-size:30px;line-height:1;font-weight:950}.buy-head span{display:block;margin-top:6px;color:var(--muted);font-weight:850;font-size:13px}.buy-list{display:grid;gap:10px;max-height:36dvh;overflow:auto;padding-right:2px}.buy-item{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.07);border-radius:18px;background:rgba(255,255,255,.035);padding:12px 13px;font-weight:900}.buy-item small{display:block;margin-top:4px;color:var(--muted);font-weight:800}.buy-remove{border:0;border-radius:50%;width:31px;height:31px;background:rgba(255,255,255,.06);color:rgba(245,246,248,.76);font-size:20px;line-height:1}.buy-form{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:14px}.buy-form input{min-width:0;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:#0f1011;color:var(--text);outline:0;padding:13px 14px;font-weight:900}.buy-form button{border:0;border-radius:18px;background:linear-gradient(135deg,#f2f8ff,#55b9ff);color:#06101b;padding:0 18px;font-weight:950}
+  .sheet-dialog{width:min(392px,calc(100vw - 28px));max-height:calc(100dvh - var(--topbar-h) - 22px);margin:calc(var(--topbar-h) + 12px) auto auto;border:0;border-radius:30px;padding:0;background:linear-gradient(180deg,#191a1d,#101113);color:var(--text);box-shadow:0 24px 90px rgba(0,0,0,.62);overflow:hidden}.sheet-dialog::backdrop{background:rgba(0,0,0,.48);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.sheet-inner{padding:18px}.sheet-handle{width:50px;height:5px;border-radius:99px;background:rgba(255,255,255,.22);margin:0 auto 18px}.buy-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}.buy-head h2{margin:0;font-size:30px;line-height:1;font-weight:950}.buy-head span{display:block;margin-top:6px;color:var(--muted);font-weight:850;font-size:13px}.buy-list{display:grid;gap:10px;max-height:36dvh;overflow:auto;padding-right:2px}.buy-item{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.07);border-radius:18px;background:rgba(255,255,255,.035);padding:12px 13px;font-weight:900}.buy-item small{display:block;margin-top:4px;color:var(--muted);font-weight:800}.buy-remove{border:0;border-radius:50%;width:31px;height:31px;background:rgba(255,255,255,.06);color:rgba(245,246,248,.76);font-size:20px;line-height:1}.buy-form{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:14px}.buy-form input{min-width:0;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:#0f1011;color:var(--text);outline:0;padding:13px 14px;font-weight:900}.buy-form button{border:0;border-radius:18px;background:linear-gradient(135deg,#f2f8ff,#55b9ff);color:#06101b;padding:0 18px;font-weight:950}
   body:has(input:focus) .tabs,body:has(textarea:focus) .tabs{display:none}
   body:has(input:focus) .page,body:has(textarea:focus) .page{bottom:0;padding-bottom:22px}
   @media(max-width:520px){:root{--safe-top:env(safe-area-inset-top,0px);--topbar-h:calc(58px + env(safe-area-inset-top));--dock:calc(58px + env(safe-area-inset-bottom))}html.native-shell{--topbar-h:calc(58px + env(safe-area-inset-top));--dock:calc(58px + env(safe-area-inset-bottom))}body{max-width:none}.topbar,.tabs{max-width:none}.tabs{height:var(--dock);min-height:0}.page{width:100%;padding-left:18px;padding-right:18px}.card{border-radius:26px}.catgrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.cat{padding:11px 3px}.cat span{font-size:10px}.hero{font-size:52px}.section-title{font-size:38px}.stat-chips{grid-template-columns:1fr 1fr}.stat-chips .stat-chip:last-child{grid-column:1/-1}.stats-number{font-size:48px}}
@@ -72,8 +75,12 @@
 <body>
   <header class="topbar">
     <button class="avatar" onclick="openBuyList()" aria-label="buy list"><img src="icons/avatar.jpg" alt="avatar"></button>
-    <div class="title"><strong>Vault</strong><span id="cycle-label">—</span></div>
-    <button class="icon-btn" onclick="renderAll()">↻</button>
+    <div class="title"><strong>Vault</strong><span id="cycle-label">Monthly cycle</span></div>
+    <button class="icon-btn cycle-btn" onclick="toggleCycleInfo(event)" aria-label="cycle info"><span id="cycle-day-count">—</span></button>
+    <div id="cycle-popover" class="cycle-popover" hidden>
+      <b>Cycle archive</b>
+      <span id="cycle-popover-copy">On the 28th at 00:00, Vault keeps last cycle's stats and starts the new month.</span>
+    </div>
   </header>
 
   <main id="home" class="page active">
@@ -173,7 +180,7 @@
   </nav>
 
 <script>
-const APP_VERSION='2026-07-23-vault-topbar-1';
+const APP_VERSION='2026-07-26-vault-cycle-pill-1';
 const LIMIT=2500,CYCLE_DAY=28,KEY='bt_txs_95566_full_2026_07_23_v1',SG_KEY='bt_sg',BUY_KEY='vault_buy_list_v1';
 const cats=[
   ['Food','🍔','#ff8f70',/(umall|online grocery|supermarket|grocer|mcd|kfc|hungry|subway|woolworth|coles|aldi|iga|restaurant|cafe|food|饭|餐|超市|线上超市|麦当劳|肯德基|奶茶|外卖|寿司|面|burger|pizza)/i],
@@ -447,6 +454,15 @@ const displayMoney=t=>{
 function save(){localStorage.setItem(KEY,JSON.stringify(txs))}
 function saveBuyList(){localStorage.setItem(BUY_KEY,JSON.stringify(buyItems))}
 function openBuyList(){renderBuyList();$('buy-dialog').showModal();setTimeout(()=>$('buy-input').focus(),80)}
+function toggleCycleInfo(event){
+  event.stopPropagation();
+  const pop=$('cycle-popover');
+  pop.hidden=!pop.hidden;
+}
+document.addEventListener('click',e=>{
+  const pop=$('cycle-popover');
+  if(pop&&!pop.hidden&&!e.target.closest('.cycle-btn')&&!e.target.closest('#cycle-popover'))pop.hidden=true;
+});
 function renderBuyList(){
   $('buy-count').textContent=buyItems.length;
   $('buy-list').innerHTML=buyItems.length?buyItems.map((item,i)=>`<div class="buy-item"><div>${esc(item.text)}<small>${esc(item.date||'')}</small></div><button class="buy-remove" onclick="removeBuyItem(${i})" aria-label="remove">×</button></div>`).join(''):'<div class="empty">No items yet.</div>';
@@ -513,7 +529,7 @@ function budgetState(){
   const spendable=Math.max(0,LIMIT-saving),left=LIMIT-spent,saveLeft=spendable-spent;
   return {c,list,expenses,spent,spendable,left,saveLeft,pct:spendable?Math.max(0,Math.min(100,spent/spendable*100)):100}
 }
-function renderHome(){const b=budgetState(),over=b.saveLeft<0;$('cycle-label').textContent=`${b.c.left} days left`;$('left-days').textContent=over?`${money(Math.abs(b.saveLeft))} over`:`${b.pct.toFixed(0)}% / ${money(b.spendable)}`;$('remaining').classList.toggle('negative',over);$('remaining').innerHTML=moneyHTML(b.saveLeft);$('spent').textContent=money(b.spent);$('daily').textContent=money(Math.max(0,b.left/b.c.left));$('saving').textContent=money(Math.max(0,b.saveLeft/b.c.left));$('saving-goal').value=saving;$('budget-fill').style.width=b.pct+'%';$('tx-count').textContent=b.expenses.length+' items';$('recent').innerHTML=b.expenses.length?b.expenses.slice(0,8).map(row).join(''):'<div class="empty">No expenses yet.</div>';bindSwipeDeletes()}
+function renderHome(){const b=budgetState(),over=b.saveLeft<0;$('cycle-label').textContent='Monthly cycle';$('cycle-day-count').textContent=b.c.left;$('left-days').textContent=over?`${money(Math.abs(b.saveLeft))} over`:`${b.pct.toFixed(0)}% / ${money(b.spendable)}`;$('remaining').classList.toggle('negative',over);$('remaining').innerHTML=moneyHTML(b.saveLeft);$('spent').textContent=money(b.spent);$('daily').textContent=money(Math.max(0,b.left/b.c.left));$('saving').textContent=money(Math.max(0,b.saveLeft/b.c.left));$('saving-goal').value=saving;$('budget-fill').style.width=b.pct+'%';$('tx-count').textContent=b.expenses.length+' items';$('recent').innerHTML=b.expenses.length?b.expenses.slice(0,8).map(row).join(''):'<div class="empty">No expenses yet.</div>';bindSwipeDeletes()}
 function row(t){const c=cats.find(x=>x[0]===t.category)||cats.at(-1),refund=(+t.amount||0)<0,foreign=!isAUD(t),sub=[refund?'':t.category,t.date,foreign?'not in AUD budget':''].filter(Boolean).join(' · ');return`<div class="swipe-row" data-id="${t.id}"><button class="swipe-delete" onclick="delTx(${t.id})">Delete</button><div class="tx"><div class="txicon" style="color:${c[2]}">${c[1]}</div><div class="txbody"><div class="txname">${esc(t.description)}</div><div class="txsub">${esc(sub)}</div></div><div class="txamt ${refund?'refund':''}">${refund?'+':'-'}${displayMoney(t)}</div></div></div>`}
 function renderHistory(){const rows=txs.filter(t=>audValue(t)>0);$('history-count').textContent=rows.length;$('history').innerHTML=rows.length?rows.map(row).join(''):'<div class="empty">No records yet.</div>';bindSwipeDeletes()}
 function delTx(id){txs=txs.filter(t=>t.id!==id);save();renderAll()}
