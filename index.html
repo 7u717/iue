@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-07-26-labtest2-maple-1"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-07-26-labtest2-maple-2"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
@@ -1866,6 +1866,24 @@
         <div class="subtopic">🖥️ dsolve({y(x)*diff(y(x),x$2)+diff(y(x),x)^2=0, y(0)=3, D(y)(0)=9}, y(x))　← 二阶 IVP，初始导数写 D(y)(0)</div>
         <div class="subtopic">🖥️ product(x^2+k+9*x, k=190..1500)　← 连乘 Π；也可用 mul(...)</div>
         <div class="subtopic">🖥️ coeff(series(exp(4*x)/(1-x), x=0, 8), x, 7)　← 取 Taylor 展开中 x^7 的系数</div>
+        <div class="subtopic">🖥️ y(x), diff(y(x),x), diff(y(x),x$2), diff(y(x),x$3)　← y, y′, y″, y‴ 的输入</div>
+        <div class="subtopic">🖥️ y(0)=a, D(y)(0)=b　← 初值条件 y(0)=a 与 y′(0)=b</div>
+        <div class="subtopic">🖥️ dsolve({方程, y(0)=a, D(y)(0)=b}, y(x))　← 二阶初值题固定外壳</div>
+        <pre class="maple-code"># Type A
+dsolve({y(x)*diff(y(x),x$2)+diff(y(x),x)^2=0,y(0)=5,D(y)(0)=4},y(x));
+
+# Type B
+dsolve({y(x)*diff(y(x),x$2)-(1/2)*diff(y(x),x)^2=0,y(0)=5,D(y)(0)=9},y(x));
+
+# Type C
+dsolve({y(x)*diff(y(x),x$2)-(2/3)*diff(y(x),x)^2=0,y(0)=5,D(y)(0)=6},y(x));
+
+# Type D
+dsolve({y(x)*diff(y(x),x$2)+3*diff(y(x),x)^2=0,y(0)=4,D(y)(0)=7},y(x));</pre>
+        <div class="subtopic">🖥️ series(f(x),x=0,n+1)　← 展开到 x^n，最后会显示 O(x^(n+1))</div>
+        <div class="subtopic">🖥️ coeff(expression,x,n)　← 取 x^n 的系数</div>
+        <pre class="maple-code">series(exp(3*x)*cos(5*x),x=0,10);
+coeff(series(exp(3*x)*cos(5*x),x=0,10),x,9);</pre>
 
         <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:10px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">递推 · 求和 · 程序模板</div>
         <div class="subtopic">🖥️ 一阶递推：从 a[0] 开始，每次用上一项生成下一项，最后输出 a[m]</div>
@@ -2030,9 +2048,14 @@ end proc;</pre>
               <span class="test-panel-chevron">▼</span>
             </div>
           </div>
-          <div class="test-panel">
-            <div class="test-panel-title">Calculus</div>
-            <div class="test-panel-note">先占位，等你把微积分题型图片放进来再补。</div>
+          <div class="test-panel clickable" id="lab-test-2-calculus-panel" onclick="toggleTestSection('lab-test-2-calculus')">
+            <div class="test-panel-head">
+              <div>
+                <div class="test-panel-title">Calculus</div>
+                <div class="test-panel-note">9 个题型已放入。点开卡片看完整图片。</div>
+              </div>
+              <span class="test-panel-chevron">▼</span>
+            </div>
           </div>
         </div>
         <div class="test-type-section" id="lab-test-2-algebra">
@@ -2050,6 +2073,20 @@ end proc;</pre>
             <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 10</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/algebra/algebra-10.png" alt="Lab Test 2 Algebra 题型 10"></div></div>
             <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 11</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/algebra/algebra-11.png" alt="Lab Test 2 Algebra 题型 11"></div></div>
             <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Algebra 题型 12</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/algebra/algebra-12.png" alt="Lab Test 2 Algebra 题型 12"></div></div>
+          </div>
+        </div>
+        <div class="test-type-section" id="lab-test-2-calculus">
+          <div style="font-size:12px;font-weight:800;color:var(--math-color);padding:2px 0 10px;">Calculus 题型</div>
+          <div class="test-type-grid">
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 1</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/calculus/calculus-01.png" alt="Lab Test 2 Calculus 题型 1"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 2</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/calculus/calculus-02.png" alt="Lab Test 2 Calculus 题型 2"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 3</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/calculus/calculus-03.png" alt="Lab Test 2 Calculus 题型 3"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 4</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/calculus/calculus-04.png" alt="Lab Test 2 Calculus 题型 4"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 5</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/calculus/calculus-05.png" alt="Lab Test 2 Calculus 题型 5"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 6</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/calculus/calculus-06.png" alt="Lab Test 2 Calculus 题型 6"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 7</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/calculus/calculus-07.png" alt="Lab Test 2 Calculus 题型 7"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 8</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/calculus/calculus-08.png" alt="Lab Test 2 Calculus 题型 8"></div></div>
+            <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 9</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/calculus/calculus-09.png" alt="Lab Test 2 Calculus 题型 9"></div></div>
           </div>
         </div>
       </div>
@@ -3018,7 +3055,7 @@ end proc;</pre>
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-26-labtest2-maple-1';
+  var APP_VERSION = '2026-07-26-labtest2-maple-2';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
