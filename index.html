@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-07-26-labtest2-maple-2"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-07-27-maple-labtest-1"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
@@ -846,6 +846,44 @@
       font-size: 11px; line-height: 1.55; white-space: pre-wrap;
       overflow-x: auto;
     }
+    .maple-template-pack {
+      display: grid;
+      gap: 10px;
+      margin: 10px 0 14px;
+    }
+    .maple-template-card {
+      border: 1px solid rgba(143,199,255,.2);
+      border-radius: 16px;
+      padding: 13px;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(143,199,255,.12), transparent 38%),
+        linear-gradient(135deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+    }
+    .maple-template-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 850;
+      margin-bottom: 8px;
+    }
+    .maple-template-note {
+      color: var(--dim);
+      font-size: 11px;
+      line-height: 1.45;
+      margin-bottom: 9px;
+    }
+    .maple-code.template {
+      margin: 0;
+      color: #f3f7fc;
+      border-color: rgba(143,199,255,.16);
+      background: rgba(6,9,13,.76);
+    }
+    .maple-fixed { color: #f5f7fb; }
+    .maple-var { color: #8fc7ff; font-weight: 850; }
+    .maple-muted { color: #8995a5; }
     @media (max-width: 640px) {
       .test-split, .test-type-grid { grid-template-columns: 1fr; }
       .test-type-front { padding: 12px; }
@@ -1869,6 +1907,38 @@
         <div class="subtopic">🖥️ y(x), diff(y(x),x), diff(y(x),x$2), diff(y(x),x$3)　← y, y′, y″, y‴ 的输入</div>
         <div class="subtopic">🖥️ y(0)=a, D(y)(0)=b　← 初值条件 y(0)=a 与 y′(0)=b</div>
         <div class="subtopic">🖥️ dsolve({方程, y(0)=a, D(y)(0)=b}, y(x))　← 二阶初值题固定外壳</div>
+        <div class="maple-template-pack">
+          <div class="maple-template-card">
+            <div class="maple-template-title"><span>Lab Test 2 Maple templates</span><span class="maple-var">蓝色 = 题目会变</span></div>
+            <div class="maple-template-note">白色部分是固定搭配照打；蓝色数字、矩阵、函数和上下限按题目替换。</div>
+            <pre class="maple-code template"><span class="maple-fixed">dsolve({y(x)*diff(y(x), x $ 2) + </span><span class="maple-var">3</span><span class="maple-fixed">*diff(y(x), x)^2 = 0, y(0) = </span><span class="maple-var">5</span><span class="maple-fixed">, D(y)(0) = </span><span class="maple-var">4</span><span class="maple-fixed">}, y(x))</span></pre>
+          </div>
+          <div class="maple-template-card">
+            <div class="maple-template-title">Taylor coefficient</div>
+            <div class="maple-template-note">先展开到需要阶数的下一阶，再取目标项系数。</div>
+            <pre class="maple-code template"><span class="maple-fixed">coeff(series(</span><span class="maple-var">exp(x)*sin(3*x)</span><span class="maple-fixed">, x = 0, </span><span class="maple-var">7</span><span class="maple-fixed">), x, </span><span class="maple-var">6</span><span class="maple-fixed">)</span></pre>
+          </div>
+          <div class="maple-template-card">
+            <div class="maple-template-title">RREF matrix</div>
+            <div class="maple-template-note">线代矩阵题先载入 LinearAlgebra，再输入矩阵并化 RREF。</div>
+            <pre class="maple-code template"><span class="maple-fixed">with(LinearAlgebra);
+A := Matrix(</span><span class="maple-var">[[-35, -32, -3, -32, -32], [-97, 17, -114, 17, 17], [36, -1, 37, -1, -1], [-61, 28, -89, 28, 28]]</span><span class="maple-fixed">);
+ReducedRowEchelonForm(A)</span></pre>
+          </div>
+          <div class="maple-template-card">
+            <div class="maple-template-title">Diagonal power</div>
+            <div class="maple-template-note">题目给特征分解/对角化结构时，直接套 M Dn M^{-1}。</div>
+            <pre class="maple-code template"><span class="maple-fixed">M := Matrix(</span><span class="maple-var">[[-4, -3], [4, 4]]</span><span class="maple-fixed">);
+Dn := Matrix([[</span><span class="maple-var">3^n</span><span class="maple-fixed">, 0], [0, </span><span class="maple-var">(-2)^n</span><span class="maple-fixed">]]);
+simplify((M . Dn) . (MatrixInverse(M)));</span></pre>
+          </div>
+          <div class="maple-template-card">
+            <div class="maple-template-title">Recurrence to target term</div>
+            <div class="maple-template-note">先保证初值已经定义好，再循环到目标项。</div>
+            <pre class="maple-code template"><span class="maple-fixed">for n from </span><span class="maple-var">3</span><span class="maple-fixed"> to </span><span class="maple-var">49</span><span class="maple-fixed"> do a[1 + n] := a[n] - </span><span class="maple-var">2</span><span class="maple-fixed">*a[n - 1] + a[n - 2]; end do;
+a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></pre>
+          </div>
+        </div>
         <pre class="maple-code"># Type A
 dsolve({y(x)*diff(y(x),x$2)+diff(y(x),x)^2=0,y(0)=5,D(y)(0)=4},y(x));
 
@@ -2057,6 +2127,15 @@ end proc;</pre>
               <span class="test-panel-chevron">▼</span>
             </div>
           </div>
+          <div class="test-panel clickable" id="lab-test-2-maple-panel" onclick="toggleTestSection('lab-test-2-maple')">
+            <div class="test-panel-head">
+              <div>
+                <div class="test-panel-title">Maple</div>
+                <div class="test-panel-note">5 个考试模板。蓝色部分按题目替换，白色部分固定照打。</div>
+              </div>
+              <span class="test-panel-chevron">▼</span>
+            </div>
+          </div>
         </div>
         <div class="test-type-section" id="lab-test-2-algebra">
           <div style="font-size:12px;font-weight:800;color:var(--math-color);padding:2px 0 10px;">Algebra 题型</div>
@@ -2087,6 +2166,41 @@ end proc;</pre>
             <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 7</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/calculus/calculus-07.png" alt="Lab Test 2 Calculus 题型 7"></div></div>
             <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 8</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/calculus/calculus-08.png" alt="Lab Test 2 Calculus 题型 8"></div></div>
             <div class="test-type-card" onclick="toggleTestType(this)"><div class="test-type-front"><span class="test-type-name">Calculus 题型 9</span><span class="test-type-hint">点击反转</span></div><div class="test-type-image"><img src="math1231/lab-test-2/calculus/calculus-09.png" alt="Lab Test 2 Calculus 题型 9"></div></div>
+          </div>
+        </div>
+        <div class="test-type-section" id="lab-test-2-maple">
+          <div style="font-size:12px;font-weight:800;color:var(--math-color);padding:2px 0 10px;">Maple 考试速查</div>
+          <div class="maple-template-pack">
+            <div class="maple-template-card">
+              <div class="maple-template-title">Second-order IVP</div>
+              <div class="maple-template-note">固定外壳是 dsolve({方程, y(0)=..., D(y)(0)=...}, y(x))。</div>
+              <pre class="maple-code template"><span class="maple-fixed">dsolve({y(x)*diff(y(x), x $ 2) + </span><span class="maple-var">3</span><span class="maple-fixed">*diff(y(x), x)^2 = 0, y(0) = </span><span class="maple-var">5</span><span class="maple-fixed">, D(y)(0) = </span><span class="maple-var">4</span><span class="maple-fixed">}, y(x))</span></pre>
+            </div>
+            <div class="maple-template-card">
+              <div class="maple-template-title">Taylor coefficient</div>
+              <div class="maple-template-note">题目要 x^6 系数，就在最后写 x, 6。</div>
+              <pre class="maple-code template"><span class="maple-fixed">coeff(series(</span><span class="maple-var">exp(x)*sin(3*x)</span><span class="maple-fixed">, x = 0, </span><span class="maple-var">7</span><span class="maple-fixed">), x, </span><span class="maple-var">6</span><span class="maple-fixed">)</span></pre>
+            </div>
+            <div class="maple-template-card">
+              <div class="maple-template-title">RREF matrix</div>
+              <div class="maple-template-note">矩阵里的所有数字是题目数据，其他照打。</div>
+              <pre class="maple-code template"><span class="maple-fixed">with(LinearAlgebra);
+A := Matrix(</span><span class="maple-var">[[-35, -32, -3, -32, -32], [-97, 17, -114, 17, 17], [36, -1, 37, -1, -1], [-61, 28, -89, 28, 28]]</span><span class="maple-fixed">);
+ReducedRowEchelonForm(A)</span></pre>
+            </div>
+            <div class="maple-template-card">
+              <div class="maple-template-title">Diagonal power</div>
+              <div class="maple-template-note">M、Dn 里的数字和特征值按题目换。</div>
+              <pre class="maple-code template"><span class="maple-fixed">M := Matrix(</span><span class="maple-var">[[-4, -3], [4, 4]]</span><span class="maple-fixed">);
+Dn := Matrix([[</span><span class="maple-var">3^n</span><span class="maple-fixed">, 0], [0, </span><span class="maple-var">(-2)^n</span><span class="maple-fixed">]]);
+simplify((M . Dn) . (MatrixInverse(M)));</span></pre>
+            </div>
+            <div class="maple-template-card">
+              <div class="maple-template-title">Recurrence to a[50]</div>
+              <div class="maple-template-note">先定义初值，再用循环推出目标项。</div>
+              <pre class="maple-code template"><span class="maple-fixed">for n from </span><span class="maple-var">3</span><span class="maple-fixed"> to </span><span class="maple-var">49</span><span class="maple-fixed"> do a[1 + n] := a[n] - </span><span class="maple-var">2</span><span class="maple-fixed">*a[n - 1] + a[n - 2]; end do;
+a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></pre>
+            </div>
           </div>
         </div>
       </div>
@@ -3055,7 +3169,7 @@ end proc;</pre>
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-26-labtest2-maple-2';
+  var APP_VERSION = '2026-07-27-maple-labtest-1';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
