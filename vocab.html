@@ -812,7 +812,7 @@
         </div>
         <div class="progress-track"><div class="progress-fill" id="today-fill"></div></div>
         <div class="hero-meta">
-          <span id="today-label">今日 0 / 180 · 90词</span>
+          <span id="today-label">Today 0 / 200 · 90 core + 10 Spanish</span>
           <span id="checkin-label">未打卡</span>
         </div>
       </div>
@@ -832,7 +832,7 @@
         </div>
       </div>
 
-      <div class="section-label">三个板块</div>
+      <div class="section-label">Daily decks</div>
       <div class="deck-grid" id="deck-grid"></div>
 
       <div class="section-label">Today Radar</div>
@@ -849,6 +849,7 @@
         <button class="mode-btn" data-practice-deck="ielts" onclick="setPracticeDeck('ielts')">雅思</button>
         <button class="mode-btn" data-practice-deck="aussie" onclick="setPracticeDeck('aussie')">口语</button>
         <button class="mode-btn active" data-practice-deck="engineering" onclick="setPracticeDeck('engineering')">工程</button>
+        <button class="mode-btn" data-practice-deck="spanish" onclick="setPracticeDeck('spanish')">西语</button>
       </div>
       <div class="mode-row">
         <button class="mode-btn active" data-mode="translation" onclick="setMode('translation')">看中文写英</button>
@@ -858,7 +859,7 @@
         <div class="flash-word-card" id="flash-card" onclick="flipCurrentCard()">
           <div class="practice-kind" id="practice-kind">Daily Card</div>
           <div class="prompt" id="practice-prompt">dimension</div>
-          <div class="prompt-sub" id="practice-sub">每板块30词，一共90词</div>
+          <div class="prompt-sub" id="practice-sub">90 core words + 10 Spanish bonus</div>
           <div class="card-answer" id="card-answer"></div>
           <div class="tap-hint" id="tap-hint">点卡片翻开</div>
         </div>
@@ -898,9 +899,10 @@
 
   <script>
     var DECKS = {
-      ielts: { label:'雅思词汇', icon:'I', color:'var(--blue)', soft:'var(--blue-soft)', note:'写作阅读高频，顺手练拼写' },
-      aussie: { label:'日常口语', icon:'AU', color:'var(--blue2)', soft:'var(--blue2-soft)', note:'同学老师常说，先听懂再接话' },
-      engineering: { label:'工程英语', icon:'CAD', color:'var(--ink)', soft:'var(--ink-soft)', note:'MMAN project / CAD / workshop 高频' }
+      ielts: { label:'雅思词汇', icon:'I', color:'var(--blue)', soft:'var(--blue-soft)', note:'写作阅读高频，顺手练拼写', target:30, voice:'en-GB' },
+      aussie: { label:'日常口语', icon:'AU', color:'var(--blue2)', soft:'var(--blue2-soft)', note:'同学老师常说，先听懂再接话', target:30, voice:'en-AU' },
+      engineering: { label:'工程英语', icon:'CAD', color:'var(--ink)', soft:'var(--ink-soft)', note:'MMAN project / CAD / workshop 高频', target:30, voice:'en-AU' },
+      spanish: { label:'西语入门', icon:'ES', color:'var(--blue)', soft:'var(--blue-soft)', note:'每天10个轻量 bonus，不挤占90词主线', target:10, voice:'es-ES' }
     };
     var WORDS = [
       { id:"iel-allocate", deck:"ielts", word:"allocate", phon:"/ˈæləkeɪt/", meaning:"分配；划拨", cn:"分配", example:"The team should allocate enough time for revision.", tags:["writing","verb"] },
@@ -1017,7 +1019,17 @@
       { id:"eng-linear-transformation", deck:"engineering", word:"Linear Transformation", phon:"/ˈlɪniə ˌtrænsfəˈmeɪʃn/", meaning:"线性变换", cn:"线性变换", example:"T is a linear transformation from R² to R³.", tags:["english-daily"] },
       { id:"eng-determinant", deck:"engineering", word:"Determinant", phon:"/dɪˈtɜːmɪnənt/", meaning:"行列式", cn:"行列式", example:"The determinant of a 2x2 matrix is ad-bc.", tags:["english-daily"] },
       { id:"eng-cnc", deck:"engineering", word:"CNC", phon:"/siː en siː/", meaning:"数控加工（Computer Numerical Control）", cn:"数控加工", example:"The part was machined on a CNC milling machine.", tags:["english-daily"] },
-      { id:"eng-yield-strength", deck:"engineering", word:"Yield Strength", phon:"/jiːld streŋθ/", meaning:"屈服强度", cn:"屈服强度", example:"The applied stress must not exceed the yield strength.", tags:["english-daily"] }
+      { id:"eng-yield-strength", deck:"engineering", word:"Yield Strength", phon:"/jiːld streŋθ/", meaning:"屈服强度", cn:"屈服强度", example:"The applied stress must not exceed the yield strength.", tags:["english-daily"] },
+      { id:"es-hola", deck:"spanish", word:"hola", phon:"/ola/", meaning:"你好", cn:"你好", example:"Hola, como estas?", tags:["spanish","daily"] },
+      { id:"es-gracias", deck:"spanish", word:"gracias", phon:"/grasjas/", meaning:"谢谢", cn:"谢谢", example:"Gracias por tu ayuda.", tags:["spanish","daily"] },
+      { id:"es-perdon", deck:"spanish", word:"perdon", phon:"/perdon/", meaning:"抱歉；不好意思", cn:"抱歉", example:"Perdon, no entiendo.", tags:["spanish","daily"] },
+      { id:"es-quiero", deck:"spanish", word:"quiero", phon:"/kjero/", meaning:"我想要", cn:"我想要", example:"Quiero un cafe.", tags:["spanish","food"] },
+      { id:"es-necesito", deck:"spanish", word:"necesito", phon:"/nesesito/", meaning:"我需要", cn:"我需要", example:"Necesito estudiar hoy.", tags:["spanish","daily"] },
+      { id:"es-tiempo", deck:"spanish", word:"tiempo", phon:"/tjempo/", meaning:"时间；天气", cn:"时间", example:"No tengo mucho tiempo.", tags:["spanish","daily"] },
+      { id:"es-comida", deck:"spanish", word:"comida", phon:"/komida/", meaning:"食物；饭", cn:"食物", example:"La comida esta muy buena.", tags:["spanish","food"] },
+      { id:"es-agua", deck:"spanish", word:"agua", phon:"/agwa/", meaning:"水", cn:"水", example:"Quiero agua, por favor.", tags:["spanish","food"] },
+      { id:"es-biblioteca", deck:"spanish", word:"biblioteca", phon:"/biblioteka/", meaning:"图书馆", cn:"图书馆", example:"Estudio en la biblioteca.", tags:["spanish","campus"] },
+      { id:"es-estacion", deck:"spanish", word:"estacion", phon:"/estasjon/", meaning:"车站", cn:"车站", example:"La estacion esta cerca.", tags:["spanish","travel"] }
     ];
 
     var state = loadState();
@@ -1028,6 +1040,8 @@
     var practiceHistory = [];
     var currentCardRevealed = false;
     var DAILY_TARGET_PER_DECK = 30;
+    var CORE_DAILY_DECKS = ['engineering','aussie','ielts'];
+    var BONUS_DAILY_DECKS = ['spanish'];
     var worldBriefLoading = false;
     var PROVERBS = [
       { en:"Fortune favors the prepared mind. — Louis Pasteur", cn:"机会偏爱有准备的头脑。—— 路易·巴斯德" },
@@ -1077,6 +1091,18 @@
     function deckWords(deck) {
       return allWords().filter(function(w){ return w.deck === deck; });
     }
+    function deckTarget(deck) {
+      return (DECKS[deck] && DECKS[deck].target) || DAILY_TARGET_PER_DECK;
+    }
+    function dailyDeckOrder() {
+      return CORE_DAILY_DECKS.concat(BONUS_DAILY_DECKS).filter(function(deck){ return DECKS[deck]; });
+    }
+    function coreDailyWords() {
+      return CORE_DAILY_DECKS.reduce(function(sum, deck){ return sum + deckTarget(deck); }, 0);
+    }
+    function requiredDailyWords() {
+      return dailyDeckOrder().reduce(function(sum, deck){ return sum + deckTarget(deck); }, 0);
+    }
     function hashDay(key) {
       var n = 0;
       for (var i = 0; i < key.length; i++) n = (n * 31 + key.charCodeAt(i)) >>> 0;
@@ -1100,7 +1126,7 @@
     function dailyPlan() {
       var day = todayKey();
       if (!state.daily) state.daily = {};
-      if (state.daily[day] && state.daily[day].words && state.daily[day].words.length >= DAILY_TARGET_PER_DECK * 3) return state.daily[day];
+      if (state.daily[day] && state.daily[day].words && state.daily[day].words.length >= requiredDailyWords()) return state.daily[day];
 
       var words = allWords();
       var byId = {};
@@ -1116,17 +1142,17 @@
       function add(id, deck) {
         if (!byId[id] || pickedSet[id]) return;
         if (deck && byId[id].deck !== deck) return;
-        if (deck && deckCount(deck) >= DAILY_TARGET_PER_DECK) return;
+        if (deck && deckCount(deck) >= deckTarget(deck)) return;
         picked.push(id);
         pickedSet[id] = true;
       }
 
-      ['engineering','aussie','ielts'].forEach(function(deck) {
+      dailyDeckOrder().forEach(function(deck) {
         Object.keys(state.reviewQueue).forEach(function(id) {
           if (state.reviewQueue[id] > 0) add(id, deck);
         });
         var deckList = seededShuffle(words.filter(function(w){ return w.deck === deck; }), seed + deck.length);
-        for (var i = 0; i < deckList.length && deckCount(deck) < DAILY_TARGET_PER_DECK; i++) {
+        for (var i = 0; i < deckList.length && deckCount(deck) < deckTarget(deck); i++) {
           add(deckList[i].id, deck);
         }
       });
@@ -1225,7 +1251,7 @@
       document.getElementById('daily-proverb').textContent = proverb.en;
       document.getElementById('daily-proverb-cn').textContent = proverb.cn;
       document.getElementById('today-fill').style.width = pct + '%';
-      document.getElementById('today-label').textContent = '今日 ' + stats.done + ' / ' + stats.total + ' · ' + plan.words.length + '词';
+      document.getElementById('today-label').textContent = 'Today ' + stats.done + ' / ' + stats.total + ' · ' + coreDailyWords() + ' core + ' + deckTarget('spanish') + ' Spanish';
       document.getElementById('checkin-label').textContent = stats.complete ? '今天已打卡' : '还差 ' + stats.remaining;
       document.getElementById('streak-num').textContent = calcStreak();
       document.getElementById('home-badge').textContent = stats.remaining;
@@ -1671,7 +1697,7 @@
       dailyPlan().complete = true;
       saveState();
       render();
-      toast('今天打卡完成，宝宝稳稳推进呀');
+      toast('今日训练完成，连续感已经建立。');
     }
     function resetToday() {
       var day = todayKey();
@@ -1849,19 +1875,20 @@
       flipCurrentCard();
     }
     function speakCurrent() {
-      if (current) speak(current.word);
+      if (current) speak(current.word, current.deck);
     }
     function speakWord(id) {
       var w = getWord(id);
-      if (w) speak(w.word);
+      if (w) speak(w.word, w.deck);
     }
-    function speak(text) {
+    function speak(text, deck) {
       if (!window.speechSynthesis) {
         toast('这个浏览器不支持发音');
         return;
       }
       var u = new SpeechSynthesisUtterance(text);
-      u.lang = 'en-AU';
+      var cfg = DECKS[deck || practiceDeck] || {};
+      u.lang = cfg.voice || 'en-AU';
       u.rate = .86;
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(u);
