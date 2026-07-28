@@ -33,11 +33,10 @@
   .avatar{width:38px;height:38px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#000;border:0;padding:0;flex:0 0 auto}
   .avatar:active{transform:scale(.96)}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
-  .title{text-align:center;line-height:1.05;position:absolute;left:76px;right:76px;pointer-events:none}.title strong{display:block;font-size:17px;line-height:1;font-weight:950;letter-spacing:.2px}.title span{display:block;margin-top:5px;color:var(--muted);font-size:12px;font-weight:850}
+  .title{text-align:center;line-height:1.05;position:absolute;left:76px;right:76px;pointer-events:none}.title strong{display:block;font-size:17px;line-height:1;font-weight:950;letter-spacing:.2px}.title span{display:none}
   .icon-btn{width:38px;height:38px;border-radius:999px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(145deg,#1c1d20,#0d0d0f);color:rgba(231,233,234,.72);display:grid;place-items:center;font-size:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05);flex:0 0 auto}
   .cycle-btn{position:relative;color:var(--blue);font-size:16px;font-weight:950;background:linear-gradient(145deg,rgba(143,202,255,.16),rgba(255,255,255,.035));border-color:rgba(143,202,255,.26)}
-  .cycle-popover{position:absolute;z-index:60;right:18px;top:calc(var(--topbar-h) - 2px);width:min(278px,calc(100vw - 36px));border:1px solid rgba(143,202,255,.22);border-radius:21px;background:linear-gradient(180deg,rgba(22,24,28,.98),rgba(10,11,13,.98));box-shadow:0 22px 70px rgba(0,0,0,.58);padding:14px 15px;color:var(--text);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
-  .cycle-popover[hidden]{display:none}.cycle-popover b{display:block;font-size:15px;font-weight:950}.cycle-popover span{display:block;margin-top:6px;color:var(--muted);font-size:12px;line-height:1.45;font-weight:820}
+.cycle-report-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:4px}.cycle-report-card{min-height:88px;border:1px solid rgba(255,255,255,.075);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));padding:13px}.cycle-report-card span{display:block;color:var(--muted);font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.cycle-report-card strong{display:block;margin-top:9px;font-size:21px;letter-spacing:-.04em;font-weight:950;white-space:nowrap}.cycle-report-card strong.text-value{font-size:17px;line-height:1.08;white-space:normal}.cycle-report-chart{margin-top:13px;padding:14px;border:1px solid rgba(255,255,255,.075);border-radius:20px;background:linear-gradient(145deg,rgba(143,202,255,.10),rgba(255,255,255,.018))}.cycle-report-chart-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}.cycle-report-chart-head strong{font-size:16px}.cycle-report-chart-head span{color:var(--muted);font-size:12px;font-weight:800}.cycle-report-canvas{height:175px;margin-top:10px}.cycle-report-categories{display:grid;gap:8px;margin-top:12px}.cycle-report-category{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:9px;padding:9px 0;border-top:1px solid rgba(255,255,255,.055)}.cycle-report-category:first-child{border-top:0}.cycle-report-category-icon{font-size:17px}.cycle-report-category-name{font-size:13px;font-weight:900}.cycle-report-category-bar{height:5px;margin-top:5px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}.cycle-report-category-bar i{display:block;height:100%;border-radius:inherit}.cycle-report-category-value{font-size:13px;font-weight:900;color:#dfe7f0}.cycle-report-note{margin:15px 2px 0;color:var(--muted);font-size:13px;line-height:1.45;font-weight:800}
   .page{display:none;position:absolute;z-index:1;top:var(--topbar-h);bottom:var(--dock);left:0;right:0;transform:none;width:100%;padding:14px 18px 18px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
   .page.active{display:block}
   .section-title{font-size:40px;line-height:.98;margin:0 0 18px;font-weight:950;letter-spacing:0}
@@ -67,6 +66,7 @@
   html.native-shell .tabs{height:var(--dock);min-height:0;padding:4px 34px max(3px,env(safe-area-inset-bottom));transform:translateZ(0)}
   .nav{position:relative;min-height:50px;width:58px;height:50px;padding:0;justify-self:center;border:0;background:transparent;color:rgba(231,233,234,.62);display:flex;align-items:center;justify-content:center;font-weight:900;transition:color .18s,transform .18s,filter .18s}.nav:active{transform:scale(.985)}.nav.active{color:var(--blue);filter:drop-shadow(0 0 14px rgba(143,202,255,.25))}.nav svg{width:28px;height:28px;stroke-width:1.85;opacity:.9}.nav.add{width:58px;height:50px;min-height:50px;margin:0 auto;border-radius:19px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.06);color:rgba(231,233,234,.82);box-shadow:0 18px 40px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.055)}.nav.add svg{width:25px;height:25px}.nav.add.active{background:linear-gradient(180deg,rgba(29,155,240,.17),rgba(255,255,255,.04));border-color:rgba(255,255,255,.08);color:#8cc8ff;box-shadow:0 16px 40px rgba(29,155,240,.13),inset 0 1px 0 rgba(255,255,255,.08)}
   .sheet-dialog{width:min(392px,calc(100vw - 28px));max-height:calc(100dvh - var(--topbar-h) - 22px);margin:calc(var(--topbar-h) + 12px) auto auto;border:0;border-radius:30px;padding:0;background:linear-gradient(180deg,#191a1d,#101113);color:var(--text);box-shadow:0 24px 90px rgba(0,0,0,.62);overflow:hidden}.sheet-dialog::backdrop{background:rgba(0,0,0,.48);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.sheet-inner{padding:18px}.sheet-handle{width:50px;height:5px;border-radius:99px;background:rgba(255,255,255,.22);margin:0 auto 18px}.buy-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}.buy-head h2{margin:0;font-size:30px;line-height:1;font-weight:950}.buy-head span{display:block;margin-top:6px;color:var(--muted);font-weight:850;font-size:13px}.buy-list{display:grid;gap:10px;max-height:36dvh;overflow:auto;padding-right:2px}.buy-item{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.07);border-radius:18px;background:rgba(255,255,255,.035);padding:12px 13px;font-weight:900}.buy-item small{display:block;margin-top:4px;color:var(--muted);font-weight:800}.buy-remove{border:0;border-radius:50%;width:31px;height:31px;background:rgba(255,255,255,.06);color:rgba(245,246,248,.76);font-size:20px;line-height:1}.buy-form{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:14px}.buy-form input{min-width:0;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:#0f1011;color:var(--text);outline:0;padding:13px 14px;font-weight:900}.buy-form button{border:0;border-radius:18px;background:linear-gradient(135deg,#f2f8ff,#55b9ff);color:#06101b;padding:0 18px;font-weight:950}
+  #cycle-report-dialog .sheet-inner{max-height:calc(100dvh - var(--topbar-h) - 22px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
   body:has(input:focus) .tabs,body:has(textarea:focus) .tabs{display:none}
   body:has(input:focus) .page,body:has(textarea:focus) .page{bottom:0;padding-bottom:22px}
   @media(max-width:520px){:root{--safe-top:env(safe-area-inset-top,0px);--topbar-h:calc(58px + env(safe-area-inset-top));--dock:calc(58px + env(safe-area-inset-bottom))}html.native-shell{--topbar-h:calc(58px + env(safe-area-inset-top));--dock:calc(58px + env(safe-area-inset-bottom))}body{max-width:none}.topbar,.tabs{max-width:none}.tabs{height:var(--dock);min-height:0}.page{width:100%;padding-left:18px;padding-right:18px}.card{border-radius:26px}.catgrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.cat{padding:11px 3px}.cat span{font-size:10px}.hero{font-size:52px}.section-title{font-size:38px}.stat-chips{grid-template-columns:1fr 1fr}.stat-chips .stat-chip:last-child{grid-column:1/-1}.stats-number{font-size:48px}}
@@ -75,12 +75,8 @@
 <body>
   <header class="topbar">
     <button class="avatar" onclick="openBuyList()" aria-label="buy list"><img src="icons/avatar.jpg" alt="avatar"></button>
-    <div class="title"><strong>Vault</strong><span id="cycle-label">Monthly cycle</span></div>
-    <button class="icon-btn cycle-btn" onclick="toggleCycleInfo(event)" aria-label="cycle info"><span id="cycle-day-count">—</span></button>
-    <div id="cycle-popover" class="cycle-popover" hidden>
-      <b>Cycle archive</b>
-      <span id="cycle-popover-copy">On the 28th at 00:00, Vault keeps last cycle's stats and starts the new month.</span>
-    </div>
+    <div class="title"><strong>Vault</strong><span id="cycle-label" aria-hidden="true"></span></div>
+  <button class="icon-btn cycle-btn" onclick="openCycleReport()" aria-label="open this cycle report"><span id="cycle-day-count">—</span></button>
   </header>
 
   <main id="home" class="page active">
@@ -171,7 +167,25 @@
         <button>Add</button>
       </form>
     </div>
-  </dialog>
+</dialog>
+<dialog id="cycle-report-dialog" class="sheet-dialog">
+  <div class="sheet-inner">
+    <div class="sheet-handle"></div>
+    <div class="buy-head"><div><h2>Previous cycle</h2><span id="cycle-report-range"></span></div><span class="pill" id="cycle-report-days">—</span></div>
+    <div class="cycle-report-grid">
+      <div class="cycle-report-card"><span>Spent</span><strong id="cycle-report-spent">$0.00</strong></div>
+      <div class="cycle-report-card"><span>Daily average</span><strong id="cycle-report-daily">$0.00</strong></div>
+      <div class="cycle-report-card"><span>Top category</span><strong class="text-value" id="cycle-report-top">—</strong></div>
+      <div class="cycle-report-card"><span>Transactions</span><strong id="cycle-report-count">0</strong></div>
+    </div>
+    <section class="cycle-report-chart">
+      <div class="cycle-report-chart-head"><strong>Daily spend</strong><span id="cycle-report-chart-total">$0.00 total</span></div>
+      <div class="cycle-report-canvas"><canvas id="cycle-report-chart"></canvas></div>
+    </section>
+    <div class="cycle-report-categories" id="cycle-report-categories"></div>
+    <p class="cycle-report-note" id="cycle-report-note"></p>
+  </div>
+</dialog>
 
   <nav class="tabs">
     <button class="nav active" data-tab="home" onclick="go('home')" aria-label="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></button>
@@ -180,7 +194,7 @@
   </nav>
 
 <script>
-const APP_VERSION='2026-07-26-vault-cycle-pill-1';
+const APP_VERSION='2026-07-28-cycle-report-1';
 const LIMIT=2500,CYCLE_DAY=28,KEY='bt_txs_95566_full_2026_07_23_v1',SG_KEY='bt_sg',BUY_KEY='vault_buy_list_v1';
 const cats=[
   ['Food','🍔','#ff8f70',/(umall|online grocery|supermarket|grocer|mcd|kfc|hungry|subway|woolworth|coles|aldi|iga|restaurant|cafe|food|饭|餐|超市|线上超市|麦当劳|肯德基|奶茶|外卖|寿司|面|burger|pizza)/i],
@@ -193,7 +207,7 @@ const cats=[
   ['Refund','↩️','#67d9a5',/(refund|reversal|return|撤销|退货|退款)/i],
   ['Other','💰','#a8abb3',/.*/]
 ];
-let txs=[],saving=1000,sel='Food',parsed=null,dashboardParsed=null,dailyChart=null,catChart=null,buyItems=[];
+let txs=[],saving=1000,sel='Food',parsed=null,dashboardParsed=null,dailyChart=null,catChart=null,cycleReportChart=null,buyItems=[];
 const DEFAULT_TXS=[
   {"amount":33.67,"currency":"AUD","description":"HUNGRY","category":"Food","date":"2026-07-19","raw":"您的信用卡3500VISA Apple Pay于2026年07月19日，在HUNGRY消费AUD33.67元。【中国银行】","id":2026071901},
   {"amount":29.99,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-07-18","raw":"您的信用卡3500于2026年07月18日，在PAYPAL消费AUD29.99元。【中国银行】","id":2026071802},
@@ -454,22 +468,53 @@ const displayMoney=t=>{
 function save(){localStorage.setItem(KEY,JSON.stringify(txs))}
 function saveBuyList(){localStorage.setItem(BUY_KEY,JSON.stringify(buyItems))}
 function openBuyList(){renderBuyList();$('buy-dialog').showModal();setTimeout(()=>$('buy-input').focus(),80)}
-function toggleCycleInfo(event){
-  event.stopPropagation();
-  const pop=$('cycle-popover');
-  pop.hidden=!pop.hidden;
+function shortCycleDate(date){return new Intl.DateTimeFormat('en-AU',{day:'numeric',month:'short'}).format(date)}
+function localDateKey(date){return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`}
+function previousCycle(){const current=cycle();const end=new Date(current.start);const start=new Date(end);start.setMonth(start.getMonth()-1);return{start,end,days:Math.round((end-start)/864e5)}}
+function transactionsFor(c){return txs.filter(t=>{const d=new Date((t.date||today())+'T00:00:00');return d>=c.start&&d<c.end&&audValue(t)>0})}
+function previousCycleStats(){
+ const c=previousCycle(),list=transactionsFor(c),spent=list.reduce((sum,t)=>sum+audValue(t),0);
+ const categories=cats.filter(x=>x[0]!=='Refund').map(x=>({name:x[0],icon:x[1],color:x[2],value:list.filter(t=>t.category===x[0]).reduce((sum,t)=>sum+audValue(t),0)})).filter(x=>x.value>0).sort((a,b)=>b.value-a.value);
+ const days=[];
+ for(let date=new Date(c.start);date<c.end;date.setDate(date.getDate()+1)){
+   const current=new Date(date),key=localDateKey(current);
+   days.push({label:shortCycleDate(current),value:list.filter(t=>t.date===key).reduce((sum,t)=>sum+audValue(t),0)});
+ }
+ return{c,list,spent,categories,days};
 }
-document.addEventListener('click',e=>{
-  const pop=$('cycle-popover');
-  if(pop&&!pop.hidden&&!e.target.closest('.cycle-btn')&&!e.target.closest('#cycle-popover'))pop.hidden=true;
-});
+function renderCycleReportChart(report){
+ if(cycleReportChart)cycleReportChart.destroy();
+ if(!window.Chart)return;
+ cycleReportChart=new Chart($('cycle-report-chart'),{type:'bar',data:{labels:report.days.map(day=>day.label),datasets:[{data:report.days.map(day=>day.value),backgroundColor:(ctx)=>{const area=ctx.chart.chartArea;if(!area)return '#8fcaff';const gradient=ctx.chart.ctx.createLinearGradient(0,area.top,0,area.bottom);gradient.addColorStop(0,'#eaf5ff');gradient.addColorStop(.5,'#8fcaff');gradient.addColorStop(1,'#227cc3');return gradient},borderRadius:8,borderSkipped:false,barPercentage:.76,categoryPercentage:.9}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:680,easing:'easeOutQuart'},plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(16,17,19,.96)',titleColor:'#f5f6f8',bodyColor:'#dfe7f0',borderColor:'rgba(255,255,255,.12)',borderWidth:1,padding:11,cornerRadius:12,callbacks:{label:ctx=>money(ctx.raw)}}},scales:{x:{ticks:{color:'#8f929a',maxTicksLimit:6,maxRotation:0,autoSkip:true},grid:{display:false},border:{display:false}},y:{beginAtZero:true,ticks:{color:'#8f929a',maxTicksLimit:4,callback:value=>'$'+value},grid:{color:'rgba(255,255,255,.06)'},border:{display:false}}}}});
+}
+function openCycleReport(){
+ const report=previousCycleStats();
+ const finalDay=new Date(report.c.end);finalDay.setDate(finalDay.getDate()-1);
+ $('cycle-report-range').textContent=`${shortCycleDate(report.c.start)} - ${shortCycleDate(finalDay)}`;
+ $('cycle-report-days').textContent='complete';
+ $('cycle-report-spent').textContent=money(report.spent);
+ $('cycle-report-daily').textContent=money(report.spent/report.c.days);
+ $('cycle-report-top').textContent=report.categories[0]?.name||'No spending';
+ $('cycle-report-count').textContent=String(report.list.length);
+ $('cycle-report-chart-total').textContent=`${money(report.spent)} total`;
+ $('cycle-report-categories').innerHTML=report.categories.length?report.categories.slice(0,5).map(item=>`<div class="cycle-report-category"><span class="cycle-report-category-icon">${item.icon}</span><div><div class="cycle-report-category-name">${esc(item.name)}</div><div class="cycle-report-category-bar"><i style="width:${Math.max(6,item.value/report.spent*100)}%;background:${item.color}"></i></div></div><strong class="cycle-report-category-value">${money(item.value)}</strong></div>`).join(''):'<div class="empty">No spending was recorded in this cycle.</div>';
+ $('cycle-report-note').textContent=`Completed cycle from the ${CYCLE_DAY}th to the ${CYCLE_DAY}th. Refunds are excluded from spending totals.`;
+ const dialog=$('cycle-report-dialog');
+ if(!dialog.open)dialog.showModal();
+ requestAnimationFrame(()=>renderCycleReportChart(report));
+}
 function renderBuyList(){
   $('buy-count').textContent=buyItems.length;
   $('buy-list').innerHTML=buyItems.length?buyItems.map((item,i)=>`<div class="buy-item"><div>${esc(item.text)}<small>${esc(item.date||'')}</small></div><button class="buy-remove" onclick="removeBuyItem(${i})" aria-label="remove">×</button></div>`).join(''):'<div class="empty">No items yet.</div>';
 }
 function addBuyItem(event){event.preventDefault();const input=$('buy-input'),text=input.value.trim();if(!text)return;buyItems.unshift({text,date:new Date().toLocaleDateString('en-AU',{month:'short',day:'numeric'})});input.value='';saveBuyList();renderBuyList()}
 function removeBuyItem(index){buyItems.splice(index,1);saveBuyList();renderBuyList()}
-document.addEventListener('click',e=>{const dialog=$('buy-dialog');if(dialog&&dialog.open&&e.target===dialog)dialog.close()});
+document.addEventListener('click',e=>{
+ ['buy-dialog','cycle-report-dialog'].forEach(id=>{
+   const dialog=$(id);
+   if(dialog&&dialog.open&&e.target===dialog)dialog.close();
+ });
+});
 function mergeDefaultTxs(storedTxs){
   if(!Array.isArray(storedTxs))return DEFAULT_TXS.slice();
   const byId=new Map(DEFAULT_TXS.map(t=>[String(t.id),t]));
@@ -529,7 +574,7 @@ function budgetState(){
   const spendable=Math.max(0,LIMIT-saving),left=LIMIT-spent,saveLeft=spendable-spent;
   return {c,list,expenses,spent,spendable,left,saveLeft,pct:spendable?Math.max(0,Math.min(100,spent/spendable*100)):100}
 }
-function renderHome(){const b=budgetState(),over=b.saveLeft<0;$('cycle-label').textContent='Monthly cycle';$('cycle-day-count').textContent=b.c.left;$('left-days').textContent=over?`${money(Math.abs(b.saveLeft))} over`:`${b.pct.toFixed(0)}% / ${money(b.spendable)}`;$('remaining').classList.toggle('negative',over);$('remaining').innerHTML=moneyHTML(b.saveLeft);$('spent').textContent=money(b.spent);$('daily').textContent=money(Math.max(0,b.left/b.c.left));$('saving').textContent=money(Math.max(0,b.saveLeft/b.c.left));$('saving-goal').value=saving;$('budget-fill').style.width=b.pct+'%';$('tx-count').textContent=b.expenses.length+' items';$('recent').innerHTML=b.expenses.length?b.expenses.slice(0,8).map(row).join(''):'<div class="empty">No expenses yet.</div>';bindSwipeDeletes()}
+function renderHome(){const b=budgetState(),over=b.saveLeft<0;$('cycle-label').textContent='';$('cycle-day-count').textContent=b.c.left;$('left-days').textContent=over?`${money(Math.abs(b.saveLeft))} over`:`${b.pct.toFixed(0)}% / ${money(b.spendable)}`;$('remaining').classList.toggle('negative',over);$('remaining').innerHTML=moneyHTML(b.saveLeft);$('spent').textContent=money(b.spent);$('daily').textContent=money(Math.max(0,b.left/b.c.left));$('saving').textContent=money(Math.max(0,b.saveLeft/b.c.left));$('saving-goal').value=saving;$('budget-fill').style.width=b.pct+'%';$('tx-count').textContent=b.expenses.length+' items';$('recent').innerHTML=b.expenses.length?b.expenses.slice(0,8).map(row).join(''):'<div class="empty">No expenses yet.</div>';bindSwipeDeletes()}
 function row(t){const c=cats.find(x=>x[0]===t.category)||cats.at(-1),refund=(+t.amount||0)<0,foreign=!isAUD(t),sub=[refund?'':t.category,t.date,foreign?'not in AUD budget':''].filter(Boolean).join(' · ');return`<div class="swipe-row" data-id="${t.id}"><button class="swipe-delete" onclick="delTx(${t.id})">Delete</button><div class="tx"><div class="txicon" style="color:${c[2]}">${c[1]}</div><div class="txbody"><div class="txname">${esc(t.description)}</div><div class="txsub">${esc(sub)}</div></div><div class="txamt ${refund?'refund':''}">${refund?'+':'-'}${displayMoney(t)}</div></div></div>`}
 function renderHistory(){const rows=txs.filter(t=>audValue(t)>0);$('history-count').textContent=rows.length;$('history').innerHTML=rows.length?rows.map(row).join(''):'<div class="empty">No records yet.</div>';bindSwipeDeletes()}
 function delTx(id){txs=txs.filter(t=>t.id!==id);save();renderAll()}
