@@ -3585,6 +3585,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function saveActiveCourses() {
     localStorage.setItem('iue.activeCourses.v1', JSON.stringify(activeCourseIds));
+    markCloudDirty();
   }
 
   function courseByCode(code) {
@@ -4932,6 +4933,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   renderGT('engg');
 
   function dashCourseFromDeadline(d) {
+    var course = deadlineCourse(d);
+    if (course) return course;
     if (!d || !d.gtId) return 'countdown';
     if (d.gtId.indexOf('mg_') === 0) return 'math';
     if (d.gtId.indexOf('mm_') === 0) return 'mman';
@@ -4941,6 +4944,113 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function dashCourseName(course) {
     return { math:'MATH1231', mman:'MMAN1130', engg:'ENGG1300' }[course] || course;
+  }
+
+  function dashCourseShortTask(course) {
+    return {
+      math:'做 25 分钟 MATH1231 错题和公式整理',
+      mman:'整理 1 个 MMAN1130 图纸/CAD/制造流程卡点',
+      engg:'复盘 1 组 ENGG1300 受力图和项目风险'
+    }[course] || '整理一门课的下一步';
+  }
+
+  function dashCleanName(name) {
+    return (name || '').replace(/^[^\w\u4e00-\u9fff]+/,'').trim();
+  }
+
+  function dashCurrentWeek(now) {
+    var start = new Date('2026-06-02T00:00:00+10:00');
+    var diffDays = Math.floor((now - start) / (24*3600*1000));
+    if (diffDays < 0) return 0;
+    return Math.min(12, Math.floor(diffDays / 7) + 1);
+  }
+
+  function dashMobiusDoneMap(data) {
+    var done = {};
+    document.querySelectorAll('#mobius-list .checklist-item').forEach(function(item) {
+      var week = item.dataset.week;
+      if (week) done[week] = item.classList.contains('checked');
+    });
+    MOB_WEEKS.forEach(function(w) {
+      var key = 'mw' + w;
+      if (data[key] && data[key].done) done[String(w)] = true;
+    });
+    return done;
+  }
+
+  function dashIsDeadlineDone(d, data, mobiusDone) {
+    return !!((d.gtId && data[d.gtId] && data[d.gtId].done) || (d.mobiusWeek && mobiusDone[String(d.mobiusWeek)]));
+  }
+
+  function dashAddFocus(focus, seen, id, text) {
+    if (!id || seen[id]) return;
+    seen[id] = true;
+    focus.push({ id:id, text:text });
+  }
+
+  function dashBuildSmartFocus(now, data, upcoming, urgent) {
+    var focus = [];
+    var seen = {};
+    dashTaskLoad().forEach(function(item) {
+      if (item && item.id && item.text) dashAddFocus(focus, seen, item.id, item.text);
+    });
+
+    var week = dashCurrentWeek(now);
+    var next = upcoming[0];
+    var examItems = [];
+    activeCourseIds.forEach(function(course) {
+      var cfg = GT[course];
+      if (!cfg) return;
+      cfg.items.forEach(function(it) {
+        var state = data[it.id] || {};
+        if (!it.date && /exam/i.test(it.id + ' ' + it.label) && !state.done) {
+          examItems.push({ course:course, item:it });
+        }
+      });
+    });
+    examItems.sort(function(a,b){ return b.item.w - a.item.w; });
+
+    if (next && next.diff <= 72*3600*1000) {
+      dashAddFocus(focus, seen, 'rush-' + (next.gtId || next.mobiusWeek || 'deadline'), '先收掉 ' + dashCleanName(next.name) + '：今天只做提交/检查，不再开太多新坑。');
+    } else if (next) {
+      dashAddFocus(focus, seen, 'next-' + (next.gtId || next.mobiusWeek || 'deadline'), '先处理 ' + dashCleanName(next.name) + '，它是当前最近的考核。');
+    }
+
+    if (examItems.length) {
+      var exam = examItems[0];
+      var examLead = week >= 8 ? '期末时间还没确认，但现在已经要当成复习期了：' : '期末时间还没确认，先预留复习节奏：';
+      dashAddFocus(focus, seen, 'exam-plan-' + exam.course, examLead + dashCourseShortTask(exam.course) + '。');
+    }
+
+    var mobiusDone = dashMobiusDoneMap(data);
+    var nextMobius = MOB_WEEKS.filter(function(w){ return !mobiusDone[String(w)]; }).filter(function(w){ return w >= Math.max(2, week - 1); })[0];
+    if (isActiveCourse('math') && nextMobius) {
+      dashAddFocus(focus, seen, 'mobius-w' + nextMobius, 'Möbius 先补 Week ' + nextMobius + '：目标是做完一遍并标记，分数之后再精修。');
+    }
+
+    if (urgent.length > 1) {
+      dashAddFocus(focus, seen, 'prep-' + (urgent[1].gtId || urgent[1].mobiusWeek || 'deadline'), '把 ' + dashCleanName(urgent[1].name) + ' 的资料先打开，做一轮轻量预习。');
+    }
+
+    var low = activeCourseIds.map(function(course){
+      return Object.assign({ course: course }, dashGradeSummary(course, data));
+    }).filter(function(s){ return s.remaining > 0; }).sort(function(a,b){
+      if (a.doneW !== b.doneW) return a.doneW - b.doneW;
+      return a.total - b.total;
+    })[0];
+    if (low) {
+      var lowNext = low.nextItem ? '下一项是 ' + dashCleanName(low.nextItem.label) : '先做一次成绩复盘';
+      dashAddFocus(focus, seen, 'grade-' + low.course, dashCourseName(low.course) + ' 目前完成权重偏少，' + lowNext + '。');
+    }
+
+    if (week >= 8 && week <= 10) {
+      dashAddFocus(focus, seen, 'week-' + week + '-review', 'Week ' + week + ' 的策略：每天留一个 30 分钟复习块，优先给未定期末和 20% 以上项目。');
+    }
+
+    if (!focus.length) {
+      dashAddFocus(focus, seen, 'steady-review', '今天做轻量维护：复盘成绩、检查 Moodle 公告、整理下一周最可能拖延的一件事。');
+    }
+    return focus;
   }
 
   function dashFormatDate(date) {
@@ -5026,33 +5136,22 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (!commandEl || typeof GT === 'undefined') return;
     var now = new Date();
     var data = gtLoad();
+    var mobiusDone = dashMobiusDoneMap(data);
     var upcoming = visibleDeadlines().map(function(d){
       return Object.assign({}, d, { diff: new Date(d.date) - now });
     }).filter(function(d){
-      var done = d.gtId && data[d.gtId] && data[d.gtId].done;
-      return d.diff > 0 && !done;
+      return d.diff > 0 && !dashIsDeadlineDone(d, data, mobiusDone);
     }).sort(function(a,b){ return a.diff - b.diff; });
     var next = upcoming[0];
     var urgent = upcoming.filter(function(d){ return d.diff <= 14*24*3600*1000; }).slice(0,5);
     var countEl = document.getElementById('dash-command-count');
     if (countEl) countEl.textContent = urgent.length + ' 件';
 
-    var focus = [];
-    dashTaskLoad().forEach(function(item) {
-      if (item && item.id && item.text) focus.push(item);
-    });
-    var todayIso = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
-    if (todayIso === '2026-06-23') {
-      focus.push({ id:'today-mman-campus-2026-06-23', text:'18:00 准备出门去学校，上 MMAN。' });
-    }
-    if (next) focus.push({ id:'next-' + (next.gtId || 'deadline'), text:'先处理 '+next.name.replace(/^[^\w\u4e00-\u9fff]+/,'')+'，它是当前最近的考核。' });
-    if (urgent.length > 1) focus.push({ id:'prep-' + (urgent[1].gtId || 'deadline'), text:'把 '+urgent[1].name.replace(/^[^\w\u4e00-\u9fff]+/,'')+' 的资料先打开，做一轮轻量预习。' });
-    var low = activeCourseIds.map(function(course){ return Object.assign({ course: course }, dashGradeSummary(course, data)); }).sort(function(a,b){ return a.total - b.total; })[0];
-    if (low) focus.push({ id:'grade-' + low.course, text:'检查 '+dashCourseName(low.course)+' 的成绩项，优先补还没有标记完成的部分。' });
+    var focus = dashBuildSmartFocus(now, data, upcoming, urgent);
     var focusDone = dashFocusLoad();
     var tinyHtml = focus.slice(0,4).map(function(item, i) {
       var done = !!focusDone[item.id];
-      return '<div class="dash-focus-row '+(done?'done':'')+'" onclick="dashToggleFocus(\''+item.id+'\')"><div class="dash-focus-num">'+(done?'✓':(i+1))+'</div><div class="dash-focus-text">'+item.text+'</div></div>';
+      return '<div class="dash-focus-row '+(done?'done':'')+'" onclick="dashToggleFocus(\''+item.id+'\')"><div class="dash-focus-num">'+(done?'✓':(i+1))+'</div><div class="dash-focus-text">'+escapeHtml(item.text)+'</div></div>';
     }).join('');
 
     var queueHtml = urgent.slice(0,4).map(function(d) {
