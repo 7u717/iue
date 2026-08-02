@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-08-02-feedback-warning-refine"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-08-02-urgent-spectrum"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
@@ -1151,15 +1151,15 @@
     .dash-command-badge { display:none; }
     .dash-command-num { font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:850;line-height:.9;color:var(--text);letter-spacing:0; }
     .dash-command-unit { font-size:12px;color:var(--muted);margin-top:5px; }
-    .dash-command-count.dash-hot .dash-command-num { color:#fb7185; }
-    .dash-command-count.dash-hot .dash-command-unit { color:#fecdd3;font-weight:750; }
+    .dash-command-count.dash-hot .dash-command-num { color:var(--dash-hot-color,#fb7185); }
+    .dash-command-count.dash-hot .dash-command-unit { color:var(--dash-hot-soft,#fecdd3);font-weight:750; }
     .dash-command-body { display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start; }
     .dash-command-section-title { font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.02em;margin-bottom:7px; }
     .dash-queue { display:flex;flex-direction:column;gap:7px; }
     .dash-queue-row { display:grid;grid-template-columns:8px 1fr auto;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07);cursor:pointer; }
     .dash-queue-row:last-child { border-bottom:none; }
-    .dash-queue-row.dash-hot .dash-queue-time { color:#fb7185; }
-    .dash-queue-row.dash-hot .dash-queue-time span { color:#fecdd3; }
+    .dash-queue-row.dash-hot .dash-queue-time { color:var(--dash-hot-color,#fb7185); }
+    .dash-queue-row.dash-hot .dash-queue-time span { color:var(--dash-hot-soft,#fecdd3); }
     .dash-queue-dot { width:8px;height:8px;border-radius:50%; }
     .dash-queue-title { font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
     .dash-queue-sub { font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
@@ -3184,7 +3184,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-02-feedback-warning-refine';
+  var APP_VERSION = '2026-08-02-urgent-spectrum';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
@@ -5091,6 +5091,18 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return { num: Math.max(0, Math.floor(hours)), unit: '小时后' };
   }
 
+  function dashUrgencyStyle(diff) {
+    if (diff > DASH_WARNING_MS) return '';
+    var stepMs = 2*3600*1000;
+    var bucket = Math.min(23, Math.max(0, Math.floor((DASH_WARNING_MS - diff) / stepMs)));
+    var t = bucket / 23;
+    var start = [255,255,255];
+    var end = [255,59,48];
+    var rgb = start.map(function(v, i){ return Math.round(v + (end[i] - v) * t); });
+    var soft = start.map(function(v, i){ return Math.round(v + (end[i] - v) * Math.min(1, t * .68)); });
+    return ' style="--dash-hot-color:rgb('+rgb.join(',')+');--dash-hot-soft:rgb('+soft.join(',')+');"';
+  }
+
   function dashGradeSummary(course, data) {
     var cfg = GT[course];
     var total = 0, doneW = 0, nextItem = null;
@@ -5184,7 +5196,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var course = dashCourseFromDeadline(d);
       var unit = left.unit.indexOf('天') > -1 ? '天' : '小时';
       var hot = d.diff <= DASH_WARNING_MS;
-      return '<div class="dash-queue-row '+(hot?'dash-hot':'')+'" onclick="showCourse(\''+course+'\')">'
+      return '<div class="dash-queue-row '+(hot?'dash-hot':'')+'"'+dashUrgencyStyle(d.diff)+' onclick="showCourse(\''+course+'\')">'
         +'<div class="dash-queue-dot" style="background:'+d.color+'"></div>'
         +'<div><div class="dash-queue-title">'+d.name+'</div><div class="dash-queue-sub">'+dashFormatDate(d.date)+' · '+dashCourseName(course)+'</div></div>'
         +'<div class="dash-queue-time">'+left.num+'<span>'+unit+'</span></div>'
@@ -5201,7 +5213,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         '<div class="dash-command-main">'
         +'<div><div class="dash-command-label">Now</div><div class="dash-command-title">'+next.name+'</div><div class="dash-command-meta">'+dashFormatDate(next.date)+' · '+dashCourseName(course)+tagText+locText+'</div>'
         +'<div class="dash-actions"><button class="dash-action primary" onclick="showCourse(\''+course+'\')">查看课程</button><button class="dash-action" onclick="showCourse(\'countdown\')">全部倒计时</button></div></div>'
-        +'<div class="dash-command-count '+(hot?'dash-hot':'')+'"><div class="dash-command-num">'+left.num+'</div><div class="dash-command-unit">'+left.unit+'</div></div>'
+        +'<div class="dash-command-count '+(hot?'dash-hot':'')+'"'+dashUrgencyStyle(next.diff)+'><div class="dash-command-num">'+left.num+'</div><div class="dash-command-unit">'+left.unit+'</div></div>'
         +'</div>'
         +'<div class="dash-command-body">'
         +'<div><div class="dash-command-section-title">最近日程</div><div class="dash-queue">'+(queueHtml || '<div style="color:var(--muted);font-size:13px;padding:6px 0;">未来两周没有未完成考核。</div>')+'</div></div>'
