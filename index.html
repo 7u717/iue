@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-07-30-math-final-exam"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-08-02-feedback-countdown"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
@@ -1151,11 +1151,22 @@
     .dash-command-badge { display:none; }
     .dash-command-num { font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:850;line-height:.9;color:var(--text);letter-spacing:0; }
     .dash-command-unit { font-size:12px;color:var(--muted);margin-top:5px; }
+    .dash-command-count.dash-hot {
+      align-self:stretch;display:flex;flex-direction:column;justify-content:center;
+      min-width:88px;padding:10px 12px;border-radius:16px;
+      background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.42);
+      box-shadow:0 0 0 1px rgba(251,191,36,.05), 0 10px 28px rgba(251,191,36,.08);
+    }
+    .dash-command-count.dash-hot .dash-command-num { color:#fbbf24; }
+    .dash-command-count.dash-hot .dash-command-unit { color:#fde68a;font-weight:750; }
     .dash-command-body { display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start; }
     .dash-command-section-title { font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.02em;margin-bottom:7px; }
     .dash-queue { display:flex;flex-direction:column;gap:7px; }
     .dash-queue-row { display:grid;grid-template-columns:8px 1fr auto;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07);cursor:pointer; }
     .dash-queue-row:last-child { border-bottom:none; }
+    .dash-queue-row.dash-hot { border-color:rgba(251,191,36,.22); }
+    .dash-queue-row.dash-hot .dash-queue-time { color:#fbbf24; }
+    .dash-queue-row.dash-hot .dash-queue-time span { color:#fde68a; }
     .dash-queue-dot { width:8px;height:8px;border-radius:50%; }
     .dash-queue-title { font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
     .dash-queue-sub { font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
@@ -1309,6 +1320,7 @@
       .dash-command-main,
       .dash-command-body { grid-template-columns:1fr; }
       .dash-command-count { text-align:left; }
+      .dash-command-count.dash-hot { align-self:start;min-width:0;width:max-content;max-width:100%; }
       .dash-grid { grid-template-columns:1fr; }
       .dash-course { border:1px solid var(--border); }
       header { padding: calc(10px + env(safe-area-inset-top)) 12px 10px; }
@@ -3180,7 +3192,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-07-30-math-final-exam';
+  var APP_VERSION = '2026-08-02-feedback-countdown';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
@@ -4538,6 +4550,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   updateProgress();
 
   // ===== COUNTDOWN =====
+  var URGENT_DEADLINE_MS = 72*3600*1000;
+  var DASH_WARNING_MS = 48*3600*1000;
   var deadlines = [
     { name: '📝 Week 1 Möbius Lessons',        date: '2026-06-09T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 1 },
     { name: '📝 Week 2 Möbius Lessons',        date: '2026-06-16T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 2 },
@@ -4561,12 +4575,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     { name: '💻 MMAN1130 MANUF3 CAM',            date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf3' },
     { name: '📄 MATH1231 Assignment',            date: '2026-08-04T23:59:00+10:00', tag: '10%', color: 'var(--math-color)', gtId: 'mg_asgn'},
     { name: '📄 ENGG1300 Test 3',               date: '2026-08-08T10:30:00+10:00', tag: '20%', color: 'var(--engg-color)', gtId: 'eg_t3',  loc: 'E19 Patricia OShane 103' },
+    { name: '💬 MATH1231 myExperience Feedback', date: '2026-08-13T23:59:00+10:00', tag: '不计分', color: 'var(--math-color)', course: 'math', kind: 'feedback' },
+    { name: '💬 ENGG1300 myExperience Feedback', date: '2026-08-13T23:59:00+10:00', tag: '不计分', color: 'var(--engg-color)', course: 'engg', kind: 'feedback' },
     { name: '🔩 MMAN1130 TOOLS3 装配',           date: '2026-08-14T23:55:00+10:00', tag: '5%',  color: 'var(--mman-color)', gtId: 'mm_t3'  },
     { name: '📐 ENGG1300 Mini-design Project',   date: '2026-08-14T20:00:00+10:00', tag: '30%', color: 'var(--engg-color)', gtId: 'eg_proj'},
     { name: '📋 MATH1231 Final Exam',            date: '2026-08-21T16:00:00+10:00', tag: '50%', color: 'var(--math-color)', gtId: 'mg_exam', loc: "Chancellor's Garden", nav: 'https://maps.apple.com/?q=Chancellor%27s+Garden+UNSW+Kensington' },
   ];
 
   function deadlineCourse(d) {
+    if (d.course) return d.course;
     if (d.mobiusWeek) return 'math';
     if (d.gtId && d.gtId.indexOf('mg_') === 0) return 'math';
     if (d.gtId && d.gtId.indexOf('mm_') === 0) return 'mman';
@@ -4575,6 +4592,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if ((d.name || '').indexOf('MMAN1130') > -1) return 'mman';
     if ((d.name || '').indexOf('ENGG1300') > -1) return 'engg';
     return '';
+  }
+
+  function deadlineIsDone(d, gtData, mobiusDone) {
+    return !!((d.gtId && gtData[d.gtId] && gtData[d.gtId].done) || (d.mobiusWeek && mobiusDone[String(d.mobiusWeek)]));
   }
 
   function visibleDeadlines() {
@@ -4604,11 +4625,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     }
 
     function makeCard(d, forceDone) {
-      var done = forceDone || (d.gtId && gtData[d.gtId] && gtData[d.gtId].done) || (d.mobiusWeek && mobiusDone[String(d.mobiusWeek)]);
+      var done = forceDone || deadlineIsDone(d, gtData, mobiusDone);
       var totalHours = d.diff / (1000*60*60);
       var days = Math.floor(Math.abs(totalHours) / 24);
       var hours = Math.floor(Math.abs(totalHours) % 24);
-      var urgent = totalHours > 0 && totalHours <= 72;
+      var urgent = totalHours > 0 && d.diff <= URGENT_DEADLINE_MS;
       var dateObj = new Date(d.date);
       var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
       var months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
@@ -4634,8 +4655,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     }
 
     // Separate done and not-done among upcoming
-    var notDone = upcoming.filter(function(d){ return !((d.gtId && gtData[d.gtId] && gtData[d.gtId].done) || (d.mobiusWeek && mobiusDone[String(d.mobiusWeek)])); });
-    var doneUp  = upcoming.filter(function(d){ return (d.gtId && gtData[d.gtId] && gtData[d.gtId].done) || (d.mobiusWeek && mobiusDone[String(d.mobiusWeek)]); });
+    var notDone = upcoming.filter(function(d){ return !deadlineIsDone(d, gtData, mobiusDone); });
+    var doneUp  = upcoming.filter(function(d){ return deadlineIsDone(d, gtData, mobiusDone); });
 
     list.innerHTML =
       notDone.map(function(d){ return makeCard(d, false); }).join('') +
@@ -4991,7 +5012,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function dashIsDeadlineDone(d, data, mobiusDone) {
-    return !!((d.gtId && data[d.gtId] && data[d.gtId].done) || (d.mobiusWeek && mobiusDone[String(d.mobiusWeek)]));
+    return deadlineIsDone(d, data, mobiusDone);
   }
 
   function dashAddFocus(focus, seen, id, text) {
@@ -5170,7 +5191,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var left = dashTimeLeft(d.diff);
       var course = dashCourseFromDeadline(d);
       var unit = left.unit.indexOf('天') > -1 ? '天' : '小时';
-      return '<div class="dash-queue-row" onclick="showCourse(\''+course+'\')">'
+      var hot = d.diff <= DASH_WARNING_MS;
+      return '<div class="dash-queue-row '+(hot?'dash-hot':'')+'" onclick="showCourse(\''+course+'\')">'
         +'<div class="dash-queue-dot" style="background:'+d.color+'"></div>'
         +'<div><div class="dash-queue-title">'+d.name+'</div><div class="dash-queue-sub">'+dashFormatDate(d.date)+' · '+dashCourseName(course)+'</div></div>'
         +'<div class="dash-queue-time">'+left.num+'<span>'+unit+'</span></div>'
@@ -5181,11 +5203,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var left = dashTimeLeft(next.diff);
       var course = dashCourseFromDeadline(next);
       var locText = next.loc ? ' · '+next.loc : '';
+      var hot = next.diff <= DASH_WARNING_MS;
       commandEl.innerHTML =
         '<div class="dash-command-main">'
         +'<div><div class="dash-command-label">Now</div><div class="dash-command-title">'+next.name+'</div><div class="dash-command-meta">'+dashFormatDate(next.date)+' · '+dashCourseName(course)+' · '+next.tag+locText+'</div>'
         +'<div class="dash-actions"><button class="dash-action primary" onclick="showCourse(\''+course+'\')">查看课程</button><button class="dash-action" onclick="showCourse(\'countdown\')">全部倒计时</button></div></div>'
-        +'<div class="dash-command-count"><div class="dash-command-num">'+left.num+'</div><div class="dash-command-unit">'+left.unit+'</div></div>'
+        +'<div class="dash-command-count '+(hot?'dash-hot':'')+'"><div class="dash-command-num">'+left.num+'</div><div class="dash-command-unit">'+left.unit+'</div></div>'
         +'</div>'
         +'<div class="dash-command-body">'
         +'<div><div class="dash-command-section-title">最近日程</div><div class="dash-queue">'+(queueHtml || '<div style="color:var(--muted);font-size:13px;padding:6px 0;">未来两周没有未完成考核。</div>')+'</div></div>'
