@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-08-02-urgent-spectrum"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-08-02-feedback-moodle-link"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
@@ -3184,7 +3184,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-02-urgent-spectrum';
+  var APP_VERSION = '2026-08-02-feedback-moodle-link';
+  var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
@@ -4014,6 +4015,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     }
   }
 
+  function openExternal(url) {
+    window.open(url, '_blank', 'noopener');
+  }
+
   function swipeOrder() {
     return activeCourseIds.concat(['courses']);
   }
@@ -4567,8 +4572,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     { name: '💻 MMAN1130 MANUF3 CAM',            date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf3' },
     { name: '📄 MATH1231 Assignment',            date: '2026-08-04T23:59:00+10:00', tag: '10%', color: 'var(--math-color)', gtId: 'mg_asgn'},
     { name: '📄 ENGG1300 Test 3',               date: '2026-08-08T10:30:00+10:00', tag: '20%', color: 'var(--engg-color)', gtId: 'eg_t3',  loc: 'E19 Patricia OShane 103' },
-    { name: '💬 MATH1231 myExperience Feedback', date: '2026-08-13T23:59:00+10:00', tag: '', color: 'var(--math-color)', course: 'math', kind: 'feedback' },
-    { name: '💬 ENGG1300 myExperience Feedback', date: '2026-08-13T23:59:00+10:00', tag: '', color: 'var(--engg-color)', course: 'engg', kind: 'feedback' },
+    { name: '💬 MATH1231 myExperience Feedback', date: '2026-08-13T23:59:00+10:00', tag: '', color: 'var(--math-color)', course: 'math', kind: 'feedback', link: MOODLE_URL },
+    { name: '💬 ENGG1300 myExperience Feedback', date: '2026-08-13T23:59:00+10:00', tag: '', color: 'var(--engg-color)', course: 'engg', kind: 'feedback', link: MOODLE_URL },
     { name: '🔩 MMAN1130 TOOLS3 装配',           date: '2026-08-14T23:55:00+10:00', tag: '5%',  color: 'var(--mman-color)', gtId: 'mm_t3'  },
     { name: '📐 ENGG1300 Mini-design Project',   date: '2026-08-14T20:00:00+10:00', tag: '30%', color: 'var(--engg-color)', gtId: 'eg_proj'},
     { name: '📋 MATH1231 Final Exam',            date: '2026-08-21T16:00:00+10:00', tag: '50%', color: 'var(--math-color)', gtId: 'mg_exam', loc: "Chancellor's Garden", nav: 'https://maps.apple.com/?q=Chancellor%27s+Garden+UNSW+Kensington' },
@@ -4631,6 +4636,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       else if (totalHours >= 24) { bigNum = Math.floor(totalHours/24); unit = '天 '+Math.floor(totalHours%24)+'小时后'; }
       else { bigNum = Math.floor(totalHours); unit = '小时后'; }
       var locHtml = d.loc ? '<a href="'+(d.nav||'#')+'" target="_blank" style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:12px;color:var(--math-color);text-decoration:none;font-weight:600;">📍 '+d.loc+' <span style="font-size:10px;">→ 导航</span></a>' : '';
+      var linkHtml = d.link ? '<a href="'+d.link+'" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:12px;color:var(--math-color);text-decoration:none;font-weight:600;">Moodle <span style="font-size:10px;">→ 打开</span></a>' : '';
       var opacity = done ? 'opacity:0.38;' : '';
       var daysStyle = done ? 'color:var(--muted);font-size:20px;' : (urgent ? 'color:var(--text);' : '');
       var unitStyle = done ? 'color:var(--muted);' : '';
@@ -4639,6 +4645,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         +'<div class="cd-name">'+d.name+(d.tag ? ' <span style="color:'+d.color+';font-weight:700;">'+d.tag+'</span>' : '')+'</div>'
         +'<div class="cd-meta">'+dateStr+'</div>'
         +locHtml
+        +linkHtml
         +'</div>'
         +'<div class="cd-right">'
         +'<div class="cd-days" style="'+daysStyle+'">'+bigNum+'</div>'
@@ -5196,7 +5203,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var course = dashCourseFromDeadline(d);
       var unit = left.unit.indexOf('天') > -1 ? '天' : '小时';
       var hot = d.diff <= DASH_WARNING_MS;
-      return '<div class="dash-queue-row '+(hot?'dash-hot':'')+'"'+dashUrgencyStyle(d.diff)+' onclick="showCourse(\''+course+'\')">'
+      var action = d.link ? 'openExternal(\''+d.link+'\')' : 'showCourse(\''+course+'\')';
+      return '<div class="dash-queue-row '+(hot?'dash-hot':'')+'"'+dashUrgencyStyle(d.diff)+' onclick="'+action+'">'
         +'<div class="dash-queue-dot" style="background:'+d.color+'"></div>'
         +'<div><div class="dash-queue-title">'+d.name+'</div><div class="dash-queue-sub">'+dashFormatDate(d.date)+' · '+dashCourseName(course)+'</div></div>'
         +'<div class="dash-queue-time">'+left.num+'<span>'+unit+'</span></div>'
@@ -5209,10 +5217,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var locText = next.loc ? ' · '+next.loc : '';
       var tagText = next.tag ? ' · '+next.tag : '';
       var hot = next.diff <= DASH_WARNING_MS;
+      var primaryAction = next.link ? 'openExternal(\''+next.link+'\')' : 'showCourse(\''+course+'\')';
+      var primaryLabel = next.link ? '打开 Moodle' : '查看课程';
       commandEl.innerHTML =
         '<div class="dash-command-main">'
         +'<div><div class="dash-command-label">Now</div><div class="dash-command-title">'+next.name+'</div><div class="dash-command-meta">'+dashFormatDate(next.date)+' · '+dashCourseName(course)+tagText+locText+'</div>'
-        +'<div class="dash-actions"><button class="dash-action primary" onclick="showCourse(\''+course+'\')">查看课程</button><button class="dash-action" onclick="showCourse(\'countdown\')">全部倒计时</button></div></div>'
+        +'<div class="dash-actions"><button class="dash-action primary" onclick="'+primaryAction+'">'+primaryLabel+'</button><button class="dash-action" onclick="showCourse(\'countdown\')">全部倒计时</button></div></div>'
         +'<div class="dash-command-count '+(hot?'dash-hot':'')+'"'+dashUrgencyStyle(next.diff)+'><div class="dash-command-num">'+left.num+'</div><div class="dash-command-unit">'+left.unit+'</div></div>'
         +'</div>'
         +'<div class="dash-command-body">'
