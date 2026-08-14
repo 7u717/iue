@@ -194,7 +194,7 @@
   </nav>
 
 <script>
-const APP_VERSION='2026-07-28-cycle-report-1';
+const APP_VERSION='2026-08-14-sms-cycle-import-1';
 const LIMIT=2500,CYCLE_DAY=28,KEY='bt_txs_95566_full_2026_07_23_v1',SG_KEY='bt_sg',BUY_KEY='vault_buy_list_v1';
 const cats=[
   ['Food','🍔','#ff8f70',/(umall|online grocery|supermarket|grocer|mcd|kfc|hungry|subway|woolworth|coles|aldi|iga|restaurant|cafe|food|饭|餐|超市|线上超市|麦当劳|肯德基|奶茶|外卖|寿司|面|burger|pizza)/i],
@@ -439,7 +439,32 @@ const DEFAULT_TXS=[
   {"amount":6.0,"currency":"AUD","description":"MAD ME","category":"Food","date":"2026-02-10","raw":"您的信用卡3500VISA Apple Pay于2026年02月10日，在MAD ME消费AUD6.00元。【中国银行】","id":2026021004},
   {"amount":20.1,"currency":"AUD","description":"KOWLOO","category":"Food","date":"2026-02-10","raw":"您的信用卡3500VISA Apple Pay于2026年02月10日，在KOWLOO消费AUD20.10元。【中国银行】","id":2026021003},
   {"amount":29.55,"currency":"AUD","description":"COLES","category":"Food","date":"2026-02-10","raw":"您的信用卡3500VISA Apple Pay于2026年02月10日，在COLES消费AUD29.55元。【中国银行】","id":2026021002},
-  {"amount":28.3,"currency":"AUD","description":"COLES","category":"Food","date":"2026-02-10","raw":"您的信用卡3500VISA Apple Pay于2026年02月10日，在COLES消费AUD28.30元。【中国银行】","id":2026021001}
+  {"amount":28.3,"currency":"AUD","description":"COLES","category":"Food","date":"2026-02-10","raw":"您的信用卡3500VISA Apple Pay于2026年02月10日，在COLES消费AUD28.30元。【中国银行】","id":2026021001},
+  {"amount":32.19,"currency":"AUD","description":"HUNGRY","category":"Food","date":"2026-07-29","raw":"95566 SMS import","id":2026072901},
+  {"amount":20.0,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-07-29","raw":"95566 SMS import","id":2026072902},
+  {"amount":29.24,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-07-30","raw":"95566 SMS import","id":2026073001},
+  {"amount":248.2,"currency":"AUD","description":"AXS AU","category":"Entertain","date":"2026-07-31","raw":"95566 SMS import","id":2026073101},
+  {"amount":236.91,"currency":"AUD","description":"UMALL","category":"Food","date":"2026-07-31","raw":"95566 SMS import","id":2026073102},
+  {"amount":5.0,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-08-01","raw":"95566 SMS import","id":2026080101},
+  {"amount":20.0,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-08-02","raw":"95566 SMS import","id":2026080201},
+  {"amount":31.1,"currency":"AUD","description":"MCDONA","category":"Food","date":"2026-08-03","raw":"95566 SMS import","id":2026080301},
+  {"amount":14.0,"currency":"AUD","description":"IKEA T","category":"Shopping","date":"2026-08-04","raw":"95566 SMS import","id":2026080401},
+  {"amount":176.02,"currency":"AUD","description":"IKEA T","category":"Shopping","date":"2026-08-04","raw":"95566 SMS import","id":2026080402},
+  {"amount":4.27,"currency":"AUD","description":"IGLU L","category":"Other","date":"2026-08-06","raw":"95566 SMS import","id":2026080601},
+  {"amount":4.27,"currency":"AUD","description":"IGLU L","category":"Other","date":"2026-08-06","raw":"95566 SMS import","id":2026080602},
+  {"amount":8.48,"currency":"AUD","description":"IGLU L","category":"Other","date":"2026-08-06","raw":"95566 SMS import","id":2026080603},
+  {"amount":180.65,"currency":"AUD","description":"MUJI R","category":"Shopping","date":"2026-08-06","raw":"95566 SMS import","id":2026080604},
+  {"amount":23.82,"currency":"AUD","description":"Twopec","category":"Other","date":"2026-08-06","raw":"95566 SMS import","id":2026080605},
+  {"amount":30.05,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-08-07","raw":"95566 SMS import","id":2026080701},
+  {"amount":4.27,"currency":"AUD","description":"IGLU L","category":"Other","date":"2026-08-07","raw":"95566 SMS import","id":2026080702},
+  {"amount":4.27,"currency":"AUD","description":"IGLU L","category":"Other","date":"2026-08-07","raw":"95566 SMS import","id":2026080703},
+  {"amount":28.64,"currency":"AUD","description":"HUNGRY","category":"Food","date":"2026-08-08","raw":"95566 SMS import","id":2026080801},
+  {"amount":14.84,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-08-10","raw":"95566 SMS import","id":2026081001},
+  {"amount":20.0,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-08-10","raw":"95566 SMS import","id":2026081002},
+  {"amount":30.45,"currency":"AUD","description":"YUM YA","category":"Food","date":"2026-08-10","raw":"95566 SMS import","id":2026081003},
+  {"amount":6.99,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-08-11","raw":"95566 SMS import","id":2026081101},
+  {"amount":58.87,"currency":"AUD","description":"PAYPAL","category":"Other","date":"2026-08-12","raw":"95566 SMS import","id":2026081201},
+  {"amount":30.72,"currency":"AUD","description":"HUNGRY","category":"Food","date":"2026-08-13","raw":"95566 SMS import","id":2026081301}
 ].sort((a,b)=>String(b.date).localeCompare(String(a.date))||b.id-a.id);
 try{
   const stored=localStorage.getItem(KEY);
