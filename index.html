@@ -15,6 +15,10 @@
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="vendor/katex/katex.min.css"/>
+  <script src="vendor/katex/katex.min.js"></script>
+  <script src="vendor/katex/auto-render.min.js"></script>
+  <script src="math1231/final-exam/questions.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -838,6 +842,25 @@
       display: block; width: 100%; height: auto; border-radius: 10px;
       background: #fff;
     }
+    .final-question-list { display:grid; gap:10px; }
+    .final-question-card { background:#0b0d10; border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+    .final-question-card.open { border-color:rgba(29,155,240,.55); background:#07111c; }
+    .final-question-head { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:13px; cursor:pointer; }
+    .final-question-title { color:var(--text); font-size:13px; font-weight:800; }
+    .final-question-meta { display:flex; gap:6px; flex-wrap:wrap; margin-top:5px; }
+    .final-question-pill { font-size:10px; color:var(--math-color); background:rgba(147,197,253,.1); border:1px solid rgba(147,197,253,.2); border-radius:999px; padding:2px 7px; }
+    .final-question-body { display:none; border-top:1px solid var(--border); padding:12px 13px 14px; }
+    .final-question-card.open .final-question-body { display:block; }
+    .final-block { margin-top:12px; }
+    .final-block:first-child { margin-top:0; }
+    .final-block-title { color:var(--math-color); font-size:11px; font-weight:800; margin-bottom:5px; }
+    .final-copy { color:#c8d2df; font-size:12px; line-height:1.65; }
+    .final-copy p + p { margin-top:7px; }
+    .final-copy ul, .final-copy ol { padding-left:19px; margin-top:6px; }
+    .final-copy li + li { margin-top:4px; }
+    .final-similar { border:1px solid rgba(255,255,255,.09); border-radius:11px; padding:10px 11px; background:rgba(255,255,255,.018); }
+    .final-similar summary { cursor:pointer; color:var(--text); font-size:12px; font-weight:700; }
+    .final-similar[open] summary { margin-bottom:8px; }
     .maple-code {
       margin: 8px 0 12px; padding: 12px 13px;
       border: 1px solid var(--border); border-radius: 14px;
@@ -2218,6 +2241,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       <div class="topic-body">
         <div class="subtopic">时间：Friday 21 August · 15:40 到 Chancellor's Garden · 16:00 开考。</div>
         <div class="subtopic">权重：50% · 2小时。倒计时按 16:00 正式开考时间计算；15:40 只是到场提醒。</div>
+        <div class="subtopic" style="margin-top:12px;color:var(--math-color);">Final 题库：点开题型查看解析、考场步骤和默认隐藏的类似例题。</div>
+        <div class="final-question-list" id="math1231-final-question-list"></div>
         <div class="link-row">
           <a class="resource-link" href="https://maps.apple.com/?q=Chancellor%27s+Garden+UNSW+Kensington" target="_blank" rel="noopener">
             <span class="link-icon" style="background:var(--math-soft);color:var(--math-color);">📍</span>
@@ -4190,6 +4215,33 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     section.classList.toggle('open');
     if (panel) panel.classList.toggle('open', section.classList.contains('open'));
   }
+
+  function toggleFinalQuestion(card) {
+    card.classList.toggle('open');
+  }
+
+  function renderFinalExamQuestions() {
+    var list = document.getElementById('math1231-final-question-list');
+    var questions = window.MATH1231_FINAL_QUESTIONS || [];
+    if (!list || !questions.length) return;
+    list.innerHTML = questions.map(function(question) {
+      return '<article class="final-question-card" onclick="toggleFinalQuestion(this)">'
+        + '<div class="final-question-head">'
+        + '<div><div class="final-question-title">Question ' + question.id + ' · ' + question.title + '</div>'
+        + '<div class="final-question-meta">' + question.tags.map(function(tag){ return '<span class="final-question-pill">' + tag + '</span>'; }).join('') + '</div></div>'
+        + '<span class="test-panel-chevron">▼</span></div>'
+        + '<div class="final-question-body" onclick="event.stopPropagation()">'
+        + '<div class="final-block"><div class="final-block-title">同类题提示</div><div class="final-copy">' + question.hint + '</div></div>'
+        + '<div class="final-block"><div class="final-block-title">解析</div><div class="final-copy">' + question.analysis + '</div></div>'
+        + '<div class="final-block"><div class="final-block-title">考场步骤</div><div class="final-copy">' + question.steps + '</div></div>'
+        + '<div class="final-block"><details class="final-similar"><summary>类似例题（先自己做，不显示答案）</summary><div class="final-copy">' + question.similar + '</div></details></div>'
+        + '</div></article>';
+    }).join('');
+    if (window.renderMathInElement) {
+      window.renderMathInElement(list, { delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}], throwOnError:false });
+    }
+  }
+  window.addEventListener('load', renderFinalExamQuestions);
 
   // ===== MATH1231 DETAILED TOPICS =====
   var MATH_TOPICS = {
