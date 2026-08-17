@@ -15,10 +15,10 @@
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="vendor/katex/katex.min.css"/>
-  <script src="vendor/katex/katex.min.js"></script>
-  <script src="vendor/katex/auto-render.min.js"></script>
-  <script src="math1231/final-exam/questions.js"></script>
+  <link rel="stylesheet" href="vendor/katex/katex.min.css?v=2026-08-17-final-review"/>
+  <script src="vendor/katex/katex.min.js?v=2026-08-17-final-review"></script>
+  <script src="vendor/katex/auto-render.min.js?v=2026-08-17-final-review"></script>
+  <script src="math1231/final-exam/questions.js?v=2026-08-17-final-review"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -3209,7 +3209,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-02-feedback-moodle-link';
+  var APP_VERSION = '2026-08-17-final-exam-katex';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
@@ -4220,6 +4220,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     card.classList.toggle('open');
   }
 
+  var finalMathRenderRetries = 0;
+  function renderFinalMath(list) {
+    if (window.renderMathInElement) {
+      window.renderMathInElement(list, { delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}], throwOnError:false });
+      return;
+    }
+    if (finalMathRenderRetries++ < 40) window.setTimeout(function(){ renderFinalMath(list); }, 100);
+  }
+
   function renderFinalExamQuestions() {
     var list = document.getElementById('math1231-final-question-list');
     var questions = window.MATH1231_FINAL_QUESTIONS || [];
@@ -4237,10 +4246,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         + '<div class="final-block"><details class="final-similar"><summary>类似例题（先自己做，不显示答案）</summary><div class="final-copy">' + question.similar + '</div></details></div>'
         + '</div></article>';
     }).join('');
-    if (window.renderMathInElement) {
-      window.renderMathInElement(list, { delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}], throwOnError:false });
-    }
+    renderFinalMath(list);
   }
+  document.addEventListener('DOMContentLoaded', renderFinalExamQuestions);
   window.addEventListener('load', renderFinalExamQuestions);
 
   // ===== MATH1231 DETAILED TOPICS =====
