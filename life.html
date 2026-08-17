@@ -9,9 +9,9 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-07-14-orbit-unsw-nav-1">
-  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-07-14-orbit-unsw-nav-1">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-07-14-orbit-unsw-nav-1">
+  <link rel="manifest" href="orbit-manifest.webmanifest?v=2026-08-17-pages-pwa-1">
+  <link rel="apple-touch-icon" href="icons/orbit-icon-180.png?v=2026-08-17-pages-pwa-1">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/orbit-icon-192.png?v=2026-08-17-pages-pwa-1">
   <title>Orbit</title>
   <script>
     if (location.protocol === 'capacitor:' || /Capacitor/i.test(navigator.userAgent)) {
@@ -68,13 +68,19 @@
       border-left: 1px solid rgba(255,255,255,.05);
       border-right: 1px solid rgba(255,255,255,.05);
     }
+    html.native-shell .app {
+      width: 100vw;
+      max-width: none;
+      border-left: 0;
+      border-right: 0;
+    }
     .page {
       height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: calc(var(--topbar-h) + 16px) 18px calc(var(--page-dock-space) + env(safe-area-inset-bottom));
+      padding: calc(var(--topbar-h) + 16px) 18px var(--page-dock-space);
       scrollbar-width: none;
-      scroll-padding-bottom: calc(var(--page-dock-space) + env(safe-area-inset-bottom));
+      scroll-padding-bottom: var(--page-dock-space);
       overscroll-behavior-y: contain;
       -webkit-overflow-scrolling: touch;
       touch-action: pan-y;
@@ -86,12 +92,12 @@
     .app:has(textarea:focus) .page { padding-bottom: 22px; }
     .page::-webkit-scrollbar { display: none; }
     .topbar {
-      position: absolute;
+      position: fixed;
       top: 0;
-      left: 0;
-      right: 0;
-      width: 100%;
-      transform: none;
+      left: 50%;
+      right: auto;
+      width: min(100vw, 430px);
+      transform: translateX(-50%);
       z-index: 18;
       display: flex;
       align-items: center;
@@ -143,7 +149,7 @@
     }
     .top-title { text-align: center; line-height: 1.05; }
     .top-title strong { display: block; font-size: 17px; letter-spacing: .2px; }
-    .top-title span { display: block; margin-top: 5px; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .top-title span { display: none; }
     .icon-btn {
       width: 38px;
       height: 38px;
@@ -161,16 +167,27 @@
       color: var(--blue);
       font-size: 15px;
       font-weight: 950;
-      background:
-        conic-gradient(from -90deg, rgba(143,198,255,.95) calc(var(--week-lit, 0) * 51.428deg), rgba(255,255,255,.08) 0),
-        linear-gradient(145deg, rgba(143,198,255,.16), rgba(255,255,255,.035));
-      border-color: rgba(143,198,255,.26);
-      box-shadow: 0 0 20px rgba(143,198,255,.1), inset 0 1px 0 rgba(255,255,255,.06);
+      background: linear-gradient(145deg, rgba(143,198,255,.12), rgba(255,255,255,.03));
+      border-color: rgba(143,198,255,.18);
+      box-shadow: 0 0 14px rgba(143,198,255,.08), inset 0 1px 0 rgba(255,255,255,.055);
+    }
+    .week-date-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: conic-gradient(from -90deg, rgba(143,198,255,.84) calc(var(--week-lit, 0) * 51.428deg), rgba(255,255,255,.075) 0);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: .9;
+      pointer-events: none;
     }
     .week-date-btn::after {
       content: "";
       position: absolute;
-      inset: 3px;
+      inset: 2px;
       border-radius: inherit;
       background: linear-gradient(145deg,#1b1c1f,#0d0d0f);
       z-index: 0;
@@ -181,7 +198,7 @@
       font-variant-numeric: tabular-nums;
     }
     .section { display: none; animation: lift .25s ease both; }
-    .section.active { display: block; min-height: calc(100dvh - var(--topbar-h) - var(--page-dock-space) - env(safe-area-inset-bottom) - 16px); }
+    .section.active { display: block; min-height: calc(100dvh - var(--topbar-h) - var(--page-dock-space) - 16px); }
     @keyframes lift { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
     .hero {
       display: grid;
@@ -1325,16 +1342,17 @@
       margin-top: 2px;
     }
     .orbit-tabs {
-      position: absolute;
+      position: fixed;
       bottom: 0;
-      left: 0;
-      right: 0;
+      left: 50%;
+      right: auto;
       z-index: 90;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       align-items: center;
-      width: 100%;
-      max-width: none;
+      width: min(100vw, 430px);
+      max-width: 430px;
+      transform: translateX(-50%);
       height: var(--bottom-nav-h);
       min-height: 0;
       margin: 0 auto;
@@ -1348,6 +1366,9 @@
       -webkit-backdrop-filter: blur(24px) saturate(1.2);
     }
     html.native-shell .orbit-tabs {
+      left: 0;
+      width: 100vw;
+      max-width: none;
       height: var(--bottom-nav-h);
       min-height: 0;
       padding: 4px 34px calc(var(--native-safe-bottom) + 3px);
@@ -1557,6 +1578,29 @@
         rgba(255,255,255,.035);
     }
     .mail-empty strong { display: block; color: var(--text); font-size: 17px; margin-bottom: 6px; }
+    .orbit-data-tools {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line-soft);
+    }
+    .orbit-data-tools button,
+    .orbit-data-tools label {
+      display: grid;
+      place-items: center;
+      min-height: 42px;
+      border: 1px solid rgba(143,198,255,.2);
+      border-radius: 14px;
+      background: rgba(35,126,219,.1);
+      color: var(--blue-2);
+      font-size: 12px;
+      font-weight: 900;
+      text-align: center;
+      cursor: pointer;
+    }
+    .orbit-data-tools input { display: none; }
     .mail-setup-steps {
       margin-top: 12px;
       display: grid;
@@ -1779,12 +1823,12 @@
   <main class="app">
     <header class="topbar">
       <button class="avatar-btn" onclick="toggleMailDrawer()" aria-label="blocks">
-        <img src="icons/avatar.jpg" alt="avatar">
+        <img src="icons/orbit-icon-192.png" alt="Orbit">
         <span id="mail-dot" class="badge"></span>
       </button>
       <div class="top-title">
         <strong>Orbit</strong>
-        <span id="today-date">Life console</span>
+        <span id="today-date" aria-hidden="true"></span>
       </div>
       <button class="icon-btn week-date-btn" id="week-date-btn" aria-label="date"><span id="week-date-number">--</span></button>
     </header>
@@ -1989,6 +2033,10 @@
       </div>
       <div id="block-clock"></div>
       <div id="mail-list"></div>
+      <div class="orbit-data-tools" aria-label="Orbit data transfer">
+        <button type="button" onclick="downloadOrbitBackup()">备份数据</button>
+        <label>导入备份<input id="orbit-import-file" type="file" accept="application/json,.json" onchange="importOrbitBackup(event)"></label>
+      </div>
     </aside>
 
     <div id="manual-sleep-mask" class="manual-sleep-mask" onclick="closeManualSleep(event)">
@@ -2032,7 +2080,7 @@
 
   <script>
     const KEY = 'life_console_v5';
-    const ORBIT_APP_VERSION = '2026-07-26-orbit-header-date-1';
+    const ORBIT_APP_VERSION = '2026-08-17-pages-pwa-1';
     const ORBIT_CLOUD_ENABLED = false;
     const ORBIT_CLOUD_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019f5e0e6766570f';
     const ORBIT_CLOUD_LAST_REMOTE_KEY = 'orbit_cloud_last_remote_saved_at';
@@ -2188,9 +2236,24 @@
       }
     ];
 
+    function legacyOrbitState() {
+      if (localStorage.getItem(KEY)) return null;
+      const legacyKeys = ['life_console_v4', 'life_console_v3', 'life_console', 'orbit_state_v1'];
+      for (const legacyKey of legacyKeys) {
+        try {
+          const candidate = JSON.parse(localStorage.getItem(legacyKey) || 'null');
+          if (candidate && typeof candidate === 'object' && !Array.isArray(candidate)) return candidate;
+        } catch(e) {}
+      }
+      return null;
+    }
     function loadState() {
-      try { return Object.assign({}, defaults, JSON.parse(localStorage.getItem(KEY) || '{}')); }
-      catch(e) { return Object.assign({}, defaults); }
+      try {
+        const saved = JSON.parse(localStorage.getItem(KEY) || 'null') || legacyOrbitState() || {};
+        const next = Object.assign({}, defaults, saved);
+        if (!localStorage.getItem(KEY) && Object.keys(saved).length) localStorage.setItem(KEY, JSON.stringify(next));
+        return next;
+      } catch(e) { return Object.assign({}, defaults); }
     }
     function persist() {
       const next = JSON.stringify(state);
@@ -2198,6 +2261,37 @@
       localStorage.setItem(KEY, next);
       if (ORBIT_CLOUD_ENABLED && !orbitCloudApplying && orbitCloudReady) markOrbitCloudDirty();
       queueOrbitNotifications('state-change');
+    }
+    function downloadOrbitBackup() {
+      const payload = { app: 'orbit', schema: 1, exportedAt: new Date().toISOString(), state: state };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'orbit-backup-' + localDayKey(new Date()) + '.json';
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      toast('备份已下载，只保存在这台设备上');
+    }
+    async function importOrbitBackup(event) {
+      const input = event.target;
+      const file = input.files && input.files[0];
+      if (!file) return;
+      try {
+        const parsed = JSON.parse(await file.text());
+        const imported = parsed && parsed.app === 'orbit' && parsed.state ? parsed.state : parsed;
+        if (!imported || typeof imported !== 'object' || Array.isArray(imported)) throw new Error('invalid backup');
+        if (!confirm('导入会用这份 Orbit 备份替换当前网页中的 Orbit 数据；当前数据会先留一份本机备份。继续吗？')) return;
+        localStorage.setItem(KEY + '_before_import_' + Date.now(), JSON.stringify(state));
+        state = Object.assign({}, defaults, imported, { hydrationBasinVersion: 3, waterSpillHidden: false });
+        persist();
+        render();
+        toast('Orbit 数据已导入');
+      } catch(e) {
+        toast('这不是可用的 Orbit 备份');
+      } finally {
+        input.value = '';
+      }
     }
     function mins(time) {
       const p = String(time || '').split(':').map(Number);
@@ -2677,7 +2771,7 @@
     function render() {
       ensureDailyRollover();
       const nowForHeader = new Date();
-      document.getElementById('today-date').textContent = nowForHeader.toLocaleDateString('en-AU', { weekday:'short', month:'short', day:'numeric' });
+      document.getElementById('today-date').textContent = '';
       const weekBtn = document.getElementById('week-date-btn');
       if (weekBtn) {
         const day = nowForHeader.getDay() || 7;
@@ -4215,7 +4309,9 @@
       openManualSleep,
       scheduleOrbitNotifications,
       sendMoodTestNotification,
-      sendAllTestNotifications
+      sendAllTestNotifications,
+      downloadOrbitBackup,
+      importOrbitBackup
     });
     setupKeyboardMode();
     setupTabSwipe();
@@ -4223,7 +4319,7 @@
     setupManualSleepOpeners();
     lockAppZoom();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./orbit-sw.js?v=2026-07-17-orbit-food-dumpling-1').then(registration => registration.update()).catch(() => {});
+      navigator.serviceWorker.register('./orbit-sw.js?v=2026-08-17-pages-pwa-1').then(registration => registration.update()).catch(() => {});
     }
     startOrbitCloudSync();
     startOrbitMailSync();
