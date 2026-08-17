@@ -62,9 +62,11 @@
       margin: 0;
       background: #000;
       position: fixed;
-      inset: 0 auto 0 50%;
-      transform: translateX(-50%);
+      inset: 0;
+      margin-inline: auto;
       overflow: hidden;
+      display: grid;
+      grid-template-rows: var(--topbar-h) minmax(0, 1fr) var(--bottom-nav-h);
       border-left: 1px solid rgba(255,255,255,.05);
       border-right: 1px solid rgba(255,255,255,.05);
     }
@@ -75,29 +77,28 @@
       border-right: 0;
     }
     .page {
-      height: 100%;
+      min-height: 0;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: calc(var(--topbar-h) + 16px) 18px var(--page-dock-space);
+      padding: 16px 18px 22px;
       scrollbar-width: none;
-      scroll-padding-bottom: var(--page-dock-space);
+      scroll-padding-bottom: 22px;
       overscroll-behavior-y: contain;
       -webkit-overflow-scrolling: touch;
       touch-action: pan-y;
       position: relative;
       z-index: 1;
     }
+    .app.keyboard-open { grid-template-rows: var(--topbar-h) minmax(0, 1fr) 0; }
     .app.keyboard-open .page { padding-bottom: 22px; }
     .app:has(input:focus) .page,
     .app:has(textarea:focus) .page { padding-bottom: 22px; }
+    .app:has(input:focus),
+    .app:has(textarea:focus) { grid-template-rows: var(--topbar-h) minmax(0, 1fr) 0; }
     .page::-webkit-scrollbar { display: none; }
     .topbar {
-      position: fixed;
-      top: 0;
-      left: 50%;
-      right: auto;
-      width: min(100vw, 430px);
-      transform: translateX(-50%);
+      position: relative;
+      width: 100%;
       z-index: 18;
       display: flex;
       align-items: center;
@@ -112,11 +113,6 @@
     html.native-shell .topbar {
       height: var(--topbar-h);
       padding: calc(var(--native-safe-top) + 14px) 20px 14px;
-    }
-    html.native-shell .page {
-      padding-top: calc(var(--topbar-h) + 16px);
-      padding-bottom: var(--page-dock-space);
-      scroll-padding-bottom: var(--page-dock-space);
     }
     .avatar-btn {
       width: 38px;
@@ -1342,17 +1338,17 @@
       margin-top: 2px;
     }
     .orbit-tabs {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
+      position: relative;
+      bottom: auto;
+      left: auto;
       right: auto;
       z-index: 90;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       align-items: center;
-      width: min(100vw, 430px);
-      max-width: 430px;
-      transform: translateX(-50%);
+      width: 100%;
+      max-width: none;
+      transform: none;
       height: var(--bottom-nav-h);
       min-height: 0;
       margin: 0 auto;
@@ -1366,13 +1362,12 @@
       -webkit-backdrop-filter: blur(24px) saturate(1.2);
     }
     html.native-shell .orbit-tabs {
-      left: 0;
       width: 100vw;
       max-width: none;
       height: var(--bottom-nav-h);
       min-height: 0;
       padding: 4px 34px calc(var(--native-safe-bottom) + 3px);
-      transform: translateZ(0);
+      transform: none;
     }
     .nav {
       appearance: none;
@@ -1823,7 +1818,7 @@
   <main class="app">
     <header class="topbar">
       <button class="avatar-btn" onclick="toggleMailDrawer()" aria-label="blocks">
-        <img src="icons/orbit-icon-192.png" alt="Orbit">
+        <img src="icons/avatar.jpg" alt="avatar">
         <span id="mail-dot" class="badge"></span>
       </button>
       <div class="top-title">
