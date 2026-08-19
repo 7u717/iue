@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-08-20-course-family-colors"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-08-20-no-emoji-course-ui"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
@@ -289,7 +289,10 @@
     .course-icon {
       width: 52px; height: 52px; border-radius: 16px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 24px; flex-shrink: 0; background: rgba(255,255,255,0.15);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px; font-weight: 850; letter-spacing: 0;
+      flex-shrink: 0; background: rgba(255,255,255,0.15);
+      color: var(--text);
     }
     .course-meta { flex: 1; }
     .course-code {
@@ -823,7 +826,10 @@
       align-items: center;
       justify-content: center;
       background: rgba(255,255,255,.08);
-      font-size: 22px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 0;
       flex-shrink: 0;
       filter: saturate(.82);
     }
@@ -1267,7 +1273,12 @@
     }
     .course-tile:active { transform:scale(.99); }
     .course-tile-top { display:flex;align-items:center;justify-content:space-between;margin-bottom:22px; }
-    .course-tile-icon { font-size:28px; }
+    .course-tile-icon {
+      min-width:42px;height:42px;border-radius:14px;
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:850;
+      color:var(--text);background:var(--surface2);border:1px solid var(--border);
+    }
     .course-tile-code { font-family:'Space Grotesk',sans-serif;font-size:27px;font-weight:800;letter-spacing:0;line-height:1; }
     .course-tile-name { margin-top:8px;font-size:13px;color:var(--muted);line-height:1.35; }
     .course-tile-meta { display:flex;gap:8px;flex-wrap:wrap;margin-top:16px; }
@@ -1314,7 +1325,7 @@
       min-width:0;
     }
     .course-library-row.archived { background:#0b0b0b; }
-    .course-library-icon { width:36px;height:36px;border-radius:12px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;filter:saturate(.72);opacity:.92; }
+    .course-library-icon { width:36px;height:36px;border-radius:12px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:850;line-height:1;color:var(--text);flex-shrink:0;filter:saturate(.72);opacity:.92; }
     .course-library-main { flex:1;min-width:0; }
     .course-library-title { font-size:15px;font-weight:800;color:var(--text);line-height:1.2; }
     .course-library-sub { font-size:12px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
@@ -1688,7 +1699,7 @@
 <div class="course-section" id="sec-phys1121">
   <div class="course-switcher" aria-label="专业课切换"></div>
   <div class="course-header phys">
-    <div class="course-icon">🛰️</div>
+    <div class="course-icon">P1A</div>
     <div class="course-meta">
       <div class="course-code">PHYS1121</div>
       <div class="course-name">Physics 1A · 2026 T3</div>
@@ -1705,7 +1716,7 @@
 <div class="course-section" id="sec-engg1811">
   <div class="course-switcher" aria-label="专业课切换"></div>
   <div class="course-header engg">
-    <div class="course-icon">💻</div>
+    <div class="course-icon">CODE</div>
     <div class="course-meta">
       <div class="course-code">ENGG1811</div>
       <div class="course-name">Computing for Engineers · 2026 T3</div>
@@ -1722,7 +1733,7 @@
 <div class="course-section" id="sec-phys1160">
   <div class="course-switcher" aria-label="专业课切换"></div>
   <div class="course-header phys">
-    <div class="course-icon">🔭</div>
+    <div class="course-icon">AST</div>
     <div class="course-meta">
       <div class="course-code">PHYS1160</div>
       <div class="course-name">Introduction to Astronomy</div>
@@ -1744,7 +1755,7 @@
     <button class="course-switch" onclick="showCourse('engg')">ENGG1300</button>
   </div>
   <div class="course-header math">
-    <div class="course-icon">📐</div>
+    <div class="course-icon">M1B</div>
     <div class="course-meta">
       <div class="course-code">MATH1231</div>
       <div class="course-name">Mathematics 1B · Calculus · Linear Algebra</div>
@@ -1755,7 +1766,7 @@
   <div class="topic-group">
     <div class="group-label">成绩追踪</div>
     <div class="topic-card" style="padding:16px;" id="gt-math"></div>
-    <div class="exam-alert">⚠️ Lab Test 1: 6月29日 · Lab Test 2: 7月27日 3–4pm（H13 Lawrence East M020）</div>
+    <div class="exam-alert">Alert: Lab Test 1: 6月29日 · Lab Test 2: 7月27日 3–4pm（H13 Lawrence East M020）</div>
   </div>
 
   <!-- Progress -->
@@ -1804,7 +1815,7 @@
   <div class="topic-group">
   <!-- Formula Sheet + Maple Commands -->
   <div class="topic-group" id="formula-quickref-group">
-    <div class="group-label">📐 公式速查</div>
+    <div class="group-label">公式速查</div>
 
     <div class="topic-card" id="tc-formulas">
       <div class="topic-header" onclick="toggleTopic('tc-formulas')">
@@ -1907,36 +1918,36 @@
       <div class="topic-body">
 
         <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:6px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">函数定义</div>
-        <div class="subtopic">🖥️ (x, y) -> 6*x^5*y^3*sin(9*x - y)　← 箭头算子，不写 f:= 和 ;</div>
-        <div class="subtopic">🖥️ f := (x, y) -> expr　← 赋值给变量 f 时才加 f :=</div>
+        <div class="subtopic">Maple: (x, y) -> 6*x^5*y^3*sin(9*x - y)　← 箭头算子，不写 f:= 和 ;</div>
+        <div class="subtopic">Maple: f := (x, y) -> expr　← 赋值给变量 f 时才加 f :=</div>
 
         <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:10px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">偏导数</div>
-        <div class="subtopic">🖥️ diff(f(x,y), x)　← ∂f/∂x</div>
-        <div class="subtopic">🖥️ diff(f(x,y), x, x, y)　← ∂³f/∂y∂x²（先x求2次，再y求1次）</div>
-        <div class="subtopic">🖥️ diff(f(x,y), x$2, y)　← 同上，简写方式</div>
-        <div class="subtopic">🖥️ evalf(D[1$4, 2$3](f)(-2,-1), 10)　← 数值偏导，10位有效数字</div>
+        <div class="subtopic">Maple: diff(f(x,y), x)　← ∂f/∂x</div>
+        <div class="subtopic">Maple: diff(f(x,y), x, x, y)　← ∂³f/∂y∂x²（先x求2次，再y求1次）</div>
+        <div class="subtopic">Maple: diff(f(x,y), x$2, y)　← 同上，简写方式</div>
+        <div class="subtopic">Maple: evalf(D[1$4, 2$3](f)(-2,-1), 10)　← 数值偏导，10位有效数字</div>
         <div class="subtopic">D[1] = 对第1个变量(x)求导，D[2] = 对第2个变量(y)求导</div>
 
         <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:10px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">三维画图</div>
-        <div class="subtopic">🖥️ plot3d(x^2 + y^2, x=-3..3, y=-3..3)　← 区间用 .. 不是 :</div>
+        <div class="subtopic">Maple: plot3d(x^2 + y^2, x=-3..3, y=-3..3)　← 区间用 .. 不是 :</div>
 
         <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:10px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">数学函数写法</div>
-        <div class="subtopic">🖥️ arcsin(x)　arccos(x)　arctan(x)　← 反三角</div>
-        <div class="subtopic">🖥️ arcsinh(x)　arccosh(x)　arctanh(x)　← 反双曲</div>
-        <div class="subtopic">🖥️ sqrt(x)　exp(x)　ln(abs(x))　← 根号、e次方、绝对值对数</div>
-        <div class="subtopic">🖥️ int(expr, x)　int(expr, x=a..b)　← 不定/定积分；π 写 Pi，e 写 exp(1)</div>
-        <div class="subtopic">🖥️ sin(x)^2　tan(x)^2　← 平方写在括号后（不是 sin²(x)）</div>
-        <div class="subtopic">🖥️ simplify(expr)　← 化简结果，导数后常用</div>
+        <div class="subtopic">Maple: arcsin(x)　arccos(x)　arctan(x)　← 反三角</div>
+        <div class="subtopic">Maple: arcsinh(x)　arccosh(x)　arctanh(x)　← 反双曲</div>
+        <div class="subtopic">Maple: sqrt(x)　exp(x)　ln(abs(x))　← 根号、e次方、绝对值对数</div>
+        <div class="subtopic">Maple: int(expr, x)　int(expr, x=a..b)　← 不定/定积分；π 写 Pi，e 写 exp(1)</div>
+        <div class="subtopic">Maple: sin(x)^2　tan(x)^2　← 平方写在括号后（不是 sin²(x)）</div>
+        <div class="subtopic">Maple: simplify(expr)　← 化简结果，导数后常用</div>
 
         <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:10px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">部分分式 · ODE · 连乘 · Taylor</div>
-        <div class="subtopic">🖥️ convert(p/q, parfrac, x)　← 对 p/q 做部分分式分解</div>
-        <div class="subtopic">🖥️ dsolve({diff(y(x),x)+4*y(x)=cos(x)+x, y(0)=0}, y(x))　← 一阶 IVP</div>
-        <div class="subtopic">🖥️ dsolve({y(x)*diff(y(x),x$2)+diff(y(x),x)^2=0, y(0)=3, D(y)(0)=9}, y(x))　← 二阶 IVP，初始导数写 D(y)(0)</div>
-        <div class="subtopic">🖥️ product(x^2+k+9*x, k=190..1500)　← 连乘 Π；也可用 mul(...)</div>
-        <div class="subtopic">🖥️ coeff(series(exp(4*x)/(1-x), x=0, 8), x, 7)　← 取 Taylor 展开中 x^7 的系数</div>
-        <div class="subtopic">🖥️ y(x), diff(y(x),x), diff(y(x),x$2), diff(y(x),x$3)　← y, y′, y″, y‴ 的输入</div>
-        <div class="subtopic">🖥️ y(0)=a, D(y)(0)=b　← 初值条件 y(0)=a 与 y′(0)=b</div>
-        <div class="subtopic">🖥️ dsolve({方程, y(0)=a, D(y)(0)=b}, y(x))　← 二阶初值题固定外壳</div>
+        <div class="subtopic">Maple: convert(p/q, parfrac, x)　← 对 p/q 做部分分式分解</div>
+        <div class="subtopic">Maple: dsolve({diff(y(x),x)+4*y(x)=cos(x)+x, y(0)=0}, y(x))　← 一阶 IVP</div>
+        <div class="subtopic">Maple: dsolve({y(x)*diff(y(x),x$2)+diff(y(x),x)^2=0, y(0)=3, D(y)(0)=9}, y(x))　← 二阶 IVP，初始导数写 D(y)(0)</div>
+        <div class="subtopic">Maple: product(x^2+k+9*x, k=190..1500)　← 连乘 Π；也可用 mul(...)</div>
+        <div class="subtopic">Maple: coeff(series(exp(4*x)/(1-x), x=0, 8), x, 7)　← 取 Taylor 展开中 x^7 的系数</div>
+        <div class="subtopic">Maple: y(x), diff(y(x),x), diff(y(x),x$2), diff(y(x),x$3)　← y, y′, y″, y‴ 的输入</div>
+        <div class="subtopic">Maple: y(0)=a, D(y)(0)=b　← 初值条件 y(0)=a 与 y′(0)=b</div>
+        <div class="subtopic">Maple: dsolve({方程, y(0)=a, D(y)(0)=b}, y(x))　← 二阶初值题固定外壳</div>
         <div class="maple-template-pack">
           <div class="maple-template-card">
             <div class="maple-template-title"><span>Lab Test 2 Maple templates</span><span class="maple-var">蓝色 = 题目会变</span></div>
@@ -1980,13 +1991,13 @@ dsolve({y(x)*diff(y(x),x$2)-(2/3)*diff(y(x),x)^2=0,y(0)=5,D(y)(0)=6},y(x));
 
 # Type D
 dsolve({y(x)*diff(y(x),x$2)+3*diff(y(x),x)^2=0,y(0)=4,D(y)(0)=7},y(x));</pre>
-        <div class="subtopic">🖥️ series(f(x),x=0,n+1)　← 展开到 x^n，最后会显示 O(x^(n+1))</div>
-        <div class="subtopic">🖥️ coeff(expression,x,n)　← 取 x^n 的系数</div>
+        <div class="subtopic">Maple: series(f(x),x=0,n+1)　← 展开到 x^n，最后会显示 O(x^(n+1))</div>
+        <div class="subtopic">Maple: coeff(expression,x,n)　← 取 x^n 的系数</div>
         <pre class="maple-code">series(exp(3*x)*cos(5*x),x=0,10);
 coeff(series(exp(3*x)*cos(5*x),x=0,10),x,9);</pre>
 
         <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:10px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">递推 · 求和 · 程序模板</div>
-        <div class="subtopic">🖥️ 一阶递推：从 a[0] 开始，每次用上一项生成下一项，最后输出 a[m]</div>
+        <div class="subtopic">Maple: 一阶递推：从 a[0] 开始，每次用上一项生成下一项，最后输出 a[m]</div>
         <pre class="maple-code">a[0] := c:
 
 for i from 1 to m do
@@ -1994,7 +2005,7 @@ for i from 1 to m do
 end do:
 
 a[m];</pre>
-        <div class="subtopic">🖥️ 三阶递推：先给 a[1], a[2], a[3]，再用公式推出 a[m]</div>
+        <div class="subtopic">Maple: 三阶递推：先给 a[1], a[2], a[3]，再用公式推出 a[m]</div>
         <pre class="maple-code">a[1] := 初值1:
 a[2] := 初值2:
 a[3] := 初值3:
@@ -2004,18 +2015,18 @@ for n from 3 to m-1 do
 end do:
 
 a[m];</pre>
-        <div class="subtopic">🖥️ 有限和数值循环：每个 k 都计算一次小数形式的和</div>
+        <div class="subtopic">Maple: 有限和数值循环：每个 k 都计算一次小数形式的和</div>
         <pre class="maple-code">for k from 1 to m do
     evalf(add(表达式, n=下限..上限));
 end do;</pre>
-        <div class="subtopic">🖥️ proc 模板：把过程打包成 f(m)，题目要函数时直接套</div>
+        <div class="subtopic">Maple: proc 模板：把过程打包成 f(m)，题目要函数时直接套</div>
         <pre class="maple-code">f := proc(m)
     local a, i;
 
     程序内容
 
 end proc;</pre>
-        <div class="subtopic">🖥️ 高精度收敛判断：Digits 先提高精度，不收敛就输出 -1</div>
+        <div class="subtopic">Maple: 高精度收敛判断：Digits 先提高精度，不收敛就输出 -1</div>
         <pre class="maple-code">Digits := 30;
 
 f := proc(m)
@@ -2034,12 +2045,12 @@ f := proc(m)
     end if
 end proc;</pre>
 
-        <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:10px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">❌ 常见错误</div>
-        <div class="subtopic">❌ 乘法漏写 *：6x^5 要写 6*x^5，sin(9x-y) 要写 sin(9*x-y)</div>
-        <div class="subtopic">❌ 幂次用错：x² 要写 x^2，不能写 x2 或 x²</div>
-        <div class="subtopic">❌ Maple 输出题不要粘 y(x)=，题目要求只填右侧表达式时要删掉左边</div>
-        <div class="subtopic">❌ product / series 题不要加赋值 := 或分号 ;，Mobius 通常只要表达式本身</div>
-        <div class="subtopic">❌ 10位有效数字题必须从 Maple 复制答案，Python 最后1-2位可能偏差</div>
+        <div style="font-size:12px;font-weight:700;color:var(--math-color);padding:10px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px;">Careful: 常见错误</div>
+        <div class="subtopic">Careful: 乘法漏写 *：6x^5 要写 6*x^5，sin(9x-y) 要写 sin(9*x-y)</div>
+        <div class="subtopic">Careful: 幂次用错：x² 要写 x^2，不能写 x2 或 x²</div>
+        <div class="subtopic">Careful: Maple 输出题不要粘 y(x)=，题目要求只填右侧表达式时要删掉左边</div>
+        <div class="subtopic">Careful: product / series 题不要加赋值 := 或分号 ;，Mobius 通常只要表达式本身</div>
+        <div class="subtopic">Careful: 10位有效数字题必须从 Maple 复制答案，Python 最后1-2位可能偏差</div>
 
       </div>
     </div>
@@ -2248,7 +2259,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         <div class="final-question-list" id="math1231-final-question-list"></div>
         <div class="link-row">
           <a class="resource-link" href="https://maps.apple.com/?q=Chancellor%27s+Garden+UNSW+Kensington" target="_blank" rel="noopener">
-            <span class="link-icon" style="background:var(--math-soft);color:var(--math-color);">📍</span>
+            <span class="link-icon" style="background:var(--math-soft);color:var(--math-color);">MAP</span>
             <span>
               <strong>Chancellor's Garden 导航</strong>
               <span style="display:block;color:var(--dim);font-size:12px;margin-top:2px;">15:40 arrive by · Apple Maps</span>
@@ -2306,7 +2317,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     <button class="course-switch" onclick="showCourse('engg')">ENGG1300</button>
   </div>
   <div class="course-header mman">
-    <div class="course-icon">🔧</div>
+    <div class="course-icon">CAD</div>
     <div class="course-meta">
       <div class="course-code">MMAN1130</div>
       <div class="course-name">Design & Manufacturing · CAD · Manufacturing</div>
@@ -2356,7 +2367,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         <div class="topic-left">
           <div class="topic-dot mman-dot"></div>
           <div class="topic-title">TOOLS1 · 工程图读图与标注</div>
-          <span class="mman-topic-tag">📝 TOOLS1 Quiz</span>
+          <span class="mman-topic-tag">TOOLS1 Quiz</span>
         </div>
         <span class="topic-chevron">▼</span>
       </div>
@@ -2367,11 +2378,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
           <div class="subtopic">沉头孔 ⌴（Counterbore）两行标注：上行 Ø[底孔直径] THRU，下行 ⌴ Ø[沉头直径] ▼[沉头深度]；⌴ = 平底扩孔，▼ = 深度</div>
           <div class="subtopic">螺纹孔两行标注：上行 Ø[底孔直径] ▼[钻孔深度]，下行 M[尺寸]×[螺距] ▼[螺纹深度]；螺纹深度必须小于钻孔深度（底部留空间防止断刀）</div>
           <div class="subtopic">ISO 公制螺纹格式：M[公称直径]×[螺距]，公称直径 = 螺纹外径，螺距 = 相邻牙距（mm），例 M5×0.8</div>
-          <div class="subtopic">📌 底孔与螺纹对照（必记）：Ø3.30 → M4×0.7；Ø4.20 → M5×0.8；Ø5.00 → M6×1.0；Ø6.80 → M8×1.25；规律：底孔直径 ≈ 公称直径 − 螺距</div>
+          <div class="subtopic">Key: 底孔与螺纹对照（必记）：Ø3.30 → M4×0.7；Ø4.20 → M5×0.8；Ø5.00 → M6×1.0；Ø6.80 → M8×1.25；规律：底孔直径 ≈ 公称直径 − 螺距</div>
           <div class="subtopic">倒角标注：C[尺寸]×45 = 45°倒角，如 C1×45 表示1mm宽的45°倒角</div>
           <div class="subtopic">锥度标注：C[尺寸]×45 TAPER = 外锥面，每边收缩该尺寸，如 C2×45 TAPER</div>
           <div class="subtopic">多孔前缀：2×、4× 表示该特征重复数量，如 4×Ø6.2 THRU = 四个直径6.2mm通孔</div>
-          <div class="subtopic">📌 符号速查：Ø=直径；▼=深度；THRU=通孔；⌴=平底沉头孔；⌵=锥形锪孔；M=公制螺纹；C=倒角/锥度</div>
+          <div class="subtopic">Key: 符号速查：Ø=直径；▼=深度；THRU=通孔；⌴=平底沉头孔；⌵=锥形锪孔；M=公制螺纹；C=倒角/锥度</div>
         </div>
         <div class="links-label">学习资源</div>
         <div class="link-row">
@@ -2394,7 +2405,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         <div class="topic-left">
           <div class="topic-dot mman-dot"></div>
           <div class="topic-title">TOOLS1 · 游标卡尺测量方法</div>
-          <span class="mman-topic-tag">📝 TOOLS1 Quiz</span>
+          <span class="mman-topic-tag">TOOLS1 Quiz</span>
         </div>
         <span class="topic-chevron">▼</span>
       </div>
@@ -2407,8 +2418,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
           <div class="subtopic">量钻孔深/沉头深度用深度杆：卡尺端面完全平贴零件表面，深度杆插入孔中顶到底，读数即为深度</div>
           <div class="subtopic">量螺纹深度用深度杆：插入螺纹孔，感觉到阻力停止（螺纹终止处），该位置读数为螺纹有效深度</div>
           <div class="subtopic">沉头深度技巧：深度杆直接测表面到沉头底面距离；或总孔深 − 底孔深 = 沉头深度</div>
-          <div class="subtopic">❌ 常见错误：内爪未垂直孔轴（读数偏大）；深度杆未顶到底就读；读数时卡尺滑动了；游标读错对齐线</div>
-          <div class="subtopic">📌 测量规范：同一尺寸量3次取平均；量孔径时在不同方向各量一次确认圆度；深度杆端面必须完全贴合表面</div>
+          <div class="subtopic">Careful: 常见错误：内爪未垂直孔轴（读数偏大）；深度杆未顶到底就读；读数时卡尺滑动了；游标读错对齐线</div>
+          <div class="subtopic">Key: 测量规范：同一尺寸量3次取平均；量孔径时在不同方向各量一次确认圆度；深度杆端面必须完全贴合表面</div>
         </div>
         <div class="links-label">学习资源</div>
         <div class="link-row">
@@ -2431,7 +2442,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         <div class="topic-left">
           <div class="topic-dot mman-dot"></div>
           <div class="topic-title">测量工具实操</div>
-          <span class="mman-topic-tag">🏫 Week 2–3</span>
+          <span class="mman-topic-tag">Week Week 2–3</span>
         </div>
         <span class="topic-chevron">▼</span>
       </div>
@@ -2448,7 +2459,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
           <div class="subtopic">注意事项：每个人单独记录，可以小组合量，但答案必须自己填写，测量准确度会影响分数。</div>
           <div class="subtopic">Note: record your own answers. You may measure in a group, but accuracy affects the mark.</div>
         </div>
-        <div style="margin:12px 0 6px;font-size:12px;font-weight:600;color:var(--text);letter-spacing:0.03em;">📋 需要现场量的尺寸（红框部分）</div>
+        <div style="margin:12px 0 6px;font-size:12px;font-weight:600;color:var(--text);letter-spacing:0.03em;">需要现场量的尺寸（红框部分）</div>
         <div style="background:var(--bg);border-radius:10px;padding:12px;font-size:13px;">
           <div style="font-weight:600;color:var(--mman-color);margin-bottom:6px;">Component 100 · Base Plate</div>
           <div style="color:var(--muted);padding:3px 0;">· T1 板厚 → 外爪</div>
@@ -2456,7 +2467,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
           <div style="color:var(--muted);padding:3px 0;">· T2 厚度 → 外爪</div>
           <div style="color:var(--muted);padding:3px 0;">· M螺纹规格（size × pitch）→ 螺距规确认螺距 + 卡尺量外径</div>
           <div style="color:var(--muted);padding:3px 0;">· 螺纹深度 ▼ → 深度杆</div>
-          <div style="color:var(--muted);padding:3px 0;">· D1 = 70 − 50 = <strong style="color:var(--mman-color)">20mm</strong> ✅（计算得出，无需量）</div>
+          <div style="color:var(--muted);padding:3px 0;">· D1 = 70 − 50 = <strong style="color:var(--mman-color)">20mm</strong> OK（计算得出，无需量）</div>
           <div style="font-weight:600;color:var(--mman-color);margin:10px 0 6px;">Component 102 · Side Panel</div>
           <div style="color:var(--muted);padding:3px 0;">· 小孔直径 Ø THRU → 内爪</div>
           <div style="color:var(--muted);padding:3px 0;">· 沉头孔直径 ⌴Ø → 内爪（量沉头那层大孔）</div>
@@ -2473,7 +2484,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
           <div style="color:var(--muted);padding:3px 0;">· ØH1 孔径 → 内爪</div>
           <div style="color:var(--muted);padding:3px 0;">· L3 总长 → 外爪</div>
         </div>
-        <div style="margin-top:12px;font-size:12px;color:var(--muted);">📌 每个尺寸量3次取平均；101和103同尺寸只需量一个；量完立刻记录，不要靠记忆</div>
+        <div style="margin-top:12px;font-size:12px;color:var(--muted);">Key: 每个尺寸量3次取平均；101和103同尺寸只需量一个；量完立刻记录，不要靠记忆</div>
       </div>
     </div>
   </div>
@@ -2486,7 +2497,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         <div class="topic-left">
           <div class="topic-dot mman-dot"></div>
           <div class="topic-title">手工工具实操</div>
-          <span class="mman-topic-tag">🏫 Week 4–5</span>
+          <span class="mman-topic-tag">Week Week 4–5</span>
         </div>
         <span class="topic-chevron">▼</span>
       </div>
@@ -2554,8 +2565,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
           <div class="subtopic">结构六部件：砧座（anvil）固定；测微螺杆（spindle）活动；套筒（sleeve）刻主刻度；套管（thimble）旋转刻25格；锁紧螺母（lock nut）；棘轮（ratchet）控制力度防过压</div>
           <div class="subtopic">读数三步（0.01mm精度）：① 读套筒——水平线上方整数mm，再看水平线下方是否露出0.5mm格 ② 读套管——对齐水平线的格数 × 0.01mm ③ 相加。例：套筒7.5mm + 套管12格×0.01 = 7.62mm</div>
           <div class="subtopic">使用步骤：① 棘轮打开比零件稍大 ② 零件放入砧座和螺杆之间 ③ 转棘轮（不转thimble）直到听到"咔"声停 ④ 锁紧读数</div>
-          <div class="subtopic">📌 归零检查（Zero Check）：两端闭合后读数应为0.00mm，不为零要调零或记录偏差后修正结果</div>
-          <div class="subtopic">❌ 常见错误：直接转thimble施力过大导致读数偏小；没归零检查；漏看套筒0.5mm刻线；零件倾斜放置</div>
+          <div class="subtopic">Key: 归零检查（Zero Check）：两端闭合后读数应为0.00mm，不为零要调零或记录偏差后修正结果</div>
+          <div class="subtopic">Careful: 常见错误：直接转thimble施力过大导致读数偏小；没归零检查；漏看套筒0.5mm刻线；零件倾斜放置</div>
           <div class="subtopic">外径用千分尺（精度高），孔径/深度用游标卡尺内爪/深度杆，两者互补使用</div>
         </div>
         <div class="links-label">学习资源</div>
@@ -2586,9 +2597,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
           <div class="subtopic">IT公差等级：IT1最精密 → IT18最粗糙；IT6/IT7用于精密配合面；IT11/IT12用于一般配合；IT14用于自由公差（粗加工）；等级数字越小公差带越窄要求越高</div>
           <div class="subtopic">三种配合类型：间隙配合（Clearance fit）轴 < 孔，总有间隙，如 H7/g6；过渡配合（Transition fit）可能间隙可能过盈，如 H7/k6；过盈配合（Interference fit）轴 > 孔，需压入，如 H7/p6</div>
           <div class="subtopic">基孔制（Hole basis）最常用：孔的下偏差固定为0（字母H），通过改变轴的公差带位置得到不同配合。读法 H7/g6：H7=基准孔（IT7级），g6=轴（负偏差，IT6级）→ 间隙配合</div>
-          <div class="subtopic">📌 常见配合速记：H7/f7 宽松间隙；H7/g6 小间隙精密滑动；H7/h6 最小间隙定位；H7/k6 过渡轻压；H7/p6 小过盈压配；H7/s6 大过盈紧压</div>
+          <div class="subtopic">Key: 常见配合速记：H7/f7 宽松间隙；H7/g6 小间隙精密滑动；H7/h6 最小间隙定位；H7/k6 过渡轻压；H7/p6 小过盈压配；H7/s6 大过盈紧压</div>
           <div class="subtopic">自由公差（General Tolerance）：图纸标题栏注明 ISO 2768-f/m/c，未单独标注的尺寸自动套用。f=fine精，m=medium中，c=coarse粗</div>
-          <div class="subtopic">❌ 易混淆：公差永远是正数（范围大小）；偏差可正可负（偏移方向）；"公差0.02mm"不是指尺寸是0.02，而是上下限相差0.02mm</div>
+          <div class="subtopic">Careful: 易混淆：公差永远是正数（范围大小）；偏差可正可负（偏移方向）；"公差0.02mm"不是指尺寸是0.02，而是上下限相差0.02mm</div>
         </div>
         <div class="links-label">学习资源</div>
         <div class="link-row">
@@ -2621,7 +2632,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
           <div class="subtopic">Abbe 原理：测量轴线与被测尺寸应在同一直线，否则角度误差会放大。千分尺符合此原理；游标卡尺量程较大时略有偏差</div>
           <div class="subtopic">标准测量温度为20°C，金属受热膨胀。精密测量前零件和量具需在同温环境放置一段时间使温度均匀</div>
           <div class="subtopic">测量不确定度（Uncertainty）表示可信范围，如 25.34 ± 0.02mm；不确定度 ≥ 仪器分辨率的一半</div>
-          <div class="subtopic">📌 操作规范：测前清洁接触面；同位置量3次取平均；同时记录环境温度；量具用完归零存放</div>
+          <div class="subtopic">Key: 操作规范：测前清洁接触面；同位置量3次取平均；同时记录环境温度；量具用完归零存放</div>
         </div>
         <div class="links-label">学习资源</div>
         <div class="link-row">
@@ -2653,7 +2664,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
           <div class="subtopic">螺纹识别四步：① 螺距规确认螺距 ② 游标卡尺量外径（公称直径）③ 查对照表得完整规格 M直径×螺距 ④ 用标准螺栓/螺母试配最终确认</div>
           <div class="subtopic">通止规（Go/No-Go Gauge）：检验孔/轴是否在公差范围的专用量具。Go端（通端）必须能通过；No-Go端（止端）不能通过。两个条件同时满足 = 合格</div>
           <div class="subtopic">其他量具：钢直尺精度1mm量长度；组合角尺量90°/45°；量角器量任意角；百分表（Dial indicator）测圆度/平面度/跳动量</div>
-          <div class="subtopic">📌 量具保养：用后擦干净防锈；卡尺存放时两爪留微小间隙；千分尺两端留0.5mm间隙防热胀卡死；避免摔落碰撞</div>
+          <div class="subtopic">Key: 量具保养：用后擦干净防锈；卡尺存放时两爪留微小间隙；千分尺两端留0.5mm间隙防热胀卡死；避免摔落碰撞</div>
         </div>
         <div class="links-label">学习资源</div>
         <div class="link-row">
@@ -2941,7 +2952,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     <button class="course-switch active" onclick="showCourse('engg')">ENGG1300</button>
   </div>
   <div class="course-header engg">
-    <div class="course-icon">⚙️</div>
+    <div class="course-icon">MECH</div>
     <div class="course-meta">
       <div class="course-code">ENGG1300</div>
       <div class="course-name">Engineering Mechanics · Statics · Dynamics</div>
@@ -2952,7 +2963,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   <div class="topic-group">
     <div class="group-label">成绩追踪</div>
     <div class="topic-card" style="padding:16px;" id="gt-engg"></div>
-    <div class="exam-alert">⚠️ 没有 Final Exam · 三次 Test 合计需 ≥ 40% 才能过课</div>
+    <div class="exam-alert">Alert: 没有 Final Exam · 三次 Test 合计需 ≥ 40% 才能过课</div>
   </div>
 
 
@@ -3091,16 +3102,16 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   <!-- Mini-design Project -->
   <div class="topic-group">
-    <div class="group-label">🛠️ Mini-design Project（30%）</div>
+    <div class="group-label">Mini-design Project（30%）</div>
 
     <div class="topic-card" style="padding:16px;">
       <div style="font-size:14px; line-height:1.7; color:var(--text);">
         <strong>Project brief：</strong>已按 Option 2 Helipad side truss 开始推进。完成 static load + impact load 两套分析，并交一份最多 20 页的 PDF 工程报告。你现在按 P–T 组：G/H/I 每个加载点 Wdl = 11 kN，impact mass = 70 kg。
       </div>
       <div style="height:10px;"></div>
-      <a class="pdf-link" href="engg1300/pdfs/ENGG1300_Mini-design_Project.pdf" target="_blank" rel="noopener">📄 Original brief</a>
+      <a class="pdf-link" href="engg1300/pdfs/ENGG1300_Mini-design_Project.pdf" target="_blank" rel="noopener">Original brief</a>
       <a class="pdf-link" href="engg1300/pdfs/ENGG1300_Mini-design_Project_CN.pdf" target="_blank" rel="noopener">译 中文翻译件</a>
-      <a class="pdf-link" href="engg1300/pdfs/ENGG1300_Mini-design_Project_Playbook.pdf" target="_blank" rel="noopener">🧭 项目书 / Playbook</a>
+      <a class="pdf-link" href="engg1300/pdfs/ENGG1300_Mini-design_Project_Playbook.pdf" target="_blank" rel="noopener">项目书 / Playbook</a>
     </div>
 
     <div class="topic-card" id="tc-mdp-option2">
@@ -3212,7 +3223,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-20-course-family-colors';
+  var APP_VERSION = '2026-08-20-no-emoji-course-ui';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -3225,32 +3236,32 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     thesis: 'var(--thesis-color)'
   };
   var COURSE_CATALOG = [
-    { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
-    { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
-    { id:'phys1121', code:'PHYS1121', icon:'🛰️', short:'Phys', color:'var(--phys-color)', name:'Physics 1A', tags:['Planned','Core','2026 T3'], status:'archived', term:'2026 T3', order:4 },
-    { id:'engg1811', code:'ENGG1811', icon:'💻', short:'Code', color:'var(--engg-color)', name:'Computing for Engineers', tags:['Planned','Core','2026 T3'], status:'archived', term:'2026 T3', order:5 },
-    { id:'phys1160', code:'PHYS1160', icon:'🔭', short:'Astro', color:'var(--phys-color)', name:'Introduction to Astronomy', tags:['Planned','Free Elective','2026 T3'], status:'archived', term:'2026 T3', order:6 },
-    { id:'desn1000', code:'DESN1000', icon:'🧩', short:'Design', color:'var(--desn-color)', name:'Introduction to Engineering Design and Innovation', tags:['Prereq','Core','2027 T1'], status:'archived', term:'2027 T1', order:7 },
-    { id:'elec1111', code:'ELEC1111', icon:'🔌', short:'Elec', color:'var(--elec-color)', name:'Electrical Circuit Fundamentals', tags:['Prereq','Core','2027 T2'], status:'archived', term:'2027 T2', order:8 },
-    { id:'mman', code:'MMAN1130', icon:'🔧', short:'Design', color:'var(--mman-color)', name:'Design and Manufacturing · CAD · Tools · Manufacturing', tags:['Prereq','Core','2027 T1'], status:'archived', note:'Dropped · materials kept', term:'2027 T1', order:9 },
-    { id:'math2018', code:'MATH2018', icon:'📐', short:'Math', color:'var(--math-color)', name:'Engineering Mathematics 2D', tags:['Selected','Core','2027 T2'], status:'archived', term:'2027 T2', order:10 },
-    { id:'math2089', code:'MATH2089', icon:'📊', short:'Stats', color:'var(--math-color)', name:'Numerical Methods and Statistics', tags:['Core','2027 T1'], status:'archived', term:'2027 T1', order:11 },
-    { id:'mman2700', code:'MMAN2700', icon:'🌡️', short:'Thermo', color:'var(--mman-color)', name:'Thermodynamics', tags:['Core','2027 T2'], status:'archived', term:'2027 T2', order:12 },
-    { id:'engg2400', code:'ENGG2400', icon:'🧱', short:'Solids', color:'var(--engg-color)', name:'Mechanics of Solids 1', tags:['Core','2027 T3'], status:'archived', term:'2027 T3', order:13 },
-    { id:'engg2500', code:'ENGG2500', icon:'🌊', short:'Fluids', color:'var(--engg-color)', name:'Fluid Mechanics for Engineers', tags:['Core','2027 T3'], status:'archived', term:'2027 T3', order:14 },
-    { id:'mman2300', code:'MMAN2300', icon:'⚙️', short:'Mech2', color:'var(--mman-color)', name:'Engineering Mechanics 2', tags:['Core','2027 T3'], status:'archived', term:'2027 T3', order:15 },
-    { id:'desn2000', code:'DESN2000', icon:'🧩', short:'Design', color:'var(--desn-color)', name:'Engineering Design and Professional Practice', tags:['Core','2028 T1'], status:'archived', term:'2028 T1', order:16 },
-    { id:'aero3410', code:'AERO3410', icon:'🚀', short:'Aero', color:'var(--aero-color)', name:'Aerospace Structures', tags:['Aero Core','2028 T1'], status:'archived', term:'2028 T1', order:17 },
-    { id:'aero3630', code:'AERO3630', icon:'🚀', short:'Aero', color:'var(--aero-color)', name:'Aerodynamics', tags:['Aero Core','2028 T1'], status:'archived', term:'2028 T1', order:18 },
-    { id:'aero3660', code:'AERO3660', icon:'🚀', short:'Flight', color:'var(--aero-color)', name:'Flight Performance and Propulsion', tags:['Aero Core','2028 T2'], status:'archived', term:'2028 T2', order:19 },
-    { id:'aero3110', code:'AERO3110', icon:'🚀', short:'Design', color:'var(--aero-color)', name:'Aerospace Design 1', tags:['Aero Core','2028 T2'], status:'archived', term:'2028 T2', order:20 },
-    { id:'mman3200', code:'MMAN3200', icon:'🎛️', short:'Control', color:'var(--mman-color)', name:'Linear Systems and Control', tags:['Core','2028 T2'], status:'archived', term:'2028 T2', order:21 },
-    { id:'desn3000', code:'DESN3000', icon:'🧠', short:'Design', color:'var(--desn-color)', name:'Strategic Design Innovation', tags:['Core','2028 T3'], status:'archived', term:'2028 T3', order:22 },
-    { id:'aero4620', code:'AERO4620', icon:'🚀', short:'Avionics', color:'var(--aero-color)', name:'Dynamics of Aerospace Vehicles, Systems and Avionics', tags:['Aero Core','2029 T1'], status:'archived', term:'2029 T1', order:23 },
-    { id:'mman4951', code:'MMAN4951', icon:'📘', short:'Thesis', color:'var(--thesis-color)', name:'Thesis A', tags:['Thesis','2029 T1'], status:'archived', term:'2029 T1', order:24 },
-    { id:'mman4952', code:'MMAN4952', icon:'📘', short:'Thesis', color:'var(--thesis-color)', name:'Thesis B', tags:['Thesis','2029 T2'], status:'archived', term:'2029 T2', order:25 },
-    { id:'aero4110', code:'AERO4110', icon:'🚀', short:'Aero', color:'var(--aero-color)', name:'Aerospace Design 2', tags:['Aero Core','2029 T3'], status:'archived', term:'2029 T3', order:26 },
-    { id:'mman4953', code:'MMAN4953', icon:'📘', short:'Thesis', color:'var(--thesis-color)', name:'Thesis C', tags:['Thesis','2029 T3'], status:'archived', term:'2029 T3', order:27 }
+    { id:'math', code:'MATH1231', icon:'M1B', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
+    { id:'engg', code:'ENGG1300', icon:'MECH', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
+    { id:'phys1121', code:'PHYS1121', icon:'P1A', short:'Phys', color:'var(--phys-color)', name:'Physics 1A', tags:['Planned','Core','2026 T3'], status:'archived', term:'2026 T3', order:4 },
+    { id:'engg1811', code:'ENGG1811', icon:'CODE', short:'Code', color:'var(--engg-color)', name:'Computing for Engineers', tags:['Planned','Core','2026 T3'], status:'archived', term:'2026 T3', order:5 },
+    { id:'phys1160', code:'PHYS1160', icon:'AST', short:'Astro', color:'var(--phys-color)', name:'Introduction to Astronomy', tags:['Planned','Free Elective','2026 T3'], status:'archived', term:'2026 T3', order:6 },
+    { id:'desn1000', code:'DESN1000', icon:'DES', short:'Design', color:'var(--desn-color)', name:'Introduction to Engineering Design and Innovation', tags:['Prereq','Core','2027 T1'], status:'archived', term:'2027 T1', order:7 },
+    { id:'elec1111', code:'ELEC1111', icon:'ELEC', short:'Elec', color:'var(--elec-color)', name:'Electrical Circuit Fundamentals', tags:['Prereq','Core','2027 T2'], status:'archived', term:'2027 T2', order:8 },
+    { id:'mman', code:'MMAN1130', icon:'CAD', short:'Design', color:'var(--mman-color)', name:'Design and Manufacturing · CAD · Tools · Manufacturing', tags:['Prereq','Core','2027 T1'], status:'archived', note:'Dropped · materials kept', term:'2027 T1', order:9 },
+    { id:'math2018', code:'MATH2018', icon:'M1B', short:'Math', color:'var(--math-color)', name:'Engineering Mathematics 2D', tags:['Selected','Core','2027 T2'], status:'archived', term:'2027 T2', order:10 },
+    { id:'math2089', code:'MATH2089', icon:'NUM', short:'Stats', color:'var(--math-color)', name:'Numerical Methods and Statistics', tags:['Core','2027 T1'], status:'archived', term:'2027 T1', order:11 },
+    { id:'mman2700', code:'MMAN2700', icon:'THER', short:'Thermo', color:'var(--mman-color)', name:'Thermodynamics', tags:['Core','2027 T2'], status:'archived', term:'2027 T2', order:12 },
+    { id:'engg2400', code:'ENGG2400', icon:'SOL', short:'Solids', color:'var(--engg-color)', name:'Mechanics of Solids 1', tags:['Core','2027 T3'], status:'archived', term:'2027 T3', order:13 },
+    { id:'engg2500', code:'ENGG2500', icon:'FLD', short:'Fluids', color:'var(--engg-color)', name:'Fluid Mechanics for Engineers', tags:['Core','2027 T3'], status:'archived', term:'2027 T3', order:14 },
+    { id:'mman2300', code:'MMAN2300', icon:'MECH', short:'Mech2', color:'var(--mman-color)', name:'Engineering Mechanics 2', tags:['Core','2027 T3'], status:'archived', term:'2027 T3', order:15 },
+    { id:'desn2000', code:'DESN2000', icon:'DES', short:'Design', color:'var(--desn-color)', name:'Engineering Design and Professional Practice', tags:['Core','2028 T1'], status:'archived', term:'2028 T1', order:16 },
+    { id:'aero3410', code:'AERO3410', icon:'AERO', short:'Aero', color:'var(--aero-color)', name:'Aerospace Structures', tags:['Aero Core','2028 T1'], status:'archived', term:'2028 T1', order:17 },
+    { id:'aero3630', code:'AERO3630', icon:'AERO', short:'Aero', color:'var(--aero-color)', name:'Aerodynamics', tags:['Aero Core','2028 T1'], status:'archived', term:'2028 T1', order:18 },
+    { id:'aero3660', code:'AERO3660', icon:'AERO', short:'Flight', color:'var(--aero-color)', name:'Flight Performance and Propulsion', tags:['Aero Core','2028 T2'], status:'archived', term:'2028 T2', order:19 },
+    { id:'aero3110', code:'AERO3110', icon:'AERO', short:'Design', color:'var(--aero-color)', name:'Aerospace Design 1', tags:['Aero Core','2028 T2'], status:'archived', term:'2028 T2', order:20 },
+    { id:'mman3200', code:'MMAN3200', icon:'CTRL', short:'Control', color:'var(--mman-color)', name:'Linear Systems and Control', tags:['Core','2028 T2'], status:'archived', term:'2028 T2', order:21 },
+    { id:'desn3000', code:'DESN3000', icon:'IDEA', short:'Design', color:'var(--desn-color)', name:'Strategic Design Innovation', tags:['Core','2028 T3'], status:'archived', term:'2028 T3', order:22 },
+    { id:'aero4620', code:'AERO4620', icon:'AERO', short:'Avionics', color:'var(--aero-color)', name:'Dynamics of Aerospace Vehicles, Systems and Avionics', tags:['Aero Core','2029 T1'], status:'archived', term:'2029 T1', order:23 },
+    { id:'mman4951', code:'MMAN4951', icon:'THES', short:'Thesis', color:'var(--thesis-color)', name:'Thesis A', tags:['Thesis','2029 T1'], status:'archived', term:'2029 T1', order:24 },
+    { id:'mman4952', code:'MMAN4952', icon:'THES', short:'Thesis', color:'var(--thesis-color)', name:'Thesis B', tags:['Thesis','2029 T2'], status:'archived', term:'2029 T2', order:25 },
+    { id:'aero4110', code:'AERO4110', icon:'AERO', short:'Aero', color:'var(--aero-color)', name:'Aerospace Design 2', tags:['Aero Core','2029 T3'], status:'archived', term:'2029 T3', order:26 },
+    { id:'mman4953', code:'MMAN4953', icon:'THES', short:'Thesis', color:'var(--thesis-color)', name:'Thesis C', tags:['Thesis','2029 T3'], status:'archived', term:'2029 T3', order:27 }
   ];
   var COUNTDOWN_TERMS = ['2026 T2','2026 T3','2027 T1','2027 T2','2027 T3'];
   var currentCountdownTerm = localStorage.getItem('iue.countdownTerm.v1') || '2026 T2';
@@ -4403,19 +4414,19 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       { tag:"Ch1A", title:"多元函数 Functions of Several Variables", file:"Holzer_chap1A_1231_Calculus_2026.pdf",
         yt:"multivariable functions level curves partial derivatives", bili:"多元函数 偏导数 等高线",
         mobius: true,
-        points:["偏导数定义：∂f/∂x 表示固定 y（及其他变量），仅对 x 求普通导数；∂f/∂y 同理固定 x 对 y 求导","偏导数几何意义：∂f/∂x 是曲面 z=f(x,y) 在该点沿 x 轴方向切线的斜率","Fact（线性函数速算）：F=ax+by+cz 的偏导数就是对应系数，∂F/∂x=a, ∂F/∂y=b, ∂F/∂z=c，直接读取，不需要计算","Fact（高阶混合偏导）：fxy = fyx，在函数连续可微的条件下混合偏导顺序可交换（Clairaut定理）","梯度定义：∇F = (∂F/∂x, ∂F/∂y, ∂F/∂z)，将各偏导排成向量","📌 核心考点：∇F 是隐曲面 F(x,y,z)=C 在该点的法向量（normal vector to the surface）","✅ 平面的法向量：ax+by+cz=d 的 ∇F=(a,b,c) 是常向量，在平面上每一点都相同","❌ 易错：一般曲面 G(x,y,z)=C（如 4x²+4z²=14）的 ∇G 含有 x,z，随点变化，不是常数","等高线 level curve：z=f(x,y) 中固定 z=C，得到 xy 平面上的曲线 f(x,y)=C","判断极限/连续性：F(x,y) 在某点连续 ⇔ 沿任意路径趋近时极限相同（不同路径极限不同 → 极限不存在）"] },
+        points:["偏导数定义：∂f/∂x 表示固定 y（及其他变量），仅对 x 求普通导数；∂f/∂y 同理固定 x 对 y 求导","偏导数几何意义：∂f/∂x 是曲面 z=f(x,y) 在该点沿 x 轴方向切线的斜率","Fact（线性函数速算）：F=ax+by+cz 的偏导数就是对应系数，∂F/∂x=a, ∂F/∂y=b, ∂F/∂z=c，直接读取，不需要计算","Fact（高阶混合偏导）：fxy = fyx，在函数连续可微的条件下混合偏导顺序可交换（Clairaut定理）","梯度定义：∇F = (∂F/∂x, ∂F/∂y, ∂F/∂z)，将各偏导排成向量","Key: 核心考点：∇F 是隐曲面 F(x,y,z)=C 在该点的法向量（normal vector to the surface）","OK: 平面的法向量：ax+by+cz=d 的 ∇F=(a,b,c) 是常向量，在平面上每一点都相同","Careful: 易错：一般曲面 G(x,y,z)=C（如 4x²+4z²=14）的 ∇G 含有 x,z，随点变化，不是常数","等高线 level curve：z=f(x,y) 中固定 z=C，得到 xy 平面上的曲线 f(x,y)=C","判断极限/连续性：F(x,y) 在某点连续 ⇔ 沿任意路径趋近时极限相同（不同路径极限不同 → 极限不存在）"] },
       { tag:"Ch1B", title:"全微分近似与链式法则", file:"Holzer_chap1B_1231_Calculus_2026.pdf",
         yt:"multivariable chain rule total differential", bili:"多元函数 全微分 链式法则",
         mobius: true,
-        points:["全微分近似：Δz ≈ ∂z/∂x·Δx + ∂z/∂y·Δy，用于估计函数值变化量或误差传播","【链式法则公式（二元单参数）】dz/dt = ∂z/∂x · dx/dt + ∂z/∂y · dy/dt","【链式法则公式（三元单参数）】dF/dt = ∂F/∂x·dx/dt + ∂F/∂y·dy/dt + ∂F/∂z·dz/dt = ∇F · (dx/dt)","📌 解题三步：① 对 z=f(x,y,…) 求各偏导数 ② 对参数方程 x(t), y(t) 直接普通求导得 dx/dt, dy/dt ③ 代入链式法则公式展开，再把 x=x(t), y=y(t) 代入化简","📌 隐函数反解技巧：F(x,y,z)=C（C 为常数）两边对 t 求导 → dF/dt=0，展开后 dz/dt 是唯一未知量，可直接解出","📌 反解已知量技巧：已知曲面方程与各速度分量，代入链式法则展开式，可反解出未知坐标或导数","几何直觉：∇F 是曲面法向量，dx/dt 是曲面上运动曲线的切向量，两者垂直 → 点积 dF/dt=0","❌ 易错（符号）：d 用于单变量（如 dx/dt），∂ 用于多变量（如 ∂z/∂x），不可混用，考试中写错符号会扣分","❌ 易错（代入顺序）：先展开链式法则公式，再把 x(t), y(t) 代入化简，不能在代入前约分","📌 化简技巧：cos²t − sin²t = cos(2t)；出现 sin²t+cos²t 时整体等于 1；展开后优先尝试二倍角公式","链式法则（多参数）：z=z(x,y), x=x(s,t), y=y(s,t) ⇒ ∂z/∂s 和 ∂z/∂t 各用树状图展开，加上对应乘积"] },
+        points:["全微分近似：Δz ≈ ∂z/∂x·Δx + ∂z/∂y·Δy，用于估计函数值变化量或误差传播","【链式法则公式（二元单参数）】dz/dt = ∂z/∂x · dx/dt + ∂z/∂y · dy/dt","【链式法则公式（三元单参数）】dF/dt = ∂F/∂x·dx/dt + ∂F/∂y·dy/dt + ∂F/∂z·dz/dt = ∇F · (dx/dt)","Key: 解题三步：① 对 z=f(x,y,…) 求各偏导数 ② 对参数方程 x(t), y(t) 直接普通求导得 dx/dt, dy/dt ③ 代入链式法则公式展开，再把 x=x(t), y=y(t) 代入化简","Key: 隐函数反解技巧：F(x,y,z)=C（C 为常数）两边对 t 求导 → dF/dt=0，展开后 dz/dt 是唯一未知量，可直接解出","Key: 反解已知量技巧：已知曲面方程与各速度分量，代入链式法则展开式，可反解出未知坐标或导数","几何直觉：∇F 是曲面法向量，dx/dt 是曲面上运动曲线的切向量，两者垂直 → 点积 dF/dt=0","Careful: 易错（符号）：d 用于单变量（如 dx/dt），∂ 用于多变量（如 ∂z/∂x），不可混用，考试中写错符号会扣分","Careful: 易错（代入顺序）：先展开链式法则公式，再把 x(t), y(t) 代入化简，不能在代入前约分","Key: 化简技巧：cos²t − sin²t = cos(2t)；出现 sin²t+cos²t 时整体等于 1；展开后优先尝试二倍角公式","链式法则（多参数）：z=z(x,y), x=x(s,t), y=y(s,t) ⇒ ∂z/∂s 和 ∂z/∂t 各用树状图展开，加上对应乘积"] },
       { tag:"Ch2A", title:"积分技巧 I：三角积分与还原公式", file:"Holzer_chap2A_1231_Calculus_2026.pdf",
         yt:"trigonometric integrals reduction formula beta function integration by parts", bili:"三角函数积分 还原公式 Beta函数 分部积分",
         mobius: true, mobiusLabels:["Möbius Week 2", "Möbius Week 3"],
-        points:["【换元选择速查表】含 √(a²+x²) → x=a tan(u) 或 x=a sinh(u)；含 √(a²−x²) → x=a sin(u) 或 x=a tanh(u)；含 √(x²−a²) → x=a sec(u) 或 x=a cosh(u)","📌 圆三角换元四步：① 令 x=a·trig(u)，求 dx ② 代入被积式，用恒等式消根号（关键）③ 对 u 积分得结果 ④ 用直角三角形将 u 的结果回代成 x","📌 直角三角形回代法（以 x=a tan(u) 为例）：画直角三角形，对边=x, 邻边=a, 斜边=√(a²+x²)，由此直接读出 tan(u)=x/a, sec(u)=√(a²+x²)/a, sin(u)=x/√(a²+x²)","✅ 圆三角恒等式速查：1+tan²u = sec²u（消 √(a²+x²)）；1−sin²u = cos²u（消 √(a²−x²)）；sec²u−1 = tan²u（消 √(x²−a²)）","📌 双曲换元四步：① 令 x=a·sinh(u)（或 tanh/cosh），求 dx ② 用双曲恒等式消根号 ③ 对 u 积分 ④ 用反双曲函数回代","✅ 双曲恒等式速查：cosh²u − sinh²u = 1 → 1+sinh²u=cosh²u（消 √(a²+x²)）；1−tanh²u = sech²u（消 √(a²−x²)）","📌 定积分三角换元：上下限也一起换；含 √(x²−a²) 且下限等于 a 时是 improper，要特别检查端点","📌 几何速算：∫₀ᵃ √(a²−x²) dx 是半径 a 的四分之一圆面积 = πa²/4","📌 换元优先级：若分子刚好是根号内部导数的一部分，代数换元 u=根号内部 通常比三角换元更快","✅ 基础对数积分：∫1/x dx = ln|x|+C，是 f'/f 型在 f(x)=x 时的特例","✅ f'/f 型：∫f'(x)/f(x)dx = ln|f(x)|+C；tanh(x)=sinh(x)/cosh(x)，所以 ∫tanh(x)dx=ln(cosh(x))+C","✅ sec 积分公式：∫sec(x)dx = ln|sec(x)+tan(x)|+C；三角换元后常直接出现","📌 反三角标准式：∫1/(x²+a²)dx=(1/a)arctan(x/a)+C","📌 配方法反三角：二次式判别式 < 0 时先配成 (x+h)²+a²，再套 ∫1/(u²+a²)du=(1/a)arctan(u/a)+C","∫sech(u)du 方法①：令 t=eᵘ，sech(u)=2/(eᵘ+e⁻ᵘ)=2t/(t²+1)，化为 2∫1/(1+t²)dt = 2arctan(eᵘ)+C","∫sech(u)du 方法②：令 t=sinh(u)，dt=cosh(u)du，cosh²=1+t²，化为 ∫1/(1+t²)dt = arctan(sinh u)+C","还原公式 reduction formula：先找到 base case，再用递推把 n 降低；常见于 ∫tanⁿx、∫secⁿx、∫₀¹xⁿe⁻ˣdx","📌 降阶公式推导套路：把一个因子拆出来，剩下部分用恒等式改写，再做分部积分，最后把含 Iₙ 的项移到左边合并","📌 分部积分型递推：Iₙ=∫₀¹xⁿe⁻ˣdx，取 u=xⁿ、dv=e⁻ˣdx，可得 Iₙ=nIₙ₋₁−1/e；边界项 [uv] 一定要代上下限","📌 sec 还原公式：Iₙ=∫secⁿx dx ⇒ Iₙ=secⁿ⁻²(x)tan(x)/(n−1)+(n−2)Iₙ₋₂/(n−1)","📌 tan 还原思路：tanⁿx=tanⁿ⁻²x(sec²x−1)，拆成可直接换元的一项 − Iₙ₋₂","📌 base case 很重要：偶数通常降到 I₀，奇数通常降到 I₁；例如 sec 题需要记住 ∫sec x dx = ln|sec x+tan x|+C","❌ 易错（降阶）：递推公式只能在相同积分区间/相同被积结构下使用；定积分每一步都要保留上下限","Beta Function 定义：B(m,n)=∫₀¹xᵐ⁻¹(1−x)ⁿ⁻¹dx，且 B(m,n)=B(n,m)","📌 Beta 递推：B(m,n)=((m−1)/(m+n−1))B(m−1,n)=((n−1)/(m+n−1))B(m,n−1)","📌 Beta base case：B(1,1)=1；B(1,n)=1/n，B(m,1)=1/m","📌 整数 Beta 快速公式：B(m,n)=((m−1)!(n−1)!)/(m+n−1)!，适合 Mobius 选择题/填空题验算","📌 Beta 识别技巧：看到 ∫₀¹ x^a(1−x)^b dx，就令 m=a+1, n=b+1；不要把指数 a,b 直接当作 m,n","❌ 易错（Beta）：B(m,n) 的指数是 m−1,n−1；递推分母是 m+n−1，不是 m+n","❌ 易错（绝对值）：ln 型积分通常要写绝对值，例如 ln|x|、ln|sec x+tan x|；但 ln(cosh x) 不需要，因为 cosh x>0","❌ 易错（根号正负）：化简 √(cosh²u) = cosh(u)（cosh 恒正，直接取正）；√(cos²u) = |cos u|，需确认 u 范围使 cos u > 0","❌ 易错（回代遗漏）：用 u 表示的积分结果一定要回代成 x 的表达式，否则答题不完整","📌 Maple 语法速查：arcsinh(x), arctan(x), arcsin(x), arctanh(x), ln(abs(x)), sqrt(x), exp(x)；tan²(x) 写作 tan(x)^2"] },
+        points:["【换元选择速查表】含 √(a²+x²) → x=a tan(u) 或 x=a sinh(u)；含 √(a²−x²) → x=a sin(u) 或 x=a tanh(u)；含 √(x²−a²) → x=a sec(u) 或 x=a cosh(u)","Key: 圆三角换元四步：① 令 x=a·trig(u)，求 dx ② 代入被积式，用恒等式消根号（关键）③ 对 u 积分得结果 ④ 用直角三角形将 u 的结果回代成 x","Key: 直角三角形回代法（以 x=a tan(u) 为例）：画直角三角形，对边=x, 邻边=a, 斜边=√(a²+x²)，由此直接读出 tan(u)=x/a, sec(u)=√(a²+x²)/a, sin(u)=x/√(a²+x²)","OK: 圆三角恒等式速查：1+tan²u = sec²u（消 √(a²+x²)）；1−sin²u = cos²u（消 √(a²−x²)）；sec²u−1 = tan²u（消 √(x²−a²)）","Key: 双曲换元四步：① 令 x=a·sinh(u)（或 tanh/cosh），求 dx ② 用双曲恒等式消根号 ③ 对 u 积分 ④ 用反双曲函数回代","OK: 双曲恒等式速查：cosh²u − sinh²u = 1 → 1+sinh²u=cosh²u（消 √(a²+x²)）；1−tanh²u = sech²u（消 √(a²−x²)）","Key: 定积分三角换元：上下限也一起换；含 √(x²−a²) 且下限等于 a 时是 improper，要特别检查端点","Key: 几何速算：∫₀ᵃ √(a²−x²) dx 是半径 a 的四分之一圆面积 = πa²/4","Key: 换元优先级：若分子刚好是根号内部导数的一部分，代数换元 u=根号内部 通常比三角换元更快","OK: 基础对数积分：∫1/x dx = ln|x|+C，是 f'/f 型在 f(x)=x 时的特例","OK: f'/f 型：∫f'(x)/f(x)dx = ln|f(x)|+C；tanh(x)=sinh(x)/cosh(x)，所以 ∫tanh(x)dx=ln(cosh(x))+C","OK: sec 积分公式：∫sec(x)dx = ln|sec(x)+tan(x)|+C；三角换元后常直接出现","Key: 反三角标准式：∫1/(x²+a²)dx=(1/a)arctan(x/a)+C","Key: 配方法反三角：二次式判别式 < 0 时先配成 (x+h)²+a²，再套 ∫1/(u²+a²)du=(1/a)arctan(u/a)+C","∫sech(u)du 方法①：令 t=eᵘ，sech(u)=2/(eᵘ+e⁻ᵘ)=2t/(t²+1)，化为 2∫1/(1+t²)dt = 2arctan(eᵘ)+C","∫sech(u)du 方法②：令 t=sinh(u)，dt=cosh(u)du，cosh²=1+t²，化为 ∫1/(1+t²)dt = arctan(sinh u)+C","还原公式 reduction formula：先找到 base case，再用递推把 n 降低；常见于 ∫tanⁿx、∫secⁿx、∫₀¹xⁿe⁻ˣdx","Key: 降阶公式推导套路：把一个因子拆出来，剩下部分用恒等式改写，再做分部积分，最后把含 Iₙ 的项移到左边合并","Key: 分部积分型递推：Iₙ=∫₀¹xⁿe⁻ˣdx，取 u=xⁿ、dv=e⁻ˣdx，可得 Iₙ=nIₙ₋₁−1/e；边界项 [uv] 一定要代上下限","Key: sec 还原公式：Iₙ=∫secⁿx dx ⇒ Iₙ=secⁿ⁻²(x)tan(x)/(n−1)+(n−2)Iₙ₋₂/(n−1)","Key: tan 还原思路：tanⁿx=tanⁿ⁻²x(sec²x−1)，拆成可直接换元的一项 − Iₙ₋₂","Key: base case 很重要：偶数通常降到 I₀，奇数通常降到 I₁；例如 sec 题需要记住 ∫sec x dx = ln|sec x+tan x|+C","Careful: 易错（降阶）：递推公式只能在相同积分区间/相同被积结构下使用；定积分每一步都要保留上下限","Beta Function 定义：B(m,n)=∫₀¹xᵐ⁻¹(1−x)ⁿ⁻¹dx，且 B(m,n)=B(n,m)","Key: Beta 递推：B(m,n)=((m−1)/(m+n−1))B(m−1,n)=((n−1)/(m+n−1))B(m,n−1)","Key: Beta base case：B(1,1)=1；B(1,n)=1/n，B(m,1)=1/m","Key: 整数 Beta 快速公式：B(m,n)=((m−1)!(n−1)!)/(m+n−1)!，适合 Mobius 选择题/填空题验算","Key: Beta 识别技巧：看到 ∫₀¹ x^a(1−x)^b dx，就令 m=a+1, n=b+1；不要把指数 a,b 直接当作 m,n","Careful: 易错（Beta）：B(m,n) 的指数是 m−1,n−1；递推分母是 m+n−1，不是 m+n","Careful: 易错（绝对值）：ln 型积分通常要写绝对值，例如 ln|x|、ln|sec x+tan x|；但 ln(cosh x) 不需要，因为 cosh x>0","Careful: 易错（根号正负）：化简 √(cosh²u) = cosh(u)（cosh 恒正，直接取正）；√(cos²u) = |cos u|，需确认 u 范围使 cos u > 0","Careful: 易错（回代遗漏）：用 u 表示的积分结果一定要回代成 x 的表达式，否则答题不完整","Key: Maple 语法速查：arcsinh(x), arctan(x), arcsin(x), arctanh(x), ln(abs(x)), sqrt(x), exp(x)；tan²(x) 写作 tan(x)^2"] },
       { tag:"Ch2B", title:"积分技巧 II：有理函数与部分分式", file:"Holzer_chap2B_1231_Calculus_2026.pdf",
         yt:"partial fractions integration rational functions", bili:"部分分式分解 有理函数积分",
         mobius: true, mobiusLabels:["Möbius Week 3"],
-        points:["处理假分式：分子次数 ≥ 分母次数时先做多项式长除法，再对余式做部分分式","部分分式分解三种情形：不同线性因子、重复线性因子、不可约二次因子","Cover-Up Rule：针对不同线性因子，快速求出对应系数；设 x 为让该因子为 0 的值","📌 非 monic 线性因子要记得链式系数：∫A/(kx+b)dx = (A/k)ln|kx+b|+C","📌 不同线性因子：A/(x−a)+B/(x−b)，求完 A、B 后分别积分成对数","重复因子 (x−a)ⁿ 需展开成 A₁/(x−a)+A₂/(x−a)²+...+Aₙ/(x−a)ⁿ","📌 重复因子技巧：先代根求最高次项系数，再比较 x²、x 等系数求剩下系数","❌ 易错（重复因子积分）：∫1/(x−a)²dx = −1/(x−a)+C，不是 ln|x−a|","不可约二次因子 (x²+bx+c) 对应项形式为 (Ax+B)/(x²+bx+c)，配方后用反三角/对数积分","📌 有理式混合题：若分子含分母导数，先拆出 f'/f 的 ln 部分，剩下常数项再用 arctan 或部分分式","📌 判别式判断：二次因子 Δ<0 → 不可约，用配方 + arctan；Δ≥0 → 可拆线性因子，用部分分式","❌ 易错（绝对值）：线性因子积分写 ln|...|；不可约二次且始终为正时不一定需要绝对值","Further Substitution：Weierstrass 替换 t=tan(x/2) 处理三角函数有理式","Sample Class Test 例题：综合练习选择合适技巧的顺序"] },
+        points:["处理假分式：分子次数 ≥ 分母次数时先做多项式长除法，再对余式做部分分式","部分分式分解三种情形：不同线性因子、重复线性因子、不可约二次因子","Cover-Up Rule：针对不同线性因子，快速求出对应系数；设 x 为让该因子为 0 的值","Key: 非 monic 线性因子要记得链式系数：∫A/(kx+b)dx = (A/k)ln|kx+b|+C","Key: 不同线性因子：A/(x−a)+B/(x−b)，求完 A、B 后分别积分成对数","重复因子 (x−a)ⁿ 需展开成 A₁/(x−a)+A₂/(x−a)²+...+Aₙ/(x−a)ⁿ","Key: 重复因子技巧：先代根求最高次项系数，再比较 x²、x 等系数求剩下系数","Careful: 易错（重复因子积分）：∫1/(x−a)²dx = −1/(x−a)+C，不是 ln|x−a|","不可约二次因子 (x²+bx+c) 对应项形式为 (Ax+B)/(x²+bx+c)，配方后用反三角/对数积分","Key: 有理式混合题：若分子含分母导数，先拆出 f'/f 的 ln 部分，剩下常数项再用 arctan 或部分分式","Key: 判别式判断：二次因子 Δ<0 → 不可约，用配方 + arctan；Δ≥0 → 可拆线性因子，用部分分式","Careful: 易错（绝对值）：线性因子积分写 ln|...|；不可约二次且始终为正时不一定需要绝对值","Further Substitution：Weierstrass 替换 t=tan(x/2) 处理三角函数有理式","Sample Class Test 例题：综合练习选择合适技巧的顺序"] },
       { tag:"Ch3A", title:"常微分方程入门 ODE Basics", file:"Holzer_chap3A_1231_Calculus_2026.pdf",
         yt:"first order differential equations separable linear exact", bili:"一阶微分方程 可分离变量 线性方程",
         points:["ODE 基本概念：阶（order）= 方程中最高阶导数的阶数","解的类型：通解（general solution，含任意常数）、特解（particular solution）、解析解","初值问题 IVP：给定初始条件 y(x₀)=y₀，确定通解中的常数","一阶可分离变量方程：dy/dx=g(x)h(y) ⇒ ∫dy/h(y) = ∫g(x)dx","一阶线性 ODE：y'+P(x)y=Q(x)，用积分因子 μ=e^∫P dx 求解","一阶精确方程 exact ODE：M dx+N dy=0，检验条件 ∂M/∂y=∂N/∂x，再求势函数","结合微积分基本定理（FTC）将隐式解写成显式形式"] },
@@ -4445,34 +4456,34 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       { tag:"Sect1", title:"向量空间的定义", file:"MATH1231_ALG_2026T2-Sect1-DefnOfVectorSpace.pdf",
         yt:"vector space axioms definition linear algebra", bili:"向量空间 定义 公理 线性代数",
         mobius:"Week 2 Algebra Q1",
-        points:["向量空间 V 的定义：非空集合 V，配有向量加法与标量乘法（标量取自 ℝ）","【8条公理】① 加法交换律 u+v=v+u ② 加法结合律 (u+v)+w=u+(v+w) ③ 零向量存在 0+v=v ④ 负元存在 v+(−v)=0 ⑤ 标量乘法结合律 λ(μv)=(λμ)v ⑥ 单位元 1·v=v ⑦ 标量对向量分配 (λ+μ)v=λv+μv ⑧ 标量对加法分配 λ(u+v)=λu+λv","❌ 向量空间没有向量乘法运算，也没有向量除法——这些不是公理！","❌ 减法不满足结合律：(u−v)−w ≠ u−(v−w)，这不是公理","✅ 常见向量空间：ℝⁿ（n维列向量）、Mₘ,ₙ（m×n矩阵空间）、𝕡ₙ(ℝ)（次数≤n的多项式）、函数空间","📌 判断技巧：不需要验证加法交换律等继承性质，只需逐条核查8条公理"] },
+        points:["向量空间 V 的定义：非空集合 V，配有向量加法与标量乘法（标量取自 ℝ）","【8条公理】① 加法交换律 u+v=v+u ② 加法结合律 (u+v)+w=u+(v+w) ③ 零向量存在 0+v=v ④ 负元存在 v+(−v)=0 ⑤ 标量乘法结合律 λ(μv)=(λμ)v ⑥ 单位元 1·v=v ⑦ 标量对向量分配 (λ+μ)v=λv+μv ⑧ 标量对加法分配 λ(u+v)=λu+λv","Careful: 向量空间没有向量乘法运算，也没有向量除法——这些不是公理！","Careful: 减法不满足结合律：(u−v)−w ≠ u−(v−w)，这不是公理","OK: 常见向量空间：ℝⁿ（n维列向量）、Mₘ,ₙ（m×n矩阵空间）、𝕡ₙ(ℝ)（次数≤n的多项式）、函数空间","Key: 判断技巧：不需要验证加法交换律等继承性质，只需逐条核查8条公理"] },
       { tag:"Sect2", title:"向量运算的性质", file:"MATH1231_ALG_2026T2-Sect2-PropertiesVectorArithmetic.pdf",
         yt:"vector space properties proofs linear algebra", bili:"向量空间 性质 推导 证明",
         mobius:"Week 2 Algebra Q1",
-        points:["这些性质不是额外公理，而是由8条公理推导出来的定理","Fact：0·v=0（标量0乘任意向量得零向量）","Fact：(−1)·v=−v（−1乘向量等于其负元）","Fact：c·0=0（任意标量乘零向量得零向量）","Fact：零向量唯一，负元唯一","证明格式：每一步必须注明用到哪条公理或已证性质","❌ 常见错误：将向量的0（零向量）和标量的0混淆；乱用没有证明过的步骤","📌 考试重点：能写出严谨的代数证明，每步有依据"] },
+        points:["这些性质不是额外公理，而是由8条公理推导出来的定理","Fact：0·v=0（标量0乘任意向量得零向量）","Fact：(−1)·v=−v（−1乘向量等于其负元）","Fact：c·0=0（任意标量乘零向量得零向量）","Fact：零向量唯一，负元唯一","证明格式：每一步必须注明用到哪条公理或已证性质","Careful: 常见错误：将向量的0（零向量）和标量的0混淆；乱用没有证明过的步骤","Key: 考试重点：能写出严谨的代数证明，每步有依据"] },
       { tag:"Sect3", title:"子空间 Subspaces", file:"MATH1231_ALG_2026T2-Sect3-Subspaces.pdf",
         yt:"subspace theorem linear algebra examples", bili:"子空间 判定定理 反例 线性代数",
         mobius:"Week 2 Algebra Q2 Q3 Q4 Q5 Q6",
-        points:["子空间定义：向量空间V的非空子集W，在V的加法和标量乘法下封闭","【子空间判定定理（Subspace Theorem）】只需验证3条：① 0∈W ② u,v∈W ⟹ u+v∈W ③ v∈W,c∈ℝ ⟹ cv∈W","✅ 常见子空间：过原点的直线/平面（ax+by+cz=0型）、齐次方程组Ax=0的解集、对称矩阵集合","❌ 常见反子空间：不过原点的直线/平面（含常数项）、右半平面{x≥0}（标量封闭失败）、单位圆盘（标量封闭失败）","📌 ℝ²中子空间只有三种：{0}、过原点的直线、ℝ²本身","📌 ℝ³中子空间只有四种：{0}、过原点的直线、过原点的平面、ℝ³本身","反例构造技巧：证明不是子空间只需一个反例；取负标量（λ<0）可破坏标量封闭；取两个向量其和不在集合内可破坏加法封闭","❌ 易错：右半平面R={x≥0}满足加法封闭，但不满足标量封闭（取λ=−1即可破坏）；同理不满足负元存在","子空间本身也是向量空间（继承V的所有运算）"] },
+        points:["子空间定义：向量空间V的非空子集W，在V的加法和标量乘法下封闭","【子空间判定定理（Subspace Theorem）】只需验证3条：① 0∈W ② u,v∈W ⟹ u+v∈W ③ v∈W,c∈ℝ ⟹ cv∈W","OK: 常见子空间：过原点的直线/平面（ax+by+cz=0型）、齐次方程组Ax=0的解集、对称矩阵集合","Careful: 常见反子空间：不过原点的直线/平面（含常数项）、右半平面{x≥0}（标量封闭失败）、单位圆盘（标量封闭失败）","Key: ℝ²中子空间只有三种：{0}、过原点的直线、ℝ²本身","Key: ℝ³中子空间只有四种：{0}、过原点的直线、过原点的平面、ℝ³本身","反例构造技巧：证明不是子空间只需一个反例；取负标量（λ<0）可破坏标量封闭；取两个向量其和不在集合内可破坏加法封闭","Careful: 易错：右半平面R={x≥0}满足加法封闭，但不满足标量封闭（取λ=−1即可破坏）；同理不满足负元存在","子空间本身也是向量空间（继承V的所有运算）"] },
       { tag:"Sect4", title:"线性组合与张成 Linear Combinations & Spans", file:"MATH1231_ALG_2026T2-Sect4-LinearCombosAndSpans.pdf",
         yt:"linear combinations span column space matrix", bili:"线性组合 张成 列空间 矩阵",
         mobius:"Week 2 Algebra Q6 Q7 Q8 Q9 Q10 Q11 Q12 Q13 Q14", mobiusLabels:["Möbius Week 2", "Möbius Week 3", "Möbius Week 5"],
-        points:["线性组合定义：c₁v₁+c₂v₂+...+cₖvₖ（cᵢ为标量）","张成 span{v₁,...,vₖ}：所有线性组合构成的集合，一定是V的子空间","Fact：Ax = x₁c₁+x₂c₂+...+xₙcₙ，即A乘向量x等于A的列向量的线性组合","列空间 col(A) = span{A的列向量} = {b: b=Ax，for some x}","判断 b∈col(A)：对增广矩阵[A|b]做行化简，有解则b∈col(A)","col(A)的几何形状取决于rank(A)：rank=3→ℝ³全空间；rank=2→过原点平面；rank=1→过原点直线；rank=0→{0}","span{v}（单向量）= 过原点的直线，x=λv形式","span{u,v}（u,v线性独立）=过原点的平面，用法向量n=u×v求方程ax+by+cz=0","从平面方程ax+by+cz=0找基向量：令两个自由变量取简单值（如1或0），依次求第三个变量","W={x:a·x=0且b·x=0}的形状：a,b线性独立→直线；a,b平行或其一为0→平面；a=b=0→ℝ³","📌 Week 3 系数题：要求 w=ru+sv，就按分量列方程求 r,s；若要求 ru+sv+tw=0，选一个自由变量（常让 t=1）快速解出非零关系","📌 RGB 颜色题：把颜色看成 ℝ³ 向量，例如 cyan=(0,255,255)=G+B；若某颜色可由另外两个颜色线性组合出来，则该集合相关","📌 冗余向量：如果某个 vᵢ 可由其他向量线性组合得到，删掉它不改变 span；这就是 span{全部}=span{删掉 vᵢ 后的集合}","❌ 易错：有一个非零关系不代表所有向量都一定能分别由其余向量表示；只有对应系数不为0的向量才能被移项表示","📌 span一定过原点（λ=0给出零向量），所以方程无常数项","📌 Maple语法：向量<1,2,3>，向量集合{<1,2,3>,<4,5,6>}","【Week 5 · 考点】把 αu+βv+γw=b 写成矩阵方程 [u v w](α,β,γ)^T=b；源向量必须排成列。","【Week 5 · 技巧】正向映射用 y=Ax；求原像时才解 Ax=b。有效数字按 significant figures 处理，不按小数位数。"] },
+        points:["线性组合定义：c₁v₁+c₂v₂+...+cₖvₖ（cᵢ为标量）","张成 span{v₁,...,vₖ}：所有线性组合构成的集合，一定是V的子空间","Fact：Ax = x₁c₁+x₂c₂+...+xₙcₙ，即A乘向量x等于A的列向量的线性组合","列空间 col(A) = span{A的列向量} = {b: b=Ax，for some x}","判断 b∈col(A)：对增广矩阵[A|b]做行化简，有解则b∈col(A)","col(A)的几何形状取决于rank(A)：rank=3→ℝ³全空间；rank=2→过原点平面；rank=1→过原点直线；rank=0→{0}","span{v}（单向量）= 过原点的直线，x=λv形式","span{u,v}（u,v线性独立）=过原点的平面，用法向量n=u×v求方程ax+by+cz=0","从平面方程ax+by+cz=0找基向量：令两个自由变量取简单值（如1或0），依次求第三个变量","W={x:a·x=0且b·x=0}的形状：a,b线性独立→直线；a,b平行或其一为0→平面；a=b=0→ℝ³","Key: Week 3 系数题：要求 w=ru+sv，就按分量列方程求 r,s；若要求 ru+sv+tw=0，选一个自由变量（常让 t=1）快速解出非零关系","Key: RGB 颜色题：把颜色看成 ℝ³ 向量，例如 cyan=(0,255,255)=G+B；若某颜色可由另外两个颜色线性组合出来，则该集合相关","Key: 冗余向量：如果某个 vᵢ 可由其他向量线性组合得到，删掉它不改变 span；这就是 span{全部}=span{删掉 vᵢ 后的集合}","Careful: 易错：有一个非零关系不代表所有向量都一定能分别由其余向量表示；只有对应系数不为0的向量才能被移项表示","Key: span一定过原点（λ=0给出零向量），所以方程无常数项","Key: Maple语法：向量<1,2,3>，向量集合{<1,2,3>,<4,5,6>}","【Week 5 · 考点】把 αu+βv+γw=b 写成矩阵方程 [u v w](α,β,γ)^T=b；源向量必须排成列。","【Week 5 · 技巧】正向映射用 y=Ax；求原像时才解 Ax=b。有效数字按 significant figures 处理，不按小数位数。"] },
       { tag:"Sect5", title:"线性独立 Linear Independence", file:"MATH1231_ALG_2026T2-Sect5-LinearIndependence.pdf",
         yt:"linear independence linear algebra explained", bili:"线性相关 线性无关 判定方法",
         mobius:"Week 2 Algebra Q14", mobiusLabels:["Möbius Week 2", "Möbius Week 3"],
-        points:["线性独立定义：c₁v₁+...+cₖvₖ=0 只有零解（所有cᵢ=0）","线性相关定义：存在不全为零的cᵢ使线性组合=0","判定方法：将向量排成矩阵A，Ax=0只有零解⟺向量组线性独立⟺每列都有主元（行化简后无自由变量）","行阶梯形矩阵读法：缺少主元的列对应自由变量；自由变量能取非零值 ⇒ Ax=0 有非零解 ⇒ 线性相关","Theorem：线性相关⟺某向量是其余向量的线性组合","Theorem：线性独立时，向量在span中的表示唯一","Theorem：ℝⁿ中超过n个向量必线性相关；含零向量的集合必线性相关","📌 Week 3 快速判定：n×k 矩阵若 rank<k，则列向量相关；若 rank=k，则列向量无关","📌 找一个非零关系：先解 Ax=0，令自由变量为 1，回代得到系数向量，例如 [1,-2,1] 表示 v₁−2v₂+v₃=0","📌 函数空间也一样：把 eˣ,e⁻ˣ,cosh(x),sinh(x) 当作向量；cosh(x)=(eˣ+e⁻ˣ)/2，sinh(x)=(eˣ−e⁻ˣ)/2，所以它们线性相关","❌ 易错：题目问 linearly independent 时，答案取决于齐次方程 Ax=0，不是增广到某个非零 b","❌ 易错：row echelon 出现零行不一定必相关；关键看列数和主元数，若每列仍有主元则仍可无关","反证法判断u∉span{v}：假设u=λv，比较各分量得λ的矛盾值，则u不在span中","📌 W={x:a·x=0且b·x=0}：a,b线性独立⟹两个方程独立⟹W是直线（一维）；a,b线性相关⟹两方程等价⟹W是平面（二维）"] },
+        points:["线性独立定义：c₁v₁+...+cₖvₖ=0 只有零解（所有cᵢ=0）","线性相关定义：存在不全为零的cᵢ使线性组合=0","判定方法：将向量排成矩阵A，Ax=0只有零解⟺向量组线性独立⟺每列都有主元（行化简后无自由变量）","行阶梯形矩阵读法：缺少主元的列对应自由变量；自由变量能取非零值 ⇒ Ax=0 有非零解 ⇒ 线性相关","Theorem：线性相关⟺某向量是其余向量的线性组合","Theorem：线性独立时，向量在span中的表示唯一","Theorem：ℝⁿ中超过n个向量必线性相关；含零向量的集合必线性相关","Key: Week 3 快速判定：n×k 矩阵若 rank<k，则列向量相关；若 rank=k，则列向量无关","Key: 找一个非零关系：先解 Ax=0，令自由变量为 1，回代得到系数向量，例如 [1,-2,1] 表示 v₁−2v₂+v₃=0","Key: 函数空间也一样：把 eˣ,e⁻ˣ,cosh(x),sinh(x) 当作向量；cosh(x)=(eˣ+e⁻ˣ)/2，sinh(x)=(eˣ−e⁻ˣ)/2，所以它们线性相关","Careful: 易错：题目问 linearly independent 时，答案取决于齐次方程 Ax=0，不是增广到某个非零 b","Careful: 易错：row echelon 出现零行不一定必相关；关键看列数和主元数，若每列仍有主元则仍可无关","反证法判断u∉span{v}：假设u=λv，比较各分量得λ的矛盾值，则u不在span中","Key: W={x:a·x=0且b·x=0}：a,b线性独立⟹两个方程独立⟹W是直线（一维）；a,b线性相关⟹两方程等价⟹W是平面（二维）"] },
       { tag:"Sect6", title:"基与维数 Basis & Dimension", file:"MATH1231_ALG_2026T2-Sect6-BasisAndDimension.pdf",
         yt:"basis and dimension vector space", bili:"基与维数 向量空间",
         points:["基 basis 定义：V 的一组向量，既线性独立又张成 V","维数 dimension 定义：基中向量的个数，记作 dim(V)","Theorem（基的大小固定）：同一向量空间的所有基都含有相同数量的向量，因此维数定义合理","Theorem（从张成集合构造基）：若一组向量张成 V，可去掉多余（线性相关）的向量得到一组基","Theorem（独立集合不会比张成集合大）：若 S 线性独立、T 张成 V，则 |S|≤|T|","Theorem（维数 vs 张成/独立）：若 dim(V)=n，则 n 个独立向量自动构成基；n 个张成向量也自动构成基","正交集 orthonormal set 与正交基 orthonormal basis：两两正交且单位长度的（基）向量集合，便于计算坐标"] },
       { tag:"Sect7", title:"线性变换 Linear Transformations", file:"MATH1231_ALG_2026T2-Sect7-LinearTransformations.pdf",
         yt:"linear transformations definition properties", bili:"线性变换 定义",
         mobius:true, mobiusLabels:["Möbius Week 5"],
-        points:["线性变换 T:V→W 定义：T(u+v)=T(u)+T(v) 且 T(cv)=cT(v)（对所有 u,v∈V, 标量 c）","Fact：线性映射把零向量映到零向量，把 -v 映到 -T(v)","Theorem：线性映射保持线性组合，即 T(c₁v₁+...+cₖvₖ)=c₁T(v₁)+...+cₖT(vₖ)","Theorem：一个线性变换完全由它在一组基向量上的取值确定（知道 T(基) 就知道 T 在整个空间的作用）","判断给定映射是否为线性映射：验证加法和标量乘法两条性质（常见反例：含常数项、绝对值、平方等的映射不是线性的）","【Week 5 · 考点】标准基展开：T(x,y)=xT(e₁)+yT(e₂)，三维则加上 zT(e₃)。已知全部 T(eᵢ) 后，T 在整个空间的值唯一确定。","【Week 5 · 技巧】若给出的不是完整标准基像，先把给定向量写成 eᵢ 的线性组合，再利用线性性补出所需的基向量像。","【Week 5 · 考点】线性变换一定把原点送到原点；若某个像与由基向量算出的结果矛盾，结论就是 not linear。","❌ 易错：不要把 T(1,1) 当成第二个基向量的像；它是 T(e₁)+T(e₂)。"] },
+        points:["线性变换 T:V→W 定义：T(u+v)=T(u)+T(v) 且 T(cv)=cT(v)（对所有 u,v∈V, 标量 c）","Fact：线性映射把零向量映到零向量，把 -v 映到 -T(v)","Theorem：线性映射保持线性组合，即 T(c₁v₁+...+cₖvₖ)=c₁T(v₁)+...+cₖT(vₖ)","Theorem：一个线性变换完全由它在一组基向量上的取值确定（知道 T(基) 就知道 T 在整个空间的作用）","判断给定映射是否为线性映射：验证加法和标量乘法两条性质（常见反例：含常数项、绝对值、平方等的映射不是线性的）","【Week 5 · 考点】标准基展开：T(x,y)=xT(e₁)+yT(e₂)，三维则加上 zT(e₃)。已知全部 T(eᵢ) 后，T 在整个空间的值唯一确定。","【Week 5 · 技巧】若给出的不是完整标准基像，先把给定向量写成 eᵢ 的线性组合，再利用线性性补出所需的基向量像。","【Week 5 · 考点】线性变换一定把原点送到原点；若某个像与由基向量算出的结果矛盾，结论就是 not linear。","Careful: 易错：不要把 T(1,1) 当成第二个基向量的像；它是 T(e₁)+T(e₂)。"] },
       { tag:"Sect8", title:"矩阵与几何 Matrices & Geometry", file:"MATH1231_ALG_2026T2-Sect8-MatricesAndGeometry.pdf",
         yt:"matrix transformations geometry rotation reflection", bili:"矩阵 几何变换 旋转 反射",
         mobius:true, mobiusLabels:["Möbius Week 5"],
-        points:["Theorem（线性映射的矩阵表示）：T:ℝⁿ→ℝᵘ 关于标准基的矩阵 A，其第 i 列 = T(eᵢ)，且 T(x)=Ax","Fact：线性变换把直线映射为直线（或退化为一点）","常见几何变换矩阵：旋转（rotation，含 cosθ, sinθ）、反射（reflection）、缩放（scaling）、投影（projection）、剪切（shear）","组合变换：先做 T₁ 再做 T₂ 对应矩阵乘法 A₂A₁（注意先后顺序）","几何例子的可视化：通过画出基向量及其像，理解矩阵对平面/空间的作用","【Week 5 · 考点】矩阵的列就是 T(e₁),T(e₂)。读几何图时先找原点、e₁、e₂ 的像，再写 A=[T(e₁) T(e₂)]，不要把列写成行。","【Week 5 · 考点】正向映射：y=Ax；求原像时解 Ax=b，若 A 可逆则 x=A⁻¹b。","【Week 5 · 公式】二维线性变换的面积缩放倍数是 |det A|=|ad−bc|；必须取绝对值，det 的正负只反映方向是否翻转。","【Week 5 · 技巧】不要只看外轮廓；用内部特征点判断图形经过的是镜像、旋转还是剪切。","【Week 5 · 特殊矩阵】−I：绕原点旋转180°；−3I：旋转180°并放大3倍。","❌ 易错：矩阵乘向量是 row × column；分数题统一分母后再相加，第二行的负号最容易漏。"] },
+        points:["Theorem（线性映射的矩阵表示）：T:ℝⁿ→ℝᵘ 关于标准基的矩阵 A，其第 i 列 = T(eᵢ)，且 T(x)=Ax","Fact：线性变换把直线映射为直线（或退化为一点）","常见几何变换矩阵：旋转（rotation，含 cosθ, sinθ）、反射（reflection）、缩放（scaling）、投影（projection）、剪切（shear）","组合变换：先做 T₁ 再做 T₂ 对应矩阵乘法 A₂A₁（注意先后顺序）","几何例子的可视化：通过画出基向量及其像，理解矩阵对平面/空间的作用","【Week 5 · 考点】矩阵的列就是 T(e₁),T(e₂)。读几何图时先找原点、e₁、e₂ 的像，再写 A=[T(e₁) T(e₂)]，不要把列写成行。","【Week 5 · 考点】正向映射：y=Ax；求原像时解 Ax=b，若 A 可逆则 x=A⁻¹b。","【Week 5 · 公式】二维线性变换的面积缩放倍数是 |det A|=|ad−bc|；必须取绝对值，det 的正负只反映方向是否翻转。","【Week 5 · 技巧】不要只看外轮廓；用内部特征点判断图形经过的是镜像、旋转还是剪切。","【Week 5 · 特殊矩阵】−I：绕原点旋转180°；−3I：旋转180°并放大3倍。","Careful: 易错：矩阵乘向量是 row × column；分数题统一分母后再相加，第二行的负号最容易漏。"] },
       { tag:"Sect9", title:"像、核与秩-零度定理", file:"MATH1231_ALG_2026T2-Sect9-ImageKernelRNT.pdf",
         yt:"kernel image rank nullity theorem", bili:"核 像 秩-零度定理",
         points:["核 kernel 定义：ker(T)={v∈V : T(v)=0}；矩阵的核 = Ax=0 的解集","像 image 定义：im(T)={T(v) : v∈V}，即 T 的值域","Theorem：ker(T) 和 im(T) 都是子空间","秩 rank：im(T) 的维数 = 矩阵行简化后主元（leading）列的个数","零度 nullity：ker(T) 的维数 = 自由变量的个数（行简化后非主元列数）","Rank-Nullity Theorem（矩阵版）：rank(A)+nullity(A)=n（A 的列数）","Rank-Nullity Theorem（一般线性变换版）：dim(ker T)+dim(im T)=dim(V)","应用：用 rank/nullity 判断 Ax=b 解的存在性与唯一性（解唯一 ⇔ nullity=0）"] },
@@ -4491,7 +4502,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
           "【正向计算】Multiply(A, <10,5,3>); 对应 y=A x。",
           "【逆向恢复】N := MatrixInverse(A): Multiply(N, b); 对应 x=A⁻¹b。先确认 A 可逆，且不要把顺序写成 bA⁻¹。",
           "【有效数字】evalf[2](答案); 是保留 2 significant figures，不是小数点后两位。",
-          "❌ 易错：题目只要最终向量时，不要多输入 Matrix(...)；保持题目要求的 <...>、[...] 或数值格式。"
+          "Careful: 易错：题目只要最终向量时，不要多输入 Matrix(...)；保持题目要求的 <...>、[...] 或数值格式。"
         ]
       },
       { tag:"MapleW5-Rank", title:"Maple：秩、张成、线性独立、像与核", file:"MATH1231_ALG_2026T2-Sect9-ImageKernelRNT.pdf",
@@ -4507,7 +4518,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
           "【Nullity】nullity = ColumnDimension(A)-Rank(A)，也就是自由变量个数。",
           "【Image / Column space】im(A)=Col(A) 在 R^m 里；判断 y 是否在 im(A)，解 LinearSolve(A,y) 或比较 Rank(A) 与 Rank(<A|y>)。",
           "【Rank-nullity】Rank(A)+Nullity(A)=列数 n；看到 kernel dimension / image dimension 题先写这个关系。",
-          "❌ 易错：Rank(A)=行数 才说明列张成 R^行数；Rank(A)=列数 才说明列线性独立，这两个判断不要混。"
+          "Careful: 易错：Rank(A)=行数 才说明列张成 R^行数；Rank(A)=列数 才说明列线性独立，这两个判断不要混。"
         ]
       },
       { tag:"MapleW2-A", title:"函数定义与偏导数计算", file:"Holzer_chap1A_1231_Calculus_2026.pdf",
@@ -4515,17 +4526,17 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         mobius: true,
         points:[
           "【定义多元函数】用箭头算子 -> 定义，格式：(变量1, 变量2) -> 表达式（不写 f:= 开头，不写 ; 结尾）",
-          "🖥️ 指令：(x, y) -> 6*x^5*y^3*sin(9*x - y)",
-          "❌ 易错：乘法必须写 *，幂次必须写 ^，函数内部参数之间也要用 *，不可省略",
+          "Maple: 指令：(x, y) -> 6*x^5*y^3*sin(9*x - y)",
+          "Careful: 易错：乘法必须写 *，幂次必须写 ^，函数内部参数之间也要用 *，不可省略",
           "【求符号偏导数】用 diff，变量顺序从右到左对应求导顺序（先写先求）",
-          "🖥️ 指令：diff(f(x,y), x, x, y)　　← 先对 x 求2次，再对 y 求1次（即 ∂³f/∂y∂x²）",
-          "🖥️ 简写：diff(f(x,y), x$2, y)　　← x$2 表示对 x 求2次，等价写法",
-          "📌 读题技巧：∂³f/∂y∂x² 分母从右往左读 → 先 x²（求2次x），再 y（求1次y）→ diff(..., x$2, y)",
+          "Maple: 指令：diff(f(x,y), x, x, y)　　← 先对 x 求2次，再对 y 求1次（即 ∂³f/∂y∂x²）",
+          "Maple: 简写：diff(f(x,y), x$2, y)　　← x$2 表示对 x 求2次，等价写法",
+          "Key: 读题技巧：∂³f/∂y∂x² 分母从右往左读 → 先 x²（求2次x），再 y（求1次y）→ diff(..., x$2, y)",
           "【求数值偏导数并指定精度】用 D 算子 + evalf，适合复杂函数在某点的高阶导数数值",
-          "🖥️ 指令：evalf(D[1$4, 2$3](f)(-2, -1), 10)",
-          "🖥️ 拆解：D[1$4, 2$3] = 对第1个变量(x)求4次、第2个变量(y)求3次；f(-2,-1) = 代入点；10 = 保留10位有效数字",
-          "📌 考点：10 significant figures 题型必须从 Maple 复制答案，Python 等工具最后1-2位可能不准确",
-          "❌ 易错：evalf 第二个参数是有效数字位数（significant figures），不是小数点后位数"
+          "Maple: 指令：evalf(D[1$4, 2$3](f)(-2, -1), 10)",
+          "Maple: 拆解：D[1$4, 2$3] = 对第1个变量(x)求4次、第2个变量(y)求3次；f(-2,-1) = 代入点；10 = 保留10位有效数字",
+          "Key: 考点：10 significant figures 题型必须从 Maple 复制答案，Python 等工具最后1-2位可能不准确",
+          "Careful: 易错：evalf 第二个参数是有效数字位数（significant figures），不是小数点后位数"
         ]
       },
       { tag:"MapleW2-B", title:"最优化与三维图形识别", file:"Holzer_chap1A_1231_Calculus_2026.pdf",
@@ -4533,18 +4544,18 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         mobius: true,
         points:[
           "【有界域求最值】给定各变量范围，分析每一项的单调性，在边界（角点）取极端值",
-          "📌 技巧：奇次幂（如 (x-y)⁷）符号由底数决定 → 最大化让底数最大，令 x 取最大值、y 取最小值",
-          "✅ 例：max of (x-y)⁷+z，x∈[0,5], y∈[0,5], z∈[0,18] → 令 x=5, y=0, z=18 → 5⁷+18 = 78143",
+          "Key: 技巧：奇次幂（如 (x-y)⁷）符号由底数决定 → 最大化让底数最大，令 x 取最大值、y 取最小值",
+          "OK: 例：max of (x-y)⁷+z，x∈[0,5], y∈[0,5], z∈[0,18] → 令 x=5, y=0, z=18 → 5⁷+18 = 78143",
           "【画三维曲面】用 plot3d，区间用两个点 .. 表示",
-          "🖥️ 指令：plot3d(x^2 + y^2, x=-3..3, y=-3..3)",
-          "❌ 易错：区间写 .. 不是 : 或 ,；函数里乘法要写 *",
+          "Maple: 指令：plot3d(x^2 + y^2, x=-3..3, y=-3..3)",
+          "Careful: 易错：区间写 .. 不是 : 或 ,；函数里乘法要写 *",
           "【五种曲面识别口诀】",
-          "📌 z=x²+y²（碗形 paraboloid）：全部≥0，原点最低，等高线是圆，光滑无尖角",
-          "📌 z=√(x²+y²)（锥形 cone）：原点有尖角不可微，z 轴截面是 V 形，等高线是圆",
-          "📌 z=x²-y²（马鞍形 saddle）：沿 x 方向向上抛物线，沿 y 方向向下抛物线，有正有负",
-          "📌 z=cos(x²+y²)（涟漪形）：z 在 [-1,1] 振荡，等高线是同心圆，图像有高低波浪",
-          "📌 z=x²y²（四角形）：坐标轴上 z=0，四个象限角高高翘起，z 全部≥0",
-          "❌ 易错：√ 和碗形等高线都是圆，区别在于 √ 原点有尖角，x²+y² 原点光滑且可微"
+          "Key: z=x²+y²（碗形 paraboloid）：全部≥0，原点最低，等高线是圆，光滑无尖角",
+          "Key: z=√(x²+y²)（锥形 cone）：原点有尖角不可微，z 轴截面是 V 形，等高线是圆",
+          "Key: z=x²-y²（马鞍形 saddle）：沿 x 方向向上抛物线，沿 y 方向向下抛物线，有正有负",
+          "Key: z=cos(x²+y²)（涟漪形）：z 在 [-1,1] 振荡，等高线是同心圆，图像有高低波浪",
+          "Key: z=x²y²（四角形）：坐标轴上 z=0，四个象限角高高翘起，z 全部≥0",
+          "Careful: 易错：√ 和碗形等高线都是圆，区别在于 √ 原点有尖角，x²+y² 原点光滑且可微"
         ]
       },
       { tag:"MapleW3", title:"部分分式、ODE 与 Taylor 系数", file:"Holzer_chap2B_1231_Calculus_2026.pdf",
@@ -4552,19 +4563,19 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         mobius: true, mobiusLabels:["Möbius Week 3"],
         points:[
           "【部分分式】convert(p/q, parfrac, x)：适合长多项式 p(x)/q(x)，避免手动分解出错",
-          "🖥️ 指令：p := ...; q := ...; convert(p/q, parfrac, x)",
-          "📌 考点：重复线性因子会出现 1/(x-a) 和 1/(x-a)^2；重复不可约二次因子会出现 (Ax+B)/(quadratic)^2",
+          "Maple: 指令：p := ...; q := ...; convert(p/q, parfrac, x)",
+          "Key: 考点：重复线性因子会出现 1/(x-a) 和 1/(x-a)^2；重复不可约二次因子会出现 (Ax+B)/(quadratic)^2",
           "【ODE/IVP】dsolve({方程, 初始条件}, y(x))：一阶和二阶初值问题都可以直接求解",
-          "🖥️ 一阶例：dsolve({diff(y(x),x)+4*y(x)=cos(x)+x, y(0)=0}, y(x))",
-          "🖥️ 二阶例：dsolve({y(x)*diff(y(x),x$2)+diff(y(x),x)^2=0, y(0)=3, D(y)(0)=9}, y(x))",
-          "❌ 易错：二阶初始导数 y'(0)=9 在 Maple 里写 D(y)(0)=9，不写 y'(0)=9",
-          "❌ 易错：Mobius 说 Do NOT enter y(x)= 时，只粘贴 Maple 输出等号右边",
+          "Maple: 一阶例：dsolve({diff(y(x),x)+4*y(x)=cos(x)+x, y(0)=0}, y(x))",
+          "Maple: 二阶例：dsolve({y(x)*diff(y(x),x$2)+diff(y(x),x)^2=0, y(0)=3, D(y)(0)=9}, y(x))",
+          "Careful: 易错：二阶初始导数 y'(0)=9 在 Maple 里写 D(y)(0)=9，不写 y'(0)=9",
+          "Careful: 易错：Mobius 说 Do NOT enter y(x)= 时，只粘贴 Maple 输出等号右边",
           "【连乘】product(expr, k=a..b) 或 mul(expr, k=a..b)：对应数学符号 Π",
-          "🖥️ 指令：product(x^2+k+9*x, k=190..1500)",
-          "❌ 易错：题目要求 product(__,__) 形式时，不要加赋值 :=，不要加分号 ;",
+          "Maple: 指令：product(x^2+k+9*x, k=190..1500)",
+          "Careful: 易错：题目要求 product(__,__) 形式时，不要加赋值 :=，不要加分号 ;",
           "【Taylor 系数】series(expr, x=0, n) 生成到 x^(n-1) 的展开；coeff(..., x, k) 取 x^k 系数",
-          "🖥️ 指令：coeff(series(exp(4*x)/(1-x), x=0, 8), x, 7)",
-          "📌 技巧：要取 a7，series 阶数至少写 8，因为 Maple 的 n 表示截断到 O(x^n)"
+          "Maple: 指令：coeff(series(exp(4*x)/(1-x), x=0, 8), x, 7)",
+          "Key: 技巧：要取 a7，series 阶数至少写 8，因为 Maple 的 n 表示截断到 O(x^n)"
         ]
       }
     ],
@@ -4603,7 +4614,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         var biliUrl = 'https://search.bilibili.com/all?keyword=' + encodeURIComponent(t.bili || t.title);
         var labels = t.mobiusLabels || (t.mobius ? [t.mobiusLabel || 'Möbius Week 2'] : []);
         var mobiusTag = labels.length ? '<span class="topic-side-tags">' + labels.map(function(label) {
-          return '<span class="topic-side-tag">📝 ' + escapeHtml(label) + '</span>';
+          return '<span class="topic-side-tag">' + escapeHtml(label) + '</span>';
         }).join('') + '</span>' : '';
         html += '<div class="topic-card" id="' + id + '">';
         html += '<div class="topic-header" onclick="toggleTopic(\'' + id + '\')">';
@@ -4619,7 +4630,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         html += '<div class="link-icon bili">B</div>';
         html += '<div class="link-text">Bilibili \u76f8\u5173\u8bb2\u89e3\u641c\u7d22<span class="link-src">中文 · 点击查看搜索结果</span></div>';
         html += '<span class="link-arrow">↗</span></a></div>';
-        html += '<a class="pdf-link" href="math1231/pdfs/' + t.file + '" target="_blank" rel="noopener">📄 PDF 原件</a>';
+        html += '<a class="pdf-link" href="math1231/pdfs/' + t.file + '" target="_blank" rel="noopener">PDF 原件</a>';
         if (Array.isArray(t.extraLinks)) {
           t.extraLinks.forEach(function(link) {
             html += '<a class="pdf-link" href="' + escapeHtml(link.href) + '" target="_blank" rel="noopener">' + escapeHtml(link.label) + '</a>';
@@ -4756,33 +4767,33 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var URGENT_DEADLINE_MS = 72*3600*1000;
   var DASH_WARNING_MS = 48*3600*1000;
   var deadlines = [
-    { name: '📝 Week 1 Möbius Lessons',        date: '2026-06-09T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 1 },
-    { name: '📝 Week 2 Möbius Lessons',        date: '2026-06-16T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 2 },
-    { name: '📝 Week 3 Möbius Lessons',        date: '2026-06-23T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 3 },
-    { name: '📝 Week 4 Möbius Lessons',        date: '2026-06-30T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 4 },
-    { name: '📝 Week 5 Möbius Lessons',        date: '2026-07-14T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 5 },
-    { name: '📝 Week 7 Möbius Lessons',        date: '2026-07-21T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 7 },
-    { name: '📝 Week 8 Möbius Lessons',        date: '2026-07-28T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 8 },
-    { name: '📝 Week 9 Möbius Lessons',        date: '2026-08-04T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 9 },
-    { name: '📝 Week 10 Möbius Lessons',       date: '2026-08-11T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 10 },
-    { name: '🔧 MMAN1130 TOOLS1 测验',         date: '2026-06-19T23:55:00+10:00', tag: '5%',  color: 'var(--mman-color)', gtId: 'mm_t1'  },
-    { name: '📄 ENGG1300 Test 1',               date: '2026-06-20T10:00:00+10:00', tag: '20%', color: 'var(--engg-color)', gtId: 'eg_t1',  loc: 'E19 Patricia OShane 103', examTable:true, durationMin:60 },
-    { name: '💻 MMAN1130 DSIGN1 零件CAD',        date: '2026-06-26T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_d1'  },
-    { name: '💻 MATH1231 Lab Test 1',            date: '2026-06-29T15:00:00+10:00', tag: '15%', color: 'var(--math-color)', gtId: 'mg_lt1', loc: 'H13 Lawrence East M020', nav: 'https://maps.apple.com/?q=UNSW+H13+Lawrence+East+Building+Kensington', examTable:true, durationMin:60 },
-    { name: '💻 MMAN1130 DSIGN2 装配CAD',        date: '2026-07-03T23:55:00+10:00', tag: '5%',  color: 'var(--mman-color)', gtId: 'mm_d2'  },
-    { name: '🔧 MMAN1130 TOOLS2 手工工具',        date: '2026-07-03T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_t2'  },
-    { name: '📐 MMAN1130 MANUF1 图纸',           date: '2026-07-17T23:55:00+10:00', tag: '15%', color: 'var(--mman-color)', gtId: 'mm_mf1' },
-    { name: '📄 ENGG1300 Test 2',               date: '2026-07-18T10:00:00+10:00', tag: '30%', color: 'var(--engg-color)', gtId: 'eg_t2',  loc: 'F10 June Griffith M10', nav: 'https://maps.apple.com/?q=UNSW+F10+June+Griffith+Building+Kensington', examTable:true, durationMin:120 },
-    { name: '💻 MATH1231 Lab Test 2',            date: '2026-07-27T15:00:00+10:00', tag: '15%', color: 'var(--math-color)', gtId: 'mg_lt2', loc: 'H13 Lawrence East M020', nav: 'https://maps.apple.com/?q=UNSW+H13+Lawrence+East+Building+Kensington', examTable:true, durationMin:60 },
-    { name: '📋 MMAN1130 MANUF2 工艺单',         date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf2' },
-    { name: '💻 MMAN1130 MANUF3 CAM',            date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf3' },
-    { name: '📄 MATH1231 Assignment',            date: '2026-08-04T23:59:00+10:00', tag: '10%', color: 'var(--math-color)', gtId: 'mg_asgn'},
-    { name: '📄 ENGG1300 Test 3',               date: '2026-08-08T10:30:00+10:00', tag: '20%', color: 'var(--engg-color)', gtId: 'eg_t3',  loc: 'E19 Patricia OShane 103', examTable:true, durationMin:60 },
-    { name: '💬 MATH1231 myExperience Feedback', date: '2026-08-13T23:59:00+10:00', tag: '', color: 'var(--math-color)', course: 'math', kind: 'feedback', link: MOODLE_URL },
-    { name: '💬 ENGG1300 myExperience Feedback', date: '2026-08-13T23:59:00+10:00', tag: '', color: 'var(--engg-color)', course: 'engg', kind: 'feedback', link: MOODLE_URL },
-    { name: '🔩 MMAN1130 TOOLS3 装配',           date: '2026-08-14T23:55:00+10:00', tag: '5%',  color: 'var(--mman-color)', gtId: 'mm_t3'  },
-    { name: '📐 ENGG1300 Mini-design Project',   date: '2026-08-14T20:00:00+10:00', tag: '30%', color: 'var(--engg-color)', gtId: 'eg_proj'},
-    { name: '📋 MATH1231 Final Exam',            date: '2026-08-21T16:00:00+10:00', tag: '50%', color: 'var(--math-color)', gtId: 'mg_exam', loc: "Chancellor's Garden", nav: 'https://maps.apple.com/?q=Chancellor%27s+Garden+UNSW+Kensington', examTable:true, durationMin:120, arrive:'15:40' },
+    { name: 'Week 1 Möbius Lessons',        date: '2026-06-09T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 1 },
+    { name: 'Week 2 Möbius Lessons',        date: '2026-06-16T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 2 },
+    { name: 'Week 3 Möbius Lessons',        date: '2026-06-23T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 3 },
+    { name: 'Week 4 Möbius Lessons',        date: '2026-06-30T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 4 },
+    { name: 'Week 5 Möbius Lessons',        date: '2026-07-14T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 5 },
+    { name: 'Week 7 Möbius Lessons',        date: '2026-07-21T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 7 },
+    { name: 'Week 8 Möbius Lessons',        date: '2026-07-28T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 8 },
+    { name: 'Week 9 Möbius Lessons',        date: '2026-08-04T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 9 },
+    { name: 'Week 10 Möbius Lessons',       date: '2026-08-11T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 10 },
+    { name: 'MMAN1130 TOOLS1 测验',         date: '2026-06-19T23:55:00+10:00', tag: '5%',  color: 'var(--mman-color)', gtId: 'mm_t1'  },
+    { name: 'ENGG1300 Test 1',               date: '2026-06-20T10:00:00+10:00', tag: '20%', color: 'var(--engg-color)', gtId: 'eg_t1',  loc: 'E19 Patricia OShane 103', examTable:true, durationMin:60 },
+    { name: 'MMAN1130 DSIGN1 零件CAD',        date: '2026-06-26T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_d1'  },
+    { name: 'MATH1231 Lab Test 1',            date: '2026-06-29T15:00:00+10:00', tag: '15%', color: 'var(--math-color)', gtId: 'mg_lt1', loc: 'H13 Lawrence East M020', nav: 'https://maps.apple.com/?q=UNSW+H13+Lawrence+East+Building+Kensington', examTable:true, durationMin:60 },
+    { name: 'MMAN1130 DSIGN2 装配CAD',        date: '2026-07-03T23:55:00+10:00', tag: '5%',  color: 'var(--mman-color)', gtId: 'mm_d2'  },
+    { name: 'MMAN1130 TOOLS2 手工工具',        date: '2026-07-03T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_t2'  },
+    { name: 'MMAN1130 MANUF1 图纸',           date: '2026-07-17T23:55:00+10:00', tag: '15%', color: 'var(--mman-color)', gtId: 'mm_mf1' },
+    { name: 'ENGG1300 Test 2',               date: '2026-07-18T10:00:00+10:00', tag: '30%', color: 'var(--engg-color)', gtId: 'eg_t2',  loc: 'F10 June Griffith M10', nav: 'https://maps.apple.com/?q=UNSW+F10+June+Griffith+Building+Kensington', examTable:true, durationMin:120 },
+    { name: 'MATH1231 Lab Test 2',            date: '2026-07-27T15:00:00+10:00', tag: '15%', color: 'var(--math-color)', gtId: 'mg_lt2', loc: 'H13 Lawrence East M020', nav: 'https://maps.apple.com/?q=UNSW+H13+Lawrence+East+Building+Kensington', examTable:true, durationMin:60 },
+    { name: 'MMAN1130 MANUF2 工艺单',         date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf2' },
+    { name: 'MMAN1130 MANUF3 CAM',            date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf3' },
+    { name: 'MATH1231 Assignment',            date: '2026-08-04T23:59:00+10:00', tag: '10%', color: 'var(--math-color)', gtId: 'mg_asgn'},
+    { name: 'ENGG1300 Test 3',               date: '2026-08-08T10:30:00+10:00', tag: '20%', color: 'var(--engg-color)', gtId: 'eg_t3',  loc: 'E19 Patricia OShane 103', examTable:true, durationMin:60 },
+    { name: 'MATH1231 myExperience Feedback', date: '2026-08-13T23:59:00+10:00', tag: '', color: 'var(--math-color)', course: 'math', kind: 'feedback', link: MOODLE_URL },
+    { name: 'ENGG1300 myExperience Feedback', date: '2026-08-13T23:59:00+10:00', tag: '', color: 'var(--engg-color)', course: 'engg', kind: 'feedback', link: MOODLE_URL },
+    { name: 'MMAN1130 TOOLS3 装配',           date: '2026-08-14T23:55:00+10:00', tag: '5%',  color: 'var(--mman-color)', gtId: 'mm_t3'  },
+    { name: 'ENGG1300 Mini-design Project',   date: '2026-08-14T20:00:00+10:00', tag: '30%', color: 'var(--engg-color)', gtId: 'eg_proj'},
+    { name: 'MATH1231 Final Exam',            date: '2026-08-21T16:00:00+10:00', tag: '50%', color: 'var(--math-color)', gtId: 'mg_exam', loc: "Chancellor's Garden", nav: 'https://maps.apple.com/?q=Chancellor%27s+Garden+UNSW+Kensington', examTable:true, durationMin:120, arrive:'15:40' },
   ];
 
   function deadlineCourse(d) {
@@ -4854,7 +4865,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     }
 
     if (!upcoming.length && !past.length) {
-      list.innerHTML = '<div style="text-align:center;color:var(--muted);padding:40px 0;">暂无考核 🎉</div>';
+      list.innerHTML = '<div style="text-align:center;color:var(--muted);padding:40px 0;">暂无考核</div>';
       return;
     }
 
@@ -4872,7 +4883,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (done || d.diff <= 0) { bigNum = '✓'; unit = '已完结'; }
       else if (totalHours >= 24) { bigNum = Math.floor(totalHours/24); unit = '天 '+Math.floor(totalHours%24)+'小时后'; }
       else { bigNum = Math.floor(totalHours); unit = '小时后'; }
-      var locHtml = d.loc ? '<a href="'+(d.nav||'#')+'" target="_blank" style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:12px;color:var(--math-color);text-decoration:none;font-weight:600;">📍 '+d.loc+' <span style="font-size:10px;">→ 导航</span></a>' : '';
+      var locHtml = d.loc ? '<a href="'+(d.nav||'#')+'" target="_blank" style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:12px;color:var(--math-color);text-decoration:none;font-weight:600;">'+d.loc+' <span style="font-size:10px;">→ 导航</span></a>' : '';
       var linkHtml = d.link ? '<a href="'+d.link+'" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:12px;color:var(--math-color);text-decoration:none;font-weight:600;">Moodle <span style="font-size:10px;">→ 打开</span></a>' : '';
       var opacity = done ? 'opacity:0.38;' : '';
       var daysStyle = done ? 'color:var(--muted);font-size:20px;' : (urgent ? 'color:var(--text);' : '');
@@ -4941,62 +4952,62 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     math: {
       color: 'var(--math-color)',
       items: [
-        { id:'mg_mob',  label:'📝 Weekly Möbius', note:'Week 2–5, 7–11 · 最好6周', w:10, mobius:true },
-        { id:'mg_lt1',  label:'💻 Lab Test 1',    note:'Week 5 · 40分钟',           w:15, date:'2026-06-29T15:00:00+10:00' },
-        { id:'mg_asgn', label:'📄 Assignment',    note:'Week 8 周二 11:59pm截止',   w:10, date:'2026-08-04T23:59:00+10:00' },
-        { id:'mg_lt2',  label:'💻 Lab Test 2',    note:'Week 9 · 40分钟',           w:15, date:'2026-07-27T15:00:00+10:00' },
-        { id:'mg_exam', label:'📋 Final Exam',    note:"21/08/2026 · 15:40 到 Chancellor's Garden · 16:00 开考 · 2小时", w:50, date:'2026-08-21T16:00:00+10:00' }
+        { id:'mg_mob',  label:'Weekly Möbius', note:'Week 2–5, 7–11 · 最好6周', w:10, mobius:true },
+        { id:'mg_lt1',  label:'Lab Test 1',    note:'Week 5 · 40分钟',           w:15, date:'2026-06-29T15:00:00+10:00' },
+        { id:'mg_asgn', label:'Assignment',    note:'Week 8 周二 11:59pm截止',   w:10, date:'2026-08-04T23:59:00+10:00' },
+        { id:'mg_lt2',  label:'Lab Test 2',    note:'Week 9 · 40分钟',           w:15, date:'2026-07-27T15:00:00+10:00' },
+        { id:'mg_exam', label:'Final Exam',    note:"21/08/2026 · 15:40 到 Chancellor's Garden · 16:00 开考 · 2小时", w:50, date:'2026-08-21T16:00:00+10:00' }
       ]
     },
     mman: {
       color: 'var(--mman-color)',
       items: [
-        { id:'mm_t1',  label:'🔧 TOOLS1 测验',      note:'Week 3 周五 11:55pm · 个人',  w:5,  date:'2026-06-19T23:55:00+10:00' },
-        { id:'mm_d1',  label:'💻 DSIGN1 零件CAD',   note:'Week 4 周五 11:55pm · 个人',  w:10, date:'2026-06-26T23:55:00+10:00' },
-        { id:'mm_d2',  label:'💻 DSIGN2 装配CAD',   note:'Week 5 周五 11:55pm · 个人',  w:5,  date:'2026-07-03T23:55:00+10:00' },
-        { id:'mm_t2',  label:'🔧 TOOLS2 手工工具',  note:'Week 4–5 手工工具课 · 个人',   w:10, date:'2026-07-03T23:55:00+10:00' },
-        { id:'mm_mf1', label:'📐 MANUF1 图纸',      note:'Week 7 周五 11:55pm · 个人',  w:15, date:'2026-07-17T23:55:00+10:00' },
-        { id:'mm_mf2', label:'📋 MANUF2 工艺单',    note:'Week 9 周五 11:55pm · 小组',  w:10, date:'2026-08-01T23:55:00+10:00' },
-        { id:'mm_mf3', label:'💻 MANUF3 CAM',       note:'Week 9 周五 11:55pm · 个人',  w:10, date:'2026-08-01T23:55:00+10:00' },
-        { id:'mm_t3',  label:'🔩 TOOLS3 装配',      note:'Week 10 PRJ课 · 小组',         w:5,  date:'2026-08-14T23:55:00+10:00' },
-        { id:'mm_exam',label:'📋 Final Exam',        note:'考试周 · 2小时',               w:30 }
+        { id:'mm_t1',  label:'TOOLS1 测验',      note:'Week 3 周五 11:55pm · 个人',  w:5,  date:'2026-06-19T23:55:00+10:00' },
+        { id:'mm_d1',  label:'DSIGN1 零件CAD',   note:'Week 4 周五 11:55pm · 个人',  w:10, date:'2026-06-26T23:55:00+10:00' },
+        { id:'mm_d2',  label:'DSIGN2 装配CAD',   note:'Week 5 周五 11:55pm · 个人',  w:5,  date:'2026-07-03T23:55:00+10:00' },
+        { id:'mm_t2',  label:'TOOLS2 手工工具',  note:'Week 4–5 手工工具课 · 个人',   w:10, date:'2026-07-03T23:55:00+10:00' },
+        { id:'mm_mf1', label:'MANUF1 图纸',      note:'Week 7 周五 11:55pm · 个人',  w:15, date:'2026-07-17T23:55:00+10:00' },
+        { id:'mm_mf2', label:'MANUF2 工艺单',    note:'Week 9 周五 11:55pm · 小组',  w:10, date:'2026-08-01T23:55:00+10:00' },
+        { id:'mm_mf3', label:'MANUF3 CAM',       note:'Week 9 周五 11:55pm · 个人',  w:10, date:'2026-08-01T23:55:00+10:00' },
+        { id:'mm_t3',  label:'TOOLS3 装配',      note:'Week 10 PRJ课 · 小组',         w:5,  date:'2026-08-14T23:55:00+10:00' },
+        { id:'mm_exam',label:'Final Exam',        note:'考试周 · 2小时',               w:30 }
       ]
     },
     engg: {
       color: 'var(--engg-color)',
       items: [
-        { id:'eg_t1',   label:'📄 Test 1',              note:'20/06/2026 · 10:30–11:30am', w:20, date:'2026-06-20T10:30:00+10:00' },
-        { id:'eg_t2',   label:'📄 Test 2',              note:'18/07/2026 · 10:00am–12:00pm · F10 June Griffith M10', w:30, date:'2026-07-18T10:00:00+10:00' },
-        { id:'eg_t3',   label:'📄 Test 3',              note:'08/08/2026 · 10:30–11:30am', w:20, date:'2026-08-08T10:30:00+10:00' },
-        { id:'eg_proj', label:'📐 Mini-design Project', note:'14/08/2026 · 8:00pm截止',    w:30, date:'2026-08-14T20:00:00+10:00' }
+        { id:'eg_t1',   label:'Test 1',              note:'20/06/2026 · 10:30–11:30am', w:20, date:'2026-06-20T10:30:00+10:00' },
+        { id:'eg_t2',   label:'Test 2',              note:'18/07/2026 · 10:00am–12:00pm · F10 June Griffith M10', w:30, date:'2026-07-18T10:00:00+10:00' },
+        { id:'eg_t3',   label:'Test 3',              note:'08/08/2026 · 10:30–11:30am', w:20, date:'2026-08-08T10:30:00+10:00' },
+        { id:'eg_proj', label:'Mini-design Project', note:'14/08/2026 · 8:00pm截止',    w:30, date:'2026-08-14T20:00:00+10:00' }
       ]
     },
     phys1121: {
       color: 'var(--phys-color)',
       items: [
-        { id:'p1121_lab', label:'🧪 Experiments / Labs', note:'20% · Dates pending · lab details from Moodle', w:20 },
-        { id:'p1121_quiz', label:'📝 Online Quizzes', note:'10% · Weekly quiz rhythm · confirm best-attempt rules', w:10 },
-        { id:'p1121_t1', label:'📄 Class Test 1', note:'10% · Date pending', w:10 },
-        { id:'p1121_t2', label:'📄 Class Test 2', note:'10% · Date pending', w:10 },
-        { id:'p1121_exam', label:'📋 Final Exam', note:'50% · Final timetable pending · older outline used 2 hours', w:50 }
+        { id:'p1121_lab', label:'Experiments / Labs', note:'20% · Dates pending · lab details from Moodle', w:20 },
+        { id:'p1121_quiz', label:'Online Quizzes', note:'10% · Weekly quiz rhythm · confirm best-attempt rules', w:10 },
+        { id:'p1121_t1', label:'Class Test 1', note:'10% · Date pending', w:10 },
+        { id:'p1121_t2', label:'Class Test 2', note:'10% · Date pending', w:10 },
+        { id:'p1121_exam', label:'Final Exam', note:'50% · Final timetable pending · older outline used 2 hours', w:50 }
       ]
     },
     engg1811: {
       color: 'var(--engg-color)',
       items: [
-        { id:'e1811_labs', label:'💻 Labs', note:'20% · Tue 16:00 lab rhythm · confirm marking on Moodle', w:20 },
-        { id:'e1811_a1', label:'📄 Assignment 1', note:'20% · Due date pending', w:20 },
-        { id:'e1811_a2', label:'📄 Assignment 2', note:'20% · Due date pending', w:20 },
-        { id:'e1811_exam', label:'📋 Final Exam', note:'40% · Final timetable pending', w:40 }
+        { id:'e1811_labs', label:'Labs', note:'20% · Tue 16:00 lab rhythm · confirm marking on Moodle', w:20 },
+        { id:'e1811_a1', label:'Assignment 1', note:'20% · Due date pending', w:20 },
+        { id:'e1811_a2', label:'Assignment 2', note:'20% · Due date pending', w:20 },
+        { id:'e1811_exam', label:'Final Exam', note:'40% · Final timetable pending', w:40 }
       ]
     },
     phys1160: {
       color: 'var(--phys-color)',
       items: [
-        { id:'p1160_quiz', label:'📝 Weekly Quizzes', note:'10% · Online rhythm · confirm quiz windows', w:10 },
-        { id:'p1160_report', label:'📄 Short Report', note:'25% · Date pending', w:25 },
-        { id:'p1160_apod', label:'🔭 APOD Project', note:'40% · Date pending', w:40 },
-        { id:'p1160_exp', label:'🧪 Experiment', note:'25% · Date pending', w:25 }
+        { id:'p1160_quiz', label:'Weekly Quizzes', note:'10% · Online rhythm · confirm quiz windows', w:10 },
+        { id:'p1160_report', label:'Short Report', note:'25% · Date pending', w:25 },
+        { id:'p1160_apod', label:'APOD Project', note:'40% · Date pending', w:40 },
+        { id:'p1160_exp', label:'Experiment', note:'25% · Date pending', w:25 }
       ]
     }
   };
@@ -5060,7 +5071,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         var weight = parseWeight(item.weight);
         return {
           id: gtItemId(course, index, item.name),
-          label: '📄 ' + item.name,
+          label: item.name,
           note: item.weight + (item.note ? ' · ' + item.note : ''),
           w: weight
         };
@@ -5120,7 +5131,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
     var html = '<div class="gt-row" onclick="gtToggleMobiusExpand()">';
     html += '<div style="width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10px;color:'+color+';flex-shrink:0;">'+(expanded?'▼':'▶')+'</div>';
-    html += '<div class="gt-info"><div class="gt-name">📝 Weekly Möbius</div><div class="gt-note">Week 2–5, 7–11 · 最好6周计入</div></div>';
+    html += '<div class="gt-info"><div class="gt-name">Weekly Möbius</div><div class="gt-note">Week 2–5, 7–11 · 最好6周计入</div></div>';
     html += '<div class="gt-weight" style="color:'+color+'">10%</div>';
     html += '<div class="gt-status" style="color:'+color+'">'+(mc.count>0 ? mc.contrib.toFixed(1)+'%' : '--')+'<br><span style="font-size:10px;opacity:.8">'+(mc.count>0 ? '+'+mc.contrib.toFixed(1)+'%' : '')+'</span></div>';
     html += '</div>';
@@ -6004,7 +6015,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       <div class="profile-value">z5678040@ad.unsw.edu.au</div>
     </div>
   </div>
-  <div style="font-size:12px;color:var(--muted);margin-top:16px;margin-bottom:6px;">📝 临时备忘录</div>
+  <div style="font-size:12px;color:var(--muted);margin-top:16px;margin-bottom:6px;">临时备忘录</div>
   <textarea id="memo-area" placeholder="在这里写临时笔记..." oninput="saveMemo()"></textarea>
   <div class="sync-card">
     <div class="profile-label">云端同步</div>
