@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-08-19-term-transition"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-08-19-t3-grade-tracker"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
@@ -1666,6 +1666,11 @@
     </div>
   </div>
   <div class="topic-group">
+    <div class="group-label">成绩追踪</div>
+    <div class="topic-card" style="padding:16px;" id="gt-phys1121"></div>
+    <div class="exam-alert">Dates pending · 先按参考 assessment breakdown 追踪，Moodle 出来后校准。</div>
+  </div>
+  <div class="topic-group">
     <div class="group-label">Course Setup</div>
     <div class="topic-card open" id="phys1121-overview">
       <div class="topic-header" onclick="toggleTopic('phys1121-overview')">
@@ -1692,6 +1697,11 @@
     </div>
   </div>
   <div class="topic-group">
+    <div class="group-label">成绩追踪</div>
+    <div class="topic-card" style="padding:16px;" id="gt-engg1811"></div>
+    <div class="exam-alert">Dates pending · 先按参考 assessment breakdown 追踪，Moodle 出来后校准。</div>
+  </div>
+  <div class="topic-group">
     <div class="group-label">Course Setup</div>
     <div class="topic-card open" id="engg1811-overview">
       <div class="topic-header" onclick="toggleTopic('engg1811-overview')">
@@ -1716,6 +1726,11 @@
       <h2 style="color:#B9C7F2;">PHYS1160</h2>
       <p>Introduction to Astronomy · Online · 2026 T3</p>
     </div>
+  </div>
+  <div class="topic-group">
+    <div class="group-label">成绩追踪</div>
+    <div class="topic-card" style="padding:16px;" id="gt-phys1160"></div>
+    <div class="exam-alert">Dates pending · 先按参考 assessment breakdown 追踪，Moodle 出来后校准。</div>
   </div>
   <div class="topic-group">
     <div class="group-label">Course Setup</div>
@@ -3210,7 +3225,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-19-term-transition';
+  var APP_VERSION = '2026-08-19-t3-grade-tracker';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
@@ -4897,12 +4912,42 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         { id:'eg_t3',   label:'📄 Test 3',              note:'08/08/2026 · 10:30–11:30am', w:20, date:'2026-08-08T10:30:00+10:00' },
         { id:'eg_proj', label:'📐 Mini-design Project', note:'14/08/2026 · 8:00pm截止',    w:30, date:'2026-08-14T20:00:00+10:00' }
       ]
+    },
+    phys1121: {
+      color: '#B9C7F2',
+      items: [
+        { id:'p1121_lab', label:'🧪 Experiments / Labs', note:'20% · Dates pending · lab details from Moodle', w:20 },
+        { id:'p1121_quiz', label:'📝 Online Quizzes', note:'10% · Weekly quiz rhythm · confirm best-attempt rules', w:10 },
+        { id:'p1121_t1', label:'📄 Class Test 1', note:'10% · Date pending', w:10 },
+        { id:'p1121_t2', label:'📄 Class Test 2', note:'10% · Date pending', w:10 },
+        { id:'p1121_exam', label:'📋 Final Exam', note:'50% · Final timetable pending · older outline used 2 hours', w:50 }
+      ]
+    },
+    engg1811: {
+      color: 'var(--engg-color)',
+      items: [
+        { id:'e1811_labs', label:'💻 Labs', note:'20% · Tue 16:00 lab rhythm · confirm marking on Moodle', w:20 },
+        { id:'e1811_a1', label:'📄 Assignment 1', note:'20% · Due date pending', w:20 },
+        { id:'e1811_a2', label:'📄 Assignment 2', note:'20% · Due date pending', w:20 },
+        { id:'e1811_exam', label:'📋 Final Exam', note:'40% · Final timetable pending', w:40 }
+      ]
+    },
+    phys1160: {
+      color: '#B9C7F2',
+      items: [
+        { id:'p1160_quiz', label:'📝 Weekly Quizzes', note:'10% · Online rhythm · confirm quiz windows', w:10 },
+        { id:'p1160_report', label:'📄 Short Report', note:'25% · Date pending', w:25 },
+        { id:'p1160_apod', label:'🔭 APOD Project', note:'40% · Date pending', w:40 },
+        { id:'p1160_exp', label:'🧪 Experiment', note:'25% · Date pending', w:25 }
+      ]
     }
   };
   function courseFillStyle(course, color) {
     if (course === 'math') return 'linear-gradient(90deg, #EFF6FF, #93C5FD 58%, #BFDBFE)';
     if (course === 'engg') return 'linear-gradient(90deg, #F8FAFC, #D1D7E2 58%, #AEB9C8)';
     if (course === 'mman') return 'linear-gradient(90deg, #F7F4FF, #C5BFD2 58%, #AFA8BD)';
+    if (course === 'phys1121' || course === 'phys1160') return 'linear-gradient(90deg, #F8FAFC, #B9C7F2 58%, #94A3D8)';
+    if (course === 'engg1811') return 'linear-gradient(90deg, #F8FAFC, #D1D7E2 58%, #AEB9C8)';
     return color || 'var(--math-color)';
   }
   function courseFillCss(course, color) {
@@ -4910,7 +4955,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function gtCourseCode(course) {
-    return { math:'MATH1231', mman:'MMAN1130', engg:'ENGG1300' }[course] || '';
+    return { math:'MATH1231', mman:'MMAN1130', engg:'ENGG1300', phys1121:'PHYS1121', engg1811:'ENGG1811', phys1160:'PHYS1160' }[course] || '';
   }
 
   function gtTargetNumber(course) {
@@ -5128,6 +5173,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   renderGT('math');
   renderGT('mman');
   renderGT('engg');
+  renderGT('phys1121');
+  renderGT('engg1811');
+  renderGT('phys1160');
 
   function dashCourseFromDeadline(d) {
     var course = deadlineCourse(d);
