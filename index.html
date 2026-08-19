@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-08-20-inline-course-icons"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-08-20-dashboard-timeline"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
@@ -263,7 +263,7 @@
     /* COURSE HEADER - dark card style */
     .course-header {
       border-radius: var(--radius); padding: 22px; margin-bottom: 20px;
-      display: flex; align-items: flex-start; gap: 16px;
+      display: flex; align-items: center; gap: 16px;
       box-shadow: var(--shadow);
     }
     .course-header.math,
@@ -287,7 +287,7 @@
       border: 1px solid rgba(184,196,216,.22);
     }
     .course-icon {
-      width: 38px; height: 38px;
+      width: 46px; height: 46px;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; background: transparent;
       color: var(--text);
@@ -300,6 +300,7 @@
       stroke: currentColor; fill: none;
       stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
     }
+    .course-icon svg { overflow: visible; }
     .course-header.math .course-icon,
     .course-header.aero .course-icon { color: var(--math-color); }
     .course-header.engg .course-icon,
@@ -308,6 +309,10 @@
     .course-header.desn .course-icon { color: var(--mman-color); }
     .course-header.phys .course-icon,
     .course-header.thesis .course-icon { color: var(--phys-color); }
+    .course-icon svg [fill="currentColor"],
+    .course-tile-icon svg [fill="currentColor"],
+    .course-library-icon svg [fill="currentColor"],
+    .course-preview-icon svg [fill="currentColor"] { fill: currentColor; }
     .course-meta { flex: 1; }
     .course-code {
       font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 800;
@@ -1269,6 +1274,47 @@
     .dash-focus-num { width:22px;height:22px;border-radius:50%;background:var(--text);color:#000;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0; }
     .dash-focus-text { font-size:13px;color:var(--text);line-height:1.45; }
     .dash-focus-row.done .dash-focus-text { text-decoration:line-through;color:var(--muted); }
+    .dash-week { min-width:0; }
+    .dash-week-head { display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px; }
+    .dash-week-title { font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.02em; }
+    .dash-week-active { font-size:11px;font-weight:750;color:var(--dim);white-space:nowrap; }
+    .dash-days { display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-bottom:12px; }
+    .dash-day {
+      height:48px;border:1px solid var(--border);border-radius:14px;background:var(--surface2);
+      color:var(--dim);display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:5px;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:850;cursor:pointer;
+      transition:background .18s,border-color .18s,transform .18s,color .18s;
+    }
+    .dash-day:active { transform:scale(.965); }
+    .dash-day.active {
+      color:var(--text);border-color:rgba(29,155,240,.46);
+      background:linear-gradient(180deg,rgba(29,155,240,.24),rgba(29,155,240,.06));
+      box-shadow:0 0 0 1px rgba(29,155,240,.08) inset;
+    }
+    .dash-day-dots { display:flex;gap:3px;height:5px;align-items:center;justify-content:center; }
+    .dash-day-dots i { width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.72; }
+    .dash-lane { display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px; }
+    .dash-times { color:var(--dim);font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;display:flex;flex-direction:column;justify-content:space-between;padding:4px 0 3px;text-align:right; }
+    .dash-events {
+      position:relative;min-height:292px;border-left:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px) 0 0/100% 44px;
+      overflow:hidden;
+    }
+    .dash-class {
+      position:absolute;left:9px;right:0;min-height:42px;
+      display:grid;grid-template-columns:25px minmax(0,1fr);gap:8px;align-items:center;
+      padding:8px 10px;border-radius:14px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.055);box-shadow:0 8px 22px rgba(0,0,0,.18);
+      cursor:pointer;animation:dashClassIn .26s ease both;
+    }
+    .dash-class:nth-child(2) { animation-delay:.03s; }
+    .dash-class:nth-child(3) { animation-delay:.06s; }
+    .dash-class svg { width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 8px currentColor); }
+    .dash-class svg [fill="currentColor"] { fill: currentColor; }
+    .dash-class-title { font-size:13px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    .dash-class-sub { font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    .dash-class-empty { color:var(--muted);font-size:13px;padding:12px 0 0 10px;line-height:1.4; }
+    @keyframes dashClassIn { from { opacity:0;transform:translateY(8px); } to { opacity:1;transform:none; } }
 
     /* COURSES HUB */
     .course-rail {
@@ -1629,65 +1675,6 @@
 
 <!-- ===== TIMETABLE ===== -->
 <div class="course-section" id="sec-timetable">
-  <div style="padding-top:4px;">
-    <div class="topic-group">
-      <div class="group-label">2026 T3 每周固定课表</div>
-      <div class="topic-card" style="padding:16px;">
-        <div class="timetable" id="weekly-timetable-list"></div>
-      </div>
-    </div>
-
-
-    <div class="topic-group">
-      <div class="group-label">考试时间表</div>
-      <div class="topic-card" style="padding:16px;">
-        <div class="timetable" id="exam-timetable-list"></div>
-      </div>
-    </div>
-
-    <div class="topic-group">
-      <div class="group-label">MMAN1130 重要日期</div>
-      <div class="topic-card" style="padding:16px;">
-        <div class="timetable">
-          <div class="tt-row">
-            <div class="tt-day">FRI</div>
-            <div class="tt-time">11:55pm</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">TOOLS1 测验</span><span class="tt-weight mman">5%</span></div><div class="tt-loc">Week 3</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">FRI</div>
-            <div class="tt-time">11:55pm</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">DSIGN1 零件CAD</span><span class="tt-weight mman">10%</span></div><div class="tt-loc">Week 4</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">FRI</div>
-            <div class="tt-time">11:55pm / PRJ课</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">DSIGN2 装配CAD + TOOLS2</span><span class="tt-weight mman">15%</span></div><div class="tt-loc">Week 5</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">FRI</div>
-            <div class="tt-time">11:55pm</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">MANUF1 图纸</span><span class="tt-weight mman">15%</span></div><div class="tt-loc">Week 7</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">FRI</div>
-            <div class="tt-time">11:55pm</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">MANUF2 工艺单 + MANUF3 CAM</span><span class="tt-weight mman">20%</span></div><div class="tt-loc">Week 9</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">—</div>
-            <div class="tt-time">PRJ课</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">TOOLS3 装配</span><span class="tt-weight mman">5%</span></div><div class="tt-loc">Week 10</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">—</div>
-            <div class="tt-time">2小时</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">MMAN1130 Final Exam</span><span class="tt-weight mman">30%</span></div><div class="tt-loc">考试周</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- ===== COUNTDOWN ===== -->
@@ -3232,7 +3219,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-20-inline-course-icons';
+  var APP_VERSION = '2026-08-20-dashboard-timeline';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -3276,13 +3263,13 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var currentCountdownTerm = localStorage.getItem('iue.countdownTerm.v1') || '2026 T2';
   if (COUNTDOWN_TERMS.indexOf(currentCountdownTerm) === -1) currentCountdownTerm = '2026 T2';
   var T3_WEEKLY_TIMETABLE = [
-    { day:'MON', time:'11:00', course:'engg1811', title:'ENGG1811', kind:'Lecture', kindClass:'lec', loc:'Online' },
-    { day:'TUE', time:'14:00', course:'phys1121', title:'PHYS1121', kind:'Lecture', kindClass:'lec', loc:'In Person' },
-    { day:'TUE', time:'16:00', course:'engg1811', title:'ENGG1811', kind:'Laboratory', kindClass:'wks', loc:'In Person' },
-    { day:'WED', time:'11:00', course:'engg1811', title:'ENGG1811', kind:'Lecture', kindClass:'lec', loc:'Online' },
-    { day:'WED', time:'13:00', course:'phys1121', title:'PHYS1121', kind:'Other', kindClass:'tut', loc:'In Person' },
-    { day:'THU', time:'11:00', course:'phys1121', title:'PHYS1121', kind:'Lecture', kindClass:'lec', loc:'In Person' },
-    { day:'THU', time:'16:00', course:'phys1121', title:'PHYS1121', kind:'Laboratory', kindClass:'wks', loc:'In Person' },
+    { day:'MON', time:'11:00', durationMin:60, course:'engg1811', title:'ENGG1811', kind:'Lecture', kindClass:'lec', loc:'Online' },
+    { day:'TUE', time:'14:00', durationMin:60, course:'phys1121', title:'PHYS1121', kind:'Lecture', kindClass:'lec', loc:'In Person' },
+    { day:'TUE', time:'16:00', durationMin:120, course:'engg1811', title:'ENGG1811', kind:'Laboratory', kindClass:'wks', loc:'In Person' },
+    { day:'WED', time:'11:00', durationMin:60, course:'engg1811', title:'ENGG1811', kind:'Lecture', kindClass:'lec', loc:'Online' },
+    { day:'WED', time:'13:00', durationMin:60, course:'phys1121', title:'PHYS1121', kind:'Other', kindClass:'tut', loc:'In Person' },
+    { day:'THU', time:'11:00', durationMin:60, course:'phys1121', title:'PHYS1121', kind:'Lecture', kindClass:'lec', loc:'In Person' },
+    { day:'THU', time:'16:00', durationMin:120, course:'phys1121', title:'PHYS1121', kind:'Laboratory', kindClass:'wks', loc:'In Person' },
     { day:'WEB', time:'Online', course:'phys1160', title:'PHYS1160', kind:'Web Delivery', kindClass:'lec', loc:'Self-paced' }
   ];
   var COURSE_META = {
@@ -3854,9 +3841,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (code === 'PHYS1160') return 'ast';
     if (/^PHYS/.test(code)) return 'phys';
     if (/^ELEC/.test(code)) return 'elec';
-    if (/^AERO/.test(code)) return 'aero';
+    if (/^AERO/.test(code)) return 'math';
     if (/^MATH/.test(code)) return 'math';
-    if (/^DESN/.test(code)) return 'desn';
+    if (/^DESN/.test(code)) return 'mman';
     if (/^MMAN495/.test(code)) return 'thesis';
     if (/^MMAN/.test(code)) return 'mman';
     return 'engg';
@@ -3864,15 +3851,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function courseIconSvg(type) {
     var icons = {
-      math: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 25h20"/><path d="M8 23 17 7l7 16H8Z"/><path d="M12 18h8"/></svg>',
-      aero: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 20c6-8 13-11 22-10"/><path d="M18 9 27 6l-3 9"/><path d="M9 23l5-2"/></svg>',
-      engg: '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 5v4M16 23v4M5 16h4M23 16h4"/><path d="m8.2 8.2 2.8 2.8M21 21l2.8 2.8M23.8 8.2 21 11M11 21l-2.8 2.8"/></svg>',
+      math: '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M22 55c8-22 35-31 54-16 11 9 3 28-17 27-17-1-31-15-26-29 4-11 20-12 34-3" fill="currentColor" fill-opacity=".24" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M23 56c16 10 32 8 46-4" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" opacity=".7"/><path d="M34 34c10 12 24 18 39 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity=".38"/><path d="M42 28c5 9 6 20 3 34M59 34c-3 9-4 18-2 28" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity=".42"/></svg>',
+      aero: '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M22 55c8-22 35-31 54-16 11 9 3 28-17 27-17-1-31-15-26-29 4-11 20-12 34-3" fill="currentColor" fill-opacity=".24" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M23 56c16 10 32 8 46-4" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" opacity=".7"/><path d="M34 34c10 12 24 18 39 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity=".38"/><path d="M42 28c5 9 6 20 3 34M59 34c-3 9-4 18-2 28" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity=".42"/></svg>',
+      engg: '<svg viewBox="0 0 72 72" aria-hidden="true"><rect x="13" y="17" width="46" height="38" rx="6" stroke="currentColor" stroke-width="4"/><path d="M24 29l-7 7 7 7M45 29l7 7-7 7M39 27l-7 18M24 59h24" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
       elec: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 21V11h16v10H8Z"/><path d="M12 7v4M20 7v4M12 21v4M20 21v4"/><path d="M5 14h3M5 18h3M24 14h3M24 18h3"/></svg>',
-      phys: '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="2.3"/><ellipse cx="16" cy="16" rx="11" ry="4.5"/><ellipse cx="16" cy="16" rx="11" ry="4.5" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="11" ry="4.5" transform="rotate(120 16 16)"/></svg>',
-      ast: '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="6"/><path d="M19 19 26 26"/><path d="M10 14h8"/><path d="M14 10v8"/></svg>',
-      mman: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 22h18"/><path d="M10 22V10h12v12"/><path d="M10 14h12M14 10v12M18 10v12"/></svg>',
-      desn: '<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="8" y="8" width="6" height="6" rx="1.5"/><rect x="18" y="8" width="6" height="6" rx="1.5"/><rect x="8" y="18" width="6" height="6" rx="1.5"/><rect x="18" y="18" width="6" height="6" rx="1.5"/></svg>',
-      thesis: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 6h11l4 4v16H9V6Z"/><path d="M20 6v5h5"/><path d="M13 17h8M13 21h6"/></svg>'
+      phys: '<svg viewBox="0 0 88 88" aria-hidden="true"><path d="M24 18h40M44 18L27 58" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><circle cx="27" cy="58" r="8" stroke="currentColor" stroke-width="4"/><path d="M44 18c14 11 20 24 18 40" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".45"/><path d="M56 53l6 5 4-7" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      ast: '<svg viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="7" fill="currentColor"/><ellipse cx="36" cy="36" rx="25" ry="10" stroke="currentColor" stroke-width="3.5"/><ellipse cx="36" cy="36" rx="14" ry="27" stroke="currentColor" stroke-width="3.5" transform="rotate(35 36 36)" opacity=".72"/><circle cx="58" cy="36" r="3" fill="currentColor"/><circle cx="27" cy="13" r="2.5" fill="currentColor"/></svg>',
+      mman: '<svg viewBox="0 0 72 72" aria-hidden="true"><rect x="43" y="16" width="15" height="20" rx="3" stroke="currentColor" stroke-width="4"/><circle cx="24" cy="48" r="10" stroke="currentColor" stroke-width="4"/><circle cx="24" cy="48" r="3" fill="currentColor"/><path d="M31 41l16-16M48 36v20M42 56h12M14 58h20M50 16V9M50 43v-7" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      desn: '<svg viewBox="0 0 72 72" aria-hidden="true"><rect x="43" y="16" width="15" height="20" rx="3" stroke="currentColor" stroke-width="4"/><circle cx="24" cy="48" r="10" stroke="currentColor" stroke-width="4"/><circle cx="24" cy="48" r="3" fill="currentColor"/><path d="M31 41l16-16M48 36v20M42 56h12M14 58h20M50 16V9M50 43v-7" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      thesis: '<svg viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="7" fill="currentColor"/><ellipse cx="36" cy="36" rx="25" ry="10" stroke="currentColor" stroke-width="3.5"/><ellipse cx="36" cy="36" rx="14" ry="27" stroke="currentColor" stroke-width="3.5" transform="rotate(35 36 36)" opacity=".72"/><circle cx="58" cy="36" r="3" fill="currentColor"/><circle cx="27" cy="13" r="2.5" fill="currentColor"/></svg>'
     };
     return icons[type] || icons.engg;
   }
@@ -4072,7 +4059,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         +'</div>'
         +'<div class="course-library-actions">'
         +'<button class="course-action-btn" onclick="openCourse(\''+c.id+'\')">View</button>'
-        +'<button class="course-action-btn '+(!active ? 'primary' : '')+'" '+(disabled ? 'disabled' : '')+' onclick="setCourseActive(\''+c.id+'\','+(!active)+')">'+(active ? 'Remove' : 'Add')+'</button>'
+        +'<button class="course-action-btn '+(!active ? 'primary' : '')+'" '+(disabled ? 'disabled' : '')+' onclick="setCourseActive(\''+c.id+'\','+(!active)+')">'+(active ? 'Omit' : 'Add')+'</button>'
         +'</div>'
         +'</div>';
       return row + (selectedPreviewCourseId === c.id ? coursePreviewMarkup(c) : '');
@@ -5557,6 +5544,96 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     renderDashboard();
   }
 
+  var DASH_WEEK_DAYS = ['MON','TUE','WED','THU','FRI'];
+  var dashboardScheduleDay = (function(){
+    var saved = localStorage.getItem('iue.dashboardDay.v1');
+    if (DASH_WEEK_DAYS.indexOf(saved) > -1) return saved;
+    var today = DASH_WEEK_DAYS[(new Date().getDay() + 6) % 7];
+    return DASH_WEEK_DAYS.indexOf(today) > -1 ? today : 'MON';
+  })();
+
+  function setDashboardScheduleDay(day) {
+    if (DASH_WEEK_DAYS.indexOf(day) === -1) return;
+    dashboardScheduleDay = day;
+    try { localStorage.setItem('iue.dashboardDay.v1', day); } catch(e) {}
+    renderDashboard();
+  }
+
+  function dashCourseFromTimetable(row) {
+    return (row && row.course) || 'courses';
+  }
+
+  function dashTimetableMinutes(time) {
+    var m = String(time || '').match(/^(\d{1,2}):(\d{2})/);
+    if (!m) return null;
+    return Number(m[1]) * 60 + Number(m[2]);
+  }
+
+  function dashTimetableRange(row) {
+    var start = dashTimetableMinutes(row.time);
+    if (start == null) return row.time || '';
+    var end = start + (row.durationMin || 60);
+    function fmt(total) {
+      var h = Math.floor(total / 60);
+      var min = total % 60;
+      return String(h).padStart(2,'0') + ':' + String(min).padStart(2,'0');
+    }
+    return fmt(start) + '-' + fmt(end);
+  }
+
+  function renderDashboardTimetable() {
+    var rowsByDay = {};
+    DASH_WEEK_DAYS.forEach(function(day){ rowsByDay[day] = []; });
+    T3_WEEKLY_TIMETABLE.forEach(function(row) {
+      if (rowsByDay[row.day]) rowsByDay[row.day].push(row);
+    });
+    Object.keys(rowsByDay).forEach(function(day) {
+      rowsByDay[day].sort(function(a,b) {
+        return (dashTimetableMinutes(a.time) || 0) - (dashTimetableMinutes(b.time) || 0);
+      });
+    });
+    var dayRows = rowsByDay[dashboardScheduleDay] || [];
+    var dayButtons = DASH_WEEK_DAYS.map(function(day) {
+      var dots = (rowsByDay[day] || []).slice(0,4).map(function(){ return '<i></i>'; }).join('');
+      return '<button class="dash-day '+(day === dashboardScheduleDay ? 'active' : '')+'" onclick="setDashboardScheduleDay(\''+day+'\')">'
+        +'<span>'+day+'</span><span class="dash-day-dots">'+dots+'</span></button>';
+    }).join('');
+    var minStart = 10 * 60;
+    var maxEnd = 18 * 60;
+    dayRows.forEach(function(row) {
+      var start = dashTimetableMinutes(row.time);
+      if (start == null) return;
+      minStart = Math.min(minStart, Math.max(8*60, start - 30));
+      maxEnd = Math.max(maxEnd, start + (row.durationMin || 60) + 30);
+    });
+    minStart = Math.floor(minStart / 60) * 60;
+    maxEnd = Math.ceil(maxEnd / 60) * 60;
+    var span = Math.max(240, maxEnd - minStart);
+    var labels = [];
+    for (var t = minStart; t <= maxEnd; t += 60) labels.push(String(Math.floor(t/60)).padStart(2,'0'));
+    var events = dayRows.map(function(row) {
+      var start = dashTimetableMinutes(row.time);
+      if (start == null) return '';
+      var laneHeight = 292;
+      var top = Math.max(0, (start - minStart) / span * laneHeight);
+      var height = Math.max(48, (row.durationMin || 60) / span * laneHeight);
+      var course = dashCourseFromTimetable(row);
+      var color = courseColor(course);
+      var iconCourse = courseById(course) || { code: row.title || '' };
+      return '<div class="dash-class" style="top:'+top.toFixed(1)+'px;height:'+height.toFixed(1)+'px;color:'+color+';" onclick="showCourse(\''+course+'\')">'
+        + courseIconSvg(courseIconType(iconCourse))
+        + '<div><div class="dash-class-title">'+escapeHtml(row.title + ' ' + row.kind)+'</div>'
+        + '<div class="dash-class-sub">'+escapeHtml(dashTimetableRange(row) + ' · ' + row.loc)+'</div></div>'
+        + '</div>';
+    }).join('');
+    if (!events) events = '<div class="dash-class-empty">这天没有固定课，可以留给复习、整理和补 Moodle。</div>';
+    return '<div class="dash-week">'
+      + '<div class="dash-week-head"><div class="dash-week-title">课表</div><div class="dash-week-active">2026 T3 · '+dashboardScheduleDay+'</div></div>'
+      + '<div class="dash-days">'+dayButtons+'</div>'
+      + '<div class="dash-lane"><div class="dash-times">'+labels.map(function(x){ return '<span>'+x+'</span>'; }).join('')+'</div><div class="dash-events">'+events+'</div></div>'
+      + '</div>';
+  }
+
   function renderDashboard() {
     var commandEl = document.getElementById('dash-command');
     if (!commandEl || typeof GT === 'undefined') return;
@@ -5579,6 +5656,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var done = !!focusDone[item.id];
       return '<div class="dash-focus-row '+(done?'done':'')+'" onclick="dashToggleFocus(\''+item.id+'\')"><div class="dash-focus-num">'+(done?'✓':(i+1))+'</div><div class="dash-focus-text">'+escapeHtml(item.text)+'</div></div>';
     }).join('');
+    var timetableHtml = renderDashboardTimetable();
 
     var queueHtml = urgent.slice(0,4).map(function(d) {
       var left = dashTimeLeft(d.diff);
@@ -5609,7 +5687,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         +'</div>'
         +'<div class="dash-command-body">'
         +'<div><div class="dash-command-section-title">最近日程</div><div class="dash-queue">'+(queueHtml || '<div style="color:var(--muted);font-size:13px;padding:6px 0;">未来两周没有未完成考核。</div>')+'</div></div>'
-        +'<div><div class="dash-command-section-title">建议</div><div class="dash-focus">'+(tinyHtml || '<div style="color:var(--muted);font-size:13px;padding:6px 0;">今天没有自动任务。</div>')+'</div></div>'
+        + timetableHtml
         +'</div>';
     } else {
       commandEl.innerHTML =
@@ -5619,7 +5697,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         +'</div>'
         +'<div class="dash-command-body">'
         +'<div><div class="dash-command-section-title">最近日程</div><div style="color:var(--muted);font-size:13px;padding:6px 0;">未来两周没有未完成考核。</div></div>'
-        +'<div><div class="dash-command-section-title">建议</div><div class="dash-focus">'+(tinyHtml || '<div style="color:var(--muted);font-size:13px;padding:6px 0;">今天没有自动任务。</div>')+'</div></div>'
+        + timetableHtml
         +'</div>';
     }
 
