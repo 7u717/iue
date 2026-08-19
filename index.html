@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-08-19-t3-grade-tracker"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-08-20-course-family-colors"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
@@ -35,10 +35,20 @@
       --radius: 16px;
       --math-color: #93C5FD;
       --math-soft: #0d1f3c;
-      --mman-color: #C5BFD2;
-      --mman-soft: #1d1a24;
       --engg-color: #D1D7E2;
       --engg-soft: #171b22;
+      --elec-color: var(--engg-color);
+      --elec-soft: var(--engg-soft);
+      --mman-color: #AEB8C8;
+      --mman-soft: #171b21;
+      --desn-color: var(--mman-color);
+      --desn-soft: var(--mman-soft);
+      --phys-color: #B8C4D8;
+      --phys-soft: #171d27;
+      --thesis-color: var(--phys-color);
+      --thesis-soft: var(--phys-soft);
+      --aero-color: var(--math-color);
+      --aero-soft: var(--math-soft);
       --phone-width: 420px;
       --header-h: 65px;
       --nav-h: 58px;
@@ -261,17 +271,20 @@
       background: linear-gradient(135deg, rgba(147,197,253,.16), rgba(147,197,253,.055) 52%, rgba(255,255,255,.025));
       border: 1px solid rgba(147,197,253,.24);
     }
-    .course-header.mman {
-      background: linear-gradient(135deg, rgba(197,191,210,.18), rgba(197,191,210,.06) 52%, rgba(255,255,255,.025));
-      border: 1px solid rgba(197,191,210,.24);
+    .course-header.mman,
+    .course-header.desn {
+      background: linear-gradient(135deg, rgba(174,184,200,.16), rgba(174,184,200,.055) 52%, rgba(255,255,255,.025));
+      border: 1px solid rgba(174,184,200,.22);
     }
-    .course-header.engg {
+    .course-header.engg,
+    .course-header.elec {
       background: linear-gradient(135deg, rgba(209,215,226,.18), rgba(209,215,226,.06) 52%, rgba(255,255,255,.025));
       border: 1px solid rgba(209,215,226,.24);
     }
-    .course-header.desn {
-      background: linear-gradient(135deg, rgba(200,194,214,.18), rgba(200,194,214,.06) 52%, rgba(255,255,255,.025));
-      border: 1px solid rgba(200,194,214,.24);
+    .course-header.phys,
+    .course-header.thesis {
+      background: linear-gradient(135deg, rgba(184,196,216,.16), rgba(184,196,216,.055) 52%, rgba(255,255,255,.025));
+      border: 1px solid rgba(184,196,216,.22);
     }
     .course-icon {
       width: 52px; height: 52px; border-radius: 16px;
@@ -283,6 +296,14 @@
       font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 800;
       margin-bottom: 2px; color: #fff; letter-spacing: -0.02em;
     }
+    .course-header.math .course-code,
+    .course-header.aero .course-code { color: var(--math-color); }
+    .course-header.engg .course-code,
+    .course-header.elec .course-code { color: var(--engg-color); }
+    .course-header.mman .course-code,
+    .course-header.desn .course-code { color: var(--mman-color); }
+    .course-header.phys .course-code,
+    .course-header.thesis .course-code { color: var(--phys-color); }
     .course-name { font-size: 13px; color: rgba(255,255,255,0.6); }
 
     /* TOPIC GROUPS */
@@ -296,6 +317,14 @@
       background: var(--surface);
       border-radius: var(--radius); margin-bottom: 10px; overflow: hidden;
       box-shadow: var(--shadow-sm);
+    }
+    .topic-card.gt-card-themed {
+      --gt-color: var(--math-color);
+      border: 1px solid color-mix(in srgb, var(--gt-color) 18%, transparent);
+      background:
+        radial-gradient(circle at 16% 0%, color-mix(in srgb, var(--gt-color) 13%, transparent), transparent 36%),
+        linear-gradient(150deg, color-mix(in srgb, var(--gt-color) 7%, transparent), var(--surface) 44%, #0c0c0c);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.035), inset 0 1px 0 rgba(255,255,255,.055);
     }
     /* Keep the study-topic cards visually separate on narrow phone screens. */
     #calc-topics,
@@ -1658,7 +1687,7 @@
 <!-- ===== PHYS1121 ===== -->
 <div class="course-section" id="sec-phys1121">
   <div class="course-switcher" aria-label="专业课切换"></div>
-  <div class="course-header aero">
+  <div class="course-header phys">
     <div class="course-icon">🛰️</div>
     <div class="course-meta">
       <div class="course-code">PHYS1121</div>
@@ -1692,11 +1721,11 @@
 <!-- ===== PHYS1160 ===== -->
 <div class="course-section" id="sec-phys1160">
   <div class="course-switcher" aria-label="专业课切换"></div>
-  <div class="course-header aero">
+  <div class="course-header phys">
     <div class="course-icon">🔭</div>
     <div class="course-meta">
       <div class="course-code">PHYS1160</div>
-      <div class="course-name">Introduction to Astronomy · Online · 2026 T3</div>
+      <div class="course-name">Introduction to Astronomy</div>
     </div>
   </div>
   <div class="topic-group">
@@ -3183,35 +3212,45 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-19-t3-grade-tracker';
+  var APP_VERSION = '2026-08-20-course-family-colors';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
+  var COURSE_FAMILY_COLOR = {
+    math: 'var(--math-color)',
+    aero: 'var(--aero-color)',
+    engg: 'var(--engg-color)',
+    elec: 'var(--elec-color)',
+    mman: 'var(--mman-color)',
+    desn: 'var(--desn-color)',
+    phys: 'var(--phys-color)',
+    thesis: 'var(--thesis-color)'
+  };
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
-    { id:'phys1121', code:'PHYS1121', icon:'🛰️', short:'Phys', color:'#B9C7F2', name:'Physics 1A', tags:['Planned','Core','2026 T3'], status:'archived', term:'2026 T3', order:4 },
+    { id:'phys1121', code:'PHYS1121', icon:'🛰️', short:'Phys', color:'var(--phys-color)', name:'Physics 1A', tags:['Planned','Core','2026 T3'], status:'archived', term:'2026 T3', order:4 },
     { id:'engg1811', code:'ENGG1811', icon:'💻', short:'Code', color:'var(--engg-color)', name:'Computing for Engineers', tags:['Planned','Core','2026 T3'], status:'archived', term:'2026 T3', order:5 },
-    { id:'phys1160', code:'PHYS1160', icon:'🔭', short:'Astro', color:'#B9C7F2', name:'Introduction to Astronomy', tags:['Planned','Free Elective','2026 T3'], status:'archived', term:'2026 T3', order:6 },
-    { id:'desn1000', code:'DESN1000', icon:'🧩', short:'Design', color:'#C8C2D6', name:'Introduction to Engineering Design and Innovation', tags:['Prereq','Core','2027 T1'], status:'archived', hasPage:false, term:'2027 T1', order:7 },
-    { id:'elec1111', code:'ELEC1111', icon:'🔌', short:'Elec', color:'#CBD5E1', name:'Electrical Circuit Fundamentals', tags:['Prereq','Core','2027 T2'], status:'archived', hasPage:false, term:'2027 T2', order:8 },
+    { id:'phys1160', code:'PHYS1160', icon:'🔭', short:'Astro', color:'var(--phys-color)', name:'Introduction to Astronomy', tags:['Planned','Free Elective','2026 T3'], status:'archived', term:'2026 T3', order:6 },
+    { id:'desn1000', code:'DESN1000', icon:'🧩', short:'Design', color:'var(--desn-color)', name:'Introduction to Engineering Design and Innovation', tags:['Prereq','Core','2027 T1'], status:'archived', term:'2027 T1', order:7 },
+    { id:'elec1111', code:'ELEC1111', icon:'🔌', short:'Elec', color:'var(--elec-color)', name:'Electrical Circuit Fundamentals', tags:['Prereq','Core','2027 T2'], status:'archived', term:'2027 T2', order:8 },
     { id:'mman', code:'MMAN1130', icon:'🔧', short:'Design', color:'var(--mman-color)', name:'Design and Manufacturing · CAD · Tools · Manufacturing', tags:['Prereq','Core','2027 T1'], status:'archived', note:'Dropped · materials kept', term:'2027 T1', order:9 },
-    { id:'math2018', code:'MATH2018', icon:'📐', short:'Math', color:'var(--math-color)', name:'Engineering Mathematics 2D', tags:['Selected','Core','2027 T2'], status:'archived', hasPage:false, term:'2027 T2', order:10 },
-    { id:'math2089', code:'MATH2089', icon:'📊', short:'Stats', color:'var(--math-color)', name:'Numerical Methods and Statistics', tags:['Core','2027 T1'], status:'archived', hasPage:false, term:'2027 T1', order:11 },
-    { id:'mman2700', code:'MMAN2700', icon:'🌡️', short:'Thermo', color:'var(--mman-color)', name:'Thermodynamics', tags:['Core','2027 T2'], status:'archived', hasPage:false, term:'2027 T2', order:12 },
-    { id:'engg2400', code:'ENGG2400', icon:'🧱', short:'Solids', color:'var(--engg-color)', name:'Mechanics of Solids 1', tags:['Core','2027 T3'], status:'archived', hasPage:false, term:'2027 T3', order:13 },
-    { id:'engg2500', code:'ENGG2500', icon:'🌊', short:'Fluids', color:'var(--engg-color)', name:'Fluid Mechanics for Engineers', tags:['Core','2027 T3'], status:'archived', hasPage:false, term:'2027 T3', order:14 },
-    { id:'mman2300', code:'MMAN2300', icon:'⚙️', short:'Mech2', color:'var(--mman-color)', name:'Engineering Mechanics 2', tags:['Core','2027 T3'], status:'archived', hasPage:false, term:'2027 T3', order:15 },
-    { id:'desn2000', code:'DESN2000', icon:'🧩', short:'Design', color:'#C8C2D6', name:'Engineering Design and Professional Practice', tags:['Core','2028 T1'], status:'archived', hasPage:false, term:'2028 T1', order:16 },
-    { id:'aero3410', code:'AERO3410', icon:'🚀', short:'Aero', color:'var(--math-color)', name:'Aerospace Structures', tags:['Aero Core','2028 T1'], status:'archived', hasPage:false, term:'2028 T1', order:17 },
-    { id:'aero3630', code:'AERO3630', icon:'🚀', short:'Aero', color:'var(--math-color)', name:'Aerodynamics', tags:['Aero Core','2028 T1'], status:'archived', hasPage:false, term:'2028 T1', order:18 },
-    { id:'aero3660', code:'AERO3660', icon:'🚀', short:'Flight', color:'var(--math-color)', name:'Flight Performance and Propulsion', tags:['Aero Core','2028 T2'], status:'archived', hasPage:false, term:'2028 T2', order:19 },
-    { id:'aero3110', code:'AERO3110', icon:'🚀', short:'Design', color:'var(--math-color)', name:'Aerospace Design 1', tags:['Aero Core','2028 T2'], status:'archived', hasPage:false, term:'2028 T2', order:20 },
-    { id:'mman3200', code:'MMAN3200', icon:'🎛️', short:'Control', color:'var(--mman-color)', name:'Linear Systems and Control', tags:['Core','2028 T2'], status:'archived', hasPage:false, term:'2028 T2', order:21 },
-    { id:'desn3000', code:'DESN3000', icon:'🧠', short:'Design', color:'#C8C2D6', name:'Strategic Design Innovation', tags:['Core','2028 T3'], status:'archived', hasPage:false, term:'2028 T3', order:22 },
-    { id:'aero4620', code:'AERO4620', icon:'🚀', short:'Avionics', color:'var(--math-color)', name:'Dynamics of Aerospace Vehicles, Systems and Avionics', tags:['Aero Core','2029 T1'], status:'archived', hasPage:false, term:'2029 T1', order:23 },
-    { id:'mman4951', code:'MMAN4951', icon:'📘', short:'Thesis', color:'#BFC5CC', name:'Thesis A', tags:['Thesis','2029 T1'], status:'archived', hasPage:false, term:'2029 T1', order:24 },
-    { id:'mman4952', code:'MMAN4952', icon:'📘', short:'Thesis', color:'#BFC5CC', name:'Thesis B', tags:['Thesis','2029 T2'], status:'archived', hasPage:false, term:'2029 T2', order:25 },
-    { id:'aero4110', code:'AERO4110', icon:'🚀', short:'Aero', color:'var(--math-color)', name:'Aerospace Design 2', tags:['Aero Core','2029 T3'], status:'archived', hasPage:false, term:'2029 T3', order:26 },
-    { id:'mman4953', code:'MMAN4953', icon:'📘', short:'Thesis', color:'#BFC5CC', name:'Thesis C', tags:['Thesis','2029 T3'], status:'archived', hasPage:false, term:'2029 T3', order:27 }
+    { id:'math2018', code:'MATH2018', icon:'📐', short:'Math', color:'var(--math-color)', name:'Engineering Mathematics 2D', tags:['Selected','Core','2027 T2'], status:'archived', term:'2027 T2', order:10 },
+    { id:'math2089', code:'MATH2089', icon:'📊', short:'Stats', color:'var(--math-color)', name:'Numerical Methods and Statistics', tags:['Core','2027 T1'], status:'archived', term:'2027 T1', order:11 },
+    { id:'mman2700', code:'MMAN2700', icon:'🌡️', short:'Thermo', color:'var(--mman-color)', name:'Thermodynamics', tags:['Core','2027 T2'], status:'archived', term:'2027 T2', order:12 },
+    { id:'engg2400', code:'ENGG2400', icon:'🧱', short:'Solids', color:'var(--engg-color)', name:'Mechanics of Solids 1', tags:['Core','2027 T3'], status:'archived', term:'2027 T3', order:13 },
+    { id:'engg2500', code:'ENGG2500', icon:'🌊', short:'Fluids', color:'var(--engg-color)', name:'Fluid Mechanics for Engineers', tags:['Core','2027 T3'], status:'archived', term:'2027 T3', order:14 },
+    { id:'mman2300', code:'MMAN2300', icon:'⚙️', short:'Mech2', color:'var(--mman-color)', name:'Engineering Mechanics 2', tags:['Core','2027 T3'], status:'archived', term:'2027 T3', order:15 },
+    { id:'desn2000', code:'DESN2000', icon:'🧩', short:'Design', color:'var(--desn-color)', name:'Engineering Design and Professional Practice', tags:['Core','2028 T1'], status:'archived', term:'2028 T1', order:16 },
+    { id:'aero3410', code:'AERO3410', icon:'🚀', short:'Aero', color:'var(--aero-color)', name:'Aerospace Structures', tags:['Aero Core','2028 T1'], status:'archived', term:'2028 T1', order:17 },
+    { id:'aero3630', code:'AERO3630', icon:'🚀', short:'Aero', color:'var(--aero-color)', name:'Aerodynamics', tags:['Aero Core','2028 T1'], status:'archived', term:'2028 T1', order:18 },
+    { id:'aero3660', code:'AERO3660', icon:'🚀', short:'Flight', color:'var(--aero-color)', name:'Flight Performance and Propulsion', tags:['Aero Core','2028 T2'], status:'archived', term:'2028 T2', order:19 },
+    { id:'aero3110', code:'AERO3110', icon:'🚀', short:'Design', color:'var(--aero-color)', name:'Aerospace Design 1', tags:['Aero Core','2028 T2'], status:'archived', term:'2028 T2', order:20 },
+    { id:'mman3200', code:'MMAN3200', icon:'🎛️', short:'Control', color:'var(--mman-color)', name:'Linear Systems and Control', tags:['Core','2028 T2'], status:'archived', term:'2028 T2', order:21 },
+    { id:'desn3000', code:'DESN3000', icon:'🧠', short:'Design', color:'var(--desn-color)', name:'Strategic Design Innovation', tags:['Core','2028 T3'], status:'archived', term:'2028 T3', order:22 },
+    { id:'aero4620', code:'AERO4620', icon:'🚀', short:'Avionics', color:'var(--aero-color)', name:'Dynamics of Aerospace Vehicles, Systems and Avionics', tags:['Aero Core','2029 T1'], status:'archived', term:'2029 T1', order:23 },
+    { id:'mman4951', code:'MMAN4951', icon:'📘', short:'Thesis', color:'var(--thesis-color)', name:'Thesis A', tags:['Thesis','2029 T1'], status:'archived', term:'2029 T1', order:24 },
+    { id:'mman4952', code:'MMAN4952', icon:'📘', short:'Thesis', color:'var(--thesis-color)', name:'Thesis B', tags:['Thesis','2029 T2'], status:'archived', term:'2029 T2', order:25 },
+    { id:'aero4110', code:'AERO4110', icon:'🚀', short:'Aero', color:'var(--aero-color)', name:'Aerospace Design 2', tags:['Aero Core','2029 T3'], status:'archived', term:'2029 T3', order:26 },
+    { id:'mman4953', code:'MMAN4953', icon:'📘', short:'Thesis', color:'var(--thesis-color)', name:'Thesis C', tags:['Thesis','2029 T3'], status:'archived', term:'2029 T3', order:27 }
   ];
   var COUNTDOWN_TERMS = ['2026 T2','2026 T3','2027 T1','2027 T2','2027 T3'];
   var currentCountdownTerm = localStorage.getItem('iue.countdownTerm.v1') || '2026 T2';
@@ -3761,6 +3800,35 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return COURSE_CATALOG.find(function(c){ return c.id === id; });
   }
 
+  function courseFamily(course) {
+    var code = typeof course === 'string' ? course : ((course && course.code) || '');
+    if (/^AERO/.test(code)) return 'aero';
+    if (/^MATH/.test(code)) return 'math';
+    if (/^PHYS/.test(code)) return 'phys';
+    if (/^ELEC/.test(code)) return 'elec';
+    if (/^ENGG/.test(code)) return 'engg';
+    if (/^DESN/.test(code)) return 'desn';
+    if (/^MMAN495/.test(code)) return 'thesis';
+    if (/^MMAN/.test(code)) return 'mman';
+    return 'engg';
+  }
+
+  function courseColor(course) {
+    var item = typeof course === 'string' ? courseById(course) : course;
+    if (item && item.color) return item.color;
+    return COURSE_FAMILY_COLOR[courseFamily(item || course)] || 'var(--math-color)';
+  }
+
+  function courseHeaderClass(course) {
+    return courseFamily(course);
+  }
+
+  function courseDisplayName(course) {
+    if (!course) return '';
+    if (course.code === 'PHYS1160') return 'Introduction to Astronomy';
+    return (course.name || '').replace(/\s+·\s+(Online|In Person|2026 T\d|2027 T\d|2028 T\d|2029 T\d).*$/i, '');
+  }
+
   function isActiveCourse(id) {
     return activeCourseIds.indexOf(id) > -1;
   }
@@ -3780,7 +3848,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function setCourseActive(id, active) {
     var course = courseById(id);
-    if (!course || course.hasPage === false) return;
+    if (!course) return;
     var currentSection = document.querySelector('.course-section.active');
     var currentId = currentSection ? currentSection.id.replace('sec-', '') : '';
     if (active) {
@@ -3804,6 +3872,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function openCourse(id) {
     var section = document.getElementById('sec-' + id);
+    if (!section && courseById(id)) section = ensureCourseSection(id);
     if (section) {
       selectedPreviewCourseId = null;
       courseManagerDirty = true;
@@ -3819,6 +3888,37 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var restored = document.getElementById('sec-courses');
       if (restored) restored.scrollTop = previousTop;
     }, 0);
+  }
+
+  function escapeHtml(text) {
+    return String(text || '').replace(/[&<>"']/g, function(ch) {
+      return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch];
+    });
+  }
+
+  function ensureCourseSection(id) {
+    var existing = document.getElementById('sec-' + id);
+    if (existing) return existing;
+    var course = courseById(id);
+    if (!course) return null;
+    var section = document.createElement('div');
+    section.className = 'course-section generated-course-section';
+    section.id = 'sec-' + id;
+    section.innerHTML =
+      '<div class="course-switcher" aria-label="专业课切换"></div>'
+      + '<div class="course-header '+courseHeaderClass(course)+'">'
+      + '<div class="course-icon">'+escapeHtml(course.icon)+'</div>'
+      + '<div class="course-meta">'
+      + '<div class="course-code">'+escapeHtml(course.code)+'</div>'
+      + '<div class="course-name">'+escapeHtml(courseDisplayName(course))+'</div>'
+      + '</div></div>'
+      + '<div class="topic-group">'
+      + '<div class="group-label">成绩追踪</div>'
+      + '<div class="topic-card" style="padding:16px;" id="gt-'+escapeHtml(id)+'"></div>'
+      + '</div>';
+    document.body.insertBefore(section, document.querySelector('.tab-bar'));
+    renderGT(id);
+    return section;
   }
 
   function coursePreviewMarkup(course) {
@@ -3904,8 +4004,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     }).filter(courseMatchesFilter);
     lib.innerHTML = sortedCatalog.map(function(c){
       var active = isActiveCourse(c.id);
-      var unavailable = c.hasPage === false;
-      var disabled = unavailable || (!active && activeCourseIds.length >= ACTIVE_COURSE_LIMIT);
+      var disabled = !active && activeCourseIds.length >= ACTIVE_COURSE_LIMIT;
       var row = '<div class="course-library-row '+(active ? '' : 'archived')+'">'
         +'<div class="course-library-icon">'+c.icon+'</div>'
         +'<div class="course-library-main" onclick="openCourse(\''+c.id+'\')">'
@@ -3914,7 +4013,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         +'</div>'
         +'<div class="course-library-actions">'
         +'<button class="course-action-btn" onclick="openCourse(\''+c.id+'\')">查看</button>'
-        +'<button class="course-action-btn '+(!active && !unavailable ? 'primary' : '')+'" '+(disabled ? 'disabled' : '')+' onclick="setCourseActive(\''+c.id+'\','+(!active)+')">'+(unavailable ? '待建' : (active ? '移出' : '加入'))+'</button>'
+        +'<button class="course-action-btn '+(!active ? 'primary' : '')+'" '+(disabled ? 'disabled' : '')+' onclick="setCourseActive(\''+c.id+'\','+(!active)+')">'+(active ? '移出' : '加入')+'</button>'
         +'</div>'
         +'</div>';
       return row + (selectedPreviewCourseId === c.id ? coursePreviewMarkup(c) : '');
@@ -4039,6 +4138,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function showCourse(course, options) {
     options = options || {};
+    if (!document.getElementById('sec-' + course) && courseById(course)) ensureCourseSection(course);
     var _secs = document.querySelectorAll('.course-section');
     for (var _i=0; _i<_secs.length; _i++) {
       _secs[_i].classList.remove('active');
@@ -4061,7 +4161,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     } else {
       activeSection.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    var tabCourse = (course === 'math' || course === 'mman' || course === 'engg') ? 'courses' : (course === 'countdown' ? 'dashboard' : course);
+    var tabCourse = courseById(course) ? 'courses' : (course === 'countdown' ? 'dashboard' : course);
     var tab = document.getElementById('tab-' + tabCourse);
     var colorMap = { dashboard: 'active-math', timetable: 'active-math', countdown: 'active-engg', courses: 'active-engg', math: 'active-math', mman: 'active-mman', engg: 'active-engg', myplan: 'active-math' };
     if (tab) {
@@ -4872,7 +4972,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       ]
     },
     phys1121: {
-      color: '#B9C7F2',
+      color: 'var(--phys-color)',
       items: [
         { id:'p1121_lab', label:'🧪 Experiments / Labs', note:'20% · Dates pending · lab details from Moodle', w:20 },
         { id:'p1121_quiz', label:'📝 Online Quizzes', note:'10% · Weekly quiz rhythm · confirm best-attempt rules', w:10 },
@@ -4891,7 +4991,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       ]
     },
     phys1160: {
-      color: '#B9C7F2',
+      color: 'var(--phys-color)',
       items: [
         { id:'p1160_quiz', label:'📝 Weekly Quizzes', note:'10% · Online rhythm · confirm quiz windows', w:10 },
         { id:'p1160_report', label:'📄 Short Report', note:'25% · Date pending', w:25 },
@@ -4902,10 +5002,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   };
   function courseFillStyle(course, color) {
     if (course === 'math') return 'linear-gradient(90deg, #EFF6FF, #93C5FD 58%, #BFDBFE)';
-    if (course === 'engg') return 'linear-gradient(90deg, #F8FAFC, #D1D7E2 58%, #AEB9C8)';
-    if (course === 'mman') return 'linear-gradient(90deg, #F7F4FF, #C5BFD2 58%, #AFA8BD)';
-    if (course === 'phys1121' || course === 'phys1160') return 'linear-gradient(90deg, #F8FAFC, #B9C7F2 58%, #94A3D8)';
-    if (course === 'engg1811') return 'linear-gradient(90deg, #F8FAFC, #D1D7E2 58%, #AEB9C8)';
+    var family = courseFamily(courseById(course) || course);
+    if (family === 'aero') return 'linear-gradient(90deg, #EFF6FF, #93C5FD 58%, #BFDBFE)';
+    if (family === 'engg' || family === 'elec') return 'linear-gradient(90deg, #F8FAFC, #D1D7E2 58%, #AEB9C8)';
+    if (family === 'mman' || family === 'desn') return 'linear-gradient(90deg, #F8FAFC, #AEB8C8 58%, #8792A3)';
+    if (family === 'phys' || family === 'thesis') return 'linear-gradient(90deg, #F8FAFC, #B8C4D8 58%, #8FA0BC)';
     return color || 'var(--math-color)';
   }
   function courseFillCss(course, color) {
@@ -4913,7 +5014,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function gtCourseCode(course) {
-    return { math:'MATH1231', mman:'MMAN1130', engg:'ENGG1300', phys1121:'PHYS1121', engg1811:'ENGG1811', phys1160:'PHYS1160' }[course] || '';
+    var catalog = courseById(course);
+    return (catalog && catalog.code) || { math:'MATH1231', mman:'MMAN1130', engg:'ENGG1300', phys1121:'PHYS1121', engg1811:'ENGG1811', phys1160:'PHYS1160' }[course] || '';
   }
 
   function gtTargetNumber(course) {
@@ -4941,6 +5043,47 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function gtLoad() { try { return JSON.parse(localStorage.getItem('gt_v2')||'{}'); } catch(e) { return {}; } }
   function gtSave(d) { try { localStorage.setItem('gt_v2', JSON.stringify(d)); } catch(e) {}; markCloudDirty(); }
+
+  function gtItemId(course, index, name) {
+    var slug = String(name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 28) || 'item';
+    return 'auto_' + course + '_' + (index + 1) + '_' + slug;
+  }
+
+  function gtFromCourseMeta(course) {
+    var code = gtCourseCode(course);
+    var meta = courseMeta(code);
+    var assessments = meta.assessments || [];
+    if (!assessments.length) return null;
+    return {
+      color: courseColor(course),
+      items: assessments.map(function(item, index) {
+        var weight = parseWeight(item.weight);
+        return {
+          id: gtItemId(course, index, item.name),
+          label: '📄 ' + item.name,
+          note: item.weight + (item.note ? ' · ' + item.note : ''),
+          w: weight
+        };
+      }).filter(function(item){ return item.w > 0; })
+    };
+  }
+
+  function gtConfig(course) {
+    if (GT[course]) {
+      var cfg = Object.assign({}, GT[course]);
+      cfg.color = courseColor(course);
+      return cfg;
+    }
+    return gtFromCourseMeta(course);
+  }
+
+  function gtEmptyMarkup(course) {
+    var code = gtCourseCode(course) || dashCourseName(course);
+    return '<div style="padding:2px 0 4px;">'
+      + '<div style="font-family:Space Grotesk,sans-serif;font-size:18px;font-weight:800;color:'+courseColor(course)+';margin-bottom:8px;">'+code+'</div>'
+      + '<div class="course-preview-rule" style="margin-top:0;">成绩占比还没确认。等 Moodle / Course Outline 出来后，在这里补考核项目；现在可以先把课程加入当前课程栏。</div>'
+      + '</div>';
+  }
 
   function gtMobiusCalc(data) {
     var scores = MOB_WEEKS.map(function(w) {
@@ -5008,9 +5151,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function renderGT(course) {
-    var cfg = GT[course];
+    var cfg = gtConfig(course);
     var el = document.getElementById('gt-'+course);
     if (!el) return;
+    el.classList.add('gt-card-themed');
+    el.style.setProperty('--gt-color', (cfg && cfg.color) || courseColor(course));
+    if (!cfg || !cfg.items || !cfg.items.length) {
+      el.innerHTML = gtEmptyMarkup(course);
+      return;
+    }
     var data = gtLoad();
 
     // Calculate progress total
@@ -5146,7 +5295,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function dashCourseName(course) {
-    return { math:'MATH1231', mman:'MMAN1130', engg:'ENGG1300', phys1121:'PHYS1121', engg1811:'ENGG1811', phys1160:'PHYS1160' }[course] || course;
+    var catalog = courseById(course);
+    return (catalog && catalog.code) || { math:'MATH1231', mman:'MMAN1130', engg:'ENGG1300', phys1121:'PHYS1121', engg1811:'ENGG1811', phys1160:'PHYS1160' }[course] || course;
   }
 
   function dashCourseShortTask(course) {
@@ -5202,7 +5352,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var next = upcoming[0];
     var examItems = [];
     activeCourseIds.forEach(function(course) {
-      var cfg = GT[course];
+      var cfg = gtConfig(course);
       if (!cfg) return;
       cfg.items.forEach(function(it) {
         var state = data[it.id] || {};
@@ -5235,7 +5385,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       dashAddFocus(focus, seen, 'prep-' + (urgent[1].gtId || urgent[1].mobiusWeek || 'deadline'), '把 ' + dashCleanName(urgent[1].name) + ' 的资料先打开，做一轮轻量预习。');
     }
 
-    var low = activeCourseIds.filter(function(course){ return !!GT[course]; }).map(function(course){
+    var low = activeCourseIds.filter(function(course){ return !!gtConfig(course); }).map(function(course){
       return Object.assign({ course: course }, dashGradeSummary(course, data));
     }).filter(function(s){ return s.remaining > 0; }).sort(function(a,b){
       if (a.doneW !== b.doneW) return a.doneW - b.doneW;
@@ -5282,8 +5432,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function dashGradeSummary(course, data) {
-    var cfg = GT[course];
+    var cfg = gtConfig(course);
     var total = 0, doneW = 0, nextItem = null;
+    if (!cfg || !cfg.items) return { total: 0, doneW: 0, remaining: 100, nextItem: null };
     cfg.items.forEach(function(it) {
       if (it.mobius) {
         var mc = gtMobiusCalc(data);
@@ -5413,15 +5564,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     }
 
     var gradeEl = document.getElementById('dash-grades');
-    var colorMap = { math:'var(--math-color)', mman:'var(--mman-color)', engg:'var(--engg-color)', phys1121:'#B9C7F2', engg1811:'var(--engg-color)', phys1160:'#B9C7F2' };
-    gradeEl.innerHTML = activeCourseIds.filter(function(course){ return !!GT[course]; }).map(function(course) {
+    gradeEl.innerHTML = activeCourseIds.filter(function(course){ return !!gtConfig(course); }).map(function(course) {
       var s = dashGradeSummary(course, data);
+      var color = courseColor(course);
       var note = s.nextItem ? '下一项：'+s.nextItem.label.replace(/[^\w\s%\u4e00-\u9fff·:-]/g,'').trim() : '已标记完成';
       return '<div class="dash-course" onclick="showCourse(\''+course+'\')">'
-        +'<div class="dash-course-code" style="color:'+colorMap[course]+'">'+dashCourseName(course)+'</div>'
+        +'<div class="dash-course-code" style="color:'+color+'">'+dashCourseName(course)+'</div>'
         +'<div class="dash-course-score">'+s.total.toFixed(1)+'%</div>'
         +'<div class="dash-course-note">'+note+'</div>'
-        +'<div class="dash-mini-bar"><div class="dash-mini-fill" style="width:'+Math.min(100,s.total)+'%;'+courseFillCss(course, colorMap[course])+'"></div></div>'
+        +'<div class="dash-mini-bar"><div class="dash-mini-fill" style="width:'+Math.min(100,s.total)+'%;'+courseFillCss(course, color)+'"></div></div>'
         +'</div>';
     }).join('');
   }
@@ -5588,7 +5739,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (payload.savedAt) localStorage.setItem(CLOUD_LAST_REMOTE_KEY, payload.savedAt);
       loadMobiusChecklist();
       updateProgress();
-      renderGT('math'); renderGT('mman'); renderGT('engg');
+      activeCourseIds.forEach(function(courseId){ renderGT(courseId); });
       renderCountdown();
       renderDashboard();
       updateTabBadges();
