@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-08-20-no-emoji-course-ui"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-08-20-inline-course-icons"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
@@ -287,13 +287,27 @@
       border: 1px solid rgba(184,196,216,.22);
     }
     .course-icon {
-      width: 52px; height: 52px; border-radius: 16px;
+      width: 38px; height: 38px;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 14px; font-weight: 850; letter-spacing: 0;
-      flex-shrink: 0; background: rgba(255,255,255,0.15);
+      flex-shrink: 0; background: transparent;
       color: var(--text);
     }
+    .course-icon svg,
+    .course-tile-icon svg,
+    .course-library-icon svg,
+    .course-preview-icon svg {
+      width: 100%; height: 100%;
+      stroke: currentColor; fill: none;
+      stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .course-header.math .course-icon,
+    .course-header.aero .course-icon { color: var(--math-color); }
+    .course-header.engg .course-icon,
+    .course-header.elec .course-icon { color: var(--engg-color); }
+    .course-header.mman .course-icon,
+    .course-header.desn .course-icon { color: var(--mman-color); }
+    .course-header.phys .course-icon,
+    .course-header.thesis .course-icon { color: var(--phys-color); }
     .course-meta { flex: 1; }
     .course-code {
       font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 800;
@@ -819,19 +833,15 @@
       margin-bottom: 12px;
     }
     .course-preview-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
+      width: 30px;
+      height: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255,255,255,.08);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
-      font-weight: 850;
-      letter-spacing: 0;
+      background: transparent;
+      color: var(--preview-color);
       flex-shrink: 0;
-      filter: saturate(.82);
+      filter: drop-shadow(0 0 12px color-mix(in srgb, var(--preview-color) 18%, transparent));
     }
 
     .test-split {
@@ -1274,10 +1284,9 @@
     .course-tile:active { transform:scale(.99); }
     .course-tile-top { display:flex;align-items:center;justify-content:space-between;margin-bottom:22px; }
     .course-tile-icon {
-      min-width:42px;height:42px;border-radius:14px;
+      width:34px;height:34px;
       display:flex;align-items:center;justify-content:center;
-      font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:850;
-      color:var(--text);background:var(--surface2);border:1px solid var(--border);
+      color:var(--text);background:transparent;
     }
     .course-tile-code { font-family:'Space Grotesk',sans-serif;font-size:27px;font-weight:800;letter-spacing:0;line-height:1; }
     .course-tile-name { margin-top:8px;font-size:13px;color:var(--muted);line-height:1.35; }
@@ -1325,7 +1334,7 @@
       min-width:0;
     }
     .course-library-row.archived { background:#0b0b0b; }
-    .course-library-icon { width:36px;height:36px;border-radius:12px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:850;line-height:1;color:var(--text);flex-shrink:0;filter:saturate(.72);opacity:.92; }
+    .course-library-icon { width:26px;height:26px;background:transparent;display:flex;align-items:center;justify-content:center;color:var(--text);flex-shrink:0;opacity:.88; }
     .course-library-main { flex:1;min-width:0; }
     .course-library-title { font-size:15px;font-weight:800;color:var(--text);line-height:1.2; }
     .course-library-sub { font-size:12px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
@@ -1699,7 +1708,7 @@
 <div class="course-section" id="sec-phys1121">
   <div class="course-switcher" aria-label="专业课切换"></div>
   <div class="course-header phys">
-    <div class="course-icon">P1A</div>
+    <div class="course-icon" data-course-icon="phys"></div>
     <div class="course-meta">
       <div class="course-code">PHYS1121</div>
       <div class="course-name">Physics 1A · 2026 T3</div>
@@ -1716,7 +1725,7 @@
 <div class="course-section" id="sec-engg1811">
   <div class="course-switcher" aria-label="专业课切换"></div>
   <div class="course-header engg">
-    <div class="course-icon">CODE</div>
+    <div class="course-icon" data-course-icon="engg"></div>
     <div class="course-meta">
       <div class="course-code">ENGG1811</div>
       <div class="course-name">Computing for Engineers · 2026 T3</div>
@@ -1733,7 +1742,7 @@
 <div class="course-section" id="sec-phys1160">
   <div class="course-switcher" aria-label="专业课切换"></div>
   <div class="course-header phys">
-    <div class="course-icon">AST</div>
+    <div class="course-icon" data-course-icon="ast"></div>
     <div class="course-meta">
       <div class="course-code">PHYS1160</div>
       <div class="course-name">Introduction to Astronomy</div>
@@ -1755,7 +1764,7 @@
     <button class="course-switch" onclick="showCourse('engg')">ENGG1300</button>
   </div>
   <div class="course-header math">
-    <div class="course-icon">M1B</div>
+    <div class="course-icon" data-course-icon="math"></div>
     <div class="course-meta">
       <div class="course-code">MATH1231</div>
       <div class="course-name">Mathematics 1B · Calculus · Linear Algebra</div>
@@ -2317,7 +2326,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     <button class="course-switch" onclick="showCourse('engg')">ENGG1300</button>
   </div>
   <div class="course-header mman">
-    <div class="course-icon">CAD</div>
+    <div class="course-icon" data-course-icon="mman"></div>
     <div class="course-meta">
       <div class="course-code">MMAN1130</div>
       <div class="course-name">Design & Manufacturing · CAD · Manufacturing</div>
@@ -2952,7 +2961,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     <button class="course-switch active" onclick="showCourse('engg')">ENGG1300</button>
   </div>
   <div class="course-header engg">
-    <div class="course-icon">MECH</div>
+    <div class="course-icon" data-course-icon="engg"></div>
     <div class="course-meta">
       <div class="course-code">ENGG1300</div>
       <div class="course-name">Engineering Mechanics · Statics · Dynamics</div>
@@ -3223,7 +3232,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-20-no-emoji-course-ui';
+  var APP_VERSION = '2026-08-20-inline-course-icons';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -3840,6 +3849,45 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return (course.name || '').replace(/\s+·\s+(Online|In Person|2026 T\d|2027 T\d|2028 T\d|2029 T\d).*$/i, '');
   }
 
+  function courseIconType(course) {
+    var code = typeof course === 'string' ? course : ((course && course.code) || '');
+    if (code === 'PHYS1160') return 'ast';
+    if (/^PHYS/.test(code)) return 'phys';
+    if (/^ELEC/.test(code)) return 'elec';
+    if (/^AERO/.test(code)) return 'aero';
+    if (/^MATH/.test(code)) return 'math';
+    if (/^DESN/.test(code)) return 'desn';
+    if (/^MMAN495/.test(code)) return 'thesis';
+    if (/^MMAN/.test(code)) return 'mman';
+    return 'engg';
+  }
+
+  function courseIconSvg(type) {
+    var icons = {
+      math: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 25h20"/><path d="M8 23 17 7l7 16H8Z"/><path d="M12 18h8"/></svg>',
+      aero: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 20c6-8 13-11 22-10"/><path d="M18 9 27 6l-3 9"/><path d="M9 23l5-2"/></svg>',
+      engg: '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 5v4M16 23v4M5 16h4M23 16h4"/><path d="m8.2 8.2 2.8 2.8M21 21l2.8 2.8M23.8 8.2 21 11M11 21l-2.8 2.8"/></svg>',
+      elec: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 21V11h16v10H8Z"/><path d="M12 7v4M20 7v4M12 21v4M20 21v4"/><path d="M5 14h3M5 18h3M24 14h3M24 18h3"/></svg>',
+      phys: '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="2.3"/><ellipse cx="16" cy="16" rx="11" ry="4.5"/><ellipse cx="16" cy="16" rx="11" ry="4.5" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="11" ry="4.5" transform="rotate(120 16 16)"/></svg>',
+      ast: '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="6"/><path d="M19 19 26 26"/><path d="M10 14h8"/><path d="M14 10v8"/></svg>',
+      mman: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 22h18"/><path d="M10 22V10h12v12"/><path d="M10 14h12M14 10v12M18 10v12"/></svg>',
+      desn: '<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="8" y="8" width="6" height="6" rx="1.5"/><rect x="18" y="8" width="6" height="6" rx="1.5"/><rect x="8" y="18" width="6" height="6" rx="1.5"/><rect x="18" y="18" width="6" height="6" rx="1.5"/></svg>',
+      thesis: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 6h11l4 4v16H9V6Z"/><path d="M20 6v5h5"/><path d="M13 17h8M13 21h6"/></svg>'
+    };
+    return icons[type] || icons.engg;
+  }
+
+  function courseIconMarkup(course, className) {
+    var color = courseColor(course);
+    return '<div class="'+className+'" style="color:'+color+';">'+courseIconSvg(courseIconType(course))+'</div>';
+  }
+
+  function hydrateStaticCourseIcons() {
+    document.querySelectorAll('[data-course-icon]').forEach(function(el) {
+      el.innerHTML = courseIconSvg(el.dataset.courseIcon);
+    });
+  }
+
   function isActiveCourse(id) {
     return activeCourseIds.indexOf(id) > -1;
   }
@@ -3918,7 +3966,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     section.innerHTML =
       '<div class="course-switcher" aria-label="专业课切换"></div>'
       + '<div class="course-header '+courseHeaderClass(course)+'">'
-      + '<div class="course-icon">'+escapeHtml(course.icon)+'</div>'
+      + courseIconMarkup(course, 'course-icon')
       + '<div class="course-meta">'
       + '<div class="course-code">'+escapeHtml(course.code)+'</div>'
       + '<div class="course-name">'+escapeHtml(courseDisplayName(course))+'</div>'
@@ -3951,7 +3999,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return '<div class="course-preview-panel" style="--preview-color:'+course.color+';">'
       + '<div class="course-preview-kicker">Course Preview</div>'
       + '<div class="course-preview-hero">'
-      + '<div class="course-preview-icon">'+course.icon+'</div>'
+      + courseIconMarkup(course, 'course-preview-icon')
       + '<div><div class="course-preview-title" style="color:'+course.color+';">'+course.code+'</div>'
       + '<div class="course-preview-sub" style="margin-bottom:0;">'+course.name+'</div></div>'
       + '</div>'
@@ -3974,7 +4022,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var archived = !isActiveCourse(course.id);
     return '<div class="course-tile '+(archived ? 'archived' : '')+'" onclick="openCourse(\''+course.id+'\')">'
       +'<div class="course-tile-top">'
-      +'<div class="course-tile-icon">'+course.icon+'</div>'
+      + courseIconMarkup(course, 'course-tile-icon')
       +'<div class="dash-pill" style="color:'+course.color+';">'+course.short+'</div>'
       +'</div>'
       +'<div class="course-tile-code" style="color:'+course.color+';">'+course.code+'</div>'
@@ -4017,14 +4065,14 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var active = isActiveCourse(c.id);
       var disabled = !active && activeCourseIds.length >= ACTIVE_COURSE_LIMIT;
       var row = '<div class="course-library-row '+(active ? '' : 'archived')+'">'
-        +'<div class="course-library-icon">'+c.icon+'</div>'
+        + courseIconMarkup(c, 'course-library-icon')
         +'<div class="course-library-main" onclick="openCourse(\''+c.id+'\')">'
         +'<div class="course-library-title" style="color:'+c.color+';">'+c.code+'</div>'
         +'<div class="course-library-sub">'+c.name+'</div>'
         +'</div>'
         +'<div class="course-library-actions">'
-        +'<button class="course-action-btn" onclick="openCourse(\''+c.id+'\')">查看</button>'
-        +'<button class="course-action-btn '+(!active ? 'primary' : '')+'" '+(disabled ? 'disabled' : '')+' onclick="setCourseActive(\''+c.id+'\','+(!active)+')">'+(active ? '移出' : '加入')+'</button>'
+        +'<button class="course-action-btn" onclick="openCourse(\''+c.id+'\')">View</button>'
+        +'<button class="course-action-btn '+(!active ? 'primary' : '')+'" '+(disabled ? 'disabled' : '')+' onclick="setCourseActive(\''+c.id+'\','+(!active)+')">'+(active ? 'Remove' : 'Add')+'</button>'
         +'</div>'
         +'</div>';
       return row + (selectedPreviewCourseId === c.id ? coursePreviewMarkup(c) : '');
@@ -5288,6 +5336,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     renderDashboard();
   }
 
+  hydrateStaticCourseIcons();
   renderGT('math');
   renderGT('mman');
   renderGT('engg');
