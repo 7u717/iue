@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-08-02-feedback-moodle-link"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-08-19-term-transition"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
@@ -1074,6 +1074,16 @@
     .cd-days { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; line-height: 1; }
     .cd-days.cd-days-urgent { color: var(--text); }
     .cd-unit { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .countdown-head { display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;padding:0 2px; }
+    .countdown-title { font-size:13px;font-weight:800;color:var(--muted);letter-spacing:.01em; }
+    .countdown-term-tabs { display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none; }
+    .countdown-term-tabs::-webkit-scrollbar { display:none; }
+    .countdown-term-btn {
+      border:1px solid var(--border);background:var(--surface2);color:var(--muted);
+      border-radius:999px;padding:6px 10px;font-size:11px;font-weight:800;white-space:nowrap;
+    }
+    .countdown-term-btn.active { background:var(--text);border-color:var(--text);color:#000; }
+    .countdown-empty { color:var(--muted);font-size:13px;padding:14px 4px; }
     .exam-alert { display: none; }
 
     /* CHECKLIST */
@@ -1131,6 +1141,7 @@
     .tt-weight.engg { color:var(--engg-color); }
     .tt-loc { font-size: 11px; color: var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px; }
     .tt-type { display:none; }
+    .tt-empty { color:var(--muted);font-size:13px;padding:14px 4px; }
     #sec-timetable .topic-card {
       padding:12px !important;
       background:var(--surface);
@@ -1571,65 +1582,9 @@
 <div class="course-section" id="sec-timetable">
   <div style="padding-top:4px;">
     <div class="topic-group">
-      <div class="group-label">每周固定课表</div>
+      <div class="group-label">2026 T3 每周固定课表</div>
       <div class="topic-card" style="padding:16px;">
-        <div class="timetable">
-          <div class="tt-row">
-            <div class="tt-day">MON</div>
-            <div class="tt-time">16:00–18:00</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">MMAN1130</span><span class="tt-kind lec">Lecture</span></div><div class="tt-loc">Online</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">TUE</div>
-            <div class="tt-time">9:00–11:00</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">ENGG1300</span><span class="tt-kind lec">Lecture</span></div><div class="tt-loc">Sir John Clancy Auditorium</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">TUE</div>
-            <div class="tt-time">11:00–13:00</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">MATH1231</span><span class="tt-kind lec">Lecture</span></div><div class="tt-loc">Online</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">TUE</div>
-            <div class="tt-time">16:00–17:00</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">MATH1231</span><span class="tt-kind tut">Tutorial</span></div><div class="tt-loc">H13 Lawrence East 2060</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">TUE</div>
-            <div class="tt-time">18:00–19:00</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">MMAN1130</span><span class="tt-kind wks">Project</span></div><div class="tt-loc">本周 Willis Annexe UTL 214N North</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">WED</div>
-            <div class="tt-time">13:00–14:00</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">MATH1231</span><span class="tt-kind lec">Lecture</span></div><div class="tt-loc">Online</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">WED</div>
-            <div class="tt-time">14:00–16:00</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">ENGG1300</span><span class="tt-kind lec">Lecture</span></div><div class="tt-loc">Sir John Clancy Auditorium</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">THU</div>
-            <div class="tt-time">9:00–11:00</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">ENGG1300</span><span class="tt-kind wks">Workshop</span></div><div class="tt-loc">Squarehouse 114</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">THU</div>
-            <div class="tt-time">11:00–12:30</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">MMAN1130</span><span class="tt-kind wks">Tut-Lab</span></div><div class="tt-loc">Ainsworth 204</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">FRI</div>
-            <div class="tt-time">14:00–16:00</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">MATH1231</span><span class="tt-kind lec">Lecture</span></div><div class="tt-loc">Online</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">FRI</div>
-            <div class="tt-time">16:00–18:00</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">MMAN1130</span><span class="tt-kind lec">Lecture</span></div><div class="tt-loc">Online</div></div>
-          </div>
-        </div>
+        <div class="timetable" id="weekly-timetable-list"></div>
       </div>
     </div>
 
@@ -1637,43 +1592,7 @@
     <div class="topic-group">
       <div class="group-label">考试时间表</div>
       <div class="topic-card" style="padding:16px;">
-        <div class="timetable">
-          <div class="tt-row">
-            <div class="tt-day">SAT</div>
-            <div class="tt-time">10:30–11:30</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">ENGG1300 Test 1</span><span class="tt-weight engg">20%</span></div><div class="tt-loc">6月20日 · E19 Patricia O'Shane 103</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">MON</div>
-            <div class="tt-time">15:00–16:00</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">MATH1231 Lab Test 1</span><span class="tt-weight math">15%</span></div><div class="tt-loc">6月29日 · H13 Lawrence East M020</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">SAT</div>
-            <div class="tt-time">10:00–12:00</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">ENGG1300 Test 2</span><span class="tt-weight engg">30%</span></div><div class="tt-loc">7月18日 · F10 June Griffith M10</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">MON</div>
-            <div class="tt-time">15:00–16:00</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">MATH1231 Lab Test 2</span><span class="tt-weight math">15%</span></div><div class="tt-loc">7月27日 · H13 Lawrence East M020</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">SAT</div>
-            <div class="tt-time">10:30–11:30</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">ENGG1300 Test 3</span><span class="tt-weight engg">20%</span></div><div class="tt-loc">8月8日 · E19 Patricia O'Shane 103</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">FRI</div>
-            <div class="tt-time">20:00</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">ENGG1300 Mini-design Project</span><span class="tt-weight engg">30%</span></div><div class="tt-loc">8月14日截止</div></div>
-          </div>
-          <div class="tt-row">
-            <div class="tt-day">FRI</div>
-            <div class="tt-time">16:00–18:00</div>
-            <div class="tt-info"><div class="tt-name"><span class="tt-title">MATH1231 Final Exam</span><span class="tt-weight math">50%</span></div><div class="tt-loc">8月21日 · Chancellor's Garden · 15:40 到场</div></div>
-          </div>
-        </div>
+        <div class="timetable" id="exam-timetable-list"></div>
       </div>
     </div>
 
@@ -1726,8 +1645,90 @@
 <div class="course-section" id="sec-countdown">
   <div style="padding-top:4px;">
     <div class="topic-group">
-      <div class="group-label">⏰ 距离重要日期</div>
+      <div class="countdown-head">
+        <div class="countdown-title">重要日期</div>
+        <div class="countdown-term-tabs" id="countdown-term-tabs"></div>
+      </div>
       <div id="countdown-list"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== PHYS1121 ===== -->
+<div class="course-section" id="sec-phys1121">
+  <div class="course-switcher" aria-label="专业课切换"></div>
+  <div class="course-header" style="border-left-color:#B9C7F2;">
+    <div class="course-icon">🛰️</div>
+    <div class="course-meta">
+      <h2 style="color:#B9C7F2;">PHYS1121</h2>
+      <p>Physics 1A · 2026 T3</p>
+    </div>
+  </div>
+  <div class="topic-group">
+    <div class="group-label">Course Setup</div>
+    <div class="topic-card open" id="phys1121-overview">
+      <div class="topic-header" onclick="toggleTopic('phys1121-overview')">
+        <div class="topic-left"><div class="topic-dot" style="background:#B9C7F2;"></div><div class="topic-title">下学期占位页</div></div>
+        <div class="topic-chevron">▼</div>
+      </div>
+      <div class="topic-body">
+        <div class="subtopic"><strong>课表：</strong>Tue 14:00 Lecture，Wed 13:00 Other，Thu 11:00 Lecture，Thu 16:00 Laboratory。</div>
+        <div class="subtopic"><strong>当前状态：</strong>Library 已建好；你之后手动加入当前课程后，会进入底部课程切换。</div>
+        <div class="subtopic"><strong>下一步：</strong>Moodle 开课后补 lab 地点、assessment dates 和每周 checklist。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ENGG1811 ===== -->
+<div class="course-section" id="sec-engg1811">
+  <div class="course-switcher" aria-label="专业课切换"></div>
+  <div class="course-header" style="border-left-color:var(--engg-color);">
+    <div class="course-icon">💻</div>
+    <div class="course-meta">
+      <h2 style="color:var(--engg-color);">ENGG1811</h2>
+      <p>Computing for Engineers · 2026 T3</p>
+    </div>
+  </div>
+  <div class="topic-group">
+    <div class="group-label">Course Setup</div>
+    <div class="topic-card open" id="engg1811-overview">
+      <div class="topic-header" onclick="toggleTopic('engg1811-overview')">
+        <div class="topic-left"><div class="topic-dot engg-dot"></div><div class="topic-title">下学期占位页</div></div>
+        <div class="topic-chevron">▼</div>
+      </div>
+      <div class="topic-body">
+        <div class="subtopic"><strong>课表：</strong>Mon 11:00 Lecture online，Wed 11:00 Lecture online，Tue 16:00 Laboratory in person。</div>
+        <div class="subtopic"><strong>当前状态：</strong>Library 已建好；你之后手动加入当前课程后，会进入底部课程切换。</div>
+        <div class="subtopic"><strong>下一步：</strong>Moodle 开课后补 assignment / lab rhythm / coding practice checklist。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PHYS1160 ===== -->
+<div class="course-section" id="sec-phys1160">
+  <div class="course-switcher" aria-label="专业课切换"></div>
+  <div class="course-header" style="border-left-color:#B9C7F2;">
+    <div class="course-icon">🔭</div>
+    <div class="course-meta">
+      <h2 style="color:#B9C7F2;">PHYS1160</h2>
+      <p>Introduction to Astronomy · Online · 2026 T3</p>
+    </div>
+  </div>
+  <div class="topic-group">
+    <div class="group-label">Course Setup</div>
+    <div class="topic-card open" id="phys1160-overview">
+      <div class="topic-header" onclick="toggleTopic('phys1160-overview')">
+        <div class="topic-left"><div class="topic-dot" style="background:#B9C7F2;"></div><div class="topic-title">下学期占位页</div></div>
+        <div class="topic-chevron">▼</div>
+      </div>
+      <div class="topic-body">
+        <div class="subtopic"><strong>课表：</strong>Web Delivery online，按 Moodle 节奏推进。</div>
+        <div class="subtopic"><strong>当前状态：</strong>Library 已建好；你之后手动加入当前课程后，会进入底部课程切换。</div>
+        <div class="subtopic"><strong>下一步：</strong>Moodle 开课后补 quiz/report/project deadlines，保持 WAM booster 节奏。</div>
+      </div>
     </div>
   </div>
 </div>
@@ -3209,14 +3210,14 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-17-final-exam-katex';
+  var APP_VERSION = '2026-08-19-term-transition';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'📐', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'⚙️', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
-    { id:'phys1121', code:'PHYS1121', icon:'🛰️', short:'Phys', color:'#B9C7F2', name:'Physics 1A', tags:['Planned','Core','2026 T3'], status:'archived', hasPage:false, term:'2026 T3', order:4 },
-    { id:'engg1811', code:'ENGG1811', icon:'💻', short:'Code', color:'var(--engg-color)', name:'Computing for Engineers', tags:['Planned','Core','2026 T3'], status:'archived', hasPage:false, term:'2026 T3', order:5 },
-    { id:'phys1160', code:'PHYS1160', icon:'🔭', short:'Astro', color:'#B9C7F2', name:'Introduction to Astronomy', tags:['Planned','Free Elective','2026 T3'], status:'archived', hasPage:false, term:'2026 T3', order:6 },
+    { id:'phys1121', code:'PHYS1121', icon:'🛰️', short:'Phys', color:'#B9C7F2', name:'Physics 1A', tags:['Planned','Core','2026 T3'], status:'archived', term:'2026 T3', order:4 },
+    { id:'engg1811', code:'ENGG1811', icon:'💻', short:'Code', color:'var(--engg-color)', name:'Computing for Engineers', tags:['Planned','Core','2026 T3'], status:'archived', term:'2026 T3', order:5 },
+    { id:'phys1160', code:'PHYS1160', icon:'🔭', short:'Astro', color:'#B9C7F2', name:'Introduction to Astronomy', tags:['Planned','Free Elective','2026 T3'], status:'archived', term:'2026 T3', order:6 },
     { id:'desn1000', code:'DESN1000', icon:'🧩', short:'Design', color:'#C8C2D6', name:'Introduction to Engineering Design and Innovation', tags:['Prereq','Core','2027 T1'], status:'archived', hasPage:false, term:'2027 T1', order:7 },
     { id:'elec1111', code:'ELEC1111', icon:'🔌', short:'Elec', color:'#CBD5E1', name:'Electrical Circuit Fundamentals', tags:['Prereq','Core','2027 T2'], status:'archived', hasPage:false, term:'2027 T2', order:8 },
     { id:'mman', code:'MMAN1130', icon:'🔧', short:'Design', color:'var(--mman-color)', name:'Design and Manufacturing · CAD · Tools · Manufacturing', tags:['Prereq','Core','2027 T1'], status:'archived', note:'Dropped · materials kept', term:'2027 T1', order:9 },
@@ -3238,6 +3239,19 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     { id:'mman4952', code:'MMAN4952', icon:'📘', short:'Thesis', color:'#BFC5CC', name:'Thesis B', tags:['Thesis','2029 T2'], status:'archived', hasPage:false, term:'2029 T2', order:25 },
     { id:'aero4110', code:'AERO4110', icon:'🚀', short:'Aero', color:'var(--math-color)', name:'Aerospace Design 2', tags:['Aero Core','2029 T3'], status:'archived', hasPage:false, term:'2029 T3', order:26 },
     { id:'mman4953', code:'MMAN4953', icon:'📘', short:'Thesis', color:'#BFC5CC', name:'Thesis C', tags:['Thesis','2029 T3'], status:'archived', hasPage:false, term:'2029 T3', order:27 }
+  ];
+  var COUNTDOWN_TERMS = ['2026 T2','2026 T3','2027 T1','2027 T2','2027 T3'];
+  var currentCountdownTerm = localStorage.getItem('iue.countdownTerm.v1') || '2026 T2';
+  if (COUNTDOWN_TERMS.indexOf(currentCountdownTerm) === -1) currentCountdownTerm = '2026 T2';
+  var T3_WEEKLY_TIMETABLE = [
+    { day:'MON', time:'11:00', course:'engg1811', title:'ENGG1811', kind:'Lecture', kindClass:'lec', loc:'Online' },
+    { day:'TUE', time:'14:00', course:'phys1121', title:'PHYS1121', kind:'Lecture', kindClass:'lec', loc:'In Person' },
+    { day:'TUE', time:'16:00', course:'engg1811', title:'ENGG1811', kind:'Laboratory', kindClass:'wks', loc:'In Person' },
+    { day:'WED', time:'11:00', course:'engg1811', title:'ENGG1811', kind:'Lecture', kindClass:'lec', loc:'Online' },
+    { day:'WED', time:'13:00', course:'phys1121', title:'PHYS1121', kind:'Other', kindClass:'tut', loc:'In Person' },
+    { day:'THU', time:'11:00', course:'phys1121', title:'PHYS1121', kind:'Lecture', kindClass:'lec', loc:'In Person' },
+    { day:'THU', time:'16:00', course:'phys1121', title:'PHYS1121', kind:'Laboratory', kindClass:'wks', loc:'In Person' },
+    { day:'WEB', time:'Online', course:'phys1160', title:'PHYS1160', kind:'Web Delivery', kindClass:'lec', loc:'Self-paced' }
   ];
   var COURSE_META = {
     MATH1131: { target: '已完成', targetNote: '已拿到 6 UOC；后续重点是用高权重课程拉 Honours WAM。' },
@@ -3900,6 +3914,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (filters) {
       var filterItems = [
         { id:'all', label:'All' },
+        { id:'2026 T3', label:'2026 T3' },
         { id:'2027', label:'2027' },
         { id:'math', label:'Math' },
         { id:'aero', label:'Aero' },
@@ -3938,6 +3953,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (currentCourseFilter === 'all') return true;
     var smart = courseSmart(course.code);
     var text = [course.code, course.name, course.term, smart.type, (course.tags || []).join(' ')].join(' ').toLowerCase();
+    if (currentCourseFilter === '2026 T3') return (course.term || '') === '2026 T3';
     if (currentCourseFilter === '2027') return (course.term || '').indexOf('2027') === 0;
     if (currentCourseFilter === 'math') return smart.type === 'Math' || /^MATH/.test(course.code);
     if (currentCourseFilter === 'aero') return smart.type === 'Aero' || /^AERO/.test(course.code);
@@ -3974,13 +3990,70 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (text.indexOf('MATH1231') > -1) return 'math';
     if (text.indexOf('MMAN1130') > -1 || text.indexOf('TOOLS') > -1 || text.indexOf('DSIGN') > -1 || text.indexOf('MANUF') > -1) return 'mman';
     if (text.indexOf('ENGG1300') > -1 || text.indexOf('Mini-design') > -1) return 'engg';
+    if (text.indexOf('PHYS1121') > -1) return 'phys1121';
+    if (text.indexOf('ENGG1811') > -1) return 'engg1811';
+    if (text.indexOf('PHYS1160') > -1) return 'phys1160';
     return '';
+  }
+
+  function timetableRowHtml(row, options) {
+    options = options || {};
+    var weightClass = row.course === 'math' ? 'math' : (row.course === 'mman' ? 'mman' : 'engg');
+    var badge = row.weight
+      ? '<span class="tt-weight '+weightClass+'">'+row.weight+'</span>'
+      : '<span class="tt-kind '+(row.kindClass || 'lec')+'">'+row.kind+'</span>';
+    var attrs = ' class="tt-row" data-course="'+(row.course || '')+'"';
+    if (options.showAlways) attrs += ' data-show-always="true"';
+    return '<div'+attrs+'>'
+      + '<div class="tt-day">'+row.day+'</div>'
+      + '<div class="tt-time">'+row.time+'</div>'
+      + '<div class="tt-info"><div class="tt-name"><span class="tt-title">'+row.title+'</span>'+badge+'</div><div class="tt-loc">'+row.loc+'</div></div>'
+      + '</div>';
+  }
+
+  function renderTimetable() {
+    var weekly = document.getElementById('weekly-timetable-list');
+    if (weekly) {
+      weekly.innerHTML = T3_WEEKLY_TIMETABLE.map(function(row){ return timetableRowHtml(row, { showAlways:true }); }).join('');
+    }
+    var examList = document.getElementById('exam-timetable-list');
+    if (examList) {
+      var now = new Date();
+      var examRows = deadlines.filter(function(d){
+        if (!d.examTable) return false;
+        return new Date(d.date) - now > 0;
+      }).sort(function(a,b){ return new Date(a.date) - new Date(b.date); }).map(function(d){
+        var dt = new Date(d.date);
+        var end = d.durationMin ? new Date(dt.getTime() + d.durationMin*60000) : null;
+        var days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+        var time = String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0');
+        if (end) time += '-'+String(end.getHours()).padStart(2,'0')+':'+String(end.getMinutes()).padStart(2,'0');
+        var loc = (dt.getMonth()+1)+'月'+dt.getDate()+'日';
+        if (d.loc) loc += ' · '+d.loc;
+        if (d.arrive) loc += ' · '+d.arrive+' 到场';
+        return {
+          day: days[dt.getDay()],
+          time: time,
+          course: deadlineCourse(d),
+          title: d.name.replace(/^[^\w\u4e00-\u9fff]+/,'').trim(),
+          weight: d.tag,
+          loc: loc
+        };
+      });
+      examList.innerHTML = examRows.length
+        ? examRows.map(function(row){ return timetableRowHtml(row, { showAlways:true }); }).join('')
+        : '<div class="tt-empty">目前没有未完成的考试时间。</div>';
+    }
   }
 
   function updateCourseVisibility() {
     document.querySelectorAll('#sec-timetable .tt-row').forEach(function(row) {
       var course = row.dataset.course || timetableCourseFromText(row.textContent || '');
       if (course) row.dataset.course = course;
+      if (row.dataset.showAlways === 'true') {
+        row.style.display = '';
+        return;
+      }
       row.style.display = course && !isActiveCourse(course) ? 'none' : '';
     });
     document.querySelectorAll('#sec-timetable .topic-group').forEach(function(group) {
@@ -4620,23 +4693,23 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     { name: '📝 Week 9 Möbius Lessons',        date: '2026-08-04T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 9 },
     { name: '📝 Week 10 Möbius Lessons',       date: '2026-08-11T17:00:00+10:00', tag: 'Möbius', color: 'var(--math-color)', mobiusWeek: 10 },
     { name: '🔧 MMAN1130 TOOLS1 测验',         date: '2026-06-19T23:55:00+10:00', tag: '5%',  color: 'var(--mman-color)', gtId: 'mm_t1'  },
-    { name: '📄 ENGG1300 Test 1',               date: '2026-06-20T10:00:00+10:00', tag: '20%', color: 'var(--engg-color)', gtId: 'eg_t1',  loc: 'E19 Patricia OShane 103' },
+    { name: '📄 ENGG1300 Test 1',               date: '2026-06-20T10:00:00+10:00', tag: '20%', color: 'var(--engg-color)', gtId: 'eg_t1',  loc: 'E19 Patricia OShane 103', examTable:true, durationMin:60 },
     { name: '💻 MMAN1130 DSIGN1 零件CAD',        date: '2026-06-26T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_d1'  },
-    { name: '💻 MATH1231 Lab Test 1',            date: '2026-06-29T15:00:00+10:00', tag: '15%', color: 'var(--math-color)', gtId: 'mg_lt1', loc: 'H13 Lawrence East M020', nav: 'https://maps.apple.com/?q=UNSW+H13+Lawrence+East+Building+Kensington' },
+    { name: '💻 MATH1231 Lab Test 1',            date: '2026-06-29T15:00:00+10:00', tag: '15%', color: 'var(--math-color)', gtId: 'mg_lt1', loc: 'H13 Lawrence East M020', nav: 'https://maps.apple.com/?q=UNSW+H13+Lawrence+East+Building+Kensington', examTable:true, durationMin:60 },
     { name: '💻 MMAN1130 DSIGN2 装配CAD',        date: '2026-07-03T23:55:00+10:00', tag: '5%',  color: 'var(--mman-color)', gtId: 'mm_d2'  },
     { name: '🔧 MMAN1130 TOOLS2 手工工具',        date: '2026-07-03T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_t2'  },
     { name: '📐 MMAN1130 MANUF1 图纸',           date: '2026-07-17T23:55:00+10:00', tag: '15%', color: 'var(--mman-color)', gtId: 'mm_mf1' },
-    { name: '📄 ENGG1300 Test 2',               date: '2026-07-18T10:00:00+10:00', tag: '30%', color: 'var(--engg-color)', gtId: 'eg_t2',  loc: 'F10 June Griffith M10', nav: 'https://maps.apple.com/?q=UNSW+F10+June+Griffith+Building+Kensington' },
-    { name: '💻 MATH1231 Lab Test 2',            date: '2026-07-27T15:00:00+10:00', tag: '15%', color: 'var(--math-color)', gtId: 'mg_lt2', loc: 'H13 Lawrence East M020', nav: 'https://maps.apple.com/?q=UNSW+H13+Lawrence+East+Building+Kensington' },
+    { name: '📄 ENGG1300 Test 2',               date: '2026-07-18T10:00:00+10:00', tag: '30%', color: 'var(--engg-color)', gtId: 'eg_t2',  loc: 'F10 June Griffith M10', nav: 'https://maps.apple.com/?q=UNSW+F10+June+Griffith+Building+Kensington', examTable:true, durationMin:120 },
+    { name: '💻 MATH1231 Lab Test 2',            date: '2026-07-27T15:00:00+10:00', tag: '15%', color: 'var(--math-color)', gtId: 'mg_lt2', loc: 'H13 Lawrence East M020', nav: 'https://maps.apple.com/?q=UNSW+H13+Lawrence+East+Building+Kensington', examTable:true, durationMin:60 },
     { name: '📋 MMAN1130 MANUF2 工艺单',         date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf2' },
     { name: '💻 MMAN1130 MANUF3 CAM',            date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf3' },
     { name: '📄 MATH1231 Assignment',            date: '2026-08-04T23:59:00+10:00', tag: '10%', color: 'var(--math-color)', gtId: 'mg_asgn'},
-    { name: '📄 ENGG1300 Test 3',               date: '2026-08-08T10:30:00+10:00', tag: '20%', color: 'var(--engg-color)', gtId: 'eg_t3',  loc: 'E19 Patricia OShane 103' },
+    { name: '📄 ENGG1300 Test 3',               date: '2026-08-08T10:30:00+10:00', tag: '20%', color: 'var(--engg-color)', gtId: 'eg_t3',  loc: 'E19 Patricia OShane 103', examTable:true, durationMin:60 },
     { name: '💬 MATH1231 myExperience Feedback', date: '2026-08-13T23:59:00+10:00', tag: '', color: 'var(--math-color)', course: 'math', kind: 'feedback', link: MOODLE_URL },
     { name: '💬 ENGG1300 myExperience Feedback', date: '2026-08-13T23:59:00+10:00', tag: '', color: 'var(--engg-color)', course: 'engg', kind: 'feedback', link: MOODLE_URL },
     { name: '🔩 MMAN1130 TOOLS3 装配',           date: '2026-08-14T23:55:00+10:00', tag: '5%',  color: 'var(--mman-color)', gtId: 'mm_t3'  },
     { name: '📐 ENGG1300 Mini-design Project',   date: '2026-08-14T20:00:00+10:00', tag: '30%', color: 'var(--engg-color)', gtId: 'eg_proj'},
-    { name: '📋 MATH1231 Final Exam',            date: '2026-08-21T16:00:00+10:00', tag: '50%', color: 'var(--math-color)', gtId: 'mg_exam', loc: "Chancellor's Garden", nav: 'https://maps.apple.com/?q=Chancellor%27s+Garden+UNSW+Kensington' },
+    { name: '📋 MATH1231 Final Exam',            date: '2026-08-21T16:00:00+10:00', tag: '50%', color: 'var(--math-color)', gtId: 'mg_exam', loc: "Chancellor's Garden", nav: 'https://maps.apple.com/?q=Chancellor%27s+Garden+UNSW+Kensington', examTable:true, durationMin:120, arrive:'15:40' },
   ];
 
   function deadlineCourse(d) {
@@ -4655,16 +4728,43 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return !!((d.gtId && gtData[d.gtId] && gtData[d.gtId].done) || (d.mobiusWeek && mobiusDone[String(d.mobiusWeek)]));
   }
 
+  function deadlineTerm(d) {
+    return d.term || '2026 T2';
+  }
+
+  function deadlineVisibleByCourse(d) {
+    var course = deadlineCourse(d);
+    return !course || isActiveCourse(course);
+  }
+
   function visibleDeadlines() {
-    return deadlines.filter(function(d) {
-      var course = deadlineCourse(d);
-      return !course || isActiveCourse(course);
-    });
+    return deadlines.filter(deadlineVisibleByCourse);
+  }
+
+  function countdownDeadlines() {
+    return visibleDeadlines().filter(function(d){ return deadlineTerm(d) === currentCountdownTerm; });
+  }
+
+  function renderCountdownTerms() {
+    var host = document.getElementById('countdown-term-tabs');
+    if (!host) return;
+    host.innerHTML = COUNTDOWN_TERMS.map(function(term) {
+      var compact = term.replace('20','').replace(' ', '');
+      return '<button class="countdown-term-btn '+(term === currentCountdownTerm ? 'active' : '')+'" onclick="setCountdownTerm(\''+term+'\')">'+compact+'</button>';
+    }).join('');
+  }
+
+  function setCountdownTerm(term) {
+    if (COUNTDOWN_TERMS.indexOf(term) === -1) return;
+    currentCountdownTerm = term;
+    try { localStorage.setItem('iue.countdownTerm.v1', term); } catch(e) {}
+    renderCountdown();
   }
 
   function renderCountdown() {
     var now = new Date();
     var list = document.getElementById('countdown-list');
+    renderCountdownTerms();
     var gtData = (function(){ try { return JSON.parse(localStorage.getItem('gt_v2')||'{}'); } catch(e){ return {}; } })();
     var mobiusDone = {};
     document.querySelectorAll('#mobius-list .checklist-item').forEach(function(item) {
@@ -4672,9 +4772,13 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (week) mobiusDone[week] = item.classList.contains('checked');
     });
 
-    var all = visibleDeadlines().map(function(d){ return Object.assign({}, d, { diff: new Date(d.date) - now }); });
+    var all = countdownDeadlines().map(function(d){ return Object.assign({}, d, { diff: new Date(d.date) - now }); });
     var upcoming = all.filter(function(d){ return d.diff > 0; }).sort(function(a,b){ return a.diff - b.diff; });
     var past = all.filter(function(d){ return d.diff <= 0; }).sort(function(a,b){ return b.diff - a.diff; });
+    if (!all.length) {
+      list.innerHTML = '<div class="countdown-empty">'+currentCountdownTerm+' 暂时还没有重要日期。</div>';
+      return;
+    }
 
     if (!upcoming.length && !past.length) {
       list.innerHTML = '<div style="text-align:center;color:var(--muted);padding:40px 0;">暂无考核 🎉</div>';
@@ -4723,6 +4827,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       past.map(function(d){ return makeCard(d, true); }).join('');
   }
   renderCountdown();
+  renderTimetable();
   updateCourseVisibility();
   function warmCourseManager() {
     if (!courseManagerDirty) return;
@@ -5035,7 +5140,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function dashCourseName(course) {
-    return { math:'MATH1231', mman:'MMAN1130', engg:'ENGG1300' }[course] || course;
+    return { math:'MATH1231', mman:'MMAN1130', engg:'ENGG1300', phys1121:'PHYS1121', engg1811:'ENGG1811', phys1160:'PHYS1160' }[course] || course;
   }
 
   function dashCourseShortTask(course) {
@@ -5124,7 +5229,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       dashAddFocus(focus, seen, 'prep-' + (urgent[1].gtId || urgent[1].mobiusWeek || 'deadline'), '把 ' + dashCleanName(urgent[1].name) + ' 的资料先打开，做一轮轻量预习。');
     }
 
-    var low = activeCourseIds.map(function(course){
+    var low = activeCourseIds.filter(function(course){ return !!GT[course]; }).map(function(course){
       return Object.assign({ course: course }, dashGradeSummary(course, data));
     }).filter(function(s){ return s.remaining > 0; }).sort(function(a,b){
       if (a.doneW !== b.doneW) return a.doneW - b.doneW;
@@ -5302,8 +5407,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     }
 
     var gradeEl = document.getElementById('dash-grades');
-    var colorMap = { math:'var(--math-color)', mman:'var(--mman-color)', engg:'var(--engg-color)' };
-    gradeEl.innerHTML = activeCourseIds.map(function(course) {
+    var colorMap = { math:'var(--math-color)', mman:'var(--mman-color)', engg:'var(--engg-color)', phys1121:'#B9C7F2', engg1811:'var(--engg-color)', phys1160:'#B9C7F2' };
+    gradeEl.innerHTML = activeCourseIds.filter(function(course){ return !!GT[course]; }).map(function(course) {
       var s = dashGradeSummary(course, data);
       var note = s.nextItem ? '下一项：'+s.nextItem.label.replace(/[^\w\s%\u4e00-\u9fff·:-]/g,'').trim() : '已标记完成';
       return '<div class="dash-course" onclick="showCourse(\''+course+'\')">'
@@ -5318,6 +5423,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   renderDashboard();
   setInterval(function(){
     renderCountdown();
+    renderTimetable();
     renderDashboard();
     updateTabBadges();
   }, 60000);
