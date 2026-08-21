@@ -1177,7 +1177,7 @@
       border-radius:999px;padding:6px 10px;font-size:11px;font-weight:800;white-space:nowrap;
     }
     .countdown-term-btn.active { background:var(--text);border-color:var(--text);color:#000; }
-    .countdown-view-tabs { display:flex;gap:6px;margin:0 2px 11px; }
+    .countdown-view-tabs { display:none;gap:6px;margin:0 2px 11px; }
     .countdown-view-btn {
       border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);color:var(--muted);
       border-radius:999px;padding:5px 9px;font-size:10.5px;font-weight:800;white-space:nowrap;
@@ -3436,7 +3436,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-22-countdown-history';
+  var APP_VERSION = '2026-08-22-hidden-countdown-history';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5123,6 +5123,13 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     renderCountdown();
   }
 
+  function showCountdownHistory() {
+    currentCountdownView = 'history';
+    try { localStorage.setItem('iue.countdownView.v1', 'history'); } catch(e) {}
+    showCourse('countdown');
+    renderCountdown();
+  }
+
   function renderCountdown() {
     var now = new Date();
     var list = document.getElementById('countdown-list');
@@ -6097,7 +6104,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       commandEl.innerHTML =
         '<div class="dash-command-main">'
         +'<div><div class="dash-command-label">Now</div><div class="dash-command-title">目前没有未完成的倒计时</div></div>'
-        +'<div class="dash-command-count"><div class="dash-command-num">✓</div><div class="dash-command-unit">All clear</div></div>'
+        +'<div class="dash-command-count" onclick="showCountdownHistory()" style="cursor:pointer;"><div class="dash-command-num">✓</div><div class="dash-command-unit">All clear</div></div>'
         +'</div>'
         +'<div class="dash-command-body">'
         +'<div><div class="dash-command-section-title">最近日程</div><div style="color:var(--muted);font-size:13px;padding:6px 0;">未来两周没有未完成考核。</div></div>'
