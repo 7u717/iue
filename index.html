@@ -1460,31 +1460,16 @@
     .lang-top { display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px; }
     .lang-title { font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:850;line-height:1;color:var(--text);letter-spacing:0; }
     .lang-goal-ring {
-      width:78px;height:78px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;
-      background:conic-gradient(#93C5FD var(--lang-pct,0%), #262626 0);
-      box-shadow:0 0 26px rgba(147,197,253,.08);
+      min-width:82px;height:44px;border-radius:16px;display:grid;place-items:center;flex-shrink:0;padding:0 12px;
+      border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);
+      box-shadow:0 12px 28px rgba(0,0,0,.18);
     }
-    .lang-goal-ring::before { content:"";position:absolute;width:58px;height:58px;border-radius:50%;background:#090909;border:1px solid rgba(255,255,255,.05); }
-    .lang-goal-ring-inner { position:relative;z-index:1;text-align:center;font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:850;color:var(--text);line-height:1; }
+    .lang-goal-ring::before { display:none; }
+    .lang-goal-ring-inner { position:relative;z-index:1;text-align:right;font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:850;color:var(--text);line-height:1; }
     .lang-goal-ring-inner span { display:block;margin-top:4px;font-family:'Inter',sans-serif;font-size:9px;font-weight:800;color:var(--muted); }
     .lang-total-row { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px; }
     .lang-progress { height:4px;border-radius:999px;background:#252525;overflow:hidden;margin-top:10px; }
     .lang-progress-fill { height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#EFF6FF,var(--math-color));transition:width .35s ease; }
-    .lang-word-stack {
-      display:flex;align-items:stretch;gap:0;margin:13px 0 2px;min-height:54px;overflow-x:auto;overflow-y:hidden;
-      padding-left:1px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;
-    }
-    .lang-word-stack::-webkit-scrollbar { display:none; }
-    .lang-mini-card {
-      flex:0 0 43%;height:54px;border-radius:16px;border:1px solid rgba(255,255,255,.08);scroll-snap-align:start;
-      background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
-      padding:10px 12px;margin-right:-16px;box-shadow:0 12px 26px rgba(0,0,0,.24);
-      display:flex;flex-direction:column;justify-content:center;
-    }
-    .lang-mini-card:nth-child(2) { transform:scale(.96);opacity:.74; }
-    .lang-mini-card:nth-child(3) { transform:scale(.92);opacity:.5; }
-    .lang-mini-word { color:#f5f5f7;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
-    .lang-mini-cn { margin-top:4px;color:var(--muted);font-size:10px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
     .lang-stats { display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px; }
     .lang-stat { border:0;border-radius:0;background:transparent;padding:0;min-width:0; }
     .lang-stat strong { display:block;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:var(--text);line-height:1; }
@@ -1941,18 +1926,16 @@
         <div class="lang-top">
           <div>
             <div class="lang-title">IELTS Words</div>
-            <div class="lang-pill" id="lang-day-label">Today</div>
           </div>
           <div class="lang-goal-ring" id="lang-goal-ring">
             <div class="lang-goal-ring-inner" id="lang-progress-count">0/0<span>today</span></div>
           </div>
         </div>
         <div class="lang-progress"><div class="lang-progress-fill" id="lang-progress-fill"></div></div>
-        <div class="lang-word-stack" id="lang-word-stack"></div>
         <div class="lang-stats">
           <div class="lang-stat"><strong id="lang-new-count">0</strong><span>today target</span></div>
-          <div class="lang-stat"><strong id="lang-review-count">0</strong><span>review target</span></div>
-          <div class="lang-stat"><strong id="lang-wrong-count">0</strong><span>weak words</span></div>
+          <div class="lang-stat"><strong id="lang-preview-count">0</strong><span>preview left</span></div>
+          <div class="lang-stat"><strong id="lang-review-count">0</strong><span>review left</span></div>
         </div>
         <div class="lang-total-row">
           <div class="lang-stat"><strong id="lang-total-done">0</strong><span>total done</span></div>
@@ -3525,7 +3508,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-22-language-preview-review';
+  var APP_VERSION = '2026-08-22-language-clean-3d';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -6065,7 +6048,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function languageBuildPlanIfNeeded(state, words) {
     var today = languageTodayStamp();
-    if (state.plan && state.plan.complete !== true) return state;
+    if (state.plan && state.plan.complete !== true) return languageResizeTodayPlan(state, words);
     if (state.plan && state.plan.date === today && state.plan.complete === true) return state;
     var newIds = languagePickNewIds(state, words);
     var previousWrong = languageShuffle(state.carryWrong || []).slice(0, Math.min(12, state.daySize));
@@ -6084,6 +6067,41 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       complete: false
     };
     state.activeMode = 'preview';
+    return state;
+  }
+
+  function languageResizeTodayPlan(state, words) {
+    if (!state.plan || state.plan.date !== languageTodayStamp() || state.plan.complete || !words || !words.length) return state;
+    var target = Math.max(5, Math.min(100, Number(state.daySize) || 20));
+    state.plan.ids = Array.isArray(state.plan.ids) ? state.plan.ids : [];
+    state.plan.previewPassed = state.plan.previewPassed || {};
+    state.plan.wrongToday = state.plan.wrongToday || {};
+    var ids = state.plan.ids;
+    var used = {};
+    ids.forEach(function(id){ used[id] = true; });
+    while (ids.length < target && ids.length < words.length) {
+      var start = Math.min(state.nextIndex || 0, Math.max(0, words.length - 1));
+      var added = false;
+      for (var i = 0; i < words.length; i++) {
+        var word = words[(start + i) % words.length];
+        if (!used[word.id]) {
+          ids.push(word.id);
+          used[word.id] = true;
+          state.nextIndex = (start + i + 1) % words.length;
+          added = true;
+          break;
+        }
+      }
+      if (!added) break;
+    }
+    if (ids.length > target) {
+      var kept = [];
+      ids.forEach(function(id) {
+        var mustKeep = !!(state.plan.previewPassed[id] || state.plan.wrongToday[id]);
+        if (mustKeep || kept.length < target) kept.push(id);
+      });
+      state.plan.ids = kept;
+    }
     return state;
   }
 
@@ -6111,34 +6129,6 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var reviewDone = reviewStarted - languageReviewQueueIds(state).length;
     var done = Math.max(0, previewDone + reviewDone);
     return { done:done, total:total, pct:total ? Math.round(done / total * 100) : 0 };
-  }
-
-  function languageRenderWordStack(state) {
-    var host = document.getElementById('lang-word-stack');
-    if (!host) return;
-    var words = langRuntime.words || [];
-    var map = words.length ? languageWordMap(words) : {};
-    if (!words.length) {
-      host.innerHTML = '<div class="lang-mini-card"><div class="lang-mini-word">Loading</div><div class="lang-mini-cn">Preparing today.</div></div>';
-      return;
-    }
-    if (state.plan && state.plan.complete) {
-      host.innerHTML = '<div class="lang-mini-card"><div class="lang-mini-word">All clear</div><div class="lang-mini-cn">Preview and Review are empty.</div></div>';
-      return;
-    }
-    var ids = languageUnique(languagePreviewRemainingIds(state).concat(languageReviewQueueIds(state), languageWeakIds(state))).slice(0, 4);
-    if (!ids.length) {
-      host.innerHTML = '<div class="lang-mini-card"><div class="lang-mini-word">All clear</div><div class="lang-mini-cn">Preview and Review are empty.</div></div>';
-      return;
-    }
-    host.innerHTML = ids.map(function(id) {
-      var word = map[id];
-      if (!word) return '';
-      return '<div class="lang-mini-card">'
-        + '<div class="lang-mini-word">' + escapeHtml(languageCleanText(word.word)) + '</div>'
-        + '<div class="lang-mini-cn">' + escapeHtml(languageCleanText(word.cn || word.en || '')) + '</div>'
-        + '</div>';
-    }).join('');
   }
 
   function languageUpdateCompletion(state) {
@@ -6224,10 +6214,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var count = document.getElementById('lang-progress-count');
     var fill = document.getElementById('lang-progress-fill');
     var daily = document.getElementById('lang-daily-size');
-    var day = document.getElementById('lang-day-label');
     var newCount = document.getElementById('lang-new-count');
+    var previewCount = document.getElementById('lang-preview-count');
     var reviewCount = document.getElementById('lang-review-count');
-    var wrongCount = document.getElementById('lang-wrong-count');
     var totalDone = document.getElementById('lang-total-done');
     var totalGoal = document.getElementById('lang-total-goal');
     var ring = document.getElementById('lang-goal-ring');
@@ -6238,13 +6227,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (fill) fill.style.width = progress.pct + '%';
     if (ring) ring.style.setProperty('--lang-pct', progress.pct + '%');
     if (daily) daily.textContent = state.daySize;
-    if (day) day.textContent = (plan.date || languageTodayStamp()) + (plan.complete ? ' · complete' : '');
-    if (newCount) newCount.textContent = previewLeft;
+    if (newCount) newCount.textContent = (plan.ids || []).length || state.daySize || 0;
+    if (previewCount) previewCount.textContent = previewLeft;
     if (reviewCount) reviewCount.textContent = reviewLeft;
-    if (wrongCount) wrongCount.textContent = languageTrueWeakIds(state).length || 0;
     if (totalDone) totalDone.textContent = learnedTotal;
     if (totalGoal) totalGoal.textContent = (langRuntime.words && langRuntime.words.length) || 8000;
-    languageRenderWordStack(state);
     document.querySelectorAll('.lang-mode').forEach(function(btn) {
       btn.classList.toggle('active', btn.dataset.langTab === state.activeMode);
     });
@@ -6374,16 +6361,20 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     ids.forEach(function(id, i) {
       var stat = (state.wrongStats || {})[id] || {};
       var angle = (Math.PI * 2 * i / ids.length) - Math.PI / 2;
-      var radius = i === 0 ? 0 : 18 + (i % 4) * 6;
+      var radius = 12 + (i % 4) * 6 + (i > 4 ? 6 : 0);
       var oldNode = old[id];
       nodes[id] = oldNode || {
         id:id,
         x:centerX + Math.cos(angle) * radius + (Math.random() * 5 - 2.5),
         y:centerY + Math.sin(angle) * radius + (Math.random() * 5 - 2.5),
+        z:(Math.random() * 30 - 15),
         vx:(Math.random() - .5) * .026,
         vy:(Math.random() - .5) * .026,
+        vz:(Math.random() - .5) * .02,
         score:stat.count || (i === 0 ? 2 : 1)
       };
+      if (typeof nodes[id].z !== 'number') nodes[id].z = (Math.random() * 30 - 15);
+      if (typeof nodes[id].vz !== 'number') nodes[id].vz = (Math.random() - .5) * .02;
       nodes[id].word = map[id];
       nodes[id].score = stat.count || nodes[id].score || 1;
     });
@@ -6402,6 +6393,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (!box || !svg || !langRuntime.map) return;
     var ids = langRuntime.map.ids || [];
     var nodes = langRuntime.map.nodes || {};
+    var projected = {};
+    ids.forEach(function(id) {
+      if (nodes[id]) projected[id] = languageProjectNode(nodes[id]);
+    });
     var lines = [];
     ids.forEach(function(id, i) {
       if (!nodes[id]) return;
@@ -6409,7 +6404,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var mid = ids[Math.floor(ids.length / 2)];
       [next, mid].forEach(function(target) {
         if (!target || target === id || !nodes[target]) return;
-        lines.push('<line class="lang-map-line" x1="'+nodes[id].x.toFixed(2)+'" y1="'+nodes[id].y.toFixed(2)+'" x2="'+nodes[target].x.toFixed(2)+'" y2="'+nodes[target].y.toFixed(2)+'"></line>');
+        var a = projected[id];
+        var b = projected[target];
+        var opacity = Math.max(.14, Math.min(.58, (a.depth + b.depth) / 2));
+        lines.push('<line class="lang-map-line" style="opacity:'+opacity.toFixed(2)+'" x1="'+a.x.toFixed(2)+'" y1="'+a.y.toFixed(2)+'" x2="'+b.x.toFixed(2)+'" y2="'+b.y.toFixed(2)+'"></line>');
       });
     });
     svg.innerHTML = lines.join('');
@@ -6434,16 +6432,32 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         box.appendChild(el);
         live[id] = el;
       }
-      var size = Math.max(13, Math.min(23, 12.5 + (n.score || 1) * 2.2 + (i === 0 ? 4 : 0)));
+      var p = projected[id] || languageProjectNode(n);
+      var size = Math.max(12, Math.min(24, (12.5 + (n.score || 1) * 2.2 + (i === 0 ? 4 : 0)) * p.scale));
       el.classList.toggle('hot', i < 3);
-      el.style.left = n.x + '%';
-      el.style.top = n.y + '%';
+      el.style.left = p.x + '%';
+      el.style.top = p.y + '%';
       el.style.fontSize = size + 'px';
+      el.style.opacity = String(Math.max(.42, Math.min(1, p.depth + .24)));
+      el.style.zIndex = String(10 + Math.round(p.depth * 80));
       el.querySelector('span').textContent = n.word.word;
     });
     var idSet = {};
     ids.forEach(function(id){ idSet[String(id)] = true; });
     Object.keys(live).forEach(function(id){ if (!idSet[String(id)]) live[id].remove(); });
+  }
+
+  function languageProjectNode(n) {
+    var cx = 50, cy = 43;
+    var z = typeof n.z === 'number' ? n.z : 0;
+    var depth = Math.max(0, Math.min(1, (z + 46) / 92));
+    var scale = .72 + depth * .52;
+    return {
+      x: cx + (n.x - cx) * scale,
+      y: cy + (n.y - cy) * scale,
+      scale: scale,
+      depth: depth
+    };
   }
 
   function languageStartMapMotion() {
@@ -6458,14 +6472,16 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         var n = nodes[id];
         var boost = Math.min(1.8, langRuntime.mapBoost || 0);
         var cx = 50, cy = 43;
-        var dx = n.x - cx, dy = n.y - cy;
-        var spin = .0022 + boost * .018;
-        n.x += n.vx + (-dy * spin);
-        n.y += n.vy + (dx * spin);
+        languageRotateNode3d(n, .0014 + boost * .009, .0007 + boost * .004);
+        n.x += n.vx;
+        n.y += n.vy;
+        n.z += n.vz || 0;
+        if (n.z < -42 || n.z > 42) n.vz = (n.vz || .01) * -1;
         if (n.x < 12 || n.x > 88) n.vx *= -1;
         if (n.y < 16 || n.y > 82) n.vy *= -1;
         n.x = Math.max(10, Math.min(90, n.x));
         n.y = Math.max(14, Math.min(84, n.y));
+        n.z = Math.max(-46, Math.min(46, n.z));
       });
       langRuntime.mapBoost = Math.max(0, (langRuntime.mapBoost || 0) * .94 - .003);
       languageDrawMap();
@@ -6474,39 +6490,49 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     langRuntime.mapFrame = requestAnimationFrame(tick);
   }
 
-  function languageRotateMap(delta) {
+  function languageRotateNode3d(n, yaw, pitch) {
+    var cx = 50, cy = 43;
+    var x = n.x - cx;
+    var y = n.y - cy;
+    var z = typeof n.z === 'number' ? n.z : 0;
+    var cosY = Math.cos(yaw);
+    var sinY = Math.sin(yaw);
+    var x1 = x * cosY + z * sinY;
+    var z1 = -x * sinY + z * cosY;
+    var cosX = Math.cos(pitch);
+    var sinX = Math.sin(pitch);
+    var y1 = y * cosX - z1 * sinX;
+    var z2 = y * sinX + z1 * cosX;
+    n.x = cx + x1;
+    n.y = cy + y1;
+    n.z = z2;
+  }
+
+  function languageRotateMap3d(yaw, pitch) {
     if (!langRuntime.map) return;
     var nodes = langRuntime.map.nodes || {};
-    var cx = 50, cy = 43;
     Object.keys(nodes).forEach(function(id) {
-      var n = nodes[id];
-      var dx = n.x - cx;
-      var dy = n.y - cy;
-      var cos = Math.cos(delta);
-      var sin = Math.sin(delta);
-      n.x = cx + dx * cos - dy * sin;
-      n.y = cy + dx * sin + dy * cos;
+      languageRotateNode3d(nodes[id], yaw, pitch);
     });
   }
 
   function languageNetworkPointerDown(event) {
     var box = document.getElementById('lang-network');
     if (!box || !langRuntime.map) return;
-    var rect = box.getBoundingClientRect();
-    var cx = rect.left + rect.width / 2;
-    var cy = rect.top + rect.height / 2;
-    var lastAngle = Math.atan2(event.clientY - cy, event.clientX - cx);
+    var lastX = event.clientX;
+    var lastY = event.clientY;
     var moved = false;
     try { box.setPointerCapture(event.pointerId); } catch(err) {}
     langRuntime.drag = { pointerId:event.pointerId };
     function move(e) {
       if (!langRuntime.drag || langRuntime.drag.pointerId !== event.pointerId) return;
-      var angle = Math.atan2(e.clientY - cy, e.clientX - cx);
-      var delta = angle - lastAngle;
-      if (Math.abs(delta) > .003) moved = true;
-      languageRotateMap(delta);
-      lastAngle = angle;
-      langRuntime.mapBoost = Math.min(2.2, (langRuntime.mapBoost || 0) + Math.min(.12, Math.abs(delta) * .55));
+      var dx = e.clientX - lastX;
+      var dy = e.clientY - lastY;
+      if (Math.hypot(dx, dy) > 1) moved = true;
+      languageRotateMap3d(dx * .006, dy * .006);
+      lastX = e.clientX;
+      lastY = e.clientY;
+      langRuntime.mapBoost = Math.min(2.2, (langRuntime.mapBoost || 0) + Math.min(.16, Math.hypot(dx, dy) * .01));
       languageDrawMap();
     }
     function up() {
@@ -6617,6 +6643,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function changeLanguageDaily(delta) {
     var state = languageLoadState();
     state.daySize = Math.max(5, Math.min(100, (Number(state.daySize) || 20) + delta));
+    if (langRuntime.words && langRuntime.words.length) {
+      state = languageResizeTodayPlan(state, langRuntime.words);
+      state = languageUpdateCompletion(state);
+    }
     languageSaveState(state);
     renderLanguageLab();
   }
