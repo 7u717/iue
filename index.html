@@ -1972,8 +1972,8 @@
         </div>
         <div class="lang-controls">
           <div class="lang-modes">
-            <button class="lang-mode active" data-lang-tab="preview" onclick="setLanguageMode('preview')">Preview</button>
-            <button class="lang-mode" data-lang-tab="review" onclick="setLanguageMode('review')">Review</button>
+            <button class="lang-mode active" data-lang-tab="preview" data-lang-module="ielts" onclick="setLanguageMode('preview','ielts')">Preview</button>
+            <button class="lang-mode" data-lang-tab="review" data-lang-module="ielts" onclick="setLanguageMode('review','ielts')">Review</button>
           </div>
           <div class="lang-stepper" aria-label="daily word count">
             <button onclick="changeLanguageDaily(-5)" aria-label="decrease daily words">−</button>
@@ -1983,58 +1983,91 @@
         </div>
       </div>
       <div class="lang-panel lang-module-card lang-module-compact" data-lang-card="daily">
-        <div>
-          <div class="lang-top">
-            <div>
-              <div class="lang-title">Daily English</div>
-              <div class="lang-module-meta">local phrases · listening · quick recall</div>
-            </div>
-            <div class="lang-goal-ring"><div class="lang-goal-ring-inner" data-lang-stat="progress">0/12<span>done</span></div></div>
+        <div class="lang-top">
+          <div>
+            <div class="lang-title">Daily English</div>
           </div>
-          <div class="lang-progress"><div class="lang-progress-fill" data-lang-stat="fill" style="width:0%"></div></div>
-          <div class="lang-module-row">
-            <div class="lang-stat"><strong data-lang-stat="target">12</strong><span>today target</span></div>
-            <div class="lang-stat"><strong data-lang-stat="preview">12</strong><span>preview left</span></div>
-            <div class="lang-stat"><strong data-lang-stat="review">0</strong><span>review left</span></div>
+          <div class="lang-goal-ring"><div class="lang-goal-ring-inner" data-lang-stat="progress">0/20<span>done</span></div></div>
+        </div>
+        <div class="lang-progress"><div class="lang-progress-fill" data-lang-stat="fill" style="width:0%"></div></div>
+        <div class="lang-stats">
+          <div class="lang-stat"><strong data-lang-stat="target">20</strong><span>today target</span></div>
+          <div class="lang-stat"><strong data-lang-stat="preview">20</strong><span>preview left</span></div>
+          <div class="lang-stat"><strong data-lang-stat="review">0</strong><span>review left</span></div>
+        </div>
+        <div class="lang-total-row">
+          <div class="lang-stat"><strong data-lang-stat="totalDone">0</strong><span>total done</span></div>
+          <div class="lang-stat"><strong data-lang-stat="totalGoal">2000</strong><span>total goal</span></div>
+        </div>
+        <div class="lang-controls">
+          <div class="lang-modes">
+            <button class="lang-mode active" data-lang-tab="preview" data-lang-module="daily" onclick="setLanguageMode('preview','daily')">Preview</button>
+            <button class="lang-mode" data-lang-tab="review" data-lang-module="daily" onclick="setLanguageMode('review','daily')">Review</button>
+          </div>
+          <div class="lang-stepper" aria-label="daily english word count">
+            <button onclick="changeLanguageDaily(-5,'daily')" aria-label="decrease daily english words">−</button>
+            <span data-lang-stat="dailySize">20</span>
+            <button onclick="changeLanguageDaily(5,'daily')" aria-label="increase daily english words">+</button>
           </div>
         </div>
-        <button class="lang-module-action" type="button" onclick="setLanguageMode('preview','daily')">Practice</button>
       </div>
       <div class="lang-panel lang-module-card lang-module-compact" data-lang-card="engineering">
-        <div>
-          <div class="lang-top">
-            <div>
-              <div class="lang-title">Engineering English</div>
-              <div class="lang-module-meta">lab wording · reports · technical verbs</div>
-            </div>
-            <div class="lang-goal-ring"><div class="lang-goal-ring-inner" data-lang-stat="progress">0/10<span>done</span></div></div>
+        <div class="lang-top">
+          <div>
+            <div class="lang-title">Engineering English</div>
           </div>
-          <div class="lang-progress"><div class="lang-progress-fill" data-lang-stat="fill" style="width:0%"></div></div>
-          <div class="lang-module-row">
-            <div class="lang-stat"><strong data-lang-stat="target">10</strong><span>today target</span></div>
-            <div class="lang-stat"><strong data-lang-stat="preview">10</strong><span>preview left</span></div>
-            <div class="lang-stat"><strong data-lang-stat="review">0</strong><span>review left</span></div>
+          <div class="lang-goal-ring"><div class="lang-goal-ring-inner" data-lang-stat="progress">0/20<span>done</span></div></div>
+        </div>
+        <div class="lang-progress"><div class="lang-progress-fill" data-lang-stat="fill" style="width:0%"></div></div>
+        <div class="lang-stats">
+          <div class="lang-stat"><strong data-lang-stat="target">20</strong><span>today target</span></div>
+          <div class="lang-stat"><strong data-lang-stat="preview">20</strong><span>preview left</span></div>
+          <div class="lang-stat"><strong data-lang-stat="review">0</strong><span>review left</span></div>
+        </div>
+        <div class="lang-total-row">
+          <div class="lang-stat"><strong data-lang-stat="totalDone">0</strong><span>total done</span></div>
+          <div class="lang-stat"><strong data-lang-stat="totalGoal">2000</strong><span>total goal</span></div>
+        </div>
+        <div class="lang-controls">
+          <div class="lang-modes">
+            <button class="lang-mode active" data-lang-tab="preview" data-lang-module="engineering" onclick="setLanguageMode('preview','engineering')">Preview</button>
+            <button class="lang-mode" data-lang-tab="review" data-lang-module="engineering" onclick="setLanguageMode('review','engineering')">Review</button>
+          </div>
+          <div class="lang-stepper" aria-label="engineering english word count">
+            <button onclick="changeLanguageDaily(-5,'engineering')" aria-label="decrease engineering english words">−</button>
+            <span data-lang-stat="dailySize">20</span>
+            <button onclick="changeLanguageDaily(5,'engineering')" aria-label="increase engineering english words">+</button>
           </div>
         </div>
-        <button class="lang-module-action" type="button" onclick="setLanguageMode('preview','engineering')">Drill</button>
       </div>
       <div class="lang-panel lang-module-card lang-module-compact" data-lang-card="spanish">
-        <div>
-          <div class="lang-top">
-            <div>
-              <div class="lang-title">Basic Spanish</div>
-              <div class="lang-module-meta">A1 words · phrases · everyday verbs</div>
-            </div>
-            <div class="lang-goal-ring"><div class="lang-goal-ring-inner" data-lang-stat="progress">0/8<span>done</span></div></div>
+        <div class="lang-top">
+          <div>
+            <div class="lang-title">Basic Spanish</div>
           </div>
-          <div class="lang-progress"><div class="lang-progress-fill" data-lang-stat="fill" style="width:0%"></div></div>
-          <div class="lang-module-row">
-            <div class="lang-stat"><strong data-lang-stat="target">8</strong><span>today target</span></div>
-            <div class="lang-stat"><strong data-lang-stat="preview">8</strong><span>preview left</span></div>
-            <div class="lang-stat"><strong data-lang-stat="review">0</strong><span>review left</span></div>
+          <div class="lang-goal-ring"><div class="lang-goal-ring-inner" data-lang-stat="progress">0/15<span>done</span></div></div>
+        </div>
+        <div class="lang-progress"><div class="lang-progress-fill" data-lang-stat="fill" style="width:0%"></div></div>
+        <div class="lang-stats">
+          <div class="lang-stat"><strong data-lang-stat="target">15</strong><span>today target</span></div>
+          <div class="lang-stat"><strong data-lang-stat="preview">15</strong><span>preview left</span></div>
+          <div class="lang-stat"><strong data-lang-stat="review">0</strong><span>review left</span></div>
+        </div>
+        <div class="lang-total-row">
+          <div class="lang-stat"><strong data-lang-stat="totalDone">0</strong><span>total done</span></div>
+          <div class="lang-stat"><strong data-lang-stat="totalGoal">1000</strong><span>total goal</span></div>
+        </div>
+        <div class="lang-controls">
+          <div class="lang-modes">
+            <button class="lang-mode active" data-lang-tab="preview" data-lang-module="spanish" onclick="setLanguageMode('preview','spanish')">Preview</button>
+            <button class="lang-mode" data-lang-tab="review" data-lang-module="spanish" onclick="setLanguageMode('review','spanish')">Review</button>
+          </div>
+          <div class="lang-stepper" aria-label="spanish word count">
+            <button onclick="changeLanguageDaily(-5,'spanish')" aria-label="decrease spanish words">−</button>
+            <span data-lang-stat="dailySize">15</span>
+            <button onclick="changeLanguageDaily(5,'spanish')" aria-label="increase spanish words">+</button>
           </div>
         </div>
-        <button class="lang-module-action" type="button" onclick="setLanguageMode('preview','spanish')">Start</button>
       </div>
       </div>
       <div class="lang-module-dots" id="lang-module-dots">
@@ -3598,7 +3631,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-22-language-large-vocab';
+  var APP_VERSION = '2026-08-22-language-card-parity';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -6453,7 +6486,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (reviewCount) reviewCount.textContent = reviewLeft;
     if (totalDone) totalDone.textContent = learnedTotal;
     if (totalGoal) totalGoal.textContent = 8000;
-    document.querySelectorAll('.lang-mode').forEach(function(btn) {
+    document.querySelectorAll('[data-lang-card="ielts"] .lang-mode').forEach(function(btn) {
       btn.classList.toggle('active', btn.dataset.langTab === ieltsState.activeMode);
     });
     languageRenderModuleCards();
@@ -6468,11 +6501,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       langRuntime.module = moduleId;
       var cfg = languageModuleConfig(moduleId);
       var moduleState = languageLoadState();
-      var words = languageNormalizeInlineWords(moduleId);
       var plan = moduleState.plan;
       var progress = plan ? languageProgress(moduleState) : { done:0, total:cfg.daySize, pct:0 };
-      var previewLeft = plan ? languagePreviewRemainingIds(moduleState).length : Math.min(cfg.daySize, words.length);
+      var previewLeft = plan ? languagePreviewRemainingIds(moduleState).length : cfg.daySize;
       var reviewLeft = plan ? languageReviewQueueIds(moduleState).length : 0;
+      var learnedTotal = Object.keys(moduleState.learned || {}).length;
       langRuntime.module = previous;
       var card = document.querySelector('[data-lang-card="' + moduleId + '"]');
       if (!card) return;
@@ -6481,11 +6514,20 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var target = card.querySelector('[data-lang-stat="target"]');
       var preview = card.querySelector('[data-lang-stat="preview"]');
       var review = card.querySelector('[data-lang-stat="review"]');
+      var totalDone = card.querySelector('[data-lang-stat="totalDone"]');
+      var totalGoal = card.querySelector('[data-lang-stat="totalGoal"]');
+      var dailySize = card.querySelector('[data-lang-stat="dailySize"]');
       if (progressEl) progressEl.innerHTML = progress.done + '/' + progress.total + '<span>done</span>';
       if (fill) fill.style.width = progress.pct + '%';
-      if (target) target.textContent = cfg.daySize;
+      if (target) target.textContent = moduleState.daySize || cfg.daySize;
       if (preview) preview.textContent = previewLeft;
       if (review) review.textContent = reviewLeft;
+      if (totalDone) totalDone.textContent = learnedTotal;
+      if (totalGoal) totalGoal.textContent = cfg.totalGoal;
+      if (dailySize) dailySize.textContent = moduleState.daySize || cfg.daySize;
+      card.querySelectorAll('.lang-mode').forEach(function(btn) {
+        btn.classList.toggle('active', btn.dataset.langTab === moduleState.activeMode);
+      });
     });
   }
 
@@ -7013,15 +7055,29 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     renderLanguageLab();
   }
 
-  function changeLanguageDaily(delta) {
+  function changeLanguageDaily(delta, moduleId) {
+    var previousModule = langRuntime.module;
+    if (LANG_MODULES[moduleId]) {
+      langRuntime.module = moduleId;
+      langRuntime.wordMap = null;
+      try { localStorage.setItem(LANG_ACTIVE_MODULE_KEY, moduleId); } catch(e) {}
+    }
     var state = languageLoadState();
-    var maxWords = (langRuntime.words && langRuntime.words.length) || 100;
+    var cfg = languageModuleConfig(langRuntime.module);
+    var maxWords = cfg.id === 'ielts' ? ((langRuntime.words && langRuntime.words.length) || cfg.totalGoal || 100) : (cfg.totalGoal || 100);
     state.daySize = Math.max(5, Math.min(maxWords, (Number(state.daySize) || languageModuleConfig(langRuntime.module).daySize || 20) + delta));
     if (langRuntime.words && langRuntime.words.length) {
       state = languageResizeTodayPlan(state, langRuntime.words);
       state = languageUpdateCompletion(state);
     }
     languageSaveState(state);
+    if (previousModule !== langRuntime.module && moduleId) {
+      loadLanguageWords(langRuntime.module).then(function(words) {
+        langRuntime.words = words;
+        renderLanguageLab();
+      });
+      return;
+    }
     renderLanguageLab();
   }
 
