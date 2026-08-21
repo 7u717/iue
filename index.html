@@ -3631,7 +3631,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-22-language-card-parity';
+  var APP_VERSION = '2026-08-22-update-on-open';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -7832,6 +7832,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         var remoteVersion = match && match[1];
         if (!remoteVersion || remoteVersion === APP_VERSION) return;
         window.IUE_UPDATE_AVAILABLE = remoteVersion;
+        var active = document.activeElement;
+        var isTyping = active && /^(INPUT|TEXTAREA)$/i.test(active.tagName || '');
+        var isStudying = document.querySelector('.language-lab.studying');
+        var alreadyTried = sessionStorage.getItem('iue_update_reload_version') === remoteVersion;
+        if (isTyping || isStudying || alreadyTried) return;
+        sessionStorage.setItem('iue_update_reload_version', remoteVersion);
+        var next = new URL(location.href);
+        next.searchParams.set('v', remoteVersion);
+        location.replace(next.toString());
       }).catch(function(){}).finally(function(){ checking = false; });
     }
     window.addEventListener('pageshow', checkForNewVersion);
