@@ -1168,7 +1168,7 @@
     .cd-days { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; line-height: 1; }
     .cd-days.cd-days-urgent { color: var(--text); }
     .cd-unit { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .countdown-head { display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;padding:0 2px; }
+    .countdown-head { display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;padding:0 2px; }
     .countdown-title { font-size:13px;font-weight:800;color:var(--muted);letter-spacing:.01em; }
     .countdown-term-tabs { display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none; }
     .countdown-term-tabs::-webkit-scrollbar { display:none; }
@@ -1177,6 +1177,14 @@
       border-radius:999px;padding:6px 10px;font-size:11px;font-weight:800;white-space:nowrap;
     }
     .countdown-term-btn.active { background:var(--text);border-color:var(--text);color:#000; }
+    .countdown-view-tabs { display:flex;gap:6px;margin:0 2px 11px; }
+    .countdown-view-btn {
+      border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);color:var(--muted);
+      border-radius:999px;padding:5px 9px;font-size:10.5px;font-weight:800;white-space:nowrap;
+      transition:transform .16s ease,background .16s ease,border-color .16s ease,color .16s ease;
+    }
+    .countdown-view-btn:active { transform:scale(.96); }
+    .countdown-view-btn.active { color:var(--text);border-color:rgba(147,197,253,.34);background:rgba(147,197,253,.09); }
     .countdown-empty { color:var(--muted);font-size:13px;padding:14px 4px; }
     .exam-alert { display: none; }
 
@@ -1893,6 +1901,7 @@
         <div class="countdown-title">重要日期</div>
         <div class="countdown-term-tabs" id="countdown-term-tabs"></div>
       </div>
+      <div class="countdown-view-tabs" id="countdown-view-tabs"></div>
       <div id="countdown-list"></div>
     </div>
   </div>
@@ -3427,7 +3436,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-22-splash-and-course-feedback';
+  var APP_VERSION = '2026-08-22-countdown-history';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -3470,6 +3479,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var COUNTDOWN_TERMS = ['2026 T2','2026 T3','2027 T1','2027 T2','2027 T3'];
   var currentCountdownTerm = localStorage.getItem('iue.countdownTerm.v1') || '2026 T2';
   if (COUNTDOWN_TERMS.indexOf(currentCountdownTerm) === -1) currentCountdownTerm = '2026 T2';
+  var currentCountdownView = localStorage.getItem('iue.countdownView.v1') || 'upcoming';
+  if (['upcoming','history'].indexOf(currentCountdownView) === -1) currentCountdownView = 'upcoming';
   var T3_WEEKLY_TIMETABLE = [
     { day:'MON', time:'11:00', durationMin:60, course:'engg1811', title:'ENGG1811', kind:'Lecture', kindClass:'lec', loc:'Online' },
     { day:'TUE', time:'14:00', durationMin:60, course:'phys1121', title:'PHYS1121', kind:'Lecture', kindClass:'lec', loc:'In Person' },
@@ -5072,8 +5083,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return deadlines.filter(deadlineVisibleByCourse);
   }
 
-  function countdownDeadlines() {
-    return visibleDeadlines().filter(function(d){ return deadlineTerm(d) === currentCountdownTerm; });
+  function countdownDeadlines(includeInactive) {
+    var source = includeInactive ? deadlines : visibleDeadlines();
+    return source.filter(function(d){ return deadlineTerm(d) === currentCountdownTerm; });
   }
 
   function renderCountdownTerms() {
@@ -5085,6 +5097,18 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     }).join('');
   }
 
+  function renderCountdownViews(activeView) {
+    var host = document.getElementById('countdown-view-tabs');
+    if (!host) return;
+    var view = activeView || currentCountdownView;
+    host.innerHTML = [
+      { id:'upcoming', label:'Upcoming' },
+      { id:'history', label:'History' }
+    ].map(function(item) {
+      return '<button class="countdown-view-btn '+(view === item.id ? 'active' : '')+'" onclick="setCountdownView(\''+item.id+'\')">'+item.label+'</button>';
+    }).join('');
+  }
+
   function setCountdownTerm(term) {
     if (COUNTDOWN_TERMS.indexOf(term) === -1) return;
     currentCountdownTerm = term;
@@ -5092,10 +5116,18 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     renderCountdown();
   }
 
+  function setCountdownView(view) {
+    if (['upcoming','history'].indexOf(view) === -1) return;
+    currentCountdownView = view;
+    try { localStorage.setItem('iue.countdownView.v1', view); } catch(e) {}
+    renderCountdown();
+  }
+
   function renderCountdown() {
     var now = new Date();
     var list = document.getElementById('countdown-list');
     renderCountdownTerms();
+    renderCountdownViews();
     var gtData = (function(){ try { return JSON.parse(localStorage.getItem('gt_v2')||'{}'); } catch(e){ return {}; } })();
     var mobiusDone = {};
     document.querySelectorAll('#mobius-list .checklist-item').forEach(function(item) {
@@ -5103,13 +5135,24 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (week) mobiusDone[week] = item.classList.contains('checked');
     });
 
-    var all = countdownDeadlines().map(function(d){ return Object.assign({}, d, { diff: new Date(d.date) - now }); });
+    var activeAll = countdownDeadlines(false).map(function(d){ return Object.assign({}, d, { diff: new Date(d.date) - now }); });
+    var archiveAll = countdownDeadlines(true).map(function(d){ return Object.assign({}, d, { diff: new Date(d.date) - now }); });
+    var all = currentCountdownView === 'history' ? archiveAll : activeAll;
     var upcoming = all.filter(function(d){ return d.diff > 0; }).sort(function(a,b){ return a.diff - b.diff; });
     var past = all.filter(function(d){ return d.diff <= 0; }).sort(function(a,b){ return b.diff - a.diff; });
     if (!all.length) {
       list.innerHTML = '<div class="countdown-empty">'+currentCountdownTerm+' 暂时还没有重要日期。</div>';
       return;
     }
+
+    var view = currentCountdownView;
+    if (view === 'upcoming' && !upcoming.length && archiveAll.some(function(d){ return d.diff <= 0; })) {
+      view = 'history';
+      all = archiveAll;
+      upcoming = [];
+      past = all.filter(function(d){ return d.diff <= 0; }).sort(function(a,b){ return b.diff - a.diff; });
+    }
+    renderCountdownViews(view);
 
     if (!upcoming.length && !past.length) {
       list.innerHTML = '<div style="text-align:center;color:var(--muted);padding:40px 0;">暂无考核</div>';
@@ -5148,14 +5191,19 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         +'</div></div>';
     }
 
-    // Separate done and not-done among upcoming
     var notDone = upcoming.filter(function(d){ return !deadlineIsDone(d, gtData, mobiusDone); });
     var doneUp  = upcoming.filter(function(d){ return deadlineIsDone(d, gtData, mobiusDone); });
 
+    if (view === 'history') {
+      list.innerHTML = past.length
+        ? past.map(function(d){ return makeCard(d, true); }).join('')
+        : '<div class="countdown-empty">'+currentCountdownTerm+' 还没有已结束的倒计时。</div>';
+      return;
+    }
+
     list.innerHTML =
       notDone.map(function(d){ return makeCard(d, false); }).join('') +
-      doneUp.map(function(d){ return makeCard(d, true); }).join('') +
-      past.map(function(d){ return makeCard(d, true); }).join('');
+      doneUp.map(function(d){ return makeCard(d, true); }).join('');
   }
   renderCountdown();
   renderTimetable();
