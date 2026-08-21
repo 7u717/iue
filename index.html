@@ -1483,6 +1483,7 @@
       width:24px;background:linear-gradient(90deg,#BFE0FF,#79B8FF);
       box-shadow:0 0 16px rgba(121,184,255,.42);transform:scaleY(1.08);
     }
+    .language-lab .lang-top .lang-goal-ring { display:none; }
     .lang-top { display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px; }
     .lang-title { font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:850;line-height:1;color:var(--text);letter-spacing:0; }
     .lang-goal-ring {
@@ -3597,7 +3598,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-22-language-modules-vocab';
+  var APP_VERSION = '2026-08-22-language-large-vocab';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -6025,7 +6026,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var LANG_STATE_KEY = 'iue.lang.v2';
   var LANG_ACTIVE_MODULE_KEY = 'iue.lang.activeModule.v1';
   var LANG_DATA_SRC = 'data/ielts-8000.js?v=' + encodeURIComponent(APP_VERSION);
+  var LANG_MODULE_DATA_SRC = 'data/language-modules.js?v=' + encodeURIComponent(APP_VERSION);
   var langWordsPromise = null;
+  var langModuleWordsPromise = null;
   var langRuntime = { words:null, module:'ielts', mode:'preview', current:null, locked:false, map:null, mapFrame:null, drag:null, mapBoost:0, studyGestures:false, scrollWatch:false, lastScrollTop:0, lastScrollTime:0 };
   var LANG_INLINE_WORDS = {
     daily: [
@@ -6081,9 +6084,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   };
   var LANG_MODULES = {
     ielts: { id:'ielts', title:'IELTS Words', daySize:20, totalGoal:8000 },
-    daily: { id:'daily', title:'Daily English', daySize:12, totalGoal:LANG_INLINE_WORDS.daily.length },
-    engineering: { id:'engineering', title:'Engineering English', daySize:10, totalGoal:LANG_INLINE_WORDS.engineering.length },
-    spanish: { id:'spanish', title:'Basic Spanish', daySize:8, totalGoal:LANG_INLINE_WORDS.spanish.length }
+    daily: { id:'daily', title:'Daily English', daySize:20, totalGoal:2000 },
+    engineering: { id:'engineering', title:'Engineering English', daySize:20, totalGoal:2000 },
+    spanish: { id:'spanish', title:'Basic Spanish', daySize:15, totalGoal:1000 }
   };
 
   function languageTodayStamp() {
@@ -6194,10 +6197,31 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return langWordsPromise;
   }
 
+  function loadLanguageModuleWords() {
+    if (window.IUE_LANGUAGE_MODULES) return Promise.resolve(window.IUE_LANGUAGE_MODULES);
+    if (langModuleWordsPromise) return langModuleWordsPromise;
+    langModuleWordsPromise = new Promise(function(resolve, reject) {
+      var script = document.createElement('script');
+      script.src = LANG_MODULE_DATA_SRC;
+      script.async = true;
+      script.onload = function() {
+        if (window.IUE_LANGUAGE_MODULES) resolve(window.IUE_LANGUAGE_MODULES);
+        else reject(new Error('language module data is empty'));
+      };
+      script.onerror = function(){ reject(new Error('language module data failed')); };
+      document.head.appendChild(script);
+    });
+    return langModuleWordsPromise;
+  }
+
   function loadLanguageWords(moduleId) {
     moduleId = LANG_MODULES[moduleId] ? moduleId : 'ielts';
     if (moduleId === 'ielts') return loadIeltsWords();
-    return Promise.resolve(languageNormalizeInlineWords(moduleId));
+    return loadLanguageModuleWords().then(function(modules) {
+      return (modules && modules[moduleId] && modules[moduleId].length) ? modules[moduleId] : languageNormalizeInlineWords(moduleId);
+    }).catch(function() {
+      return languageNormalizeInlineWords(moduleId);
+    });
   }
 
   function languageShuffle(list) {
@@ -7508,7 +7532,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       localStorage.getItem('gt_v2') ||
       localStorage.getItem('mobius_check_v1') ||
       localStorage.getItem('memo_7u') ||
-      localStorage.getItem('iue.lang.v2')
+      localStorage.getItem('iue.lang.v2') ||
+      localStorage.getItem('iue.lang.v2.daily') ||
+      localStorage.getItem('iue.lang.v2.engineering') ||
+      localStorage.getItem('iue.lang.v2.spanish')
     );
   }
 
@@ -7525,7 +7552,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function cloudPayloadHasProgressState(payload) {
     if (!payload || !payload.items) return false;
     var items = payload.items;
-    return !!(items.gt_v2 || items.mobius_check_v1 || items.memo_7u || items['iue.activeCourses.v1'] || items['iue.lang.v2']);
+    return !!(items.gt_v2 || items.mobius_check_v1 || items.memo_7u || items['iue.activeCourses.v1'] || items['iue.lang.v2'] || items['iue.lang.v2.daily'] || items['iue.lang.v2.engineering'] || items['iue.lang.v2.spanish']);
   }
 
   function cloudCollect() {
@@ -7536,7 +7563,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       clientId:cloudClientId(),
       items:{}
     };
-    var keep = ['gt_v2', 'memo_7u', 'mobius_check_v1', 'mobius_check_schema', 'iue.activeCourses.v1', 'iue.lang.v2'];
+    var keep = ['gt_v2', 'memo_7u', 'mobius_check_v1', 'mobius_check_schema', 'iue.activeCourses.v1', 'iue.lang.v2', 'iue.lang.v2.daily', 'iue.lang.v2.engineering', 'iue.lang.v2.spanish', 'iue.lang.activeModule.v1'];
     keep.forEach(function(k){ data.items[k] = localStorage.getItem(k); });
     for (var i=0; i<localStorage.length; i++) {
       var key = localStorage.key(i);
@@ -7748,12 +7775,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         var match = html.match(/var APP_VERSION = '([^']+)'/);
         var remoteVersion = match && match[1];
         if (!remoteVersion || remoteVersion === APP_VERSION) return;
-        var active = document.activeElement;
-        var isTyping = active && /^(INPUT|TEXTAREA)$/i.test(active.tagName || '');
-        if (isTyping) return;
-        var next = new URL(location.href);
-        next.searchParams.set('v', remoteVersion);
-        location.replace(next.toString());
+        window.IUE_UPDATE_AVAILABLE = remoteVersion;
       }).catch(function(){}).finally(function(){ checking = false; });
     }
     window.addEventListener('pageshow', checkForNewVersion);
@@ -7761,8 +7783,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     document.addEventListener('visibilitychange', function() {
       if (!document.hidden) checkForNewVersion();
     });
-    setTimeout(checkForNewVersion, 1200);
-    setInterval(checkForNewVersion, 20000);
+    setTimeout(checkForNewVersion, 1800);
   }
 
   function lockAppZoom() {
