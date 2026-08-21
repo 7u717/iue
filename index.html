@@ -1249,14 +1249,14 @@
     .dash-command-badge { display:none; }
     .dash-command-num { font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:850;line-height:.9;color:var(--text);letter-spacing:0; }
     .dash-command-unit { font-size:12px;color:var(--muted);margin-top:5px; }
-    .dash-command-count.dash-hot .dash-command-num { color:var(--dash-hot-color,#fb7185); }
+    .dash-command-count.dash-hot .dash-command-num { color:var(--dash-hot-color,#fb7185);animation:dashPulse 1.8s ease-in-out infinite; }
     .dash-command-count.dash-hot .dash-command-unit { color:var(--dash-hot-soft,#fecdd3);font-weight:750; }
     .dash-command-body { display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start; }
     .dash-command-section-title { font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.02em;margin-bottom:7px; }
     .dash-queue { display:flex;flex-direction:column;gap:7px; }
     .dash-queue-row { display:grid;grid-template-columns:8px 1fr auto;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07);cursor:pointer; }
     .dash-queue-row:last-child { border-bottom:none; }
-    .dash-queue-row.dash-hot .dash-queue-time { color:var(--dash-hot-color,#fb7185); }
+    .dash-queue-row.dash-hot .dash-queue-time { color:var(--dash-hot-color,#fb7185);animation:dashPulse 1.9s ease-in-out infinite; }
     .dash-queue-row.dash-hot .dash-queue-time span { color:var(--dash-hot-soft,#fecdd3); }
     .dash-queue-dot { width:8px;height:8px;border-radius:50%; }
     .dash-queue-title { font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
@@ -1290,7 +1290,7 @@
     .dash-course-icon svg { width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round; }
     .dash-course-icon svg [fill="currentColor"] { fill:currentColor; }
     .dash-course-icon img { width:30px;height:30px;object-fit:contain;filter:drop-shadow(0 0 5px rgba(147,197,253,.32)); }
-    .dash-course-score { font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:500;line-height:1;color:var(--text);letter-spacing:0; }
+    .dash-course-score { font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:430;line-height:1;color:rgba(245,245,247,.94);letter-spacing:.01em; }
     .dash-course-code { display:none; }
     .dash-course-note { display:none; }
     .dash-mini-bar,
@@ -1315,16 +1315,16 @@
     .dash-week-active { font-size:11px;font-weight:750;color:var(--dim);white-space:nowrap; }
     .dash-days { display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-bottom:12px; }
     .dash-day {
-      height:43px;border:1px solid rgba(255,255,255,.095);border-radius:16px;background:rgba(255,255,255,.025);
+      height:40px;border:1px solid rgba(255,255,255,.075);border-radius:15px;background:rgba(255,255,255,.018);
       color:var(--dim);display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:4px;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:850;cursor:pointer;
+      gap:4px;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:800;cursor:pointer;
       transition:background .18s,border-color .18s,transform .18s,color .18s,box-shadow .18s;
     }
     .dash-day:active { transform:scale(.965); }
     .dash-day.active {
-      color:var(--text);border-color:rgba(29,155,240,.58);
-      background:linear-gradient(180deg,rgba(29,155,240,.22),rgba(29,155,240,.055));
-      box-shadow:0 0 0 1px rgba(29,155,240,.1) inset,0 0 18px rgba(29,155,240,.12);
+      color:var(--text);border-color:rgba(147,197,253,.42);
+      background:linear-gradient(180deg,rgba(29,155,240,.16),rgba(29,155,240,.035));
+      box-shadow:0 0 0 1px rgba(147,197,253,.055) inset,0 0 14px rgba(29,155,240,.09);
     }
     .dash-day-dots { display:flex;gap:3px;height:5px;align-items:center;justify-content:center; }
     .dash-day-dots i { width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.72; }
@@ -1333,7 +1333,7 @@
     .dash-times span { position:absolute;right:0;transform:translateY(-50%); }
     .dash-events {
       position:relative;min-height:292px;border-left:1px solid rgba(255,255,255,.08);
-      background:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px) 0 0/100% var(--dash-hour-gap,44px);
+      background:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/100% var(--dash-hour-gap,44px);
       overflow:hidden;
     }
     .dash-class {
@@ -1349,10 +1349,32 @@
     .dash-class svg [fill="currentColor"] { fill: currentColor; }
     .dash-class img { width:23px;height:23px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(147,197,253,.38)); }
     .dash-class.deadline { border-color:rgba(255,255,255,.2);background:linear-gradient(145deg,rgba(255,255,255,.085),rgba(255,255,255,.035)); }
+    .dash-class.dash-hot { border-color:color-mix(in srgb, var(--dash-hot-color,#fb7185) 42%, rgba(255,255,255,.15));box-shadow:0 8px 22px rgba(0,0,0,.18),0 0 18px color-mix(in srgb, var(--dash-hot-color,#fb7185) 14%, transparent); }
     .dash-class-title { font-size:12px;font-weight:800;line-height:1.12;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
     .dash-class-sub { font-size:10.5px;line-height:1.12;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
     .dash-class-empty { color:var(--muted);font-size:13px;padding:12px 0 0 10px;line-height:1.4; }
     @keyframes dashClassIn { from { opacity:0;transform:translateY(8px); } to { opacity:1;transform:none; } }
+    @keyframes dashPulse { 0%,100% { opacity:1;transform:scale(1); } 50% { opacity:.78;transform:scale(.985); } }
+
+    .dash-grade-sheet {
+      position:fixed;left:14px;right:14px;bottom:88px;z-index:260;
+      border:1px solid rgba(255,255,255,.12);border-radius:26px;
+      background:rgba(16,16,18,.94);box-shadow:0 22px 60px rgba(0,0,0,.58);
+      backdrop-filter:blur(26px) saturate(1.18);-webkit-backdrop-filter:blur(26px) saturate(1.18);
+      padding:16px;animation:dashSheetIn .2s ease both;
+    }
+    .dash-grade-sheet-backdrop { position:fixed;inset:0;z-index:250;background:rgba(0,0,0,.18);animation:dashFadeIn .16s ease both; }
+    .dash-grade-sheet-head { display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:13px; }
+    .dash-grade-sheet-title { font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:750;color:var(--text);letter-spacing:0; }
+    .dash-grade-sheet-close { width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.055);color:var(--muted);font-size:18px;line-height:1; }
+    .dash-grade-sheet-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px; }
+    .dash-grade-sheet-stat { border:1px solid rgba(255,255,255,.08);border-radius:16px;background:rgba(255,255,255,.035);padding:10px 9px;min-width:0; }
+    .dash-grade-sheet-stat strong { display:block;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:650;color:var(--text);line-height:1; }
+    .dash-grade-sheet-stat span { display:block;margin-top:5px;font-size:10px;font-weight:750;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    .dash-grade-sheet-next { font-size:12px;line-height:1.45;color:var(--muted);border-top:1px solid rgba(255,255,255,.08);padding-top:11px; }
+    .dash-grade-sheet-action { margin-top:13px;width:100%;height:39px;border-radius:999px;border:0;background:var(--text);color:#000;font-size:13px;font-weight:800; }
+    @keyframes dashSheetIn { from { opacity:0;transform:translateY(12px) scale(.985); } to { opacity:1;transform:none; } }
+    @keyframes dashFadeIn { from { opacity:0; } to { opacity:1; } }
 
     /* LANGUAGE LAB */
     .language-lab { padding-top:4px;display:flex;flex-direction:column;gap:14px; }
@@ -1433,9 +1455,9 @@
     .course-library { display:grid;grid-template-columns:minmax(0,1fr);gap:10px; }
     .course-filter-bar {
       display: flex;
-      gap: 7px;
+      gap: 6px;
       overflow-x: auto;
-      padding: 2px 0 12px;
+      padding: 0 0 10px;
       margin-top: -2px;
       -webkit-overflow-scrolling: touch;
     }
@@ -1445,12 +1467,15 @@
       border-radius: 999px;
       background: var(--surface2);
       color: var(--muted);
-      padding: 7px 11px;
-      font-size: 11px;
+      padding: 5px 9px;
+      font-size: 10.5px;
       font-weight: 800;
       white-space: nowrap;
       cursor: pointer;
+      min-height:28px;
+      transition:transform .16s ease, background .16s ease, border-color .16s ease, color .16s ease;
     }
+    .course-filter:active { transform:scale(.96); }
     .course-filter.active {
       color: #06121f;
       border-color: rgba(147,197,253,.9);
@@ -1481,6 +1506,8 @@
     }
     .course-action-btn.primary { background:#07111c;border-color:rgba(29,155,240,.45);color:#93C5FD; }
     .course-action-btn:disabled { opacity:.35;cursor:not-allowed; }
+    .course-library-row.just-added { animation:courseAddPop .42s ease both; }
+    @keyframes courseAddPop { 0% { transform:scale(.985);box-shadow:0 0 0 rgba(147,197,253,0); } 42% { transform:scale(1.012);box-shadow:0 0 24px rgba(147,197,253,.14); } 100% { transform:none;box-shadow:none; } }
     .course-trend-list { border-top:1px solid var(--border); }
     .course-trend {
       display:flex;align-items:center;gap:12px;padding:15px 0;
@@ -3356,7 +3383,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-21-math-icon-centered';
+  var APP_VERSION = '2026-08-21-dashboard-interactions';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -4029,6 +4056,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     showCourse(active && active.id === 'sec-myplan' ? 'dashboard' : 'myplan');
   }
 
+  var lastAddedCourseId = null;
+
   function setCourseActive(id, active) {
     var course = courseById(id);
     if (!course) return;
@@ -4037,6 +4066,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (active) {
       if (isActiveCourse(id) || activeCourseIds.length >= ACTIVE_COURSE_LIMIT) return;
       activeCourseIds.push(id);
+      lastAddedCourseId = id;
     } else {
       activeCourseIds = activeCourseIds.filter(function(courseId){ return courseId !== id; });
       if (!activeCourseIds.length) activeCourseIds = ['math'];
@@ -4188,7 +4218,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     lib.innerHTML = sortedCatalog.map(function(c){
       var active = isActiveCourse(c.id);
       var disabled = !active && activeCourseIds.length >= ACTIVE_COURSE_LIMIT;
-      var row = '<div class="course-library-row '+(active ? '' : 'archived')+'">'
+      var row = '<div class="course-library-row '+(active ? '' : 'archived')+' '+(lastAddedCourseId === c.id ? 'just-added' : '')+'">'
         + courseIconMarkup(c, 'course-library-icon')
         +'<div class="course-library-main" onclick="openCourse(\''+c.id+'\')">'
         +'<div class="course-library-title" style="color:'+c.color+';">'+c.code+'</div>'
@@ -4201,6 +4231,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         +'</div>';
       return row + (selectedPreviewCourseId === c.id ? coursePreviewMarkup(c) : '');
     }).join('');
+    if (lastAddedCourseId) setTimeout(function(){ lastAddedCourseId = null; }, 450);
     courseManagerDirty = false;
   }
 
@@ -5207,21 +5238,58 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return match ? parseInt(match[1], 10) : 80;
   }
 
-  function gtNeedMarkup(course, total, doneW, color) {
+  function gtNeedText(course, total, doneW) {
     var target = gtTargetNumber(course);
     var remainW = Math.max(0, 100 - doneW);
     var need = remainW > 0 ? Math.max(0, (target - total) / remainW * 100) : 0;
-    var text;
     if (total >= target) {
-      text = '目标 ' + target + '+ 已达到，后面稳住就行。';
-    } else if (remainW <= 0) {
-      text = '目标 ' + target + '+，当前还差 ' + (target - total).toFixed(1) + ' 分。';
-    } else if (need > 100) {
-      text = '目标 ' + target + '+ 已经很难，只看下一项先追回一点。';
-    } else {
-      text = '目标 ' + target + '+：剩余 ' + remainW + '% 平均要拿 ' + need.toFixed(0) + '%。';
+      return '目标 ' + target + '+ 已达到，后面稳住就行。';
     }
-    return '<div class="course-preview-rule" style="margin-top:10px;"><span style="color:'+color+';font-weight:800;">Target</span> · '+text+'</div>';
+    if (remainW <= 0) {
+      return '目标 ' + target + '+，当前还差 ' + (target - total).toFixed(1) + ' 分。';
+    }
+    if (need > 100) {
+      return '目标 ' + target + '+ 已经很难，只看下一项先追回一点。';
+    }
+    return '目标 ' + target + '+：剩余 ' + remainW + '% 平均要拿 ' + need.toFixed(0) + '%。';
+  }
+
+  function gtNeedMarkup(course, total, doneW, color) {
+    return '<div class="course-preview-rule" id="gt-need-'+course+'" style="margin-top:10px;"><span style="color:'+color+';font-weight:800;">Target</span> · <span class="gt-need-text">'+gtNeedText(course, total, doneW)+'</span></div>';
+  }
+
+  function gtCourseCalc(course, data) {
+    var cfg = gtConfig(course);
+    var total = 0, doneW = 0, nextItem = null;
+    if (!cfg || !cfg.items || !cfg.items.length) return { cfg:cfg, total:0, doneW:0, remaining:100, nextItem:null };
+    cfg.items.forEach(function(it) {
+      if (it.mobius) {
+        var mc = gtMobiusCalc(data);
+        if (mc.count > 0) { total += mc.contrib; doneW += 10; }
+      } else {
+        var d = data[it.id] || {};
+        if (d.done) {
+          total += (d.s && d.m && +d.m > 0) ? (+d.s / +d.m) * it.w : it.w;
+          doneW += it.w;
+        } else if (!nextItem) {
+          nextItem = it;
+        }
+      }
+    });
+    return { cfg:cfg, total:total, doneW:doneW, remaining:Math.max(0, 100 - doneW), nextItem:nextItem };
+  }
+
+  function gtUpdateHeader(course) {
+    var calc = gtCourseCalc(course, gtLoad());
+    if (!calc.cfg) return;
+    var totalEl = document.getElementById('gt-total-' + course);
+    var pendingEl = document.getElementById('gt-pending-' + course);
+    var fillEl = document.getElementById('gt-fill-' + course);
+    var needEl = document.querySelector('#gt-need-' + course + ' .gt-need-text');
+    if (totalEl) totalEl.textContent = calc.total.toFixed(1) + '%';
+    if (pendingEl) pendingEl.textContent = calc.doneW > 0 ? calc.remaining + '% 待完成' : '点击考核项目标记完成';
+    if (fillEl) fillEl.style.width = Math.min(calc.total, 100) + '%';
+    if (needEl) needEl.textContent = gtNeedText(course, calc.total, calc.doneW);
   }
 
   function gtLoad() { try { return JSON.parse(localStorage.getItem('gt_v2')||'{}'); } catch(e) { return {}; } }
@@ -5345,30 +5413,17 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     }
     var data = gtLoad();
 
-    // Calculate progress total
-    var total = 0, doneW = 0;
-    for (var j=0; j<cfg.items.length; j++) {
-      var itj = cfg.items[j];
-      if (itj.mobius) {
-        var mc = gtMobiusCalc(data);
-        if (mc.count > 0) { total += mc.contrib; doneW += 10; }
-      } else {
-        var dj = data[itj.id]||{};
-        if (dj.done) {
-          total += (dj.s && dj.m && +dj.m>0) ? (+dj.s/+dj.m)*itj.w : itj.w;
-          doneW += itj.w;
-        }
-      }
-    }
+    var calc = gtCourseCalc(course, data);
+    var total = calc.total, doneW = calc.doneW;
 
     // Progress bar header
     var html = '<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);">'
       +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">'
-      +'<div style="font-family:Space Grotesk,sans-serif;font-size:22px;font-weight:700;color:'+cfg.color+'">'+total.toFixed(1)+'%</div>'
-      +'<div style="font-size:12px;color:var(--muted);">'+(doneW>0 ? (100-doneW)+'% 待完成' : '点击考核项目标记完成')+'</div>'
+      +'<div id="gt-total-'+course+'" style="font-family:Space Grotesk,sans-serif;font-size:22px;font-weight:700;color:'+cfg.color+'">'+total.toFixed(1)+'%</div>'
+      +'<div id="gt-pending-'+course+'" style="font-size:12px;color:var(--muted);">'+(doneW>0 ? (100-doneW)+'% 待完成' : '点击考核项目标记完成')+'</div>'
       +'</div>'
       +'<div style="height:6px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;">'
-      +'<div style="height:100%;border-radius:999px;'+courseFillCss(course, cfg.color)+'width:'+Math.min(total,100)+'%;transition:width .4s;"></div>'
+      +'<div id="gt-fill-'+course+'" style="height:100%;border-radius:999px;'+courseFillCss(course, cfg.color)+'width:'+Math.min(total,100)+'%;transition:width .4s;"></div>'
       +'</div>'
       +gtNeedMarkup(course, total, doneW, cfg.color)
       +'</div>';
@@ -5427,7 +5482,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (!data[id]) data[id] = {};
     data[id][field] = el.value;
     gtSave(data);
-    renderGT(course);
+    gtUpdateHeader(course);
     renderDashboard();
   }
 
@@ -5456,7 +5511,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (!data[key]) data[key] = {};
     data[key][field] = el.value;
     gtSave(data);
-    renderGT('math');
+    gtUpdateHeader('math');
     renderDashboard();
   }
 
@@ -5605,6 +5660,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function dashUrgencyStyle(diff) {
     if (diff > DASH_WARNING_MS) return '';
+    return ' style="' + dashUrgencyVars(diff) + '"';
+  }
+
+  function dashUrgencyVars(diff) {
+    if (diff > DASH_WARNING_MS) return '';
     var stepMs = 2*3600*1000;
     var bucket = Math.min(23, Math.max(0, Math.floor((DASH_WARNING_MS - diff) / stepMs)));
     var t = bucket / 23;
@@ -5612,28 +5672,48 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var end = [255,59,48];
     var rgb = start.map(function(v, i){ return Math.round(v + (end[i] - v) * t); });
     var soft = start.map(function(v, i){ return Math.round(v + (end[i] - v) * Math.min(1, t * .68)); });
-    return ' style="--dash-hot-color:rgb('+rgb.join(',')+');--dash-hot-soft:rgb('+soft.join(',')+');"';
+    return '--dash-hot-color:rgb('+rgb.join(',')+');--dash-hot-soft:rgb('+soft.join(',')+');';
   }
 
   function dashGradeSummary(course, data) {
-    var cfg = gtConfig(course);
-    var total = 0, doneW = 0, nextItem = null;
-    if (!cfg || !cfg.items) return { total: 0, doneW: 0, remaining: 100, nextItem: null };
-    cfg.items.forEach(function(it) {
-      if (it.mobius) {
-        var mc = gtMobiusCalc(data);
-        if (mc.count > 0) { total += mc.contrib; doneW += 10; }
-      } else {
-        var d = data[it.id] || {};
-        if (d.done) {
-          total += (d.s && d.m && +d.m > 0) ? (+d.s / +d.m) * it.w : it.w;
-          doneW += it.w;
-        } else if (!nextItem) {
-          nextItem = it;
-        }
-      }
-    });
-    return { total: total, doneW: doneW, remaining: Math.max(0, 100 - doneW), nextItem: nextItem };
+    return gtCourseCalc(course, data);
+  }
+
+  function closeDashGradeSheet() {
+    var sheet = document.getElementById('dash-grade-sheet');
+    var backdrop = document.getElementById('dash-grade-sheet-backdrop');
+    if (sheet) sheet.remove();
+    if (backdrop) backdrop.remove();
+  }
+
+  function showDashGradeSheet(course) {
+    var data = gtLoad();
+    var s = dashGradeSummary(course, data);
+    var color = courseColor(course);
+    var code = gtCourseCode(course) || dashCourseName(course);
+    var next = s.nextItem ? dashCleanName(s.nextItem.label) + ' · ' + s.nextItem.w + '%' : '没有下一项，保持复盘就好。';
+    closeDashGradeSheet();
+    var backdrop = document.createElement('div');
+    backdrop.id = 'dash-grade-sheet-backdrop';
+    backdrop.className = 'dash-grade-sheet-backdrop';
+    backdrop.onclick = closeDashGradeSheet;
+    var sheet = document.createElement('div');
+    sheet.id = 'dash-grade-sheet';
+    sheet.className = 'dash-grade-sheet';
+    sheet.innerHTML =
+      '<div class="dash-grade-sheet-head">'
+      + '<div class="dash-grade-sheet-title" style="color:'+color+';">'+escapeHtml(code)+'</div>'
+      + '<button class="dash-grade-sheet-close" onclick="closeDashGradeSheet()">×</button>'
+      + '</div>'
+      + '<div class="dash-grade-sheet-grid">'
+      + '<div class="dash-grade-sheet-stat"><strong>'+Math.round(s.total)+'%</strong><span>current</span></div>'
+      + '<div class="dash-grade-sheet-stat"><strong>'+Math.round(s.doneW)+'%</strong><span>completed</span></div>'
+      + '<div class="dash-grade-sheet-stat"><strong>'+Math.round(s.remaining)+'%</strong><span>remaining</span></div>'
+      + '</div>'
+      + '<div class="dash-grade-sheet-next"><span style="color:'+color+';font-weight:800;">Next</span> · '+escapeHtml(next)+'<br>'+escapeHtml(gtNeedText(course, s.total, s.doneW))+'</div>'
+      + '<button class="dash-grade-sheet-action" onclick="closeDashGradeSheet();showCourse(\''+course+'\')">Open tracker</button>';
+    document.body.appendChild(backdrop);
+    document.body.appendChild(sheet);
   }
 
   function dashTodayKey() {
@@ -5718,9 +5798,14 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   var DASH_WEEK_DAYS = ['MON','TUE','WED','THU','FRI'];
+  function dashDateStamp(date) {
+    var d = date || new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
   var dashboardScheduleDay = (function(){
     var saved = localStorage.getItem('iue.dashboardDay.v1');
-    if (DASH_WEEK_DAYS.indexOf(saved) > -1) return saved;
+    var savedDate = localStorage.getItem('iue.dashboardDayDate.v1');
+    if (savedDate === dashDateStamp() && DASH_WEEK_DAYS.indexOf(saved) > -1) return saved;
     var today = DASH_WEEK_DAYS[(new Date().getDay() + 6) % 7];
     return DASH_WEEK_DAYS.indexOf(today) > -1 ? today : 'MON';
   })();
@@ -5729,7 +5814,19 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (DASH_WEEK_DAYS.indexOf(day) === -1) return;
     dashboardScheduleDay = day;
     try { localStorage.setItem('iue.dashboardDay.v1', day); } catch(e) {}
+    try { localStorage.setItem('iue.dashboardDayDate.v1', dashDateStamp()); } catch(e) {}
     renderDashboard();
+  }
+
+  function dashAutoScheduleDay(rowsByDay, now) {
+    var today = DASH_WEEK_DAYS[(now.getDay() + 6) % 7];
+    if (DASH_WEEK_DAYS.indexOf(today) > -1 && (rowsByDay[today] || []).length) return today;
+    var todayIndex = Math.max(0, DASH_WEEK_DAYS.indexOf(today));
+    for (var offset = 1; offset <= DASH_WEEK_DAYS.length; offset++) {
+      var day = DASH_WEEK_DAYS[(todayIndex + offset) % DASH_WEEK_DAYS.length];
+      if ((rowsByDay[day] || []).length) return day;
+    }
+    return DASH_WEEK_DAYS.indexOf(today) > -1 ? today : 'MON';
   }
 
   function dashCourseFromTimetable(row) {
@@ -5784,6 +5881,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         color: d.color,
         nav: d.nav,
         link: d.link,
+        diff: d.diff,
         isDeadline: true
       });
     });
@@ -5792,6 +5890,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         return (dashTimetableMinutes(a.time) || 0) - (dashTimetableMinutes(b.time) || 0);
       });
     });
+    if (localStorage.getItem('iue.dashboardDayDate.v1') !== dashDateStamp(now)) {
+      dashboardScheduleDay = dashAutoScheduleDay(rowsByDay, now);
+    }
     var dayRows = rowsByDay[dashboardScheduleDay] || [];
     var dayButtons = DASH_WEEK_DAYS.map(function(day) {
       var dots = (rowsByDay[day] || []).slice(0,4).map(function(){ return '<i></i>'; }).join('');
@@ -5830,7 +5931,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var kindText = row.kind || '';
       if (row.isDeadline && kindText && new RegExp('\\b'+kindText+'\\b', 'i').test(row.title || '')) kindText = '';
       var titleText = (row.title || '') + (kindText ? ' ' + kindText : '');
-      return '<div class="dash-class '+(row.isDeadline ? 'deadline' : '')+'" style="top:'+top.toFixed(1)+'px;height:'+height.toFixed(1)+'px;color:'+color+';" onclick="'+action+'">'
+      var hot = row.diff && row.diff <= DASH_WARNING_MS;
+      var hotVars = hot ? dashUrgencyVars(row.diff) : '';
+      return '<div class="dash-class '+(row.isDeadline ? 'deadline' : '')+' '+(hot ? 'dash-hot' : '')+'" style="'+hotVars+'top:'+top.toFixed(1)+'px;height:'+height.toFixed(1)+'px;color:'+color+';" onclick="'+action+'">'
         + courseIconSvg(courseIconType(iconCourse))
         + '<div><div class="dash-class-title">'+escapeHtml(titleText)+'</div>'
         + '<div class="dash-class-sub">'+escapeHtml(dashTimetableRange(row) + ' · ' + row.loc)+'</div></div>'
@@ -5919,7 +6022,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var hasScore = s.doneW > 0 || s.total > 0;
       var ring = hasScore ? Math.max(0, Math.min(100, s.total)) : 0;
       var dash = (ring / 100 * 150.8).toFixed(1);
-      return '<div class="dash-course" onclick="showCourse(\''+course+'\')" aria-label="'+escapeHtml(label)+' grade snapshot">'
+      return '<div class="dash-course" onclick="showDashGradeSheet(\''+course+'\')" aria-label="'+escapeHtml(label)+' grade snapshot">'
         +'<div class="dash-course-ring" style="--ring-color:'+color+';--ring-dash:'+dash+';">'
         +'<svg class="dash-course-ring-svg" viewBox="0 0 58 58" aria-hidden="true">'
         +'<circle class="dash-course-ring-track" cx="29" cy="29" r="24"></circle>'
