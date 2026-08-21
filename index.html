@@ -1420,14 +1420,18 @@
     @keyframes dashFadeIn { from { opacity:0; } to { opacity:1; } }
 
     /* LANGUAGE LAB */
-    .language-lab { padding-top:4px;display:flex;flex-direction:column;gap:12px; }
+    .language-lab { padding-top:4px;display:flex;flex-direction:column;gap:12px;min-height:calc(100dvh - var(--header-h) - var(--nav-h) - 24px); }
+    .lang-home { position:relative;display:flex;flex-direction:column;gap:12px; }
+    .language-lab.studying .lang-home { display:none; }
+    .language-lab:not(.studying) #lang-stage { display:none; }
+    .language-lab.studying #lang-stage { display:flex;min-height:calc(100dvh - var(--header-h) - var(--nav-h) - 24px); }
     .lang-network {
-      position:relative;height:286px;border:1px solid var(--border);border-radius:22px;overflow:hidden;
+      position:relative;height:318px;margin:-12px -12px 0;border:0;border-radius:0;overflow:hidden;
       background:
         radial-gradient(circle at 38% 28%, rgba(147,197,253,.13), transparent 32%),
         radial-gradient(circle at 78% 72%, rgba(96,165,250,.08), transparent 34%),
-        linear-gradient(180deg,#070b10,#030405);
-      box-shadow:var(--shadow-sm);touch-action:none;
+        linear-gradient(180deg,#05080d 0%,#020304 82%,#000 100%);
+      box-shadow:none;touch-action:none;
     }
     .lang-network::after {
       content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 28%,rgba(0,0,0,.32));pointer-events:none;
@@ -1451,8 +1455,9 @@
       color:var(--muted);font-size:13px;font-weight:750;text-align:center;line-height:1.45;
     }
     .lang-panel {
-      border:1px solid var(--border);border-radius:18px;background:var(--surface);
-      padding:14px;box-shadow:var(--shadow-sm);
+      border:1px solid rgba(255,255,255,.08);border-radius:24px;background:linear-gradient(180deg,rgba(20,20,20,.92),rgba(10,10,10,.94));
+      padding:15px;box-shadow:0 18px 42px rgba(0,0,0,.28);
+      margin-top:-42px;z-index:3;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
     }
     .lang-top { display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px; }
     .lang-title { font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:850;line-height:1;color:var(--text);letter-spacing:0; }
@@ -1467,12 +1472,14 @@
     .lang-total-row { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px; }
     .lang-progress { height:4px;border-radius:999px;background:#252525;overflow:hidden;margin-top:10px; }
     .lang-progress-fill { height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#EFF6FF,var(--math-color));transition:width .35s ease; }
-    .lang-stats { display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px; }
-    .lang-stat { border:1px solid rgba(255,255,255,.07);border-radius:13px;background:rgba(255,255,255,.025);padding:8px;min-width:0; }
-    .lang-stat strong { display:block;font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:750;color:var(--text);line-height:1; }
-    .lang-stat span { display:block;margin-top:5px;color:var(--muted);font-size:10px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
-    .lang-controls { display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:10px; }
-    .lang-modes { display:grid;grid-template-columns:repeat(2,1fr);gap:6px; }
+    .lang-stats { display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px; }
+    .lang-stat { border:0;border-radius:0;background:transparent;padding:0;min-width:0; }
+    .lang-stat strong { display:block;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:var(--text);line-height:1; }
+    .lang-stat span { display:block;margin-top:6px;color:var(--muted);font-size:10px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    .lang-total-row { display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07); }
+    .lang-total-row .lang-stat { flex:1; }
+    .lang-controls { display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:14px; }
+    .lang-modes { display:grid;grid-template-columns:repeat(2,1fr);gap:8px; }
     .lang-mode,
     .lang-icon-btn,
     .lang-choice,
@@ -1482,8 +1489,8 @@
       transition:transform .16s ease,border-color .16s ease,background .16s ease,color .16s ease,opacity .16s ease;
     }
     .lang-mode {
-      height:38px;border-radius:14px;border:1px solid var(--border);background:var(--surface2);
-      color:var(--muted);font-size:12px;font-weight:850;
+      height:44px;border-radius:18px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);
+      color:var(--muted);font-size:13px;font-weight:850;
     }
     .lang-mode.active { color:#06121f;border-color:rgba(147,197,253,.86);background:linear-gradient(135deg,#EFF6FF,#93C5FD); }
     .lang-mode:active,
@@ -1491,35 +1498,40 @@
     .lang-choice:active,
     .lang-primary:active,
     .lang-stepper button:active { transform:scale(.97); }
-    .lang-stepper { display:flex;align-items:center;gap:5px;border:1px solid var(--border);border-radius:12px;background:var(--surface2);padding:3px; }
-    .lang-stepper button { width:28px;height:28px;border:0;border-radius:9px;background:rgba(255,255,255,.045);color:var(--text);font-size:15px;font-weight:850; }
+    .lang-stepper { display:flex;align-items:center;gap:5px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:rgba(255,255,255,.035);padding:4px; }
+    .lang-stepper button { width:34px;height:34px;border:0;border-radius:14px;background:rgba(255,255,255,.05);color:var(--text);font-size:16px;font-weight:850; }
     .lang-stepper span { min-width:28px;text-align:center;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:850;color:var(--text); }
     .lang-card {
-      position:relative;overflow:hidden;border:1px solid var(--border);border-radius:20px;background:linear-gradient(180deg,#111,#0b0b0b);
-      padding:16px;box-shadow:var(--shadow-sm);animation:langCardIn .22s ease both;
+      position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.1);border-radius:24px;background:linear-gradient(180deg,#15181d,#08090b);
+      padding:16px;box-shadow:var(--shadow-sm);animation:langCardIn .22s ease both;width:100%;min-height:calc(100dvh - var(--header-h) - var(--nav-h) - 28px);
+      display:flex;flex-direction:column;
     }
-    .lang-card::before { content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(147,197,253,.12),transparent 34%);pointer-events:none; }
-    .lang-card-inner { position:relative;z-index:1; }
+    .lang-card::before { content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(147,197,253,.16),transparent 34%);pointer-events:none; }
+    .lang-card-inner { position:relative;z-index:1;display:flex;flex-direction:column;flex:1; }
     .lang-card-head { display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px; }
     .lang-pill { border:1px solid var(--border);border-radius:999px;padding:5px 9px;color:var(--muted);font-size:10.5px;font-weight:850;background:rgba(255,255,255,.035); }
-    .lang-word { font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:850;line-height:1.02;color:var(--text);letter-spacing:0;overflow-wrap:anywhere; }
+    .lang-word { font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:850;line-height:1.02;color:#f5f5f7;letter-spacing:0;overflow-wrap:anywhere; }
     .lang-phonetic { margin-top:8px;color:var(--math-color);font-size:13px;font-weight:750;min-height:18px; }
     .lang-meaning { margin-top:13px;color:var(--text);font-size:15px;font-weight:700;line-height:1.42; }
     .lang-definition { margin-top:8px;color:var(--muted);font-size:12.5px;line-height:1.42; }
     .lang-example { margin-top:13px;padding:12px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.06); }
     .lang-example-en { color:rgba(245,245,247,.9);font-size:13px;font-weight:650;line-height:1.42; }
     .lang-example-cn { margin-top:6px;color:var(--muted);font-size:12px;line-height:1.4; }
-    .lang-question { font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;line-height:1.16;color:var(--text);overflow-wrap:anywhere; }
+    .lang-question { font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;line-height:1.16;color:#f5f5f7;overflow-wrap:anywhere; }
     .lang-answer-state { min-height:18px;margin-top:10px;color:var(--muted);font-size:12px;font-weight:800;text-align:center; }
     .lang-card-actions { display:flex;gap:7px;margin-top:14px; }
     .lang-icon-btn,
     .lang-primary { border:1px solid var(--border);border-radius:999px;background:var(--surface2);color:var(--text);font-size:12px;font-weight:850; }
     .lang-icon-btn { width:38px;height:36px;display:grid;place-items:center; }
     .lang-primary { flex:1;height:36px;background:var(--text);border-color:var(--text);color:#000; }
+    .lang-study-back { width:38px;height:36px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);color:var(--text);font-size:18px;font-weight:850; }
+    .lang-swipe-deck { flex:1;display:flex;flex-direction:column;justify-content:center;transition:transform .18s ease,opacity .18s ease;will-change:transform; }
+    .lang-swipe-deck.swiping { transition:none; }
+    .lang-card-actions { margin-top:auto;padding-top:18px; }
     .lang-choices { display:grid;grid-template-columns:1fr;gap:8px;margin-top:14px; }
     .lang-choice {
       min-height:45px;text-align:left;border:1px solid rgba(255,255,255,.09);border-radius:14px;background:rgba(255,255,255,.035);
-      color:var(--text);padding:10px 12px;font-size:13px;font-weight:750;line-height:1.25;
+      color:#f5f5f7;padding:10px 12px;font-size:13px;font-weight:750;line-height:1.25;
     }
     .lang-choice.correct { border-color:rgba(134,239,172,.5);background:rgba(34,197,94,.13);color:#bbf7d0; }
     .lang-choice.wrong { border-color:rgba(248,113,113,.5);background:rgba(239,68,68,.12);color:#fecaca; }
@@ -1894,40 +1906,42 @@
 <!-- ===== TIMETABLE ===== -->
 <div class="course-section" id="sec-timetable">
   <div class="language-lab">
-    <div class="lang-network" id="lang-network">
-      <svg class="lang-map-svg" id="lang-map-svg" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
-      <div class="lang-map-empty" id="lang-map-empty">Loading words...</div>
-    </div>
+    <div class="lang-home">
+      <div class="lang-network" id="lang-network">
+        <svg class="lang-map-svg" id="lang-map-svg" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+        <div class="lang-map-empty" id="lang-map-empty">Loading words...</div>
+      </div>
 
-    <div class="lang-panel">
-      <div class="lang-top">
-        <div>
-          <div class="lang-title">IELTS Words</div>
-          <div class="lang-pill" id="lang-day-label">Today</div>
+      <div class="lang-panel">
+        <div class="lang-top">
+          <div>
+            <div class="lang-title">IELTS Words</div>
+            <div class="lang-pill" id="lang-day-label">Today</div>
+          </div>
+          <div class="lang-goal-ring" id="lang-goal-ring">
+            <div class="lang-goal-ring-inner" id="lang-progress-count">0/0<span>today</span></div>
+          </div>
         </div>
-        <div class="lang-goal-ring" id="lang-goal-ring">
-          <div class="lang-goal-ring-inner" id="lang-progress-count">0/0<span>today</span></div>
+        <div class="lang-progress"><div class="lang-progress-fill" id="lang-progress-fill"></div></div>
+        <div class="lang-stats">
+          <div class="lang-stat"><strong id="lang-new-count">0</strong><span>today target</span></div>
+          <div class="lang-stat"><strong id="lang-review-count">0</strong><span>review target</span></div>
+          <div class="lang-stat"><strong id="lang-wrong-count">0</strong><span>weak words</span></div>
         </div>
-      </div>
-      <div class="lang-progress"><div class="lang-progress-fill" id="lang-progress-fill"></div></div>
-      <div class="lang-stats">
-        <div class="lang-stat"><strong id="lang-new-count">0</strong><span>today target</span></div>
-        <div class="lang-stat"><strong id="lang-review-count">0</strong><span>review target</span></div>
-        <div class="lang-stat"><strong id="lang-wrong-count">0</strong><span>weak words</span></div>
-      </div>
-      <div class="lang-total-row">
-        <div class="lang-stat"><strong id="lang-total-done">0</strong><span>total done</span></div>
-        <div class="lang-stat"><strong id="lang-total-goal">8000</strong><span>total goal</span></div>
-      </div>
-      <div class="lang-controls">
-        <div class="lang-modes">
-          <button class="lang-mode active" data-lang-tab="preview" onclick="setLanguageMode('preview')">New</button>
-          <button class="lang-mode" data-lang-tab="review" onclick="setLanguageMode('review')">Review</button>
+        <div class="lang-total-row">
+          <div class="lang-stat"><strong id="lang-total-done">0</strong><span>total done</span></div>
+          <div class="lang-stat"><strong id="lang-total-goal">8000</strong><span>total goal</span></div>
         </div>
-        <div class="lang-stepper" aria-label="daily word count">
-          <button onclick="changeLanguageDaily(-5)" aria-label="decrease daily words">−</button>
-          <span id="lang-daily-size">20</span>
-          <button onclick="changeLanguageDaily(5)" aria-label="increase daily words">+</button>
+        <div class="lang-controls">
+          <div class="lang-modes">
+            <button class="lang-mode active" data-lang-tab="preview" onclick="setLanguageMode('preview')">New</button>
+            <button class="lang-mode" data-lang-tab="review" onclick="setLanguageMode('review')">Review</button>
+          </div>
+          <div class="lang-stepper" aria-label="daily word count">
+            <button onclick="changeLanguageDaily(-5)" aria-label="decrease daily words">−</button>
+            <span id="lang-daily-size">20</span>
+            <button onclick="changeLanguageDaily(5)" aria-label="increase daily words">+</button>
+          </div>
         </div>
       </div>
     </div>
@@ -3485,7 +3499,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-22-ielts-weak-map';
+  var APP_VERSION = '2026-08-22-language-fluid-study';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5913,7 +5927,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var LANG_STATE_KEY = 'iue.lang.v2';
   var LANG_DATA_SRC = 'data/ielts-8000.js?v=' + encodeURIComponent(APP_VERSION);
   var langWordsPromise = null;
-  var langRuntime = { words:null, mode:'preview', current:null, locked:false, map:null, mapFrame:null, drag:null };
+  var langRuntime = { words:null, mode:'preview', current:null, locked:false, map:null, mapFrame:null, drag:null, mapBoost:0, studyGestures:false, scrollWatch:false, lastScrollTop:0, lastScrollTime:0 };
 
   function languageTodayStamp() {
     return dashDateStamp(new Date());
@@ -5923,6 +5937,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return {
       daySize: 20,
       nextIndex: 0,
+      view: 'home',
       activeMode: 'preview',
       plan: null,
       carryWrong: [],
@@ -5942,6 +5957,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       });
       parsed.daySize = Math.max(5, Math.min(100, Number(parsed.daySize) || 20));
       parsed.nextIndex = Math.max(0, Number(parsed.nextIndex) || 0);
+      parsed.view = parsed.view || 'home';
       parsed.activeMode = parsed.activeMode || 'preview';
       parsed.carryWrong = Array.isArray(parsed.carryWrong) ? parsed.carryWrong : [];
       parsed.wrongStats = parsed.wrongStats && typeof parsed.wrongStats === 'object' ? parsed.wrongStats : {};
@@ -6152,11 +6168,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var index = Math.min((state.plan.previewIndex || 0) + 1, ids.length);
     languageRenderCard(
       '<div class="lang-card"><div class="lang-card-inner">'
-        + '<div class="lang-card-head"><div class="lang-pill">Preview ' + index + '/' + ids.length + '</div>' + languageSpeakButton('Play', word.word) + '</div>'
-        + languageEntryHtml(word)
+        + '<div class="lang-card-head"><button class="lang-study-back" onclick="languageSetView(\'home\')">‹</button><div class="lang-pill">New ' + index + '/' + ids.length + '</div>' + languageSpeakButton('Play', word.word) + '</div>'
+        + '<div class="lang-swipe-deck" id="lang-swipe-deck">' + languageEntryHtml(word) + '</div>'
         + '<div class="lang-card-actions">' + languageSpeakButton('Line', word.example || word.word) + '<button class="lang-primary" onclick="languageNextPreview()">Next</button></div>'
       + '</div></div>'
     );
+    languageAttachStudyGestures();
   }
 
   function renderLanguageQuiz(state, words) {
@@ -6176,19 +6193,22 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     }).join('');
     languageRenderCard(
       '<div class="lang-card"><div class="lang-card-inner">'
-        + '<div class="lang-card-head"><div class="lang-pill">' + escapeHtml(sub) + '</div>' + languageSpeakButton('Play', q.word.word) + '</div>'
+        + '<div class="lang-card-head"><button class="lang-study-back" onclick="languageSetView(\'home\')">‹</button><div class="lang-pill">' + escapeHtml(sub) + '</div>' + languageSpeakButton('Play', q.word.word) + '</div>'
+        + '<div class="lang-swipe-deck" id="lang-swipe-deck">'
         + '<div class="lang-question">' + escapeHtml(title) + '</div>'
         + '<div class="lang-phonetic">' + escapeHtml(q.word.phonetic || '') + '</div>'
         + '<div class="lang-choices">' + choices + '</div>'
+        + '</div>'
         + '<div class="lang-answer-state" id="lang-answer-state"></div>'
       + '</div></div>'
     );
+    languageAttachStudyGestures();
   }
 
   function renderLanguageComplete(state) {
     languageRenderCard(
       '<div class="lang-card"><div class="lang-card-inner">'
-        + '<div class="lang-card-head"><div class="lang-pill">Complete</div></div>'
+        + '<div class="lang-card-head"><button class="lang-study-back" onclick="languageSetView(\'home\')">‹</button><div class="lang-pill">Complete</div></div>'
         + '<div class="lang-word">Done</div>'
         + '<div class="lang-definition">Today is complete.</div>'
         + '<div class="lang-card-actions"><button class="lang-primary" onclick="setLanguageMode(\'preview\')">Preview</button></div>'
@@ -6209,7 +6229,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var plan = state.plan || {};
     var ids = languageTrueWeakIds(state);
     if (!ids.length) ids = (plan.reviewIds || []).concat((plan.ids || []).slice(0, 8));
-    return languageUnique(ids).slice(0, 9);
+    return languageUnique(ids).slice(0, 10);
   }
 
   function renderLanguageMap(state, words) {
@@ -6238,8 +6258,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         id:id,
         x:centerX + Math.cos(angle) * radius + (Math.random() * 5 - 2.5),
         y:centerY + Math.sin(angle) * radius + (Math.random() * 5 - 2.5),
-        vx:(Math.random() - .5) * .035,
-        vy:(Math.random() - .5) * .035,
+        vx:(Math.random() - .5) * .026,
+        vy:(Math.random() - .5) * .026,
         score:stat.count || (i === 0 ? 2 : 1)
       };
       nodes[id].word = map[id];
@@ -6306,12 +6326,18 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       Object.keys(nodes).forEach(function(id) {
         var n = nodes[id];
         if (langRuntime.drag && langRuntime.drag.id === id) return;
-        n.x += n.vx; n.y += n.vy;
+        var boost = Math.min(1.8, langRuntime.mapBoost || 0);
+        var cx = 50, cy = 48;
+        var dx = n.x - cx, dy = n.y - cy;
+        var spin = boost * .018;
+        n.x += n.vx + (-dy * spin);
+        n.y += n.vy + (dx * spin);
         if (n.x < 12 || n.x > 88) n.vx *= -1;
         if (n.y < 16 || n.y > 82) n.vy *= -1;
         n.x = Math.max(10, Math.min(90, n.x));
         n.y = Math.max(14, Math.min(84, n.y));
       });
+      langRuntime.mapBoost = Math.max(0, (langRuntime.mapBoost || 0) * .94 - .003);
       languageDrawMap();
       langRuntime.mapFrame = requestAnimationFrame(tick);
     }
@@ -6331,8 +6357,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (!n) return;
       n.x = Math.max(8, Math.min(92, (e.clientX - rect.left) / rect.width * 100));
       n.y = Math.max(10, Math.min(86, (e.clientY - rect.top) / rect.height * 100));
-      n.vx = (Math.random() - .5) * .02;
-      n.vy = (Math.random() - .5) * .02;
+      n.vx = (Math.random() - .5) * .025;
+      n.vy = (Math.random() - .5) * .025;
+      langRuntime.mapBoost = Math.min(2, (langRuntime.mapBoost || 0) + .08);
       languageDrawMap();
     }
     function up() {
@@ -6357,18 +6384,70 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     );
   }
 
+  function languagePulseMap(amount) {
+    langRuntime.mapBoost = Math.min(2.2, (langRuntime.mapBoost || 0) + amount);
+  }
+
+  function languageWatchScroll() {
+    if (langRuntime.scrollWatch) return;
+    var section = document.getElementById('sec-timetable');
+    if (!section) return;
+    langRuntime.scrollWatch = true;
+    langRuntime.lastScrollTop = section.scrollTop || 0;
+    langRuntime.lastScrollTime = Date.now();
+    section.addEventListener('scroll', function() {
+      var now = Date.now();
+      var dy = Math.abs((section.scrollTop || 0) - langRuntime.lastScrollTop);
+      var dt = Math.max(16, now - langRuntime.lastScrollTime);
+      languagePulseMap(Math.min(1.2, dy / dt * .18));
+      langRuntime.lastScrollTop = section.scrollTop || 0;
+      langRuntime.lastScrollTime = now;
+    }, { passive:true });
+    var pointer = null;
+    section.addEventListener('pointerdown', function(e) {
+      pointer = { x:e.clientX, y:e.clientY, t:Date.now() };
+    }, { passive:true });
+    section.addEventListener('pointermove', function(e) {
+      if (!pointer) return;
+      var now = Date.now();
+      var dist = Math.hypot(e.clientX - pointer.x, e.clientY - pointer.y);
+      var dt = Math.max(16, now - pointer.t);
+      languagePulseMap(Math.min(1.5, dist / dt * .16));
+      pointer = { x:e.clientX, y:e.clientY, t:now };
+    }, { passive:true });
+    section.addEventListener('pointerup', function(){ pointer = null; }, { passive:true });
+    section.addEventListener('pointercancel', function(){ pointer = null; }, { passive:true });
+    section.addEventListener('wheel', function(e) {
+      languagePulseMap(Math.min(1.4, Math.abs(e.deltaY || e.deltaX || 0) * .006));
+    }, { passive:true });
+  }
+
+  function languageSetView(view) {
+    var state = languageLoadState();
+    state.view = view === 'study' ? 'study' : 'home';
+    languageSaveState(state);
+    renderLanguageLab();
+  }
+
   function renderLanguageLab() {
     var stage = document.getElementById('lang-stage');
     if (!stage) return;
     var state = languageLoadState();
     state.activeMode = state.activeMode || 'preview';
+    document.querySelector('.language-lab')?.classList.toggle('studying', state.view === 'study');
     languageRenderShell(state);
+    languageWatchScroll();
     loadIeltsWords().then(function(words) {
       langRuntime.words = words;
       state = languageBuildPlanIfNeeded(languageLoadState(), words);
       languageSaveState(state);
+      document.querySelector('.language-lab')?.classList.toggle('studying', state.view === 'study');
       languageRenderShell(state);
       renderLanguageMap(state, words);
+      if (state.view !== 'study') {
+        languageRenderCard('');
+        return;
+      }
       if (state.plan && state.plan.complete) return renderLanguageComplete(state);
       if (state.activeMode === 'preview') renderLanguagePreview(state, words);
       else renderLanguageQuiz(state, words);
@@ -6380,6 +6459,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function setLanguageMode(mode) {
     if (['preview','review'].indexOf(mode) === -1) return;
     var state = languageLoadState();
+    state.view = 'study';
     state.activeMode = mode;
     languageSaveState(state);
     renderLanguageLab();
@@ -6400,6 +6480,57 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if ((state.plan.previewIndex || 0) >= ids.length - 1) state.activeMode = 'review';
     languageSaveState(state);
     renderLanguageLab();
+  }
+
+  function languagePrevPreview() {
+    var state = languageLoadState();
+    if (!state.plan) return renderLanguageLab();
+    state.plan.previewIndex = Math.max(0, (state.plan.previewIndex || 0) - 1);
+    state.activeMode = 'preview';
+    state.view = 'study';
+    languageSaveState(state);
+    renderLanguageLab();
+  }
+
+  function languageAttachStudyGestures() {
+    var deck = document.getElementById('lang-swipe-deck');
+    if (!deck || deck.dataset.gestureReady) return;
+    deck.dataset.gestureReady = '1';
+    var startX = 0, startY = 0, lastX = 0, active = false;
+    deck.addEventListener('pointerdown', function(e) {
+      active = true;
+      startX = lastX = e.clientX;
+      startY = e.clientY;
+      deck.classList.add('swiping');
+      try { deck.setPointerCapture(e.pointerId); } catch(err) {}
+    });
+    deck.addEventListener('pointermove', function(e) {
+      if (!active) return;
+      var dx = e.clientX - startX;
+      var dy = e.clientY - startY;
+      if (Math.abs(dx) < Math.abs(dy)) return;
+      deck.style.transform = 'translateX(' + Math.max(-42, Math.min(42, dx * .22)).toFixed(1) + 'px) rotate(' + (dx * .01).toFixed(2) + 'deg)';
+      deck.style.opacity = String(Math.max(.82, 1 - Math.abs(dx) / 340));
+      languagePulseMap(Math.min(.55, Math.abs(e.clientX - lastX) * .018));
+      lastX = e.clientX;
+    });
+    function finish(e) {
+      if (!active) return;
+      active = false;
+      var dx = e.clientX - startX;
+      deck.classList.remove('swiping');
+      deck.style.transform = '';
+      deck.style.opacity = '';
+      if (Math.abs(dx) > 54) {
+        var state = languageLoadState();
+        if (state.activeMode === 'preview') {
+          if (dx < 0) languageNextPreview();
+          else languagePrevPreview();
+        }
+      }
+    }
+    deck.addEventListener('pointerup', finish);
+    deck.addEventListener('pointercancel', finish);
   }
 
   function answerLanguageChoice(index) {
