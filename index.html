@@ -1434,8 +1434,8 @@
     .lang-network::after {
       content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(147,197,253,.055),transparent 48%);pointer-events:none;
     }
-    .lang-map-svg { position:absolute;inset:0;width:100%;height:100%;opacity:.48;z-index:1; }
-    .lang-map-line { stroke:rgba(147,197,253,.34);stroke-width:.85;vector-effect:non-scaling-stroke; }
+    .lang-map-svg { position:absolute;inset:0;width:100%;height:100%;opacity:.62;z-index:1; }
+    .lang-map-line { fill:none;stroke:rgba(147,197,253,.34);stroke-width:.75;vector-effect:non-scaling-stroke;stroke-linecap:round; }
     .lang-node {
       position:absolute;border:0;background:transparent;color:#BFD9FF;-webkit-text-fill-color:currentColor;font-family:'Space Grotesk',sans-serif;
       font-weight:850;letter-spacing:0;text-shadow:0 0 10px rgba(147,197,253,.72),0 0 24px rgba(147,197,253,.32);
@@ -1473,9 +1473,16 @@
       color:var(--text);font-size:13px;font-weight:850;width:100%;
     }
     .lang-module-action:active { transform:scale(.98); }
-    .lang-module-dots { display:flex;justify-content:center;gap:7px;margin:5px 0 0; }
-    .lang-module-dot { width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);transition:width .18s ease,background .18s ease; }
-    .lang-module-dot.active { width:16px;background:rgba(147,197,253,.86); }
+    .lang-module-dots { display:flex;justify-content:center;align-items:center;gap:9px;margin:8px 0 0; }
+    .lang-module-dot {
+      width:7px;height:7px;border-radius:999px;background:rgba(255,255,255,.22);
+      box-shadow:0 0 0 1px rgba(255,255,255,.04);
+      transition:width .22s cubic-bezier(.2,.8,.2,1),background .22s ease,box-shadow .22s ease,transform .22s ease;
+    }
+    .lang-module-dot.active {
+      width:24px;background:linear-gradient(90deg,#BFE0FF,#79B8FF);
+      box-shadow:0 0 16px rgba(121,184,255,.42);transform:scaleY(1.08);
+    }
     .lang-top { display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px; }
     .lang-title { font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:850;line-height:1;color:var(--text);letter-spacing:0; }
     .lang-goal-ring {
@@ -1943,7 +1950,7 @@
       </div>
 
       <div class="lang-module-rail" id="lang-module-rail">
-      <div class="lang-panel lang-module-card lang-module-compact">
+      <div class="lang-panel lang-module-card lang-module-compact" data-lang-card="ielts">
         <div class="lang-top">
           <div>
             <div class="lang-title">IELTS Words</div>
@@ -1974,59 +1981,59 @@
           </div>
         </div>
       </div>
-      <div class="lang-panel lang-module-card lang-module-compact">
+      <div class="lang-panel lang-module-card lang-module-compact" data-lang-card="daily">
         <div>
           <div class="lang-top">
             <div>
               <div class="lang-title">Daily English</div>
               <div class="lang-module-meta">local phrases · listening · quick recall</div>
             </div>
-            <div class="lang-goal-ring"><div class="lang-goal-ring-inner">0/12<span>done</span></div></div>
+            <div class="lang-goal-ring"><div class="lang-goal-ring-inner" data-lang-stat="progress">0/12<span>done</span></div></div>
           </div>
-          <div class="lang-progress"><div class="lang-progress-fill" style="width:0%"></div></div>
+          <div class="lang-progress"><div class="lang-progress-fill" data-lang-stat="fill" style="width:0%"></div></div>
           <div class="lang-module-row">
-            <div class="lang-stat"><strong>12</strong><span>today target</span></div>
-            <div class="lang-stat"><strong>12</strong><span>preview left</span></div>
-            <div class="lang-stat"><strong>0</strong><span>review left</span></div>
+            <div class="lang-stat"><strong data-lang-stat="target">12</strong><span>today target</span></div>
+            <div class="lang-stat"><strong data-lang-stat="preview">12</strong><span>preview left</span></div>
+            <div class="lang-stat"><strong data-lang-stat="review">0</strong><span>review left</span></div>
           </div>
         </div>
-        <button class="lang-module-action" type="button">Open</button>
+        <button class="lang-module-action" type="button" onclick="setLanguageMode('preview','daily')">Practice</button>
       </div>
-      <div class="lang-panel lang-module-card lang-module-compact">
+      <div class="lang-panel lang-module-card lang-module-compact" data-lang-card="engineering">
         <div>
           <div class="lang-top">
             <div>
               <div class="lang-title">Engineering English</div>
               <div class="lang-module-meta">lab wording · reports · technical verbs</div>
             </div>
-            <div class="lang-goal-ring"><div class="lang-goal-ring-inner">0/10<span>done</span></div></div>
+            <div class="lang-goal-ring"><div class="lang-goal-ring-inner" data-lang-stat="progress">0/10<span>done</span></div></div>
           </div>
-          <div class="lang-progress"><div class="lang-progress-fill" style="width:0%"></div></div>
+          <div class="lang-progress"><div class="lang-progress-fill" data-lang-stat="fill" style="width:0%"></div></div>
           <div class="lang-module-row">
-            <div class="lang-stat"><strong>10</strong><span>today target</span></div>
-            <div class="lang-stat"><strong>10</strong><span>preview left</span></div>
-            <div class="lang-stat"><strong>0</strong><span>review left</span></div>
+            <div class="lang-stat"><strong data-lang-stat="target">10</strong><span>today target</span></div>
+            <div class="lang-stat"><strong data-lang-stat="preview">10</strong><span>preview left</span></div>
+            <div class="lang-stat"><strong data-lang-stat="review">0</strong><span>review left</span></div>
           </div>
         </div>
-        <button class="lang-module-action" type="button">Open</button>
+        <button class="lang-module-action" type="button" onclick="setLanguageMode('preview','engineering')">Drill</button>
       </div>
-      <div class="lang-panel lang-module-card lang-module-compact">
+      <div class="lang-panel lang-module-card lang-module-compact" data-lang-card="spanish">
         <div>
           <div class="lang-top">
             <div>
               <div class="lang-title">Basic Spanish</div>
               <div class="lang-module-meta">A1 words · phrases · everyday verbs</div>
             </div>
-            <div class="lang-goal-ring"><div class="lang-goal-ring-inner">0/8<span>done</span></div></div>
+            <div class="lang-goal-ring"><div class="lang-goal-ring-inner" data-lang-stat="progress">0/8<span>done</span></div></div>
           </div>
-          <div class="lang-progress"><div class="lang-progress-fill" style="width:0%"></div></div>
+          <div class="lang-progress"><div class="lang-progress-fill" data-lang-stat="fill" style="width:0%"></div></div>
           <div class="lang-module-row">
-            <div class="lang-stat"><strong>8</strong><span>today target</span></div>
-            <div class="lang-stat"><strong>8</strong><span>preview left</span></div>
-            <div class="lang-stat"><strong>0</strong><span>review left</span></div>
+            <div class="lang-stat"><strong data-lang-stat="target">8</strong><span>today target</span></div>
+            <div class="lang-stat"><strong data-lang-stat="preview">8</strong><span>preview left</span></div>
+            <div class="lang-stat"><strong data-lang-stat="review">0</strong><span>review left</span></div>
           </div>
         </div>
-        <button class="lang-module-action" type="button">Open</button>
+        <button class="lang-module-action" type="button" onclick="setLanguageMode('preview','spanish')">Start</button>
       </div>
       </div>
       <div class="lang-module-dots" id="lang-module-dots">
@@ -3590,7 +3597,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-22-language-modules-clean';
+  var APP_VERSION = '2026-08-22-language-modules-vocab';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -6016,17 +6023,109 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   var LANG_STATE_KEY = 'iue.lang.v2';
+  var LANG_ACTIVE_MODULE_KEY = 'iue.lang.activeModule.v1';
   var LANG_DATA_SRC = 'data/ielts-8000.js?v=' + encodeURIComponent(APP_VERSION);
   var langWordsPromise = null;
-  var langRuntime = { words:null, mode:'preview', current:null, locked:false, map:null, mapFrame:null, drag:null, mapBoost:0, studyGestures:false, scrollWatch:false, lastScrollTop:0, lastScrollTime:0 };
+  var langRuntime = { words:null, module:'ielts', mode:'preview', current:null, locked:false, map:null, mapFrame:null, drag:null, mapBoost:0, studyGestures:false, scrollWatch:false, lastScrollTop:0, lastScrollTime:0 };
+  var LANG_INLINE_WORDS = {
+    daily: [
+      ['daily-1','fair enough','phr. 有道理，可以理解','reasonable; acceptable','Fair enough, I can come back later.','有道理，我可以晚点再回来。'],
+      ['daily-2','no worries','phr. 没关系，别担心','it is okay; do not worry','No worries, I will send it tonight.','没关系，我今晚发给你。'],
+      ['daily-3','reckon','v. 觉得，认为','to think or believe','I reckon this bus is faster.','我觉得这辆公交更快。'],
+      ['daily-4','sort out','phr. 处理好，解决','to arrange or fix something','I need to sort out my timetable.','我得把课表处理好。'],
+      ['daily-5','grab','v. 买/拿/吃一点','to quickly get something','Let us grab coffee before class.','上课前我们去买杯咖啡吧。'],
+      ['daily-6','keen','adj. 感兴趣，愿意','interested or willing','I am keen to join the study group.','我挺想加入学习小组。'],
+      ['daily-7','heaps','adv. 很多，非常','a lot; very','Thanks heaps for helping me.','非常感谢你帮我。'],
+      ['daily-8','pop in','phr. 顺路进去','to visit briefly','I might pop in after the lecture.','我可能讲座后顺路过去。'],
+      ['daily-9','wrap up','phr. 结束，收尾','to finish something','We should wrap up before dinner.','我们晚饭前应该收尾。'],
+      ['daily-10','head off','phr. 出发，离开','to leave','I need to head off soon.','我很快得走了。'],
+      ['daily-11','all good','phr. 没问题，都好','everything is fine','All good, I found the room.','没问题，我找到教室了。'],
+      ['daily-12','run late','phr. 迟到，晚点','to be delayed','I am running late because of the tram.','电车耽误了，我会晚点。'],
+      ['daily-13','catch up','phr. 补上进度/见面聊','to meet or make up progress','Can we catch up after lab?','实验课后我们能聊一下吗？'],
+      ['daily-14','double-check','v. 再确认','to check again','I will double-check the deadline.','我会再确认截止时间。'],
+      ['daily-15','turn up','phr. 出现，到场','to arrive or appear','Only half the class turned up.','只有一半同学来了。'],
+      ['daily-16','takeaway','n. 外卖；要点','food to go; main point','The main takeaway is to start early.','主要结论是早点开始。']
+    ],
+    engineering: [
+      ['engineering-1','assumption','n. 假设','something accepted as true for analysis','State every assumption before solving.','解题前写清楚每个假设。'],
+      ['engineering-2','constraint','n. 约束条件','a limit or restriction','The support creates a vertical constraint.','支座产生了竖向约束。'],
+      ['engineering-3','load','n. 载荷','force applied to a structure','The beam carries a distributed load.','梁承受分布载荷。'],
+      ['engineering-4','reaction','n. 反力','force provided by a support','Find the support reactions first.','先求支座反力。'],
+      ['engineering-5','equilibrium','n. 平衡','state where net force and moment are zero','Use equilibrium equations for the joint.','对节点使用平衡方程。'],
+      ['engineering-6','deflection','n. 挠度，变形','displacement under load','Large deflection may cause failure.','大挠度可能导致失效。'],
+      ['engineering-7','tolerance','n. 公差，容许误差','allowed variation in measurement','The part is within tolerance.','这个零件在公差范围内。'],
+      ['engineering-8','calibrate','v. 校准','to adjust an instrument','Calibrate the sensor before testing.','测试前校准传感器。'],
+      ['engineering-9','derive','v. 推导','to obtain from equations or principles','Derive the expression from first principles.','从基本原理推导表达式。'],
+      ['engineering-10','validate','v. 验证','to check accuracy or suitability','Validate the model with lab data.','用实验数据验证模型。'],
+      ['engineering-11','prototype','n. 原型','early test version of a design','The prototype failed under impact.','原型在冲击下失效。'],
+      ['engineering-12','specification','n. 规格，要求','technical requirement','Read the specification carefully.','仔细阅读规格要求。'],
+      ['engineering-13','iterate','v. 迭代','to improve through repeated cycles','Iterate the design after feedback.','根据反馈迭代设计。'],
+      ['engineering-14','failure mode','n. 失效模式','the way a system fails','Identify the likely failure mode.','找出可能的失效模式。']
+    ],
+    spanish: [
+      ['spanish-1','hola','int. 你好','hello','Hola, me llamo Alex.','你好，我叫 Alex。'],
+      ['spanish-2','gracias','int. 谢谢','thank you','Gracias por tu ayuda.','谢谢你的帮助。'],
+      ['spanish-3','por favor','phr. 请','please','Un cafe, por favor.','请给我一杯咖啡。'],
+      ['spanish-4','perdon','int. 对不起/打扰一下','sorry; excuse me','Perdon, donde esta la biblioteca?','打扰一下，图书馆在哪里？'],
+      ['spanish-5','agua','n. 水','water','Quiero agua.','我想要水。'],
+      ['spanish-6','comida','n. 食物','food','La comida esta buena.','食物很好吃。'],
+      ['spanish-7','clase','n. 课','class','Tengo clase a las dos.','我两点有课。'],
+      ['spanish-8','amigo','n. 朋友','friend','Mi amigo estudia fisica.','我的朋友学物理。'],
+      ['spanish-9','hoy','adv. 今天','today','Hoy tengo mucho trabajo.','今天我有很多事。'],
+      ['spanish-10','manana','adv. 明天','tomorrow','Manana voy a estudiar.','明天我要学习。'],
+      ['spanish-11','leer','v. 阅读','to read','Voy a leer el libro.','我要读这本书。'],
+      ['spanish-12','hablar','v. 说话','to speak','Quiero hablar espanol.','我想说西语。'],
+      ['spanish-13','entender','v. 理解','to understand','No entiendo la pregunta.','我不理解这个问题。'],
+      ['spanish-14','necesito','v. 我需要','I need','Necesito practicar mas.','我需要多练习。']
+    ]
+  };
+  var LANG_MODULES = {
+    ielts: { id:'ielts', title:'IELTS Words', daySize:20, totalGoal:8000 },
+    daily: { id:'daily', title:'Daily English', daySize:12, totalGoal:LANG_INLINE_WORDS.daily.length },
+    engineering: { id:'engineering', title:'Engineering English', daySize:10, totalGoal:LANG_INLINE_WORDS.engineering.length },
+    spanish: { id:'spanish', title:'Basic Spanish', daySize:8, totalGoal:LANG_INLINE_WORDS.spanish.length }
+  };
 
   function languageTodayStamp() {
     return dashDateStamp(new Date());
   }
 
+  function languageActiveModule() {
+    try {
+      var stored = localStorage.getItem(LANG_ACTIVE_MODULE_KEY) || 'ielts';
+      return LANG_MODULES[stored] ? stored : 'ielts';
+    } catch(e) {
+      return 'ielts';
+    }
+  }
+
+  function languageStateKey(moduleId) {
+    moduleId = LANG_MODULES[moduleId] ? moduleId : 'ielts';
+    return moduleId === 'ielts' ? LANG_STATE_KEY : LANG_STATE_KEY + '.' + moduleId;
+  }
+
+  function languageNormalizeInlineWords(moduleId) {
+    return (LANG_INLINE_WORDS[moduleId] || []).map(function(item) {
+      return {
+        id:item[0],
+        word:item[1],
+        phonetic:'',
+        cn:item[2],
+        en:item[3],
+        example:item[4],
+        exampleCn:item[5]
+      };
+    });
+  }
+
+  function languageModuleConfig(moduleId) {
+    return LANG_MODULES[moduleId] || LANG_MODULES.ielts;
+  }
+
   function languageDefaultState() {
+    var cfg = languageModuleConfig(langRuntime.module || languageActiveModule());
     return {
-      daySize: 20,
+      daySize: cfg.daySize || 20,
       nextIndex: 0,
       view: 'home',
       activeMode: 'preview',
@@ -6041,13 +6140,16 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function languageLoadState() {
     try {
-      var parsed = JSON.parse(localStorage.getItem(LANG_STATE_KEY) || 'null');
+      var moduleId = langRuntime.module || languageActiveModule();
+      var parsed = JSON.parse(localStorage.getItem(languageStateKey(moduleId)) || 'null');
       var base = languageDefaultState();
       if (!parsed || typeof parsed !== 'object') return base;
       Object.keys(base).forEach(function(k) {
         if (typeof parsed[k] === 'undefined') parsed[k] = base[k];
       });
-      parsed.daySize = Math.max(5, Math.min(100, Number(parsed.daySize) || 20));
+      var cfg = languageModuleConfig(langRuntime.module || languageActiveModule());
+      var maxDay = cfg.id === 'ielts' ? 100 : Math.max(5, cfg.totalGoal || cfg.daySize || 20);
+      parsed.daySize = Math.max(5, Math.min(maxDay, Number(parsed.daySize) || cfg.daySize || 20));
       parsed.nextIndex = Math.max(0, Number(parsed.nextIndex) || 0);
       parsed.view = parsed.view || 'home';
       parsed.activeMode = parsed.activeMode || 'preview';
@@ -6071,7 +6173,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function languageSaveState(state) {
-    try { localStorage.setItem(LANG_STATE_KEY, JSON.stringify(state)); } catch(e) {}
+    try { localStorage.setItem(languageStateKey(langRuntime.module || languageActiveModule()), JSON.stringify(state)); } catch(e) {}
     markCloudDirty();
   }
 
@@ -6090,6 +6192,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       document.head.appendChild(script);
     });
     return langWordsPromise;
+  }
+
+  function loadLanguageWords(moduleId) {
+    moduleId = LANG_MODULES[moduleId] ? moduleId : 'ielts';
+    if (moduleId === 'ielts') return loadIeltsWords();
+    return Promise.resolve(languageNormalizeInlineWords(moduleId));
   }
 
   function languageShuffle(list) {
@@ -6111,10 +6219,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function languageWordMap(words) {
-    if (langRuntime.wordMap) return langRuntime.wordMap;
+    var key = (langRuntime.module || 'ielts') + ':' + (words ? words.length : 0);
+    if (langRuntime.wordMap && langRuntime.wordMapKey === key) return langRuntime.wordMap;
     var map = {};
     words.forEach(function(word){ map[word.id] = word; });
     langRuntime.wordMap = map;
+    langRuntime.wordMapKey = key;
     return map;
   }
 
@@ -6275,7 +6385,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     try {
       window.speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(text);
-      u.lang = /^[a-zA-Z][a-zA-Z\s'-]+$/.test(text) ? 'en-GB' : 'zh-CN';
+      u.lang = (langRuntime.module === 'spanish') ? 'es-ES' : (/^[a-zA-Z][a-zA-Z\s'-]+$/.test(text) ? 'en-GB' : 'zh-CN');
       u.rate = .88;
       window.speechSynthesis.speak(u);
     } catch(e) {}
@@ -6291,8 +6401,13 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function languageRenderShell(state) {
-    var plan = state.plan || {};
-    var progress = languageProgress(state);
+    var activeModule = langRuntime.module || 'ielts';
+    var previousModule = langRuntime.module;
+    langRuntime.module = 'ielts';
+    var ieltsState = activeModule === 'ielts' ? state : languageLoadState();
+    var plan = ieltsState.plan || {};
+    var progress = ieltsState.plan ? languageProgress(ieltsState) : { done:0, total:ieltsState.daySize || 20, pct:0 };
+    langRuntime.module = previousModule;
     var count = document.getElementById('lang-progress-count');
     var fill = document.getElementById('lang-progress-fill');
     var daily = document.getElementById('lang-daily-size');
@@ -6302,22 +6417,68 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var totalDone = document.getElementById('lang-total-done');
     var totalGoal = document.getElementById('lang-total-goal');
     var ring = document.getElementById('lang-goal-ring');
-    var learnedTotal = Object.keys(state.learned || {}).length;
-    var previewLeft = languagePreviewRemainingIds(state).length;
-    var reviewLeft = languageReviewQueueIds(state).length;
+    var learnedTotal = Object.keys(ieltsState.learned || {}).length;
+    var previewLeft = ieltsState.plan ? languagePreviewRemainingIds(ieltsState) : new Array(ieltsState.daySize || 20);
+    var reviewLeft = ieltsState.plan ? languageReviewQueueIds(ieltsState).length : 0;
     if (count) count.innerHTML = progress.done + '/' + progress.total + '<span>done</span>';
     if (fill) fill.style.width = progress.pct + '%';
     if (ring) ring.style.setProperty('--lang-pct', progress.pct + '%');
-    if (daily) daily.textContent = state.daySize;
-    if (newCount) newCount.textContent = (plan.ids || []).length || state.daySize || 0;
-    if (previewCount) previewCount.textContent = previewLeft;
+    if (daily) daily.textContent = ieltsState.daySize;
+    if (newCount) newCount.textContent = (plan.ids || []).length || ieltsState.daySize || 0;
+    if (previewCount) previewCount.textContent = previewLeft.length;
     if (reviewCount) reviewCount.textContent = reviewLeft;
     if (totalDone) totalDone.textContent = learnedTotal;
-    if (totalGoal) totalGoal.textContent = (langRuntime.words && langRuntime.words.length) || 8000;
+    if (totalGoal) totalGoal.textContent = 8000;
     document.querySelectorAll('.lang-mode').forEach(function(btn) {
-      btn.classList.toggle('active', btn.dataset.langTab === state.activeMode);
+      btn.classList.toggle('active', btn.dataset.langTab === ieltsState.activeMode);
     });
+    languageRenderModuleCards();
     languageBindModuleRail();
+    languagePositionModuleRail();
+  }
+
+  function languageRenderModuleCards() {
+    Object.keys(LANG_MODULES).forEach(function(moduleId) {
+      if (moduleId === 'ielts') return;
+      var previous = langRuntime.module;
+      langRuntime.module = moduleId;
+      var cfg = languageModuleConfig(moduleId);
+      var moduleState = languageLoadState();
+      var words = languageNormalizeInlineWords(moduleId);
+      var plan = moduleState.plan;
+      var progress = plan ? languageProgress(moduleState) : { done:0, total:cfg.daySize, pct:0 };
+      var previewLeft = plan ? languagePreviewRemainingIds(moduleState).length : Math.min(cfg.daySize, words.length);
+      var reviewLeft = plan ? languageReviewQueueIds(moduleState).length : 0;
+      langRuntime.module = previous;
+      var card = document.querySelector('[data-lang-card="' + moduleId + '"]');
+      if (!card) return;
+      var progressEl = card.querySelector('[data-lang-stat="progress"]');
+      var fill = card.querySelector('[data-lang-stat="fill"]');
+      var target = card.querySelector('[data-lang-stat="target"]');
+      var preview = card.querySelector('[data-lang-stat="preview"]');
+      var review = card.querySelector('[data-lang-stat="review"]');
+      if (progressEl) progressEl.innerHTML = progress.done + '/' + progress.total + '<span>done</span>';
+      if (fill) fill.style.width = progress.pct + '%';
+      if (target) target.textContent = cfg.daySize;
+      if (preview) preview.textContent = previewLeft;
+      if (review) review.textContent = reviewLeft;
+    });
+  }
+
+  function languageSelectModule(moduleId, fromScroll) {
+    if (!LANG_MODULES[moduleId]) moduleId = 'ielts';
+    if (langRuntime.module === moduleId && fromScroll) return;
+    langRuntime.module = moduleId;
+    langRuntime.wordMap = null;
+    try { localStorage.setItem(LANG_ACTIVE_MODULE_KEY, moduleId); } catch(e) {}
+    loadLanguageWords(moduleId).then(function(words) {
+      langRuntime.words = words;
+      var state = languageBuildPlanIfNeeded(languageLoadState(), words);
+      state = languageUpdateCompletion(state);
+      languageSaveState(state);
+      renderLanguageMap(state, words);
+      languageRenderShell(state);
+    });
   }
 
   function languageBindModuleRail() {
@@ -6329,9 +6490,28 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (!dots.length) return;
       var index = Math.round(rail.scrollLeft / Math.max(1, rail.clientWidth));
       dots.forEach(function(dot, i){ dot.classList.toggle('active', i === index); });
+      var card = rail.children[index];
+      var moduleId = card && card.dataset ? card.dataset.langCard : '';
+      if (moduleId && moduleId !== langRuntime.module && LANG_MODULES[moduleId]) {
+        languageSelectModule(moduleId, true);
+      }
     }
     rail.addEventListener('scroll', function(){ window.requestAnimationFrame(updateDots); }, { passive:true });
     updateDots();
+  }
+
+  function languagePositionModuleRail() {
+    var rail = document.getElementById('lang-module-rail');
+    if (!rail) return;
+    var moduleId = langRuntime.module || languageActiveModule();
+    if (rail.dataset.positionedFor === moduleId) return;
+    var cards = Array.prototype.slice.call(rail.children);
+    var index = cards.findIndex(function(card){ return card.dataset && card.dataset.langCard === moduleId; });
+    if (index < 0) return;
+    rail.dataset.positionedFor = moduleId;
+    rail.scrollLeft = index * rail.clientWidth;
+    var dots = document.querySelectorAll('#lang-module-dots .lang-module-dot');
+    dots.forEach(function(dot, i){ dot.classList.toggle('active', i === index); });
   }
 
   function languageRenderCard(html) {
@@ -6457,17 +6637,17 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var centerX = 50, centerY = 43;
     ids.forEach(function(id, i) {
       var stat = (state.wrongStats || {})[id] || {};
-      var angle = (Math.PI * 2 * i / ids.length) - Math.PI / 2;
-      var radius = 12 + (i % 4) * 6 + (i > 4 ? 6 : 0);
+      var angle = (Math.PI * 2 * (i / Math.max(1, ids.length) + Math.random() * .11)) - Math.PI / 2;
+      var radius = 10 + Math.random() * 30;
       var oldNode = old[id];
       nodes[id] = oldNode || {
         id:id,
-        x:centerX + Math.cos(angle) * radius + (Math.random() * 5 - 2.5),
-        y:centerY + Math.sin(angle) * radius + (Math.random() * 5 - 2.5),
-        z:(Math.random() * 30 - 15),
-        vx:(Math.random() - .5) * .026,
-        vy:(Math.random() - .5) * .026,
-        vz:(Math.random() - .5) * .02,
+        x:centerX + Math.cos(angle) * radius + (Math.random() * 10 - 5),
+        y:centerY + Math.sin(angle) * radius * .82 + (Math.random() * 10 - 5),
+        z:(Math.random() * 72 - 36),
+        vx:(Math.random() - .5) * .034,
+        vy:(Math.random() - .5) * .034,
+        vz:(Math.random() - .5) * .026,
         score:stat.count || (i === 0 ? 2 : 1)
       };
       if (typeof nodes[id].z !== 'number') nodes[id].z = (Math.random() * 30 - 15);
@@ -6475,13 +6655,70 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       nodes[id].word = map[id];
       nodes[id].score = stat.count || nodes[id].score || 1;
     });
-    langRuntime.map = { nodes:nodes, ids:ids };
+    languageRelaxMapNodes(nodes, 14);
+    var edgeKey = (langRuntime.module || 'ielts') + ':' + ids.join('|');
+    var oldEdges = langRuntime.map && langRuntime.map.edgeKey === edgeKey ? langRuntime.map.edges : null;
+    langRuntime.map = { nodes:nodes, ids:ids, edgeKey:edgeKey, edges:oldEdges || languageBuildMapEdges(ids) };
     if (!box.dataset.rotateReady) {
       box.dataset.rotateReady = '1';
       box.addEventListener('pointerdown', languageNetworkPointerDown);
     }
     languageDrawMap();
     languageStartMapMotion();
+  }
+
+  function languageRelaxMapNodes(nodes, rounds) {
+    var list = Object.keys(nodes).map(function(id){ return nodes[id]; });
+    for (var r = 0; r < rounds; r++) {
+      for (var i = 0; i < list.length; i++) {
+        for (var j = i + 1; j < list.length; j++) {
+          var a = list[i], b = list[j];
+          var dx = b.x - a.x;
+          var dy = b.y - a.y;
+          var dist = Math.max(.1, Math.hypot(dx, dy));
+          var min = 8.5 + Math.min(8, ((a.word && a.word.word.length) || 4) * .34) + Math.min(8, ((b.word && b.word.word.length) || 4) * .34);
+          if (dist >= min) continue;
+          var push = (min - dist) * .045;
+          var ux = dx / dist;
+          var uy = dy / dist;
+          a.x -= ux * push;
+          a.y -= uy * push;
+          b.x += ux * push;
+          b.y += uy * push;
+        }
+      }
+      list.forEach(function(n) {
+        n.x = Math.max(9, Math.min(91, n.x));
+        n.y = Math.max(14, Math.min(84, n.y));
+      });
+    }
+  }
+
+  function languageBuildMapEdges(ids) {
+    var edges = [];
+    var seen = {};
+    ids.forEach(function(id, i) {
+      var count = Math.min(ids.length - 1, 2 + Math.floor(Math.random() * 3));
+      var pool = ids.filter(function(other){ return other !== id; });
+      pool.sort(function(a, b) {
+        var da = Math.abs(ids.indexOf(a) - i) + Math.random() * 5;
+        var db = Math.abs(ids.indexOf(b) - i) + Math.random() * 5;
+        return da - db;
+      });
+      for (var n = 0; n < count && n < pool.length; n++) {
+        var target = pool[(n + Math.floor(Math.random() * pool.length)) % pool.length];
+        var key = [id, target].sort().join('~');
+        if (seen[key]) continue;
+        seen[key] = true;
+        edges.push({
+          from:id,
+          to:target,
+          curve:(Math.random() - .5) * 18,
+          loose:Math.random() > .56
+        });
+      }
+    });
+    return edges.slice(0, Math.max(8, ids.length * 3));
   }
 
   function languageDrawMap() {
@@ -6495,17 +6732,23 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (nodes[id]) projected[id] = languageProjectNode(nodes[id]);
     });
     var lines = [];
-    ids.forEach(function(id, i) {
-      if (!nodes[id]) return;
-      var next = ids[(i + 1) % ids.length];
-      var mid = ids[Math.floor(ids.length / 2)];
-      [next, mid].forEach(function(target) {
-        if (!target || target === id || !nodes[target]) return;
-        var a = projected[id];
-        var b = projected[target];
-        var opacity = Math.max(.14, Math.min(.58, (a.depth + b.depth) / 2));
-        lines.push('<line class="lang-map-line" style="opacity:'+opacity.toFixed(2)+'" x1="'+a.x.toFixed(2)+'" y1="'+a.y.toFixed(2)+'" x2="'+b.x.toFixed(2)+'" y2="'+b.y.toFixed(2)+'"></line>');
-      });
+    (langRuntime.map.edges || []).forEach(function(edge) {
+      if (!nodes[edge.from] || !nodes[edge.to]) return;
+      var a = projected[edge.from];
+      var b = projected[edge.to];
+      if (!a || !b) return;
+      var mx = (a.x + b.x) / 2;
+      var my = (a.y + b.y) / 2;
+      var dx = b.x - a.x;
+      var dy = b.y - a.y;
+      var len = Math.max(1, Math.hypot(dx, dy));
+      var bend = (edge.curve || 0) * (edge.loose ? 1.35 : .7);
+      var cx = mx - dy / len * bend;
+      var cy = my + dx / len * bend;
+      var depth = (a.depth + b.depth) / 2;
+      var opacity = Math.max(.06, Math.min(.42, depth * .42 + (edge.loose ? -.04 : .02)));
+      var width = Math.max(.45, Math.min(1.05, .48 + depth * .55));
+      lines.push('<path class="lang-map-line" style="opacity:'+opacity.toFixed(2)+';stroke-width:'+width.toFixed(2)+'" d="M '+a.x.toFixed(2)+' '+a.y.toFixed(2)+' Q '+cx.toFixed(2)+' '+cy.toFixed(2)+' '+b.x.toFixed(2)+' '+b.y.toFixed(2)+'"></path>');
     });
     svg.innerHTML = lines.join('');
     var live = {};
@@ -6580,6 +6823,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         n.y = Math.max(14, Math.min(84, n.y));
         n.z = Math.max(-46, Math.min(46, n.z));
       });
+      languageRelaxMapNodes(nodes, 1);
       langRuntime.mapBoost = Math.max(0, (langRuntime.mapBoost || 0) * .94 - .003);
       languageDrawMap();
       langRuntime.mapFrame = requestAnimationFrame(tick);
@@ -6703,12 +6947,14 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function renderLanguageLab() {
     var stage = document.getElementById('lang-stage');
     if (!stage) return;
+    langRuntime.module = languageActiveModule();
+    langRuntime.wordMap = null;
     var state = languageLoadState();
     state.activeMode = state.activeMode || 'preview';
     document.querySelector('.language-lab')?.classList.toggle('studying', state.view === 'study');
     languageRenderShell(state);
     languageWatchScroll();
-    loadIeltsWords().then(function(words) {
+    loadLanguageWords(langRuntime.module).then(function(words) {
       langRuntime.words = words;
       state = languageBuildPlanIfNeeded(languageLoadState(), words);
       state = languageUpdateCompletion(state);
@@ -6730,6 +6976,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function setLanguageMode(mode) {
     if (['preview','review'].indexOf(mode) === -1) return;
+    var moduleId = arguments.length > 1 ? arguments[1] : langRuntime.module;
+    if (LANG_MODULES[moduleId]) {
+      langRuntime.module = moduleId;
+      langRuntime.wordMap = null;
+      try { localStorage.setItem(LANG_ACTIVE_MODULE_KEY, moduleId); } catch(e) {}
+    }
     var state = languageLoadState();
     state.view = 'study';
     state.activeMode = mode;
@@ -6739,7 +6991,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function changeLanguageDaily(delta) {
     var state = languageLoadState();
-    state.daySize = Math.max(5, Math.min(100, (Number(state.daySize) || 20) + delta));
+    var maxWords = (langRuntime.words && langRuntime.words.length) || 100;
+    state.daySize = Math.max(5, Math.min(maxWords, (Number(state.daySize) || languageModuleConfig(langRuntime.module).daySize || 20) + delta));
     if (langRuntime.words && langRuntime.words.length) {
       state = languageResizeTodayPlan(state, langRuntime.words);
       state = languageUpdateCompletion(state);
