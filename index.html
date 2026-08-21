@@ -3631,7 +3631,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-22-update-on-open';
+  var APP_VERSION = '2026-08-22-language-module-words';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -6062,7 +6062,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var LANG_MODULE_DATA_SRC = 'data/language-modules.js?v=' + encodeURIComponent(APP_VERSION);
   var langWordsPromise = null;
   var langModuleWordsPromise = null;
-  var langRuntime = { words:null, module:'ielts', mode:'preview', current:null, locked:false, map:null, mapFrame:null, drag:null, mapBoost:0, studyGestures:false, scrollWatch:false, lastScrollTop:0, lastScrollTime:0 };
+  var langRuntime = { words:null, module:'ielts', mode:'preview', current:null, locked:false, map:null, mapFrame:null, drag:null, mapBoost:0, studyGestures:false, scrollWatch:false, lastScrollTop:0, lastScrollTime:0, loadToken:0 };
   var LANG_INLINE_WORDS = {
     daily: [
       ['daily-1','fair enough','phr. 有道理，可以理解','reasonable; acceptable','Fair enough, I can come back later.','有道理，我可以晚点再回来。'],
@@ -6297,6 +6297,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function languageBuildPlanIfNeeded(state, words) {
     var today = languageTodayStamp();
+    var hasWords = words && words.length;
+    var planIds = state.plan && Array.isArray(state.plan.ids) ? state.plan.ids : [];
+    var planReviews = state.plan && Array.isArray(state.plan.reviewIds) ? state.plan.reviewIds : [];
+    if (hasWords && state.plan && state.plan.date === today && !planIds.length && !planReviews.length) {
+      state.plan = null;
+    }
     if (state.plan && state.plan.complete !== true) return languageResizeTodayPlan(state, words);
     if (state.plan && state.plan.date === today && state.plan.complete === true) return state;
     var newIds = languagePickNewIds(state, words);
@@ -6536,8 +6542,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (langRuntime.module === moduleId && fromScroll) return;
     langRuntime.module = moduleId;
     langRuntime.wordMap = null;
+    var token = ++langRuntime.loadToken;
     try { localStorage.setItem(LANG_ACTIVE_MODULE_KEY, moduleId); } catch(e) {}
     loadLanguageWords(moduleId).then(function(words) {
+      if (token !== langRuntime.loadToken || langRuntime.module !== moduleId) return;
       langRuntime.words = words;
       var state = languageBuildPlanIfNeeded(languageLoadState(), words);
       state = languageUpdateCompletion(state);
@@ -7015,12 +7023,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (!stage) return;
     langRuntime.module = languageActiveModule();
     langRuntime.wordMap = null;
+    var moduleId = langRuntime.module;
+    var token = ++langRuntime.loadToken;
     var state = languageLoadState();
     state.activeMode = state.activeMode || 'preview';
     document.querySelector('.language-lab')?.classList.toggle('studying', state.view === 'study');
     languageRenderShell(state);
     languageWatchScroll();
-    loadLanguageWords(langRuntime.module).then(function(words) {
+    loadLanguageWords(moduleId).then(function(words) {
+      if (token !== langRuntime.loadToken || langRuntime.module !== moduleId) return;
       langRuntime.words = words;
       state = languageBuildPlanIfNeeded(languageLoadState(), words);
       state = languageUpdateCompletion(state);
