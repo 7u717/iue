@@ -1420,161 +1420,94 @@
     @keyframes dashFadeIn { from { opacity:0; } to { opacity:1; } }
 
     /* LANGUAGE LAB */
-    .language-lab { padding-top:4px;display:flex;flex-direction:column;gap:12px;min-height:calc(100dvh - var(--header-h) - var(--nav-h) - 24px); }
-    .lang-home { position:relative;display:flex;flex-direction:column;gap:12px; }
+    .language-lab { padding:4px 0 18px;min-height:calc(100dvh - var(--header-h) - var(--nav-h) - 20px); }
     .language-lab.studying .lang-home { display:none; }
     .language-lab:not(.studying) #lang-stage { display:none; }
-    .language-lab.studying #lang-stage { display:flex;min-height:calc(100dvh - var(--header-h) - var(--nav-h) - 24px); }
-    .lang-network {
-      position:relative;height:274px;margin:-12px -12px -12px;border:0;border-radius:0;overflow:hidden;
-      background:transparent;
-      box-shadow:none;touch-action:none;cursor:grab;
+    .lang-home { display:flex;flex-direction:column;gap:12px; }
+    .lang-hero-card,
+    .lang-today-list,
+    .lang-study-screen {
+      position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.085);border-radius:24px;
+      background:linear-gradient(180deg,rgba(22,24,28,.96),rgba(8,9,11,.98));
+      box-shadow:0 18px 48px rgba(0,0,0,.32);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
     }
-    .lang-network:active { cursor:grabbing; }
-    .lang-network::after {
-      content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(147,197,253,.055),transparent 48%);pointer-events:none;
-    }
-    .lang-map-svg { position:absolute;inset:0;width:100%;height:100%;opacity:.62;z-index:1; }
-    .lang-map-line { fill:none;stroke:rgba(147,197,253,.34);stroke-width:.75;vector-effect:non-scaling-stroke;stroke-linecap:round; }
-    .lang-node {
-      position:absolute;border:0;background:transparent;color:#BFD9FF;-webkit-text-fill-color:currentColor;font-family:'Space Grotesk',sans-serif;
-      font-weight:850;letter-spacing:0;text-shadow:0 0 10px rgba(147,197,253,.72),0 0 24px rgba(147,197,253,.32);
-      transform:translate(-50%,-50%);cursor:pointer;z-index:5;transition:color .18s ease,text-shadow .18s ease;
-      -webkit-tap-highlight-color:transparent;
-    }
-    .lang-node:active { color:#EFF6FF;text-shadow:0 0 24px rgba(147,197,253,.68); }
-    .lang-node.hot { color:#F8FBFF; }
-    .lang-node-dot {
-      position:absolute;left:50%;top:calc(100% + 2px);width:5px;height:5px;border-radius:50%;
-      background:currentColor;transform:translateX(-50%);box-shadow:0 0 10px currentColor;opacity:.85;
-    }
-    .lang-map-empty {
-      position:absolute;left:18px;right:18px;top:50%;transform:translateY(-50%);
-      color:var(--muted);font-size:13px;font-weight:750;text-align:center;line-height:1.45;
-    }
-    .lang-panel {
-      border:1px solid rgba(255,255,255,.08);border-radius:24px;background:linear-gradient(180deg,rgba(20,20,20,.92),rgba(10,10,10,.94));
-      padding:15px;box-shadow:0 18px 42px rgba(0,0,0,.28);
-      z-index:3;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-    }
-    .lang-module-rail {
-      display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
-      margin:-12px -12px 0;padding:0 12px 4px;-webkit-overflow-scrolling:touch;
-    }
-    .lang-module-rail::-webkit-scrollbar { display:none; }
-    .lang-module-card { flex:0 0 100%;scroll-snap-align:center; }
-    .lang-module-compact {
-      min-height:238px;display:flex;flex-direction:column;justify-content:space-between;
-    }
-    .lang-module-meta { color:var(--muted);font-size:11px;font-weight:800;margin-top:8px; }
-    .lang-module-row { display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px; }
-    .lang-module-action {
-      height:44px;border-radius:18px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);
-      color:var(--text);font-size:13px;font-weight:850;width:100%;
-    }
-    .lang-module-action:active { transform:scale(.98); }
-    .lang-module-dots { display:flex;justify-content:center;align-items:center;gap:9px;margin:8px 0 0; }
-    .lang-module-dot {
-      width:7px;height:7px;border-radius:999px;background:rgba(255,255,255,.22);
-      box-shadow:0 0 0 1px rgba(255,255,255,.04);
-      transition:width .22s cubic-bezier(.2,.8,.2,1),background .22s ease,box-shadow .22s ease,transform .22s ease;
-    }
-    .lang-module-dot.active {
-      width:24px;background:linear-gradient(90deg,#BFE0FF,#79B8FF);
-      box-shadow:0 0 16px rgba(121,184,255,.42);transform:scaleY(1.08);
-    }
-    .language-lab .lang-top .lang-goal-ring { display:none; }
-    .lang-top { display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px; }
-    .lang-title { font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:850;line-height:1;color:var(--text);letter-spacing:0; }
-    .lang-goal-ring {
-      min-width:82px;height:44px;border-radius:16px;display:grid;place-items:center;flex-shrink:0;padding:0 12px;
-      border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);
-      box-shadow:0 12px 28px rgba(0,0,0,.18);
-    }
-    .lang-goal-ring::before { display:none; }
-    .lang-goal-ring-inner { position:relative;z-index:1;text-align:right;font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:850;color:var(--text);line-height:1; }
-    .lang-goal-ring-inner span { display:block;margin-top:4px;font-family:'Inter',sans-serif;font-size:9px;font-weight:800;color:var(--muted); }
-    .lang-total-row { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px; }
-    .lang-progress { height:4px;border-radius:999px;background:#252525;overflow:hidden;margin-top:10px; }
-    .lang-progress-fill { height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#EFF6FF,var(--math-color));transition:width .35s ease; }
-    .lang-stats { display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px; }
-    .lang-stat { border:0;border-radius:0;background:transparent;padding:0;min-width:0; }
-    .lang-stat strong { display:block;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:var(--text);line-height:1; }
-    .lang-stat span { display:block;margin-top:6px;color:var(--muted);font-size:10px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
-    .lang-total-row { display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07); }
-    .lang-total-row .lang-stat { flex:1; }
-    .lang-controls { display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:14px; }
-    .lang-modes { display:grid;grid-template-columns:repeat(2,1fr);gap:8px; }
-    .lang-mode,
-    .lang-icon-btn,
-    .lang-choice,
-    .lang-primary,
-    .lang-stepper button {
-      -webkit-tap-highlight-color:transparent;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease,color .16s ease,opacity .16s ease;
-    }
-    .lang-mode {
-      height:44px;border-radius:18px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);
-      color:var(--muted);font-size:13px;font-weight:850;
-    }
-    .lang-mode.active { color:#06121f;border-color:rgba(147,197,253,.86);background:linear-gradient(135deg,#EFF6FF,#93C5FD); }
-    .lang-mode:active,
-    .lang-icon-btn:active,
-    .lang-choice:active,
+    .lang-hero-card { padding:18px;animation:langCardIn .24s ease both; }
+    .lang-hero-card::before,
+    .lang-study-screen::before { content:"";position:absolute;inset:-40% -30% auto;height:220px;background:radial-gradient(circle at 50% 50%,rgba(147,197,253,.16),transparent 62%);pointer-events:none; }
+    .lang-orbit { position:absolute;right:-36px;top:-46px;width:170px;height:170px;border-radius:50%;opacity:.62;filter:blur(.1px); }
+    .lang-orbit i { position:absolute;inset:22px;border:1px solid rgba(147,197,253,.25);border-radius:50%;transform:rotate(var(--r));animation:langOrbit 9s linear infinite; }
+    .lang-orbit i:nth-child(1){ --r:21deg; }
+    .lang-orbit i:nth-child(2){ --r:78deg;animation-duration:13s;inset:38px; }
+    .lang-orbit i:nth-child(3){ --r:-34deg;animation-duration:16s;inset:54px; }
+    .lang-hero-top,
+    .lang-study-head,
+    .lang-list-head { position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:12px; }
+    .lang-kicker { color:var(--muted);font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:.08em; }
+    .lang-hero-card h2,
+    .lang-study-head h2 { margin:4px 0 0;font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:850;line-height:1;color:var(--text);letter-spacing:0; }
+    .lang-total-badge { min-width:86px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.045);padding:10px 12px;text-align:right;font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:850;color:#F5F7FB; }
+    .lang-total-badge span { color:var(--muted);font-size:13px; }
+    .lang-progress { position:relative;z-index:1;height:4px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:18px; }
+    .lang-progress-fill { height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#EFF6FF,#8BC8FF);transition:width .42s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 16px rgba(139,200,255,.45); }
+    .lang-plan-row { position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px; }
+    .lang-plan-row strong { display:block;font-family:'Space Grotesk',sans-serif;font-size:25px;font-weight:850;color:#F5F7FB;line-height:1; }
+    .lang-plan-row span { display:block;margin-top:7px;color:var(--muted);font-size:10px;font-weight:800;white-space:nowrap; }
+    .lang-step-row { position:relative;z-index:1;margin-top:18px;display:grid;grid-template-columns:42px 1fr 42px;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.08);border-radius:20px;background:rgba(255,255,255,.035);padding:5px; }
+    .lang-step-row button,
+    .lang-dictation-actions button,
+    .lang-ghost,
+    .lang-audio,
+    .lang-study-back,
+    .lang-primary { -webkit-tap-highlight-color:transparent;transition:transform .16s ease,border-color .16s ease,background .16s ease,opacity .16s ease; }
+    .lang-step-row button { height:38px;border:0;border-radius:16px;background:rgba(255,255,255,.06);color:var(--text);font-size:18px;font-weight:850; }
+    .lang-step-row span { text-align:center;font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:850;color:var(--text); }
+    .lang-primary { position:relative;z-index:1;border:0;border-radius:20px;background:linear-gradient(135deg,#EFF6FF,#8BC8FF);color:#07111F;font-size:14px;font-weight:900;box-shadow:0 14px 30px rgba(91,157,255,.22); }
+    .lang-primary.big { width:100%;height:50px;margin-top:14px; }
+    .lang-primary.small { height:38px;padding:0 14px;border-radius:16px; }
     .lang-primary:active,
-    .lang-stepper button:active { transform:scale(.97); }
-    .lang-stepper { display:flex;align-items:center;gap:5px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:rgba(255,255,255,.035);padding:4px; }
-    .lang-stepper button { width:34px;height:34px;border:0;border-radius:14px;background:rgba(255,255,255,.05);color:var(--text);font-size:16px;font-weight:850; }
-    .lang-stepper span { min-width:28px;text-align:center;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:850;color:var(--text); }
-    .lang-card {
-      position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.1);border-radius:24px;background:linear-gradient(180deg,#15181d,#08090b);
-      padding:16px;box-shadow:var(--shadow-sm);animation:langCardIn .22s ease both;width:100%;min-height:calc(100dvh - var(--header-h) - var(--nav-h) - 28px);
-      display:flex;flex-direction:column;
-    }
-    .lang-card::before { content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(147,197,253,.16),transparent 34%);pointer-events:none; }
-    .lang-card-inner { position:relative;z-index:1;display:flex;flex-direction:column;flex:1; }
-    .lang-card-head { display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px; }
-    .lang-card-head-spacer { width:38px;height:38px;display:block;flex-shrink:0; }
-    .lang-pill { border:1px solid var(--border);border-radius:999px;padding:5px 9px;color:var(--muted);font-size:10.5px;font-weight:850;background:rgba(255,255,255,.035); }
-    .lang-word { font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:850;line-height:1.02;color:#f5f5f7;letter-spacing:0;overflow-wrap:anywhere; }
-    .lang-phonetic { margin-top:8px;color:var(--math-color);font-size:13px;font-weight:750;min-height:18px; }
-    .lang-meaning { margin-top:13px;color:var(--text);font-size:15px;font-weight:700;line-height:1.42; }
-    .lang-definition { margin-top:8px;color:var(--muted);font-size:12.5px;line-height:1.42; }
-    .lang-example { margin-top:13px;padding:12px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.06); }
-    .lang-example-en { color:rgba(245,245,247,.9);font-size:13px;font-weight:650;line-height:1.42; }
-    .lang-example-cn { margin-top:6px;color:var(--muted);font-size:12px;line-height:1.4; }
-    .lang-question { font-family:'Space Grotesk',sans-serif;font-size:25px;font-weight:800;line-height:1.16;color:#f5f5f7;overflow-wrap:anywhere; }
-    .lang-answer-state { min-height:18px;margin-top:10px;color:var(--muted);font-size:12px;font-weight:800;text-align:center; }
-    .lang-card-actions { display:flex;gap:7px;margin-top:14px; }
-    .lang-icon-btn,
-    .lang-primary { border:1px solid var(--border);border-radius:999px;background:var(--surface2);color:var(--text);font-size:12px;font-weight:850; }
-    .lang-icon-btn { width:38px;height:36px;display:grid;place-items:center; }
-    .lang-primary { flex:1;height:36px;background:var(--text);border-color:var(--text);color:#000; }
-    .lang-study-back { width:38px;height:36px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);color:var(--text);font-size:18px;font-weight:850; }
-    .lang-study-play {
-      width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      color:#f5f5f7;font-size:0;box-shadow:0 10px 24px rgba(0,0,0,.2);position:relative;
-    }
-    .lang-study-play::before {
-      content:"";position:absolute;left:15px;top:12px;border-left:10px solid currentColor;border-top:7px solid transparent;border-bottom:7px solid transparent;
-    }
-    .lang-answer-note { margin-top:14px;color:var(--muted);font-size:12px;font-weight:750;line-height:1.45; }
-    .lang-analysis-actions { display:flex;gap:8px;margin-top:auto;padding-top:18px; }
-    .lang-swipe-deck { flex:1;display:flex;flex-direction:column;justify-content:center;transition:transform .18s ease,opacity .18s ease;will-change:transform; }
-    .lang-swipe-deck.quiz,
-    .lang-swipe-deck.analysis { justify-content:flex-start;padding-top:86px; }
-    .lang-swipe-deck.swiping { transition:none; }
-    .lang-card-actions { margin-top:auto;padding-top:18px; }
-    .lang-choices { display:grid;grid-template-columns:1fr;gap:8px;margin-top:14px; }
-    .lang-choice {
-      min-height:45px;text-align:left;border:1px solid rgba(255,255,255,.09);border-radius:14px;background:rgba(255,255,255,.035);
-      color:#f5f5f7;padding:10px 12px;font-size:13px;font-weight:750;line-height:1.25;
-    }
-    .lang-choice.correct { border-color:rgba(134,239,172,.5);background:rgba(34,197,94,.13);color:#bbf7d0; }
-    .lang-choice.wrong { border-color:rgba(248,113,113,.5);background:rgba(239,68,68,.12);color:#fecaca; }
+    .lang-step-row button:active,
+    .lang-dictation-actions button:active,
+    .lang-ghost:active,
+    .lang-audio:active,
+    .lang-study-back:active { transform:scale(.97); }
+    .lang-today-list { padding:14px;animation:langCardIn .28s ease both; }
+    .lang-list-head span { color:var(--muted);font-size:11px;font-weight:850;text-transform:uppercase;letter-spacing:.08em; }
+    .lang-list-head button,
+    .lang-ghost { height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.045);color:var(--text);font-size:12px;font-weight:850;padding:0 12px; }
+    .lang-word-list { display:flex;flex-direction:column;gap:10px;margin-top:12px; }
+    .lang-word-list.study { padding-bottom:74px; }
+    .lang-word-card { position:relative;display:grid;grid-template-columns:42px 1fr;gap:10px;padding:12px;border:1px solid rgba(255,255,255,.075);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.026));animation:langWordIn .28s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i) * 18ms); }
+    .lang-audio { grid-row:1 / span 3;width:42px;height:42px;border:1px solid rgba(147,197,253,.22);border-radius:50%;background:rgba(147,197,253,.075);box-shadow:0 0 22px rgba(147,197,253,.08); }
+    .lang-audio span { display:block;margin:13px 0 0 16px;width:0;height:0;border-left:11px solid #DCEEFF;border-top:7px solid transparent;border-bottom:7px solid transparent; }
+    .lang-word-title { font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:850;color:#F5F7FB;line-height:1.05;overflow-wrap:anywhere; }
+    .lang-word-meta { margin-top:5px;color:#8BC8FF;font-size:11px;font-weight:800; }
+    .lang-meaning { grid-column:2;color:rgba(245,245,247,.9);font-size:14px;font-weight:720;line-height:1.38; }
+    .lang-example,
+    .lang-extra { grid-column:2;color:var(--muted);font-size:12px;font-weight:650;line-height:1.35; }
+    .lang-extra { color:rgba(147,197,253,.72); }
+    .lang-study-screen { min-height:calc(100dvh - var(--header-h) - var(--nav-h) - 24px);padding:16px;display:flex;flex-direction:column;animation:langCardIn .22s ease both; }
+    .lang-study-head { margin-bottom:14px; }
+    .lang-study-back { width:40px;height:38px;border-radius:16px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);color:var(--text);font-size:22px;font-weight:850; }
+    .lang-primary.sticky { position:sticky;bottom:10px;margin-top:auto;flex-shrink:0; }
+    .lang-listen-core { flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;min-height:430px; }
+    .lang-listen-button { position:relative;width:126px;height:126px;border-radius:50%;border:1px solid rgba(147,197,253,.24);background:radial-gradient(circle at 50% 45%,rgba(147,197,253,.22),rgba(255,255,255,.045));box-shadow:0 0 42px rgba(147,197,253,.18),inset 0 0 24px rgba(255,255,255,.04); }
+    .lang-listen-button span { position:absolute;left:52px;top:42px;width:0;height:0;border-left:34px solid #F5F7FB;border-top:22px solid transparent;border-bottom:22px solid transparent;filter:drop-shadow(0 0 16px rgba(147,197,253,.42)); }
+    .lang-listen-count { font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:850;color:#F5F7FB; }
+    .lang-listen-ring { width:min(68vw,260px);height:4px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden; }
+    .lang-listen-ring i { display:block;height:100%;width:100%;background:linear-gradient(90deg,#EFF6FF,#8BC8FF);transform-origin:left;animation:langListenBar 15s linear both; }
+    .lang-dictation-actions { display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto; }
+    .lang-dictation-actions button { height:48px;border-radius:18px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);color:var(--text);font-size:14px;font-weight:850; }
+    .lang-mark-grid { display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-bottom:76px; }
+    .lang-mark-chip { min-height:84px;text-align:left;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:rgba(255,255,255,.04);color:var(--text);padding:12px;animation:langWordIn .26s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i) * 16ms);transition:transform .18s cubic-bezier(.2,.8,.2,1),background .18s ease,border-color .18s ease,box-shadow .18s ease; }
+    .lang-mark-chip strong { display:block;font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:850;line-height:1.1;overflow-wrap:anywhere; }
+    .lang-mark-chip span { display:block;margin-top:7px;color:var(--muted);font-size:11px;font-weight:700;line-height:1.25; }
+    .lang-mark-chip.wrong { background:rgba(255,69,58,.13);border-color:rgba(255,99,91,.48);box-shadow:0 0 24px rgba(255,69,58,.12);transform:translateY(-2px) scale(1.015); }
+    .lang-mark-chip.wrong::after { content:"Miss";position:absolute;right:10px;top:10px;color:#FF9A94;font-size:10px;font-weight:900; }
     .lang-empty { border:1px dashed rgba(255,255,255,.13);border-radius:18px;padding:22px 14px;color:var(--muted);text-align:center;font-size:13px;font-weight:700;line-height:1.4; }
-    @keyframes langCardIn { from { opacity:0;transform:translateY(8px) scale(.99); } to { opacity:1;transform:none; } }
+    @keyframes langCardIn { from { opacity:0;transform:translateY(10px) scale(.992); } to { opacity:1;transform:none; } }
+    @keyframes langWordIn { from { opacity:0;transform:translateY(8px); } to { opacity:1;transform:none; } }
+    @keyframes langListenBar { from { transform:scaleX(1); } to { transform:scaleX(0); } }
+    @keyframes langOrbit { to { transform:rotate(calc(var(--r) + 360deg)); } }
 
     /* COURSES HUB */
     .course-rail {
@@ -1943,148 +1876,9 @@
 
 <!-- ===== TIMETABLE ===== -->
 <div class="course-section" id="sec-timetable">
-  <div class="language-lab">
-    <div class="lang-home">
-      <div class="lang-network" id="lang-network">
-        <svg class="lang-map-svg" id="lang-map-svg" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
-        <div class="lang-map-empty" id="lang-map-empty">Loading words...</div>
-      </div>
-
-      <div class="lang-module-rail" id="lang-module-rail">
-      <div class="lang-panel lang-module-card lang-module-compact" data-lang-card="ielts">
-        <div class="lang-top">
-          <div>
-            <div class="lang-title">IELTS Words</div>
-          </div>
-          <div class="lang-goal-ring" id="lang-goal-ring">
-            <div class="lang-goal-ring-inner" id="lang-progress-count">0/0<span>today</span></div>
-          </div>
-        </div>
-        <div class="lang-progress"><div class="lang-progress-fill" id="lang-progress-fill"></div></div>
-        <div class="lang-stats">
-          <div class="lang-stat"><strong id="lang-new-count">0</strong><span>today target</span></div>
-          <div class="lang-stat"><strong id="lang-preview-count">0</strong><span>preview left</span></div>
-          <div class="lang-stat"><strong id="lang-review-count">0</strong><span>review left</span></div>
-        </div>
-        <div class="lang-total-row">
-          <div class="lang-stat"><strong id="lang-total-done">0</strong><span>total done</span></div>
-          <div class="lang-stat"><strong id="lang-total-goal">8000</strong><span>total goal</span></div>
-        </div>
-        <div class="lang-controls">
-          <div class="lang-modes">
-            <button class="lang-mode active" data-lang-tab="preview" data-lang-module="ielts" onclick="setLanguageMode('preview','ielts')">Preview</button>
-            <button class="lang-mode" data-lang-tab="review" data-lang-module="ielts" onclick="setLanguageMode('review','ielts')">Review</button>
-          </div>
-          <div class="lang-stepper" aria-label="daily word count">
-            <button onclick="changeLanguageDaily(-5)" aria-label="decrease daily words">−</button>
-            <span id="lang-daily-size">20</span>
-            <button onclick="changeLanguageDaily(5)" aria-label="increase daily words">+</button>
-          </div>
-        </div>
-      </div>
-      <div class="lang-panel lang-module-card lang-module-compact" data-lang-card="daily">
-        <div class="lang-top">
-          <div>
-            <div class="lang-title">Daily English</div>
-          </div>
-          <div class="lang-goal-ring"><div class="lang-goal-ring-inner" data-lang-stat="progress">0/20<span>done</span></div></div>
-        </div>
-        <div class="lang-progress"><div class="lang-progress-fill" data-lang-stat="fill" style="width:0%"></div></div>
-        <div class="lang-stats">
-          <div class="lang-stat"><strong data-lang-stat="target">20</strong><span>today target</span></div>
-          <div class="lang-stat"><strong data-lang-stat="preview">20</strong><span>preview left</span></div>
-          <div class="lang-stat"><strong data-lang-stat="review">0</strong><span>review left</span></div>
-        </div>
-        <div class="lang-total-row">
-          <div class="lang-stat"><strong data-lang-stat="totalDone">0</strong><span>total done</span></div>
-          <div class="lang-stat"><strong data-lang-stat="totalGoal">2000</strong><span>total goal</span></div>
-        </div>
-        <div class="lang-controls">
-          <div class="lang-modes">
-            <button class="lang-mode active" data-lang-tab="preview" data-lang-module="daily" onclick="setLanguageMode('preview','daily')">Preview</button>
-            <button class="lang-mode" data-lang-tab="review" data-lang-module="daily" onclick="setLanguageMode('review','daily')">Review</button>
-          </div>
-          <div class="lang-stepper" aria-label="daily english word count">
-            <button onclick="changeLanguageDaily(-5,'daily')" aria-label="decrease daily english words">−</button>
-            <span data-lang-stat="dailySize">20</span>
-            <button onclick="changeLanguageDaily(5,'daily')" aria-label="increase daily english words">+</button>
-          </div>
-        </div>
-      </div>
-      <div class="lang-panel lang-module-card lang-module-compact" data-lang-card="engineering">
-        <div class="lang-top">
-          <div>
-            <div class="lang-title">Engineering English</div>
-          </div>
-          <div class="lang-goal-ring"><div class="lang-goal-ring-inner" data-lang-stat="progress">0/20<span>done</span></div></div>
-        </div>
-        <div class="lang-progress"><div class="lang-progress-fill" data-lang-stat="fill" style="width:0%"></div></div>
-        <div class="lang-stats">
-          <div class="lang-stat"><strong data-lang-stat="target">20</strong><span>today target</span></div>
-          <div class="lang-stat"><strong data-lang-stat="preview">20</strong><span>preview left</span></div>
-          <div class="lang-stat"><strong data-lang-stat="review">0</strong><span>review left</span></div>
-        </div>
-        <div class="lang-total-row">
-          <div class="lang-stat"><strong data-lang-stat="totalDone">0</strong><span>total done</span></div>
-          <div class="lang-stat"><strong data-lang-stat="totalGoal">2000</strong><span>total goal</span></div>
-        </div>
-        <div class="lang-controls">
-          <div class="lang-modes">
-            <button class="lang-mode active" data-lang-tab="preview" data-lang-module="engineering" onclick="setLanguageMode('preview','engineering')">Preview</button>
-            <button class="lang-mode" data-lang-tab="review" data-lang-module="engineering" onclick="setLanguageMode('review','engineering')">Review</button>
-          </div>
-          <div class="lang-stepper" aria-label="engineering english word count">
-            <button onclick="changeLanguageDaily(-5,'engineering')" aria-label="decrease engineering english words">−</button>
-            <span data-lang-stat="dailySize">20</span>
-            <button onclick="changeLanguageDaily(5,'engineering')" aria-label="increase engineering english words">+</button>
-          </div>
-        </div>
-      </div>
-      <div class="lang-panel lang-module-card lang-module-compact" data-lang-card="spanish">
-        <div class="lang-top">
-          <div>
-            <div class="lang-title">Basic Spanish</div>
-          </div>
-          <div class="lang-goal-ring"><div class="lang-goal-ring-inner" data-lang-stat="progress">0/15<span>done</span></div></div>
-        </div>
-        <div class="lang-progress"><div class="lang-progress-fill" data-lang-stat="fill" style="width:0%"></div></div>
-        <div class="lang-stats">
-          <div class="lang-stat"><strong data-lang-stat="target">15</strong><span>today target</span></div>
-          <div class="lang-stat"><strong data-lang-stat="preview">15</strong><span>preview left</span></div>
-          <div class="lang-stat"><strong data-lang-stat="review">0</strong><span>review left</span></div>
-        </div>
-        <div class="lang-total-row">
-          <div class="lang-stat"><strong data-lang-stat="totalDone">0</strong><span>total done</span></div>
-          <div class="lang-stat"><strong data-lang-stat="totalGoal">1000</strong><span>total goal</span></div>
-        </div>
-        <div class="lang-controls">
-          <div class="lang-modes">
-            <button class="lang-mode active" data-lang-tab="preview" data-lang-module="spanish" onclick="setLanguageMode('preview','spanish')">Preview</button>
-            <button class="lang-mode" data-lang-tab="review" data-lang-module="spanish" onclick="setLanguageMode('review','spanish')">Review</button>
-          </div>
-          <div class="lang-stepper" aria-label="spanish word count">
-            <button onclick="changeLanguageDaily(-5,'spanish')" aria-label="decrease spanish words">−</button>
-            <span data-lang-stat="dailySize">15</span>
-            <button onclick="changeLanguageDaily(5,'spanish')" aria-label="increase spanish words">+</button>
-          </div>
-        </div>
-      </div>
-      </div>
-      <div class="lang-module-dots" id="lang-module-dots">
-        <span class="lang-module-dot active"></span>
-        <span class="lang-module-dot"></span>
-        <span class="lang-module-dot"></span>
-        <span class="lang-module-dot"></span>
-      </div>
-    </div>
-
-    <div id="lang-stage">
-      <div class="lang-card">
-        <div class="lang-card-inner">
-          <div class="lang-empty">Loading words...</div>
-        </div>
-      </div>
-    </div>
+  <div class="language-lab" id="language-lab">
+    <div class="lang-home" id="lang-home"></div>
+    <div id="lang-stage"></div>
   </div>
 </div>
 
@@ -3631,7 +3425,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-08-22-language-module-words';
+  var APP_VERSION = '2026-08-31-zhenjing-dictation';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -6056,1195 +5850,260 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     renderDashboard();
   }
 
-  var LANG_STATE_KEY = 'iue.lang.v2';
-  var LANG_ACTIVE_MODULE_KEY = 'iue.lang.activeModule.v1';
-  var LANG_DATA_SRC = 'data/ielts-8000.js?v=' + encodeURIComponent(APP_VERSION);
-  var LANG_MODULE_DATA_SRC = 'data/language-modules.js?v=' + encodeURIComponent(APP_VERSION);
+  var LANG_STATE_KEY = 'iue.lang.zhenjing.v1';
+  var LANG_DATA_SRC = 'data/ielts-zhenjing.js?v=' + encodeURIComponent(APP_VERSION);
   var langWordsPromise = null;
-  var langModuleWordsPromise = null;
-  var langRuntime = { words:null, module:'ielts', mode:'preview', current:null, locked:false, map:null, mapFrame:null, drag:null, mapBoost:0, studyGestures:false, scrollWatch:false, lastScrollTop:0, lastScrollTime:0, loadToken:0 };
-  var LANG_INLINE_WORDS = {
-    daily: [
-      ['daily-1','fair enough','phr. 有道理，可以理解','reasonable; acceptable','Fair enough, I can come back later.','有道理，我可以晚点再回来。'],
-      ['daily-2','no worries','phr. 没关系，别担心','it is okay; do not worry','No worries, I will send it tonight.','没关系，我今晚发给你。'],
-      ['daily-3','reckon','v. 觉得，认为','to think or believe','I reckon this bus is faster.','我觉得这辆公交更快。'],
-      ['daily-4','sort out','phr. 处理好，解决','to arrange or fix something','I need to sort out my timetable.','我得把课表处理好。'],
-      ['daily-5','grab','v. 买/拿/吃一点','to quickly get something','Let us grab coffee before class.','上课前我们去买杯咖啡吧。'],
-      ['daily-6','keen','adj. 感兴趣，愿意','interested or willing','I am keen to join the study group.','我挺想加入学习小组。'],
-      ['daily-7','heaps','adv. 很多，非常','a lot; very','Thanks heaps for helping me.','非常感谢你帮我。'],
-      ['daily-8','pop in','phr. 顺路进去','to visit briefly','I might pop in after the lecture.','我可能讲座后顺路过去。'],
-      ['daily-9','wrap up','phr. 结束，收尾','to finish something','We should wrap up before dinner.','我们晚饭前应该收尾。'],
-      ['daily-10','head off','phr. 出发，离开','to leave','I need to head off soon.','我很快得走了。'],
-      ['daily-11','all good','phr. 没问题，都好','everything is fine','All good, I found the room.','没问题，我找到教室了。'],
-      ['daily-12','run late','phr. 迟到，晚点','to be delayed','I am running late because of the tram.','电车耽误了，我会晚点。'],
-      ['daily-13','catch up','phr. 补上进度/见面聊','to meet or make up progress','Can we catch up after lab?','实验课后我们能聊一下吗？'],
-      ['daily-14','double-check','v. 再确认','to check again','I will double-check the deadline.','我会再确认截止时间。'],
-      ['daily-15','turn up','phr. 出现，到场','to arrive or appear','Only half the class turned up.','只有一半同学来了。'],
-      ['daily-16','takeaway','n. 外卖；要点','food to go; main point','The main takeaway is to start early.','主要结论是早点开始。']
-    ],
-    engineering: [
-      ['engineering-1','assumption','n. 假设','something accepted as true for analysis','State every assumption before solving.','解题前写清楚每个假设。'],
-      ['engineering-2','constraint','n. 约束条件','a limit or restriction','The support creates a vertical constraint.','支座产生了竖向约束。'],
-      ['engineering-3','load','n. 载荷','force applied to a structure','The beam carries a distributed load.','梁承受分布载荷。'],
-      ['engineering-4','reaction','n. 反力','force provided by a support','Find the support reactions first.','先求支座反力。'],
-      ['engineering-5','equilibrium','n. 平衡','state where net force and moment are zero','Use equilibrium equations for the joint.','对节点使用平衡方程。'],
-      ['engineering-6','deflection','n. 挠度，变形','displacement under load','Large deflection may cause failure.','大挠度可能导致失效。'],
-      ['engineering-7','tolerance','n. 公差，容许误差','allowed variation in measurement','The part is within tolerance.','这个零件在公差范围内。'],
-      ['engineering-8','calibrate','v. 校准','to adjust an instrument','Calibrate the sensor before testing.','测试前校准传感器。'],
-      ['engineering-9','derive','v. 推导','to obtain from equations or principles','Derive the expression from first principles.','从基本原理推导表达式。'],
-      ['engineering-10','validate','v. 验证','to check accuracy or suitability','Validate the model with lab data.','用实验数据验证模型。'],
-      ['engineering-11','prototype','n. 原型','early test version of a design','The prototype failed under impact.','原型在冲击下失效。'],
-      ['engineering-12','specification','n. 规格，要求','technical requirement','Read the specification carefully.','仔细阅读规格要求。'],
-      ['engineering-13','iterate','v. 迭代','to improve through repeated cycles','Iterate the design after feedback.','根据反馈迭代设计。'],
-      ['engineering-14','failure mode','n. 失效模式','the way a system fails','Identify the likely failure mode.','找出可能的失效模式。']
-    ],
-    spanish: [
-      ['spanish-1','hola','int. 你好','hello','Hola, me llamo Alex.','你好，我叫 Alex。'],
-      ['spanish-2','gracias','int. 谢谢','thank you','Gracias por tu ayuda.','谢谢你的帮助。'],
-      ['spanish-3','por favor','phr. 请','please','Un cafe, por favor.','请给我一杯咖啡。'],
-      ['spanish-4','perdon','int. 对不起/打扰一下','sorry; excuse me','Perdon, donde esta la biblioteca?','打扰一下，图书馆在哪里？'],
-      ['spanish-5','agua','n. 水','water','Quiero agua.','我想要水。'],
-      ['spanish-6','comida','n. 食物','food','La comida esta buena.','食物很好吃。'],
-      ['spanish-7','clase','n. 课','class','Tengo clase a las dos.','我两点有课。'],
-      ['spanish-8','amigo','n. 朋友','friend','Mi amigo estudia fisica.','我的朋友学物理。'],
-      ['spanish-9','hoy','adv. 今天','today','Hoy tengo mucho trabajo.','今天我有很多事。'],
-      ['spanish-10','manana','adv. 明天','tomorrow','Manana voy a estudiar.','明天我要学习。'],
-      ['spanish-11','leer','v. 阅读','to read','Voy a leer el libro.','我要读这本书。'],
-      ['spanish-12','hablar','v. 说话','to speak','Quiero hablar espanol.','我想说西语。'],
-      ['spanish-13','entender','v. 理解','to understand','No entiendo la pregunta.','我不理解这个问题。'],
-      ['spanish-14','necesito','v. 我需要','I need','Necesito practicar mas.','我需要多练习。']
-    ]
-  };
-  var LANG_MODULES = {
-    ielts: { id:'ielts', title:'IELTS Words', daySize:20, totalGoal:8000 },
-    daily: { id:'daily', title:'Daily English', daySize:20, totalGoal:2000 },
-    engineering: { id:'engineering', title:'Engineering English', daySize:20, totalGoal:2000 },
-    spanish: { id:'spanish', title:'Basic Spanish', daySize:15, totalGoal:1000 }
-  };
+  var langRuntime = { words:null, wordMap:null, wordMapSize:0, dictationTimer:null };
 
   function languageTodayStamp() {
-    return dashDateStamp(new Date());
-  }
-
-  function languageActiveModule() {
-    try {
-      var stored = localStorage.getItem(LANG_ACTIVE_MODULE_KEY) || 'ielts';
-      return LANG_MODULES[stored] ? stored : 'ielts';
-    } catch(e) {
-      return 'ielts';
-    }
-  }
-
-  function languageStateKey(moduleId) {
-    moduleId = LANG_MODULES[moduleId] ? moduleId : 'ielts';
-    return moduleId === 'ielts' ? LANG_STATE_KEY : LANG_STATE_KEY + '.' + moduleId;
-  }
-
-  function languageNormalizeInlineWords(moduleId) {
-    return (LANG_INLINE_WORDS[moduleId] || []).map(function(item) {
-      return {
-        id:item[0],
-        word:item[1],
-        phonetic:'',
-        cn:item[2],
-        en:item[3],
-        example:item[4],
-        exampleCn:item[5]
-      };
-    });
-  }
-
-  function languageModuleConfig(moduleId) {
-    return LANG_MODULES[moduleId] || LANG_MODULES.ielts;
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   }
 
   function languageDefaultState() {
-    var cfg = languageModuleConfig(langRuntime.module || languageActiveModule());
-    return {
-      daySize: cfg.daySize || 20,
-      nextIndex: 0,
-      view: 'home',
-      activeMode: 'preview',
-      analysisWordId: null,
-      plan: null,
-      carryWrong: [],
-      wrongStats: {},
-      learned: {},
-      history: {}
-    };
+    return { version:1, daySize:20, seed:Math.floor(Math.random()*1000000000), completed:{}, history:[], carryWrong:[], today:null, view:'home', dictation:null, selectedWrong:{} };
   }
 
   function languageLoadState() {
     try {
-      var moduleId = langRuntime.module || languageActiveModule();
-      var parsed = JSON.parse(localStorage.getItem(languageStateKey(moduleId)) || 'null');
+      var parsed = JSON.parse(localStorage.getItem(LANG_STATE_KEY) || 'null') || languageDefaultState();
       var base = languageDefaultState();
-      if (!parsed || typeof parsed !== 'object') return base;
-      Object.keys(base).forEach(function(k) {
-        if (typeof parsed[k] === 'undefined') parsed[k] = base[k];
-      });
-      var cfg = languageModuleConfig(langRuntime.module || languageActiveModule());
-      var maxDay = cfg.id === 'ielts' ? 100 : Math.max(5, cfg.totalGoal || cfg.daySize || 20);
-      parsed.daySize = Math.max(5, Math.min(maxDay, Number(parsed.daySize) || cfg.daySize || 20));
-      parsed.nextIndex = Math.max(0, Number(parsed.nextIndex) || 0);
-      parsed.view = parsed.view || 'home';
-      parsed.activeMode = parsed.activeMode || 'preview';
-      parsed.analysisWordId = (typeof parsed.analysisWordId === 'undefined') ? null : parsed.analysisWordId;
-      if (parsed.plan) {
-        parsed.plan.previewPassed = parsed.plan.previewPassed || {};
-        parsed.plan.previewHistory = Array.isArray(parsed.plan.previewHistory) ? parsed.plan.previewHistory : [];
-        parsed.plan.queue = Array.isArray(parsed.plan.queue) ? parsed.plan.queue : [];
-        parsed.plan.secondRound = Array.isArray(parsed.plan.secondRound) ? parsed.plan.secondRound : [];
-        parsed.plan.wrongToday = parsed.plan.wrongToday || {};
-        parsed.plan.passed = parsed.plan.passed || {};
-      }
+      Object.keys(base).forEach(function(k){ if (typeof parsed[k] === 'undefined') parsed[k] = base[k]; });
+      parsed.daySize = Math.max(5, Math.min(120, Number(parsed.daySize) || 20));
+      parsed.completed = parsed.completed && typeof parsed.completed === 'object' ? parsed.completed : {};
+      parsed.history = Array.isArray(parsed.history) ? parsed.history : [];
       parsed.carryWrong = Array.isArray(parsed.carryWrong) ? parsed.carryWrong : [];
-      parsed.wrongStats = parsed.wrongStats && typeof parsed.wrongStats === 'object' ? parsed.wrongStats : {};
-      parsed.learned = parsed.learned && typeof parsed.learned === 'object' ? parsed.learned : {};
-      parsed.history = parsed.history && typeof parsed.history === 'object' ? parsed.history : {};
+      parsed.selectedWrong = parsed.selectedWrong && typeof parsed.selectedWrong === 'object' ? parsed.selectedWrong : {};
       return parsed;
-    } catch(e) {
-      return languageDefaultState();
-    }
+    } catch(e) { return languageDefaultState(); }
   }
 
   function languageSaveState(state) {
-    try { localStorage.setItem(languageStateKey(langRuntime.module || languageActiveModule()), JSON.stringify(state)); } catch(e) {}
-    markCloudDirty();
+    try { localStorage.setItem(LANG_STATE_KEY, JSON.stringify(state)); } catch(e) {}
+    if (typeof markCloudDirty === 'function') markCloudDirty();
   }
 
-  function loadIeltsWords() {
-    if (window.IUE_IELTS_8000 && window.IUE_IELTS_8000.length) return Promise.resolve(window.IUE_IELTS_8000);
+  function loadLanguageWords() {
+    if (window.IUE_ZHENJING_WORDS && window.IUE_ZHENJING_WORDS.length) return Promise.resolve(window.IUE_ZHENJING_WORDS);
     if (langWordsPromise) return langWordsPromise;
     langWordsPromise = new Promise(function(resolve, reject) {
       var script = document.createElement('script');
       script.src = LANG_DATA_SRC;
       script.async = true;
       script.onload = function() {
-        if (window.IUE_IELTS_8000 && window.IUE_IELTS_8000.length) resolve(window.IUE_IELTS_8000);
-        else reject(new Error('IELTS word data is empty'));
+        if (window.IUE_ZHENJING_WORDS && window.IUE_ZHENJING_WORDS.length) resolve(window.IUE_ZHENJING_WORDS);
+        else reject(new Error('IELTS vocabulary data is empty'));
       };
-      script.onerror = function(){ reject(new Error('IELTS word data failed')); };
+      script.onerror = function(){ reject(new Error('IELTS vocabulary data failed')); };
       document.head.appendChild(script);
     });
     return langWordsPromise;
   }
 
-  function loadLanguageModuleWords() {
-    if (window.IUE_LANGUAGE_MODULES) return Promise.resolve(window.IUE_LANGUAGE_MODULES);
-    if (langModuleWordsPromise) return langModuleWordsPromise;
-    langModuleWordsPromise = new Promise(function(resolve, reject) {
-      var script = document.createElement('script');
-      script.src = LANG_MODULE_DATA_SRC;
-      script.async = true;
-      script.onload = function() {
-        if (window.IUE_LANGUAGE_MODULES) resolve(window.IUE_LANGUAGE_MODULES);
-        else reject(new Error('language module data is empty'));
-      };
-      script.onerror = function(){ reject(new Error('language module data failed')); };
-      document.head.appendChild(script);
-    });
-    return langModuleWordsPromise;
+  function languageHash(str) {
+    var h = 2166136261;
+    str = String(str || '');
+    for (var i=0; i<str.length; i++) { h ^= str.charCodeAt(i); h += (h<<1)+(h<<4)+(h<<7)+(h<<8)+(h<<24); }
+    return h >>> 0;
   }
 
-  function loadLanguageWords(moduleId) {
-    moduleId = LANG_MODULES[moduleId] ? moduleId : 'ielts';
-    if (moduleId === 'ielts') return loadIeltsWords();
-    return loadLanguageModuleWords().then(function(modules) {
-      return (modules && modules[moduleId] && modules[moduleId].length) ? modules[moduleId] : languageNormalizeInlineWords(moduleId);
-    }).catch(function() {
-      return languageNormalizeInlineWords(moduleId);
-    });
-  }
-
-  function languageShuffle(list) {
+  function languageShuffleSeeded(list, seedText) {
     var arr = list.slice();
-    for (var i = arr.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
-    }
+    var seed = languageHash(seedText);
+    function rnd(){ seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
+    for (var i=arr.length-1; i>0; i--) { var j=Math.floor(rnd()*(i+1)); var t=arr[i]; arr[i]=arr[j]; arr[j]=t; }
     return arr;
   }
 
-  function languageUnique(list) {
-    var seen = {};
-    return list.filter(function(id) {
-      if (id === null || typeof id === 'undefined' || id === '' || seen[id]) return false;
-      seen[id] = true;
-      return true;
-    });
-  }
+  function languageShuffle(list) { return languageShuffleSeeded(list, Date.now() + ':' + Math.random()); }
 
   function languageWordMap(words) {
-    var key = (langRuntime.module || 'ielts') + ':' + (words ? words.length : 0);
-    if (langRuntime.wordMap && langRuntime.wordMapKey === key) return langRuntime.wordMap;
-    var map = {};
-    words.forEach(function(word){ map[word.id] = word; });
-    langRuntime.wordMap = map;
-    langRuntime.wordMapKey = key;
-    return map;
+    if (langRuntime.wordMap && langRuntime.wordMapSize === words.length) return langRuntime.wordMap;
+    var map = {}; words.forEach(function(w){ map[w.id] = w; });
+    langRuntime.wordMap = map; langRuntime.wordMapSize = words.length; return map;
   }
 
-  function languagePickNewIds(state, words) {
-    var ids = [];
-    var start = Math.min(state.nextIndex || 0, Math.max(0, words.length - 1));
-    for (var i = 0; i < state.daySize && i < words.length; i++) {
-      ids.push(words[(start + i) % words.length].id);
-    }
-    state.nextIndex = (start + ids.length) % words.length;
+  function languagePickTodayIds(state, words) {
+    var all = words.map(function(w){ return w.id; }).filter(function(id){ return !state.completed[id]; });
+    var base = languageShuffleSeeded(all, state.seed + ':' + languageTodayStamp() + ':' + state.history.length);
+    var wrong = (state.carryWrong || []).filter(function(id){ return !state.completed[id]; });
+    var carryCount = wrong.length < 5 ? wrong.length : Math.min(10, Math.max(5, wrong.length));
+    var carry = languageShuffleSeeded(wrong, state.seed + ':carry:' + languageTodayStamp()).slice(0, carryCount);
+    var used = {}, ids = [];
+    carry.forEach(function(id){ if (!used[id]) { used[id] = true; ids.push(id); } });
+    base.forEach(function(id){ if (!used[id] && ids.length < state.daySize) { used[id] = true; ids.push(id); } });
     return ids;
   }
 
-  function languageBuildPlanIfNeeded(state, words) {
-    var today = languageTodayStamp();
-    var hasWords = words && words.length;
-    var planIds = state.plan && Array.isArray(state.plan.ids) ? state.plan.ids : [];
-    var planReviews = state.plan && Array.isArray(state.plan.reviewIds) ? state.plan.reviewIds : [];
-    if (hasWords && state.plan && state.plan.date === today && !planIds.length && !planReviews.length) {
-      state.plan = null;
-    }
-    if (state.plan && state.plan.complete !== true) return languageResizeTodayPlan(state, words);
-    if (state.plan && state.plan.date === today && state.plan.complete === true) return state;
-    var newIds = languagePickNewIds(state, words);
-    var previousWrong = languageShuffle(state.carryWrong || []).slice(0, Math.min(12, state.daySize));
-    var reviewIds = previousWrong.filter(function(id){ return newIds.indexOf(id) === -1; });
-    state.plan = {
-      date: today,
-      ids: newIds,
-      reviewIds: reviewIds,
-      previewIndex: 0,
-      queue: languageShuffle(reviewIds),
-      secondRound: [],
-      previewPassed: {},
-      previewHistory: [],
-      passed: {},
-      wrongToday: {},
-      complete: false
-    };
-    state.activeMode = 'preview';
-    return state;
-  }
-
-  function languageResizeTodayPlan(state, words) {
-    if (!state.plan || state.plan.date !== languageTodayStamp() || state.plan.complete || !words || !words.length) return state;
-    var target = Math.max(5, Math.min(100, Number(state.daySize) || 20));
-    state.plan.ids = Array.isArray(state.plan.ids) ? state.plan.ids : [];
-    state.plan.previewPassed = state.plan.previewPassed || {};
-    state.plan.wrongToday = state.plan.wrongToday || {};
-    var ids = state.plan.ids;
+  function languageResizeToday(state, words) {
+    if (!state.today || state.today.complete === true) return state;
+    var ids = Array.isArray(state.today.ids) ? state.today.ids : [];
     var used = {};
-    ids.forEach(function(id){ used[id] = true; });
-    while (ids.length < target && ids.length < words.length) {
-      var start = Math.min(state.nextIndex || 0, Math.max(0, words.length - 1));
-      var added = false;
-      for (var i = 0; i < words.length; i++) {
-        var word = words[(start + i) % words.length];
-        if (!used[word.id]) {
-          ids.push(word.id);
-          used[word.id] = true;
-          state.nextIndex = (start + i + 1) % words.length;
-          added = true;
-          break;
+    ids.forEach(function(id){ if (!state.completed[id]) used[id] = true; });
+    ids = ids.filter(function(id){ return used[id]; });
+    if (ids.length > state.daySize) {
+      ids = ids.slice(0, state.daySize);
+    }
+    if (ids.length < state.daySize) {
+      var pool = languageShuffleSeeded(words.map(function(w){ return w.id; }), state.seed + ':resize:' + state.today.date + ':' + state.daySize);
+      pool.forEach(function(id) {
+        if (!used[id] && !state.completed[id] && ids.length < state.daySize) {
+          used[id] = true;
+          ids.push(id);
         }
-      }
-      if (!added) break;
-    }
-    if (ids.length > target) {
-      var kept = [];
-      ids.forEach(function(id) {
-        var mustKeep = !!(state.plan.previewPassed[id] || state.plan.wrongToday[id]);
-        if (mustKeep || kept.length < target) kept.push(id);
       });
-      state.plan.ids = kept;
     }
+    state.today.ids = ids;
+    state.dictation = null;
+    state.selectedWrong = {};
     return state;
   }
 
-  function languageCurrentIds(state) {
-    if (!state.plan) return [];
-    return (state.plan.reviewIds || []).concat(state.plan.ids || []);
-  }
-
-  function languagePreviewRemainingIds(state) {
-    var plan = state.plan || {};
-    var passed = plan.previewPassed || plan.passed || {};
-    return (plan.ids || []).filter(function(id){ return !passed[id]; });
-  }
-
-  function languageReviewQueueIds(state) {
-    var plan = state.plan || {};
-    return languageShuffle(languageUnique((plan.queue || []).concat(plan.secondRound || [])));
-  }
-
-  function languageProgress(state) {
-    var ids = state.plan ? (state.plan.ids || []) : [];
-    var reviewStarted = Object.keys((state.plan && state.plan.wrongToday) || {}).length;
-    var total = ids.length + reviewStarted;
-    var previewDone = ids.filter(function(id){ return state.plan && state.plan.previewPassed && state.plan.previewPassed[id]; }).length;
-    var reviewDone = reviewStarted - languageReviewQueueIds(state).length;
-    var done = Math.max(0, previewDone + reviewDone);
-    return { done:done, total:total, pct:total ? Math.round(done / total * 100) : 0 };
-  }
-
-  function languageUpdateCompletion(state) {
-    if (!state.plan || state.plan.complete) return state;
-    if (!languagePreviewRemainingIds(state).length && !languageReviewQueueIds(state).length) {
-      state.plan.complete = true;
-      state.history[state.plan.date] = {
-        done: (state.plan.ids || []).length,
-        wrong: Object.keys(state.plan.wrongToday || {}).length
-      };
-      state.carryWrong = Object.keys(state.plan.wrongToday || {});
-      state.analysisWordId = null;
-    }
+  function languageEnsureToday(state, words) {
+    var today = languageTodayStamp();
+    if (state.today && state.today.complete !== true) return state;
+    if (state.today && state.today.date === today && state.today.complete === true) return state;
+    state.today = { date:today, ids:languagePickTodayIds(state, words), complete:false, issuedAt:new Date().toISOString() };
+    state.view = 'home'; state.dictation = null; state.selectedWrong = {};
     return state;
   }
 
-  function languageCurrentPreviewWord(state, words) {
-    var ids = languagePreviewRemainingIds(state);
-    var map = languageWordMap(words);
-    if (!ids.length) return null;
-    return map[ids[0]] || null;
+  function languageStats(state, words) {
+    var ids = state.today ? (state.today.ids || []) : [];
+    var done = ids.filter(function(id){ return state.completed[id]; }).length;
+    var totalDone = Object.keys(state.completed || {}).length;
+    var daysLeft = state.daySize ? Math.ceil(Math.max(0, words.length - totalDone) / state.daySize) : 0;
+    return { todayDone:done, todayTotal:ids.length, todayPct:ids.length?Math.round(done/ids.length*100):0, totalDone:totalDone, totalGoal:words.length, totalPct:words.length?Math.round(totalDone/words.length*100):0, daysLeft:daysLeft };
   }
 
-  function languageMarkPreviewPassed(state, word, learned) {
-    if (!state.plan || !word) return;
-    state.plan.previewPassed = state.plan.previewPassed || {};
-    state.plan.previewHistory = state.plan.previewHistory || [];
-    if (state.plan.previewHistory.indexOf(word.id) === -1) state.plan.previewHistory.push(word.id);
-    state.plan.previewPassed[word.id] = true;
-    if (learned) state.learned[word.id] = { last: languageTodayStamp(), word:word.word };
-  }
-
-  function languageNextQuizWord(state, words) {
-    var map = languageWordMap(words);
-    var queue = state.plan && state.plan.queue ? languageShuffle(state.plan.queue) : [];
-    state.plan.queue = queue;
-    while (queue.length && !map[queue[0]]) queue.shift();
-    return queue.length ? map[queue[0]] : null;
-  }
-
-  function languageOptionText(word, direction) {
-    if (!word) return '';
-    return languageCleanText(direction === 'en-cn' ? (word.cn || word.en || word.word) : word.word);
-  }
-
-  function languageMakeQuestion(word, words, mode) {
-    if (!word) return null;
-    var direction = mode === 'preview' ? 'cn-en' : (Math.random() > .5 ? 'en-cn' : 'cn-en');
-    var prompt = languageCleanText(direction === 'en-cn' ? word.word : (word.cn || word.en || word.word));
-    var answer = languageOptionText(word, direction);
-    var pool = languageShuffle(words).filter(function(item) {
-      return item && item.id !== word.id && languageOptionText(item, direction) && languageOptionText(item, direction) !== answer;
-    }).slice(0, 3);
-    var choices = languageShuffle([word].concat(pool)).map(function(item) {
-      return { id:item.id, text:languageOptionText(item, direction), correct:item.id === word.id };
-    });
-    return { word:word, direction:direction, prompt:prompt, answer:answer, choices:choices };
-  }
+  function languageCleanText(text) { return String(text || '').replace(/\n/g, '; ').replace(/\s+/g, ' ').trim(); }
 
   function languageSpeak(text) {
     if (!('speechSynthesis' in window) || !text) return;
-    try {
-      window.speechSynthesis.cancel();
-      var u = new SpeechSynthesisUtterance(text);
-      u.lang = (langRuntime.module === 'spanish') ? 'es-ES' : (/^[a-zA-Z][a-zA-Z\s'-]+$/.test(text) ? 'en-GB' : 'zh-CN');
-      u.rate = .88;
-      window.speechSynthesis.speak(u);
-    } catch(e) {}
+    try { window.speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(text); u.lang='en-GB'; u.rate=.82; u.pitch=.95; window.speechSynthesis.speak(u); } catch(e) {}
   }
 
-  function languageSpeakButton(label, text) {
-    var cls = label === 'Play' ? 'lang-study-play' : 'lang-icon-btn';
-    return '<button class="' + cls + '" data-speak="' + escapeHtml(text || '') + '" onclick="languageSpeak(this.dataset.speak)" aria-label="' + escapeHtml(label) + '">' + escapeHtml(label) + '</button>';
+  function languageEscapedSpeak(word) { return String(word || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+  function languageWordHtml(word, index) {
+    return '<article class="lang-word-card" style="--i:'+index+'">'
+      + '<button class="lang-audio" onclick="languageSpeak(\'' + escapeHtml(languageEscapedSpeak(word.word)) + '\')" aria-label="play word"><span></span></button>'
+      + '<div class="lang-word-main"><div class="lang-word-title">' + escapeHtml(word.word) + '</div><div class="lang-word-meta">' + escapeHtml([word.pos, word.phonetic, word.topic].filter(Boolean).join(' · ')) + '</div></div>'
+      + '<div class="lang-meaning">' + escapeHtml(languageCleanText(word.cn)) + '</div>'
+      + (word.example ? '<div class="lang-example">' + escapeHtml(languageCleanText(word.example)) + '</div>' : '')
+      + (word.extra ? '<div class="lang-extra">' + escapeHtml(languageCleanText(word.extra)) + '</div>' : '')
+      + '</article>';
   }
 
-  function languageCleanText(text) {
-    return String(text || '').replace(/\\n/g, '; ').replace(/\s+/g, ' ').trim();
+  function renderLanguageHome(state, words) {
+    state = languageEnsureToday(state, words); languageSaveState(state);
+    var stats = languageStats(state, words), map = languageWordMap(words);
+    var todayWords = (state.today.ids || []).map(function(id){ return map[id]; }).filter(Boolean);
+    var home = document.getElementById('lang-home'); if (!home) return;
+    document.querySelector('.language-lab')?.classList.remove('studying');
+    home.innerHTML = '<section class="lang-hero-card">'
+      + '<div class="lang-orbit" aria-hidden="true"><i></i><i></i><i></i></div>'
+      + '<div class="lang-hero-top"><div><div class="lang-kicker">IELTS Vocabulary Zhenjing</div><h2>Today Words</h2></div><div class="lang-total-badge">' + stats.totalDone + '<span>/' + stats.totalGoal + '</span></div></div>'
+      + '<div class="lang-progress"><div class="lang-progress-fill" style="width:' + stats.totalPct + '%"></div></div>'
+      + '<div class="lang-plan-row"><div><strong>' + stats.todayTotal + '</strong><span>today target</span></div><div><strong>' + stats.daysLeft + '</strong><span>days left</span></div><div><strong>' + stats.todayPct + '%</strong><span>today done</span></div></div>'
+      + '<div class="lang-step-row"><button onclick="changeLanguageDaily(-5)" aria-label="decrease daily words">−</button><span>' + state.daySize + '</span><button onclick="changeLanguageDaily(5)" aria-label="increase daily words">+</button></div>'
+      + '<button class="lang-primary big" onclick="languageSetView(\'preview\')">Preview Today</button></section>'
+      + '<section class="lang-today-list"><div class="lang-list-head"><span>Word release</span><button onclick="languageSetView(\'dictation\')">Start Dictation</button></div><div class="lang-word-list">' + todayWords.map(languageWordHtml).join('') + '</div></section>';
   }
 
-  function languageRenderShell(state) {
-    var activeModule = langRuntime.module || 'ielts';
-    var previousModule = langRuntime.module;
-    langRuntime.module = 'ielts';
-    var ieltsState = activeModule === 'ielts' ? state : languageLoadState();
-    var plan = ieltsState.plan || {};
-    var progress = ieltsState.plan ? languageProgress(ieltsState) : { done:0, total:ieltsState.daySize || 20, pct:0 };
-    langRuntime.module = previousModule;
-    var count = document.getElementById('lang-progress-count');
-    var fill = document.getElementById('lang-progress-fill');
-    var daily = document.getElementById('lang-daily-size');
-    var newCount = document.getElementById('lang-new-count');
-    var previewCount = document.getElementById('lang-preview-count');
-    var reviewCount = document.getElementById('lang-review-count');
-    var totalDone = document.getElementById('lang-total-done');
-    var totalGoal = document.getElementById('lang-total-goal');
-    var ring = document.getElementById('lang-goal-ring');
-    var learnedTotal = Object.keys(ieltsState.learned || {}).length;
-    var previewLeft = ieltsState.plan ? languagePreviewRemainingIds(ieltsState) : new Array(ieltsState.daySize || 20);
-    var reviewLeft = ieltsState.plan ? languageReviewQueueIds(ieltsState).length : 0;
-    if (count) count.innerHTML = progress.done + '/' + progress.total + '<span>done</span>';
-    if (fill) fill.style.width = progress.pct + '%';
-    if (ring) ring.style.setProperty('--lang-pct', progress.pct + '%');
-    if (daily) daily.textContent = ieltsState.daySize;
-    if (newCount) newCount.textContent = (plan.ids || []).length || ieltsState.daySize || 0;
-    if (previewCount) previewCount.textContent = previewLeft.length;
-    if (reviewCount) reviewCount.textContent = reviewLeft;
-    if (totalDone) totalDone.textContent = learnedTotal;
-    if (totalGoal) totalGoal.textContent = 8000;
-    document.querySelectorAll('[data-lang-card="ielts"] .lang-mode').forEach(function(btn) {
-      btn.classList.toggle('active', btn.dataset.langTab === ieltsState.activeMode);
-    });
-    languageRenderModuleCards();
-    languageBindModuleRail();
-    languagePositionModuleRail();
-  }
+  function languageRenderStage(html) { var stage = document.getElementById('lang-stage'); if (stage) stage.innerHTML = html; }
 
-  function languageRenderModuleCards() {
-    Object.keys(LANG_MODULES).forEach(function(moduleId) {
-      if (moduleId === 'ielts') return;
-      var previous = langRuntime.module;
-      langRuntime.module = moduleId;
-      var cfg = languageModuleConfig(moduleId);
-      var moduleState = languageLoadState();
-      var plan = moduleState.plan;
-      var progress = plan ? languageProgress(moduleState) : { done:0, total:cfg.daySize, pct:0 };
-      var previewLeft = plan ? languagePreviewRemainingIds(moduleState).length : cfg.daySize;
-      var reviewLeft = plan ? languageReviewQueueIds(moduleState).length : 0;
-      var learnedTotal = Object.keys(moduleState.learned || {}).length;
-      langRuntime.module = previous;
-      var card = document.querySelector('[data-lang-card="' + moduleId + '"]');
-      if (!card) return;
-      var progressEl = card.querySelector('[data-lang-stat="progress"]');
-      var fill = card.querySelector('[data-lang-stat="fill"]');
-      var target = card.querySelector('[data-lang-stat="target"]');
-      var preview = card.querySelector('[data-lang-stat="preview"]');
-      var review = card.querySelector('[data-lang-stat="review"]');
-      var totalDone = card.querySelector('[data-lang-stat="totalDone"]');
-      var totalGoal = card.querySelector('[data-lang-stat="totalGoal"]');
-      var dailySize = card.querySelector('[data-lang-stat="dailySize"]');
-      if (progressEl) progressEl.innerHTML = progress.done + '/' + progress.total + '<span>done</span>';
-      if (fill) fill.style.width = progress.pct + '%';
-      if (target) target.textContent = moduleState.daySize || cfg.daySize;
-      if (preview) preview.textContent = previewLeft;
-      if (review) review.textContent = reviewLeft;
-      if (totalDone) totalDone.textContent = learnedTotal;
-      if (totalGoal) totalGoal.textContent = cfg.totalGoal;
-      if (dailySize) dailySize.textContent = moduleState.daySize || cfg.daySize;
-      card.querySelectorAll('.lang-mode').forEach(function(btn) {
-        btn.classList.toggle('active', btn.dataset.langTab === moduleState.activeMode);
-      });
-    });
-  }
-
-  function languageSelectModule(moduleId, fromScroll) {
-    if (!LANG_MODULES[moduleId]) moduleId = 'ielts';
-    if (langRuntime.module === moduleId && fromScroll) return;
-    langRuntime.module = moduleId;
-    langRuntime.wordMap = null;
-    var token = ++langRuntime.loadToken;
-    try { localStorage.setItem(LANG_ACTIVE_MODULE_KEY, moduleId); } catch(e) {}
-    loadLanguageWords(moduleId).then(function(words) {
-      if (token !== langRuntime.loadToken || langRuntime.module !== moduleId) return;
-      langRuntime.words = words;
-      var state = languageBuildPlanIfNeeded(languageLoadState(), words);
-      state = languageUpdateCompletion(state);
-      languageSaveState(state);
-      renderLanguageMap(state, words);
-      languageRenderShell(state);
-    });
-  }
-
-  function languageBindModuleRail() {
-    var rail = document.getElementById('lang-module-rail');
-    if (!rail || rail.dataset.bound) return;
-    rail.dataset.bound = '1';
-    function updateDots() {
-      var dots = document.querySelectorAll('#lang-module-dots .lang-module-dot');
-      if (!dots.length) return;
-      var index = Math.round(rail.scrollLeft / Math.max(1, rail.clientWidth));
-      dots.forEach(function(dot, i){ dot.classList.toggle('active', i === index); });
-      var card = rail.children[index];
-      var moduleId = card && card.dataset ? card.dataset.langCard : '';
-      if (moduleId && moduleId !== langRuntime.module && LANG_MODULES[moduleId]) {
-        languageSelectModule(moduleId, true);
-      }
-    }
-    rail.addEventListener('scroll', function(){ window.requestAnimationFrame(updateDots); }, { passive:true });
-    updateDots();
-  }
-
-  function languagePositionModuleRail() {
-    var rail = document.getElementById('lang-module-rail');
-    if (!rail) return;
-    var moduleId = langRuntime.module || languageActiveModule();
-    if (rail.dataset.positionedFor === moduleId) return;
-    var cards = Array.prototype.slice.call(rail.children);
-    var index = cards.findIndex(function(card){ return card.dataset && card.dataset.langCard === moduleId; });
-    if (index < 0) return;
-    rail.dataset.positionedFor = moduleId;
-    rail.scrollLeft = index * rail.clientWidth;
-    var dots = document.querySelectorAll('#lang-module-dots .lang-module-dot');
-    dots.forEach(function(dot, i){ dot.classList.toggle('active', i === index); });
-  }
-
-  function languageRenderCard(html) {
-    var stage = document.getElementById('lang-stage');
-    if (stage) stage.innerHTML = html;
-  }
-
-  function languageEntryHtml(word) {
-    var example = word.example ? '<div class="lang-example"><div class="lang-example-en">' + escapeHtml(languageCleanText(word.example)) + '</div>' + (word.exampleCn ? '<div class="lang-example-cn">' + escapeHtml(languageCleanText(word.exampleCn)) + '</div>' : '') + '</div>' : '';
-    return ''
-      + '<div class="lang-word">' + escapeHtml(languageCleanText(word.word)) + '</div>'
-      + '<div class="lang-phonetic">' + escapeHtml(languageCleanText(word.phonetic || '')) + '</div>'
-      + '<div class="lang-meaning">' + escapeHtml(languageCleanText(word.cn || '')) + '</div>'
-      + '<div class="lang-definition">' + escapeHtml(languageCleanText(word.en || '')) + '</div>'
-      + example;
+  function languageSetView(view) {
+    var state = languageLoadState(); state.view = view || 'home';
+    if (state.view !== 'dictation') languageStopDictationTimer();
+    languageSaveState(state); renderLanguageLab();
   }
 
   function renderLanguagePreview(state, words) {
-    var word = languageCurrentPreviewWord(state, words);
-    if (!word) {
-      languageRenderCard('<div class="lang-card"><div class="lang-card-inner"><div class="lang-card-head"><button class="lang-study-back" onclick="languageSetView(\'home\')">‹</button><div class="lang-pill">Preview</div></div><div class="lang-empty">Preview is clear.</div></div></div>');
-      return;
-    }
-    renderLanguageQuiz(state, words, word, 'preview');
-    languageAttachStudyGestures();
-  }
-
-  function renderLanguageQuiz(state, words, forcedWord, forcedMode) {
-    var word = forcedWord || languageNextQuizWord(state, words);
-    if (!word) {
-      if (forcedMode === 'preview' || state.activeMode === 'preview') {
-        languageRenderCard('<div class="lang-card"><div class="lang-card-inner"><div class="lang-card-head"><button class="lang-study-back" onclick="languageSetView(\'home\')">‹</button><div class="lang-pill">Preview</div></div><div class="lang-empty">Preview is clear.</div></div></div>');
-        return;
-      }
-      state = languageUpdateCompletion(state);
-      languageSaveState(state);
-      languageRenderShell(state);
-      if (state.plan && state.plan.complete) renderLanguageComplete(state);
-      else languageRenderCard('<div class="lang-card"><div class="lang-card-inner"><div class="lang-card-head"><button class="lang-study-back" onclick="languageSetView(\'home\')">‹</button><div class="lang-pill">Review</div></div><div class="lang-empty">Review is clear.</div><div class="lang-card-actions"><button class="lang-primary" onclick="setLanguageMode(\'preview\')">Preview</button></div></div></div>');
-      return;
-    }
-    var mode = forcedMode || (state.activeMode === 'preview' ? 'preview' : 'review');
-    var q = languageMakeQuestion(word, words, mode);
-    q.mode = mode;
-    langRuntime.current = q;
-    langRuntime.locked = false;
-    var title = q.direction === 'en-cn' ? q.word.word : q.prompt;
-    var sub = q.direction === 'en-cn' ? 'Choose Chinese' : 'Choose English';
-    var choices = q.choices.map(function(choice, i) {
-      return '<button class="lang-choice" data-choice="' + i + '" onclick="answerLanguageChoice(' + i + ')">' + escapeHtml(choice.text) + '</button>';
-    }).join('');
-    languageRenderCard(
-      '<div class="lang-card"><div class="lang-card-inner">'
-        + '<div class="lang-card-head"><button class="lang-study-back" onclick="languageSetView(\'home\')">‹</button><div class="lang-pill">' + escapeHtml(mode === 'preview' ? 'Preview' : sub) + '</div>' + (mode === 'preview' ? '<span class="lang-card-head-spacer"></span>' : languageSpeakButton('Play', q.word.word)) + '</div>'
-        + '<div class="lang-swipe-deck quiz" id="lang-swipe-deck">'
-        + '<div class="lang-question">' + escapeHtml(title) + '</div>'
-        + (mode === 'preview' ? '' : '<div class="lang-phonetic">' + escapeHtml(q.word.phonetic || '') + '</div>')
-        + '<div class="lang-choices">' + choices + '</div>'
-        + '</div>'
-        + '<div class="lang-answer-state" id="lang-answer-state"></div>'
-      + '</div></div>'
-    );
-    languageAttachStudyGestures();
-  }
-
-  function renderLanguageAnalysis(state, words) {
     var map = languageWordMap(words);
-    var word = map[state.analysisWordId];
-    if (!word) return renderLanguagePreview(state, words);
-    languageRenderCard(
-      '<div class="lang-card"><div class="lang-card-inner">'
-        + '<div class="lang-card-head"><button class="lang-study-back" onclick="languageSetView(\'home\')">‹</button><div class="lang-pill">Analysis</div>' + languageSpeakButton('Play', word.word) + '</div>'
-        + '<div class="lang-swipe-deck analysis" id="lang-swipe-deck">' + languageEntryHtml(word) + '<div class="lang-answer-note">Moved to Review.</div></div>'
-        + '<div class="lang-analysis-actions"><button class="lang-icon-btn" onclick="languagePrevPreview()" aria-label="previous word">‹</button><button class="lang-primary" onclick="languageContinuePreviewAfterAnalysis()">Next</button></div>'
-      + '</div></div>'
-    );
-    languageAttachStudyGestures();
+    var todayWords = (state.today.ids || []).map(function(id){ return map[id]; }).filter(Boolean);
+    document.querySelector('.language-lab')?.classList.add('studying');
+    languageRenderStage('<div class="lang-study-screen preview"><div class="lang-study-head"><button class="lang-study-back" onclick="languageSetView(\'home\')">‹</button><div><div class="lang-kicker">Preview</div><h2>Today Words</h2></div><button class="lang-primary small" onclick="languageSetView(\'dictation\')">Dictation</button></div><div class="lang-word-list study">' + todayWords.map(languageWordHtml).join('') + '</div><button class="lang-primary big sticky" onclick="languageSetView(\'dictation\')">Confirm Dictation</button></div>');
   }
 
-  function renderLanguageComplete(state) {
-    languageRenderCard(
-      '<div class="lang-card"><div class="lang-card-inner">'
-        + '<div class="lang-card-head"><button class="lang-study-back" onclick="languageSetView(\'home\')">‹</button><div class="lang-pill">Complete</div></div>'
-        + '<div class="lang-word">Done</div>'
-        + '<div class="lang-definition">Today is complete.</div>'
-        + '<div class="lang-card-actions"><button class="lang-primary" onclick="setLanguageMode(\'preview\')">Preview</button></div>'
-      + '</div></div>'
-    );
+  function languageStartDictation(state) {
+    var source = (state.today.date || '') + ':' + (state.today.ids || []).join('|');
+    if (!state.dictation || state.dictation.source !== source) {
+      state.dictation = { source:source, ids:languageShuffle(state.today.ids || []), index:0, heard:[] };
+      state.selectedWrong = {}; languageSaveState(state);
+    }
   }
 
-  function languageTrueWeakIds(state) {
-    var plan = state.plan || {};
-    var ids = Object.keys(state.wrongStats || {}).sort(function(a,b) {
-      return ((state.wrongStats[b] && state.wrongStats[b].count) || 0) - ((state.wrongStats[a] && state.wrongStats[a].count) || 0);
-    });
-    ids = ids.concat(Object.keys(plan.wrongToday || {}), state.carryWrong || []);
-    return languageUnique(ids);
+  function languageDictationCurrent(state, words) {
+    var map = languageWordMap(words); var id = state.dictation && state.dictation.ids ? state.dictation.ids[state.dictation.index || 0] : null;
+    return id ? map[id] : null;
   }
 
-  function languageWeakIds(state) {
-    var plan = state.plan || {};
-    var ids = languageTrueWeakIds(state);
-    if (!ids.length) ids = (plan.reviewIds || []).concat((plan.ids || []).slice(0, 8));
-    return languageUnique(ids).slice(0, 10);
+  function languageStopDictationTimer() { if (langRuntime.dictationTimer) clearTimeout(langRuntime.dictationTimer); langRuntime.dictationTimer = null; }
+  function languageScheduleDictation() { languageStopDictationTimer(); langRuntime.dictationTimer = setTimeout(function(){ languageNextDictation(true); }, 15000); }
+
+  function renderLanguageDictation(state, words) {
+    languageStartDictation(state);
+    var word = languageDictationCurrent(state, words);
+    document.querySelector('.language-lab')?.classList.add('studying');
+    if (!word) return renderLanguageMark(state, words);
+    var index = (state.dictation.index || 0) + 1, total = (state.dictation.ids || []).length;
+    languageRenderStage('<div class="lang-study-screen dictation"><div class="lang-study-head"><button class="lang-study-back" onclick="languageSetView(\'preview\')">‹</button><div><div class="lang-kicker">Dictation</div><h2>Listen only</h2></div><button class="lang-ghost" onclick="languageSetView(\'mark\')">Mark</button></div><div class="lang-listen-core"><button class="lang-listen-button" onclick="languageReplayDictation()"><span></span></button><div class="lang-listen-count">' + index + ' / ' + total + '</div><div class="lang-listen-ring"><i></i></div></div><div class="lang-dictation-actions"><button onclick="languageReplayDictation()">Replay</button><button onclick="languageNextDictation(false)">Next</button></div></div>');
+    setTimeout(function(){ languageSpeak(word.word); }, 120); languageScheduleDictation();
   }
 
-  function renderLanguageMap(state, words) {
-    var box = document.getElementById('lang-network');
-    var svg = document.getElementById('lang-map-svg');
-    var empty = document.getElementById('lang-map-empty');
-    if (!box || !svg) return;
+  function languageReplayDictation() { var state = languageLoadState(); var word = languageDictationCurrent(state, langRuntime.words || []); if (word) languageSpeak(word.word); }
+
+  function languageNextDictation(auto) {
+    var state = languageLoadState(); if (!state.dictation) return renderLanguageLab();
+    var id = state.dictation.ids[state.dictation.index || 0]; if (id && state.dictation.heard.indexOf(id) === -1) state.dictation.heard.push(id);
+    state.dictation.index = (state.dictation.index || 0) + 1;
+    if (state.dictation.index >= state.dictation.ids.length) state.view = 'mark';
+    languageSaveState(state); renderLanguageLab();
+  }
+
+  function renderLanguageMark(state, words) {
     var map = languageWordMap(words);
-    var ids = languageWeakIds(state).filter(function(id){ return !!map[id]; });
-    if (!ids.length) {
-      if (empty) empty.textContent = 'No weak words yet';
-      svg.innerHTML = '';
-      box.querySelectorAll('.lang-node').forEach(function(n){ n.remove(); });
-      return;
-    }
-    if (empty) empty.textContent = '';
-    var old = langRuntime.map && langRuntime.map.nodes ? langRuntime.map.nodes : {};
-    var nodes = {};
-    var centerX = 50, centerY = 43;
-    ids.forEach(function(id, i) {
-      var stat = (state.wrongStats || {})[id] || {};
-      var angle = (Math.PI * 2 * (i / Math.max(1, ids.length) + Math.random() * .11)) - Math.PI / 2;
-      var radius = 10 + Math.random() * 30;
-      var oldNode = old[id];
-      nodes[id] = oldNode || {
-        id:id,
-        x:centerX + Math.cos(angle) * radius + (Math.random() * 10 - 5),
-        y:centerY + Math.sin(angle) * radius * .82 + (Math.random() * 10 - 5),
-        z:(Math.random() * 72 - 36),
-        vx:(Math.random() - .5) * .034,
-        vy:(Math.random() - .5) * .034,
-        vz:(Math.random() - .5) * .026,
-        score:stat.count || (i === 0 ? 2 : 1)
-      };
-      if (typeof nodes[id].z !== 'number') nodes[id].z = (Math.random() * 30 - 15);
-      if (typeof nodes[id].vz !== 'number') nodes[id].vz = (Math.random() - .5) * .02;
-      nodes[id].word = map[id];
-      nodes[id].score = stat.count || nodes[id].score || 1;
-    });
-    languageRelaxMapNodes(nodes, 14);
-    var edgeKey = (langRuntime.module || 'ielts') + ':' + ids.join('|');
-    var oldEdges = langRuntime.map && langRuntime.map.edgeKey === edgeKey ? langRuntime.map.edges : null;
-    langRuntime.map = { nodes:nodes, ids:ids, edgeKey:edgeKey, edges:oldEdges || languageBuildMapEdges(ids) };
-    if (!box.dataset.rotateReady) {
-      box.dataset.rotateReady = '1';
-      box.addEventListener('pointerdown', languageNetworkPointerDown);
-    }
-    languageDrawMap();
-    languageStartMapMotion();
+    var todayWords = (state.today.ids || []).map(function(id){ return map[id]; }).filter(Boolean);
+    document.querySelector('.language-lab')?.classList.add('studying'); languageStopDictationTimer();
+    languageRenderStage('<div class="lang-study-screen mark"><div class="lang-study-head"><button class="lang-study-back" onclick="languageSetView(\'dictation\')">‹</button><div><div class="lang-kicker">Mark</div><h2>Select Misses</h2></div><button class="lang-ghost" onclick="languageClearWrongSelection()">Clear</button></div><div class="lang-mark-grid">' + todayWords.map(function(word, i){ var active = state.selectedWrong && state.selectedWrong[word.id]; return '<button class="lang-mark-chip ' + (active ? 'wrong' : '') + '" style="--i:'+i+'" onclick="languageToggleWrong(\''+word.id+'\')"><strong>' + escapeHtml(word.word) + '</strong><span>' + escapeHtml(languageCleanText(word.cn)) + '</span></button>'; }).join('') + '</div><button class="lang-primary big sticky" onclick="languageCompleteToday()">Confirm Today</button></div>');
   }
 
-  function languageRelaxMapNodes(nodes, rounds) {
-    var list = Object.keys(nodes).map(function(id){ return nodes[id]; });
-    for (var r = 0; r < rounds; r++) {
-      for (var i = 0; i < list.length; i++) {
-        for (var j = i + 1; j < list.length; j++) {
-          var a = list[i], b = list[j];
-          var dx = b.x - a.x;
-          var dy = b.y - a.y;
-          var dist = Math.max(.1, Math.hypot(dx, dy));
-          var min = 8.5 + Math.min(8, ((a.word && a.word.word.length) || 4) * .34) + Math.min(8, ((b.word && b.word.word.length) || 4) * .34);
-          if (dist >= min) continue;
-          var push = (min - dist) * .045;
-          var ux = dx / dist;
-          var uy = dy / dist;
-          a.x -= ux * push;
-          a.y -= uy * push;
-          b.x += ux * push;
-          b.y += uy * push;
-        }
-      }
-      list.forEach(function(n) {
-        n.x = Math.max(9, Math.min(91, n.x));
-        n.y = Math.max(14, Math.min(84, n.y));
-      });
-    }
-  }
+  function languageToggleWrong(id) { var state = languageLoadState(); state.selectedWrong = state.selectedWrong || {}; state.selectedWrong[id] = !state.selectedWrong[id]; languageSaveState(state); renderLanguageMark(state, langRuntime.words || []); }
+  function languageClearWrongSelection() { var state = languageLoadState(); state.selectedWrong = {}; languageSaveState(state); renderLanguageMark(state, langRuntime.words || []); }
 
-  function languageBuildMapEdges(ids) {
-    var edges = [];
-    var seen = {};
-    ids.forEach(function(id, i) {
-      var count = Math.min(ids.length - 1, 2 + Math.floor(Math.random() * 3));
-      var pool = ids.filter(function(other){ return other !== id; });
-      pool.sort(function(a, b) {
-        var da = Math.abs(ids.indexOf(a) - i) + Math.random() * 5;
-        var db = Math.abs(ids.indexOf(b) - i) + Math.random() * 5;
-        return da - db;
-      });
-      for (var n = 0; n < count && n < pool.length; n++) {
-        var target = pool[(n + Math.floor(Math.random() * pool.length)) % pool.length];
-        var key = [id, target].sort().join('~');
-        if (seen[key]) continue;
-        seen[key] = true;
-        edges.push({
-          from:id,
-          to:target,
-          curve:(Math.random() - .5) * 18,
-          loose:Math.random() > .56
-        });
-      }
-    });
-    return edges.slice(0, Math.max(8, ids.length * 3));
-  }
-
-  function languageDrawMap() {
-    var box = document.getElementById('lang-network');
-    var svg = document.getElementById('lang-map-svg');
-    if (!box || !svg || !langRuntime.map) return;
-    var ids = langRuntime.map.ids || [];
-    var nodes = langRuntime.map.nodes || {};
-    var projected = {};
-    ids.forEach(function(id) {
-      if (nodes[id]) projected[id] = languageProjectNode(nodes[id]);
-    });
-    var lines = [];
-    (langRuntime.map.edges || []).forEach(function(edge) {
-      if (!nodes[edge.from] || !nodes[edge.to]) return;
-      var a = projected[edge.from];
-      var b = projected[edge.to];
-      if (!a || !b) return;
-      var mx = (a.x + b.x) / 2;
-      var my = (a.y + b.y) / 2;
-      var dx = b.x - a.x;
-      var dy = b.y - a.y;
-      var len = Math.max(1, Math.hypot(dx, dy));
-      var bend = (edge.curve || 0) * (edge.loose ? 1.35 : .7);
-      var cx = mx - dy / len * bend;
-      var cy = my + dx / len * bend;
-      var depth = (a.depth + b.depth) / 2;
-      var opacity = Math.max(.06, Math.min(.42, depth * .42 + (edge.loose ? -.04 : .02)));
-      var width = Math.max(.45, Math.min(1.05, .48 + depth * .55));
-      lines.push('<path class="lang-map-line" style="opacity:'+opacity.toFixed(2)+';stroke-width:'+width.toFixed(2)+'" d="M '+a.x.toFixed(2)+' '+a.y.toFixed(2)+' Q '+cx.toFixed(2)+' '+cy.toFixed(2)+' '+b.x.toFixed(2)+' '+b.y.toFixed(2)+'"></path>');
-    });
-    svg.innerHTML = lines.join('');
-    var live = {};
-    box.querySelectorAll('.lang-node').forEach(function(el){ live[el.dataset.id] = el; });
-    ids.forEach(function(id, i) {
-      var n = nodes[id];
-      var el = live[id];
-      if (!el) {
-        el = document.createElement('button');
-        el.className = 'lang-node';
-        el.type = 'button';
-        el.dataset.id = id;
-        el.innerHTML = '<span></span><i class="lang-node-dot"></i>';
-        el.addEventListener('click', function(e){
-          if (langRuntime.mapSuppressClick && Date.now() - langRuntime.mapSuppressClick < 240) {
-            e.preventDefault();
-            return;
-          }
-          languageOpenMapWord(id);
-        });
-        box.appendChild(el);
-        live[id] = el;
-      }
-      var p = projected[id] || languageProjectNode(n);
-      var size = Math.max(12, Math.min(24, (12.5 + (n.score || 1) * 2.2 + (i === 0 ? 4 : 0)) * p.scale));
-      el.classList.toggle('hot', i < 3);
-      el.style.left = p.x + '%';
-      el.style.top = p.y + '%';
-      el.style.fontSize = size + 'px';
-      el.style.opacity = String(Math.max(.42, Math.min(1, p.depth + .24)));
-      el.style.zIndex = String(10 + Math.round(p.depth * 80));
-      el.querySelector('span').textContent = n.word.word;
-    });
-    var idSet = {};
-    ids.forEach(function(id){ idSet[String(id)] = true; });
-    Object.keys(live).forEach(function(id){ if (!idSet[String(id)]) live[id].remove(); });
-  }
-
-  function languageProjectNode(n) {
-    var cx = 50, cy = 43;
-    var z = typeof n.z === 'number' ? n.z : 0;
-    var depth = Math.max(0, Math.min(1, (z + 46) / 92));
-    var scale = .72 + depth * .52;
-    return {
-      x: cx + (n.x - cx) * scale,
-      y: cy + (n.y - cy) * scale,
-      scale: scale,
-      depth: depth
-    };
-  }
-
-  function languageStartMapMotion() {
-    if (langRuntime.mapFrame) return;
-    function tick() {
-      if (!langRuntime.map || !document.getElementById('sec-timetable').classList.contains('active')) {
-        langRuntime.mapFrame = null;
-        return;
-      }
-      var nodes = langRuntime.map.nodes || {};
-      Object.keys(nodes).forEach(function(id) {
-        var n = nodes[id];
-        var boost = Math.min(1.8, langRuntime.mapBoost || 0);
-        var cx = 50, cy = 43;
-        languageRotateNode3d(n, .0014 + boost * .009, .0007 + boost * .004);
-        n.x += n.vx;
-        n.y += n.vy;
-        n.z += n.vz || 0;
-        if (n.z < -42 || n.z > 42) n.vz = (n.vz || .01) * -1;
-        if (n.x < 12 || n.x > 88) n.vx *= -1;
-        if (n.y < 16 || n.y > 82) n.vy *= -1;
-        n.x = Math.max(10, Math.min(90, n.x));
-        n.y = Math.max(14, Math.min(84, n.y));
-        n.z = Math.max(-46, Math.min(46, n.z));
-      });
-      languageRelaxMapNodes(nodes, 1);
-      langRuntime.mapBoost = Math.max(0, (langRuntime.mapBoost || 0) * .94 - .003);
-      languageDrawMap();
-      langRuntime.mapFrame = requestAnimationFrame(tick);
-    }
-    langRuntime.mapFrame = requestAnimationFrame(tick);
-  }
-
-  function languageRotateNode3d(n, yaw, pitch) {
-    var cx = 50, cy = 43;
-    var x = n.x - cx;
-    var y = n.y - cy;
-    var z = typeof n.z === 'number' ? n.z : 0;
-    var cosY = Math.cos(yaw);
-    var sinY = Math.sin(yaw);
-    var x1 = x * cosY + z * sinY;
-    var z1 = -x * sinY + z * cosY;
-    var cosX = Math.cos(pitch);
-    var sinX = Math.sin(pitch);
-    var y1 = y * cosX - z1 * sinX;
-    var z2 = y * sinX + z1 * cosX;
-    n.x = cx + x1;
-    n.y = cy + y1;
-    n.z = z2;
-  }
-
-  function languageRotateMap3d(yaw, pitch) {
-    if (!langRuntime.map) return;
-    var nodes = langRuntime.map.nodes || {};
-    Object.keys(nodes).forEach(function(id) {
-      languageRotateNode3d(nodes[id], yaw, pitch);
-    });
-  }
-
-  function languageNetworkPointerDown(event) {
-    var box = document.getElementById('lang-network');
-    if (!box || !langRuntime.map) return;
-    var lastX = event.clientX;
-    var lastY = event.clientY;
-    var moved = false;
-    try { box.setPointerCapture(event.pointerId); } catch(err) {}
-    langRuntime.drag = { pointerId:event.pointerId };
-    function move(e) {
-      if (!langRuntime.drag || langRuntime.drag.pointerId !== event.pointerId) return;
-      var dx = e.clientX - lastX;
-      var dy = e.clientY - lastY;
-      if (Math.hypot(dx, dy) > 1) moved = true;
-      languageRotateMap3d(dx * .006, dy * .006);
-      lastX = e.clientX;
-      lastY = e.clientY;
-      langRuntime.mapBoost = Math.min(2.2, (langRuntime.mapBoost || 0) + Math.min(.16, Math.hypot(dx, dy) * .01));
-      languageDrawMap();
-    }
-    function up() {
-      if (moved) langRuntime.mapSuppressClick = Date.now();
-      langRuntime.drag = null;
-      window.removeEventListener('pointermove', move);
-      window.removeEventListener('pointerup', up);
-    }
-    window.addEventListener('pointermove', move);
-    window.addEventListener('pointerup', up);
-  }
-
-  function languageOpenMapWord(id) {
-    var words = langRuntime.words || [];
-    var word = languageWordMap(words)[id];
-    if (!word) return;
-    languageRenderCard(
-      '<div class="lang-card"><div class="lang-card-inner">'
-        + '<div class="lang-card-head"><div class="lang-pill">Weak word</div>' + languageSpeakButton('Play', word.word) + '</div>'
-        + languageEntryHtml(word)
-        + '<div class="lang-card-actions"><button class="lang-primary" onclick="setLanguageMode(\'review\')">Review</button></div>'
-      + '</div></div>'
-    );
-  }
-
-  function languagePulseMap(amount) {
-    langRuntime.mapBoost = Math.min(2.2, (langRuntime.mapBoost || 0) + amount);
-  }
-
-  function languageWatchScroll() {
-    if (langRuntime.scrollWatch) return;
+  function languageCompleteToday() {
+    var state = languageLoadState(); if (!state.today) return renderLanguageLab();
+    var wrong = Object.keys(state.selectedWrong || {}).filter(function(id){ return state.selectedWrong[id]; });
+    (state.today.ids || []).forEach(function(id){ state.completed[id] = { date:languageTodayStamp(), wrong:wrong.indexOf(id) > -1 }; });
+    var carryCount = wrong.length < 5 ? wrong.length : Math.min(10, Math.max(5, wrong.length));
+    state.carryWrong = languageShuffle(wrong).slice(0, carryCount);
+    state.today.complete = true; state.history.unshift({ date:state.today.date, total:(state.today.ids || []).length, wrong:wrong.length }); state.history = state.history.slice(0,90);
+    state.view = 'home'; state.dictation = null; state.selectedWrong = {}; languageSaveState(state);
     var section = document.getElementById('sec-timetable');
-    if (!section) return;
-    langRuntime.scrollWatch = true;
-    langRuntime.lastScrollTop = section.scrollTop || 0;
-    langRuntime.lastScrollTime = Date.now();
-    section.addEventListener('scroll', function() {
-      var now = Date.now();
-      var dy = Math.abs((section.scrollTop || 0) - langRuntime.lastScrollTop);
-      var dt = Math.max(16, now - langRuntime.lastScrollTime);
-      languagePulseMap(Math.min(1.2, dy / dt * .18));
-      langRuntime.lastScrollTop = section.scrollTop || 0;
-      langRuntime.lastScrollTime = now;
-    }, { passive:true });
-    var pointer = null;
-    section.addEventListener('pointerdown', function(e) {
-      pointer = { x:e.clientX, y:e.clientY, t:Date.now() };
-    }, { passive:true });
-    section.addEventListener('pointermove', function(e) {
-      if (!pointer) return;
-      var now = Date.now();
-      var dist = Math.hypot(e.clientX - pointer.x, e.clientY - pointer.y);
-      var dt = Math.max(16, now - pointer.t);
-      languagePulseMap(Math.min(1.5, dist / dt * .16));
-      pointer = { x:e.clientX, y:e.clientY, t:now };
-    }, { passive:true });
-    section.addEventListener('pointerup', function(){ pointer = null; }, { passive:true });
-    section.addEventListener('pointercancel', function(){ pointer = null; }, { passive:true });
-    section.addEventListener('wheel', function(e) {
-      languagePulseMap(Math.min(1.4, Math.abs(e.deltaY || e.deltaX || 0) * .006));
-    }, { passive:true });
+    if (section) section.scrollTop = 0;
+    renderLanguageLab();
   }
 
-  function languageSetView(view) {
-    var state = languageLoadState();
-    state.view = view === 'study' ? 'study' : 'home';
-    languageSaveState(state);
-    renderLanguageLab();
+  function changeLanguageDaily(delta) {
+    var state = languageLoadState(); state.daySize = Math.max(5, Math.min(120, (Number(state.daySize) || 20) + delta));
+    if (state.today && state.today.complete === true) state.today = null;
+    if (langRuntime.words && langRuntime.words.length) state = languageResizeToday(state, langRuntime.words);
+    languageSaveState(state); renderLanguageLab();
   }
 
   function renderLanguageLab() {
-    var stage = document.getElementById('lang-stage');
-    if (!stage) return;
-    langRuntime.module = languageActiveModule();
-    langRuntime.wordMap = null;
-    var moduleId = langRuntime.module;
-    var token = ++langRuntime.loadToken;
-    var state = languageLoadState();
-    state.activeMode = state.activeMode || 'preview';
-    document.querySelector('.language-lab')?.classList.toggle('studying', state.view === 'study');
-    languageRenderShell(state);
-    languageWatchScroll();
-    loadLanguageWords(moduleId).then(function(words) {
-      if (token !== langRuntime.loadToken || langRuntime.module !== moduleId) return;
+    var home = document.getElementById('lang-home'), stage = document.getElementById('lang-stage'); if (!home || !stage) return;
+    loadLanguageWords().then(function(words) {
       langRuntime.words = words;
-      state = languageBuildPlanIfNeeded(languageLoadState(), words);
-      state = languageUpdateCompletion(state);
-      languageSaveState(state);
-      document.querySelector('.language-lab')?.classList.toggle('studying', state.view === 'study');
-      languageRenderShell(state);
-      renderLanguageMap(state, words);
-      if (state.view !== 'study') {
-        languageRenderCard('');
-        return;
-      }
-      if (state.plan && state.plan.complete) return renderLanguageComplete(state);
-      if (state.activeMode === 'preview') renderLanguagePreview(state, words);
-      else renderLanguageQuiz(state, words);
-    }).catch(function() {
-      languageRenderCard('<div class="lang-card"><div class="lang-card-inner"><div class="lang-empty">Words unavailable</div></div></div>');
-    });
+      var state = languageEnsureToday(languageLoadState(), words);
+      if (state.view === 'preview') return renderLanguagePreview(state, words);
+      if (state.view === 'dictation') return renderLanguageDictation(state, words);
+      if (state.view === 'mark') return renderLanguageMark(state, words);
+      languageStopDictationTimer(); stage.innerHTML = ''; renderLanguageHome(state, words);
+    }).catch(function(){ home.innerHTML = '<div class="lang-empty">Words unavailable</div>'; });
   }
 
-  function setLanguageMode(mode) {
-    if (['preview','review'].indexOf(mode) === -1) return;
-    var moduleId = arguments.length > 1 ? arguments[1] : langRuntime.module;
-    if (LANG_MODULES[moduleId]) {
-      langRuntime.module = moduleId;
-      langRuntime.wordMap = null;
-      try { localStorage.setItem(LANG_ACTIVE_MODULE_KEY, moduleId); } catch(e) {}
-    }
-    var state = languageLoadState();
-    state.view = 'study';
-    state.activeMode = mode;
-    languageSaveState(state);
-    renderLanguageLab();
-  }
-
-  function changeLanguageDaily(delta, moduleId) {
-    var previousModule = langRuntime.module;
-    if (LANG_MODULES[moduleId]) {
-      langRuntime.module = moduleId;
-      langRuntime.wordMap = null;
-      try { localStorage.setItem(LANG_ACTIVE_MODULE_KEY, moduleId); } catch(e) {}
-    }
-    var state = languageLoadState();
-    var cfg = languageModuleConfig(langRuntime.module);
-    var maxWords = cfg.id === 'ielts' ? ((langRuntime.words && langRuntime.words.length) || cfg.totalGoal || 100) : (cfg.totalGoal || 100);
-    state.daySize = Math.max(5, Math.min(maxWords, (Number(state.daySize) || languageModuleConfig(langRuntime.module).daySize || 20) + delta));
-    if (langRuntime.words && langRuntime.words.length) {
-      state = languageResizeTodayPlan(state, langRuntime.words);
-      state = languageUpdateCompletion(state);
-    }
-    languageSaveState(state);
-    if (previousModule !== langRuntime.module && moduleId) {
-      loadLanguageWords(langRuntime.module).then(function(words) {
-        langRuntime.words = words;
-        renderLanguageLab();
-      });
-      return;
-    }
-    renderLanguageLab();
-  }
-
-  function languageNextPreview() {
-    var state = languageLoadState();
-    if (!state.plan) return renderLanguageLab();
-    var word = languageCurrentPreviewWord(state, langRuntime.words || []);
-    if (word) {
-      languageMarkPreviewPassed(state, word, true);
-    }
-    if (!languagePreviewRemainingIds(state).length) state.activeMode = 'review';
-    state = languageUpdateCompletion(state);
-    languageSaveState(state);
-    renderLanguageLab();
-  }
-
-  function languagePrevPreview() {
-    var state = languageLoadState();
-    if (!state.plan) return renderLanguageLab();
-    state.plan.previewHistory = state.plan.previewHistory || [];
-    var previousId = state.plan.previewHistory.pop();
-    if (previousId !== null && typeof previousId !== 'undefined') {
-      if (state.plan.previewPassed) delete state.plan.previewPassed[previousId];
-      if (state.learned) delete state.learned[previousId];
-    }
-    state.analysisWordId = null;
-    state.activeMode = 'preview';
-    state.view = 'study';
-    state = languageUpdateCompletion(state);
-    languageSaveState(state);
-    renderLanguageLab();
-  }
-
-  function languageContinuePreviewAfterAnalysis() {
-    var state = languageLoadState();
-    state.analysisWordId = null;
-    state.activeMode = languagePreviewRemainingIds(state).length ? 'preview' : 'review';
-    state.view = 'study';
-    state = languageUpdateCompletion(state);
-    languageSaveState(state);
-    renderLanguageLab();
-  }
-
-  function languageAttachStudyGestures() {
-    var deck = document.getElementById('lang-swipe-deck');
-    if (!deck || deck.dataset.gestureReady) return;
-    deck.dataset.gestureReady = '1';
-    var startX = 0, startY = 0, lastX = 0, active = false;
-    deck.addEventListener('pointerdown', function(e) {
-      active = true;
-      startX = lastX = e.clientX;
-      startY = e.clientY;
-      deck.classList.add('swiping');
-      try { deck.setPointerCapture(e.pointerId); } catch(err) {}
-    });
-    deck.addEventListener('pointermove', function(e) {
-      if (!active) return;
-      var dx = e.clientX - startX;
-      var dy = e.clientY - startY;
-      if (Math.abs(dx) < Math.abs(dy)) return;
-      deck.style.transform = 'translateX(' + Math.max(-42, Math.min(42, dx * .22)).toFixed(1) + 'px) rotate(' + (dx * .01).toFixed(2) + 'deg)';
-      deck.style.opacity = String(Math.max(.82, 1 - Math.abs(dx) / 340));
-      languagePulseMap(Math.min(.55, Math.abs(e.clientX - lastX) * .018));
-      lastX = e.clientX;
-    });
-    function finish(e) {
-      if (!active) return;
-      active = false;
-      var dx = e.clientX - startX;
-      deck.classList.remove('swiping');
-      deck.style.transform = '';
-      deck.style.opacity = '';
-    }
-    deck.addEventListener('pointerup', finish);
-    deck.addEventListener('pointercancel', finish);
-  }
-
-  function answerLanguageChoice(index) {
-    if (langRuntime.locked || !langRuntime.current) return;
-    langRuntime.locked = true;
-    var state = languageLoadState();
-    var q = langRuntime.current;
-    var selected = q.choices[index];
-    var buttons = document.querySelectorAll('.lang-choice');
-    buttons.forEach(function(btn, i) {
-      var choice = q.choices[i];
-      btn.classList.toggle('correct', !!choice.correct);
-      btn.classList.toggle('wrong', i === index && !choice.correct);
-    });
-    var status = document.getElementById('lang-answer-state');
-    if (status) status.textContent = selected && selected.correct ? 'Correct' : 'Again';
-    if (!state.plan) return;
-    var currentId = q.word.id;
-    state.plan.queue = (state.plan.queue || []).filter(function(id){ return id !== currentId; });
-    if (selected && selected.correct) {
-      if (q.mode === 'preview') {
-        languageMarkPreviewPassed(state, q.word, true);
-      } else {
-        state.plan.passed[currentId] = true;
-      }
-      state.learned[currentId] = { last: languageTodayStamp(), word:q.word.word };
-    } else {
-      state.plan.wrongToday[currentId] = true;
-      state.wrongStats = state.wrongStats || {};
-      var stat = state.wrongStats[currentId] || { count:0, word:q.word.word };
-      stat.count = (stat.count || 0) + 1;
-      stat.word = q.word.word;
-      stat.last = languageTodayStamp();
-      state.wrongStats[currentId] = stat;
-      if ((state.plan.queue || []).indexOf(currentId) === -1) state.plan.queue.push(currentId);
-      if (q.mode !== 'preview' && (state.plan.secondRound || []).indexOf(currentId) === -1) state.plan.secondRound.push(currentId);
-      if (q.mode === 'preview') {
-        languageMarkPreviewPassed(state, q.word, false);
-        state.analysisWordId = currentId;
-      }
-    }
-    languageSaveState(state);
-    if (langRuntime.words) renderLanguageMap(state, langRuntime.words);
-    languageRenderShell(state);
-    if (!(selected && selected.correct) && q.mode === 'preview') {
-      setTimeout(function(){ renderLanguageAnalysis(languageLoadState(), langRuntime.words || []); }, 420);
-      return;
-    }
-    setTimeout(function() {
-      var fresh = languageLoadState();
-      if (q.mode === 'preview') renderLanguageLab();
-      else languageContinueQuiz(fresh);
-    }, selected && selected.correct ? 520 : 760);
-  }
-
-  function languageContinueQuiz(state) {
-    if (!state.plan) return renderLanguageLab();
-    if ((state.plan.queue || []).length === 0 && (state.plan.secondRound || []).length > 0) {
-      state.plan.queue = languageShuffle(languageUnique(state.plan.secondRound));
-      state.plan.secondRound = [];
-      languageSaveState(state);
-    }
-    languageFinishIfReady(state, langRuntime.words || []);
-  }
-
-  function languageFinishIfReady(state, words) {
-    if (!state.plan) return renderLanguageLab();
-    state = languageUpdateCompletion(state);
-    if (state.plan.complete) {
-      languageSaveState(state);
-      languageRenderShell(state);
-      renderLanguageComplete(state);
-      return;
-    }
-    languageRenderShell(state);
-    if (!languageReviewQueueIds(state).length) {
-      languageRenderCard('<div class="lang-card"><div class="lang-card-inner"><div class="lang-card-head"><button class="lang-study-back" onclick="languageSetView(\'home\')">‹</button><div class="lang-pill">Review</div></div><div class="lang-empty">Review is clear.</div><div class="lang-card-actions"><button class="lang-primary" onclick="setLanguageMode(\'preview\')">Preview</button></div></div></div>');
-      return;
-    }
-    renderLanguageQuiz(state, words.length ? words : (langRuntime.words || []));
-  }
 
   var DASH_WEEK_DAYS = ['MON','TUE','WED','THU','FRI'];
   function dashDateStamp(date) {
@@ -7599,10 +6458,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       localStorage.getItem('gt_v2') ||
       localStorage.getItem('mobius_check_v1') ||
       localStorage.getItem('memo_7u') ||
-      localStorage.getItem('iue.lang.v2') ||
-      localStorage.getItem('iue.lang.v2.daily') ||
-      localStorage.getItem('iue.lang.v2.engineering') ||
-      localStorage.getItem('iue.lang.v2.spanish')
+      localStorage.getItem('iue.lang.zhenjing.v1')
     );
   }
 
@@ -7619,7 +6475,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function cloudPayloadHasProgressState(payload) {
     if (!payload || !payload.items) return false;
     var items = payload.items;
-    return !!(items.gt_v2 || items.mobius_check_v1 || items.memo_7u || items['iue.activeCourses.v1'] || items['iue.lang.v2'] || items['iue.lang.v2.daily'] || items['iue.lang.v2.engineering'] || items['iue.lang.v2.spanish']);
+    return !!(items.gt_v2 || items.mobius_check_v1 || items.memo_7u || items['iue.activeCourses.v1'] || items['iue.lang.zhenjing.v1']);
   }
 
   function cloudCollect() {
@@ -7630,7 +6486,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       clientId:cloudClientId(),
       items:{}
     };
-    var keep = ['gt_v2', 'memo_7u', 'mobius_check_v1', 'mobius_check_schema', 'iue.activeCourses.v1', 'iue.lang.v2', 'iue.lang.v2.daily', 'iue.lang.v2.engineering', 'iue.lang.v2.spanish', 'iue.lang.activeModule.v1'];
+    var keep = ['gt_v2', 'memo_7u', 'mobius_check_v1', 'mobius_check_schema', 'iue.activeCourses.v1', 'iue.lang.zhenjing.v1'];
     keep.forEach(function(k){ data.items[k] = localStorage.getItem(k); });
     for (var i=0; i<localStorage.length; i++) {
       var key = localStorage.key(i);
