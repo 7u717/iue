@@ -1509,12 +1509,32 @@
     .language-lab.adjusting .lang-hero-card,
     .language-lab.adjusting .lang-today-list,
     .language-lab.adjusting .lang-word-card { animation:none; }
-    .lang-network-panel { position:relative;z-index:1;height:212px;margin-top:16px;border-radius:20px;overflow:hidden;opacity:0;transform:translateY(6px) scale(.985);animation:langNetworkIn .28s cubic-bezier(.2,.8,.2,1) forwards; }
-    .lang-network-panel::before { content:"";position:absolute;inset:18px;border-radius:50%;background:radial-gradient(circle,rgba(147,197,253,.16),transparent 62%);filter:blur(22px);opacity:.8; }
-    .lang-network-lines { position:absolute;inset:0;width:100%;height:100%;opacity:.62; }
-    .lang-network-lines line { stroke:rgba(147,197,253,.24);stroke-width:1; }
-    .lang-network-node { position:absolute;left:calc(var(--x) * 1%);top:calc(var(--y) * 1%);transform:translate(-50%,-50%);font-family:'Space Grotesk',sans-serif;font-size:clamp(12px,calc(var(--s) * 1px),22px);font-weight:850;color:rgba(219,235,255,.78);text-shadow:0 0 14px rgba(147,197,253,.5);animation:langFloat calc(6.8s + var(--i) * .24s) ease-in-out infinite alternate;animation-delay:calc(var(--i) * -240ms); }
-    .lang-network-node::after { content:"";display:block;width:5px;height:5px;margin:4px auto 0;border-radius:50%;background:rgba(219,235,255,.58);box-shadow:0 0 10px rgba(147,197,253,.45); }
+    .lang-network {
+      position:relative;z-index:1;height:274px;margin:2px -12px -8px;border:0;border-radius:0;overflow:hidden;
+      background:transparent;box-shadow:none;touch-action:none;cursor:grab;opacity:0;transform:translateY(6px);
+      animation:langNetworkIn .28s cubic-bezier(.2,.8,.2,1) forwards;
+    }
+    .lang-network:active { cursor:grabbing; }
+    .lang-network::after {
+      content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(147,197,253,.055),transparent 48%);pointer-events:none;
+    }
+    .lang-map-svg { position:absolute;inset:0;width:100%;height:100%;opacity:.62;z-index:1; }
+    .lang-map-line { fill:none;stroke:rgba(147,197,253,.34);stroke-width:.75;vector-effect:non-scaling-stroke;stroke-linecap:round; }
+    .lang-node {
+      position:absolute;border:0;background:transparent;color:#BFD9FF;-webkit-text-fill-color:currentColor;font-family:'Space Grotesk',sans-serif;
+      font-weight:850;letter-spacing:0;text-shadow:0 0 10px rgba(147,197,253,.72),0 0 24px rgba(147,197,253,.32);
+      transform:translate(-50%,-50%);z-index:5;transition:color .18s ease,text-shadow .18s ease,opacity .18s ease;
+      pointer-events:none;
+    }
+    .lang-node.hot { color:#F8FBFF; }
+    .lang-node-dot {
+      position:absolute;left:50%;top:calc(100% + 2px);width:5px;height:5px;border-radius:50%;
+      background:currentColor;transform:translateX(-50%);box-shadow:0 0 10px currentColor;opacity:.85;
+    }
+    .lang-map-empty {
+      position:absolute;left:18px;right:18px;top:50%;transform:translateY(-50%);
+      color:var(--muted);font-size:13px;font-weight:750;text-align:center;line-height:1.45;
+    }
     .lang-hero-card.networking .lang-orbit { opacity:.2;transform:scale(.92); }
     .lang-hero-card.networking .lang-progress,
     .lang-hero-card.networking .lang-plan-row,
@@ -1523,7 +1543,6 @@
     @keyframes langCardIn { from { opacity:0;transform:translateY(10px) scale(.992); } to { opacity:1;transform:none; } }
     @keyframes langWordIn { from { opacity:0;transform:translateY(8px); } to { opacity:1;transform:none; } }
     @keyframes langNetworkIn { to { opacity:1;transform:none; } }
-    @keyframes langFloat { from { transform:translate(-50%,-50%) translate3d(-4px,3px,0); } to { transform:translate(-50%,-50%) translate3d(5px,-4px,0); } }
     @keyframes langListenBar { from { transform:scaleX(1); } to { transform:scaleX(0); } }
     @keyframes langOrbit { to { transform:rotate(calc(var(--r) + 360deg)); } }
 
@@ -3443,7 +3462,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-09-01-zhenjing-natural-voice';
+  var APP_VERSION = '2026-09-01-zhenjing-old-network';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5871,7 +5890,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var LANG_STATE_KEY = 'iue.lang.zhenjing.v2';
   var LANG_DATA_SRC = 'data/ielts-zhenjing.js?v=' + encodeURIComponent(APP_VERSION);
   var langWordsPromise = null;
-  var langRuntime = { words:null, wordMap:null, wordMapSize:0, dictationTimer:null, preferredVoice:null };
+  var langRuntime = { words:null, wordMap:null, wordMapSize:0, dictationTimer:null, preferredVoice:null, map:null, mapFrame:null, mapBoost:0, scrollWatch:false, mapSuppressClick:0 };
 
   function languageTodayStamp() {
     var d = new Date();
@@ -6001,6 +6020,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return ids;
   }
 
+  function languageUnique(ids) {
+    var seen = {};
+    return (ids || []).filter(function(id){ if (!id || seen[id]) return false; seen[id] = true; return true; });
+  }
+
   function languageStats(state, words) {
     var ids = state.today ? (state.today.ids || []) : [];
     var done = ids.filter(function(id){ return state.completed[id]; }).length;
@@ -6062,25 +6086,288 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       + '</article>';
   }
 
-  function languageNetworkHtml(words) {
-    var nodes = words.slice(0, 10);
-    var spots = [[18,35,19],[40,20,17],[68,30,21],[83,54,15],[58,68,18],[28,72,16],[48,46,14],[76,76,17],[22,55,14],[62,16,13]];
-    var pairs = [[0,2],[0,6],[0,8],[1,3],[1,6],[2,4],[2,7],[2,8],[3,5],[3,6],[4,7],[5,8],[6,9],[7,9],[1,8],[0,5]];
-    var lines = pairs.map(function(p){
-      var a = spots[p[0]], b = spots[p[1]];
-      return '<line x1="' + a[0] + '%" y1="' + a[1] + '%" x2="' + b[0] + '%" y2="' + b[1] + '%"></line>';
-    }).join('');
-    return '<div class="lang-network-panel" aria-label="vocabulary network"><svg class="lang-network-lines" viewBox="0 0 100 100" preserveAspectRatio="none">' + lines + '</svg>'
-      + nodes.map(function(word, i){ var s = spots[i]; return '<span class="lang-network-node" style="--x:'+s[0]+';--y:'+s[1]+';--s:'+s[2]+';--i:'+i+'">' + escapeHtml(word.word) + '</span>'; }).join('')
-      + '</div>';
+  function languageWeakIds(state) {
+    var ids = [];
+    if (state.today && Array.isArray(state.today.wrongIds)) ids = ids.concat(state.today.wrongIds);
+    ids = ids.concat(state.carryWrong || []);
+    if (state.today && Array.isArray(state.today.ids)) ids = ids.concat(state.today.ids.slice(0, 10));
+    return languageUnique(ids).slice(0, 10);
+  }
+
+  function languageNetworkHtml() {
+    return '<div class="lang-network" id="lang-network" aria-label="vocabulary network"><svg class="lang-map-svg" id="lang-map-svg" viewBox="0 0 100 100" preserveAspectRatio="none"></svg><div class="lang-map-empty" id="lang-map-empty"></div></div>';
   }
 
   function languageToggleNetwork(event) {
     if (event && event.target && event.target.closest('button')) return;
+    if (langRuntime.mapSuppressClick && Date.now() - langRuntime.mapSuppressClick < 260) return;
     var state = languageLoadState();
     state.networkOpen = !state.networkOpen;
     languageSaveState(state);
     renderLanguageLab();
+  }
+
+  function renderLanguageMap(state, words) {
+    var box = document.getElementById('lang-network');
+    var svg = document.getElementById('lang-map-svg');
+    var empty = document.getElementById('lang-map-empty');
+    if (!box || !svg) return;
+    var map = languageWordMap(words);
+    var ids = languageWeakIds(state).filter(function(id){ return !!map[id]; });
+    if (!ids.length) {
+      if (empty) empty.textContent = '';
+      svg.innerHTML = '';
+      box.querySelectorAll('.lang-node').forEach(function(n){ n.remove(); });
+      return;
+    }
+    if (empty) empty.textContent = '';
+    var old = langRuntime.map && langRuntime.map.nodes ? langRuntime.map.nodes : {};
+    var nodes = {};
+    var centerX = 50, centerY = 43;
+    ids.forEach(function(id, i) {
+      var oldNode = old[id];
+      var isWrong = !!((state.today && state.today.wrongIds || []).indexOf(id) > -1 || (state.carryWrong || []).indexOf(id) > -1);
+      var angle = (Math.PI * 2 * (i / Math.max(1, ids.length) + Math.random() * .11)) - Math.PI / 2;
+      var radius = 10 + Math.random() * 30;
+      nodes[id] = oldNode || {
+        id:id,
+        x:centerX + Math.cos(angle) * radius + (Math.random() * 10 - 5),
+        y:centerY + Math.sin(angle) * radius * .82 + (Math.random() * 10 - 5),
+        z:(Math.random() * 72 - 36),
+        vx:(Math.random() - .5) * .034,
+        vy:(Math.random() - .5) * .034,
+        vz:(Math.random() - .5) * .026,
+        score:isWrong ? 2 : (i === 0 ? 2 : 1)
+      };
+      if (typeof nodes[id].z !== 'number') nodes[id].z = (Math.random() * 30 - 15);
+      if (typeof nodes[id].vz !== 'number') nodes[id].vz = (Math.random() - .5) * .02;
+      nodes[id].word = map[id];
+      nodes[id].score = isWrong ? Math.max(2, nodes[id].score || 1) : (nodes[id].score || 1);
+    });
+    languageRelaxMapNodes(nodes, 14);
+    var edgeKey = ids.join('|');
+    var oldEdges = langRuntime.map && langRuntime.map.edgeKey === edgeKey ? langRuntime.map.edges : null;
+    langRuntime.map = { nodes:nodes, ids:ids, edgeKey:edgeKey, edges:oldEdges || languageBuildMapEdges(ids) };
+    if (!box.dataset.rotateReady) {
+      box.dataset.rotateReady = '1';
+      box.addEventListener('pointerdown', languageNetworkPointerDown);
+    }
+    languageDrawMap();
+    languageStartMapMotion();
+  }
+
+  function languageRelaxMapNodes(nodes, rounds) {
+    var list = Object.keys(nodes).map(function(id){ return nodes[id]; });
+    for (var r = 0; r < rounds; r++) {
+      for (var i = 0; i < list.length; i++) {
+        for (var j = i + 1; j < list.length; j++) {
+          var a = list[i], b = list[j];
+          var dx = b.x - a.x, dy = b.y - a.y;
+          var dist = Math.max(.1, Math.hypot(dx, dy));
+          var min = 8.5 + Math.min(8, ((a.word && a.word.word.length) || 4) * .34) + Math.min(8, ((b.word && b.word.word.length) || 4) * .34);
+          if (dist >= min) continue;
+          var push = (min - dist) * .045;
+          var ux = dx / dist, uy = dy / dist;
+          a.x -= ux * push; a.y -= uy * push; b.x += ux * push; b.y += uy * push;
+        }
+      }
+      list.forEach(function(n) {
+        n.x = Math.max(9, Math.min(91, n.x));
+        n.y = Math.max(14, Math.min(84, n.y));
+      });
+    }
+  }
+
+  function languageBuildMapEdges(ids) {
+    var edges = [];
+    var seen = {};
+    ids.forEach(function(id, i) {
+      var count = Math.min(ids.length - 1, 2 + Math.floor(Math.random() * 3));
+      var pool = ids.filter(function(other){ return other !== id; });
+      pool.sort(function(a, b) {
+        var da = Math.abs(ids.indexOf(a) - i) + Math.random() * 5;
+        var db = Math.abs(ids.indexOf(b) - i) + Math.random() * 5;
+        return da - db;
+      });
+      for (var n = 0; n < count && n < pool.length; n++) {
+        var target = pool[(n + Math.floor(Math.random() * pool.length)) % pool.length];
+        var key = [id, target].sort().join('~');
+        if (seen[key]) continue;
+        seen[key] = true;
+        edges.push({ from:id, to:target, curve:(Math.random() - .5) * 18, loose:Math.random() > .56 });
+      }
+    });
+    return edges.slice(0, Math.max(8, ids.length * 3));
+  }
+
+  function languageProjectNode(n) {
+    var cx = 50, cy = 43;
+    var z = typeof n.z === 'number' ? n.z : 0;
+    var depth = Math.max(0, Math.min(1, (z + 46) / 92));
+    var scale = .72 + depth * .52;
+    return { x:cx + (n.x - cx) * scale, y:cy + (n.y - cy) * scale, scale:scale, depth:depth };
+  }
+
+  function languageDrawMap() {
+    var box = document.getElementById('lang-network');
+    var svg = document.getElementById('lang-map-svg');
+    if (!box || !svg || !langRuntime.map) return;
+    var ids = langRuntime.map.ids || [];
+    var nodes = langRuntime.map.nodes || {};
+    var projected = {};
+    ids.forEach(function(id){ if (nodes[id]) projected[id] = languageProjectNode(nodes[id]); });
+    var lines = [];
+    (langRuntime.map.edges || []).forEach(function(edge) {
+      if (!nodes[edge.from] || !nodes[edge.to]) return;
+      var a = projected[edge.from], b = projected[edge.to];
+      if (!a || !b) return;
+      var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      var dx = b.x - a.x, dy = b.y - a.y;
+      var len = Math.max(1, Math.hypot(dx, dy));
+      var bend = (edge.curve || 0) * (edge.loose ? 1.35 : .7);
+      var cx = mx - dy / len * bend;
+      var cy = my + dx / len * bend;
+      var depth = (a.depth + b.depth) / 2;
+      var opacity = Math.max(.06, Math.min(.42, depth * .42 + (edge.loose ? -.04 : .02)));
+      var width = Math.max(.45, Math.min(1.05, .48 + depth * .55));
+      lines.push('<path class="lang-map-line" style="opacity:'+opacity.toFixed(2)+';stroke-width:'+width.toFixed(2)+'" d="M '+a.x.toFixed(2)+' '+a.y.toFixed(2)+' Q '+cx.toFixed(2)+' '+cy.toFixed(2)+' '+b.x.toFixed(2)+' '+b.y.toFixed(2)+'"></path>');
+    });
+    svg.innerHTML = lines.join('');
+    var live = {};
+    box.querySelectorAll('.lang-node').forEach(function(el){ live[el.dataset.id] = el; });
+    ids.forEach(function(id, i) {
+      var n = nodes[id];
+      var el = live[id];
+      if (!el) {
+        el = document.createElement('span');
+        el.className = 'lang-node';
+        el.dataset.id = id;
+        el.innerHTML = '<span></span><i class="lang-node-dot"></i>';
+        box.appendChild(el);
+        live[id] = el;
+      }
+      var p = projected[id] || languageProjectNode(n);
+      var size = Math.max(12, Math.min(24, (12.5 + (n.score || 1) * 2.2 + (i === 0 ? 4 : 0)) * p.scale));
+      el.classList.toggle('hot', i < 3);
+      el.style.left = p.x + '%';
+      el.style.top = p.y + '%';
+      el.style.fontSize = size + 'px';
+      el.style.opacity = String(Math.max(.42, Math.min(1, p.depth + .24)));
+      el.style.zIndex = String(10 + Math.round(p.depth * 80));
+      el.querySelector('span').textContent = n.word.word;
+    });
+    var idSet = {};
+    ids.forEach(function(id){ idSet[String(id)] = true; });
+    Object.keys(live).forEach(function(id){ if (!idSet[String(id)]) live[id].remove(); });
+  }
+
+  function languageRotateNode3d(n, yaw, pitch) {
+    var cx = 50, cy = 43;
+    var x = n.x - cx, y = n.y - cy, z = typeof n.z === 'number' ? n.z : 0;
+    var cosY = Math.cos(yaw), sinY = Math.sin(yaw);
+    var x1 = x * cosY + z * sinY;
+    var z1 = -x * sinY + z * cosY;
+    var cosX = Math.cos(pitch), sinX = Math.sin(pitch);
+    var y1 = y * cosX - z1 * sinX;
+    var z2 = y * sinX + z1 * cosX;
+    n.x = cx + x1; n.y = cy + y1; n.z = z2;
+  }
+
+  function languageRotateMap3d(yaw, pitch) {
+    if (!langRuntime.map) return;
+    var nodes = langRuntime.map.nodes || {};
+    Object.keys(nodes).forEach(function(id){ languageRotateNode3d(nodes[id], yaw, pitch); });
+  }
+
+  function languageStartMapMotion() {
+    if (langRuntime.mapFrame) return;
+    function tick() {
+      if (!langRuntime.map || !document.getElementById('sec-timetable').classList.contains('active')) {
+        langRuntime.mapFrame = null;
+        return;
+      }
+      var nodes = langRuntime.map.nodes || {};
+      Object.keys(nodes).forEach(function(id) {
+        var n = nodes[id];
+        var boost = Math.min(1.8, langRuntime.mapBoost || 0);
+        languageRotateNode3d(n, .0014 + boost * .009, .0007 + boost * .004);
+        n.x += n.vx; n.y += n.vy; n.z += n.vz || 0;
+        if (n.z < -42 || n.z > 42) n.vz = (n.vz || .01) * -1;
+        if (n.x < 12 || n.x > 88) n.vx *= -1;
+        if (n.y < 16 || n.y > 82) n.vy *= -1;
+        n.x = Math.max(10, Math.min(90, n.x));
+        n.y = Math.max(14, Math.min(84, n.y));
+        n.z = Math.max(-46, Math.min(46, n.z));
+      });
+      languageRelaxMapNodes(nodes, 1);
+      langRuntime.mapBoost = Math.max(0, (langRuntime.mapBoost || 0) * .94 - .003);
+      languageDrawMap();
+      langRuntime.mapFrame = requestAnimationFrame(tick);
+    }
+    langRuntime.mapFrame = requestAnimationFrame(tick);
+  }
+
+  function languagePulseMap(amount) {
+    langRuntime.mapBoost = Math.min(2.2, (langRuntime.mapBoost || 0) + amount);
+  }
+
+  function languageNetworkPointerDown(event) {
+    var box = document.getElementById('lang-network');
+    if (!box || !langRuntime.map) return;
+    var lastX = event.clientX;
+    var lastY = event.clientY;
+    var moved = false;
+    try { box.setPointerCapture(event.pointerId); } catch(err) {}
+    langRuntime.drag = { pointerId:event.pointerId };
+    function move(e) {
+      if (!langRuntime.drag || langRuntime.drag.pointerId !== event.pointerId) return;
+      var dx = e.clientX - lastX;
+      var dy = e.clientY - lastY;
+      if (Math.hypot(dx, dy) > 1) moved = true;
+      languageRotateMap3d(dx * .006, dy * .006);
+      lastX = e.clientX;
+      lastY = e.clientY;
+      langRuntime.mapBoost = Math.min(2.2, (langRuntime.mapBoost || 0) + Math.min(.16, Math.hypot(dx, dy) * .01));
+      languageDrawMap();
+    }
+    function up() {
+      if (moved) langRuntime.mapSuppressClick = Date.now();
+      langRuntime.drag = null;
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    }
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  }
+
+  function languageWatchScroll() {
+    if (langRuntime.scrollWatch) return;
+    var section = document.getElementById('sec-timetable');
+    if (!section) return;
+    langRuntime.scrollWatch = true;
+    langRuntime.lastScrollTop = section.scrollTop || 0;
+    langRuntime.lastScrollTime = Date.now();
+    section.addEventListener('scroll', function() {
+      var now = Date.now();
+      var dy = Math.abs((section.scrollTop || 0) - langRuntime.lastScrollTop);
+      var dt = Math.max(16, now - langRuntime.lastScrollTime);
+      languagePulseMap(Math.min(1.2, dy / dt * .18));
+      langRuntime.lastScrollTop = section.scrollTop || 0;
+      langRuntime.lastScrollTime = now;
+    }, { passive:true });
+    var pointer = null;
+    section.addEventListener('pointerdown', function(e) { pointer = { x:e.clientX, y:e.clientY, t:Date.now() }; }, { passive:true });
+    section.addEventListener('pointermove', function(e) {
+      if (!pointer) return;
+      var now = Date.now();
+      var dist = Math.hypot(e.clientX - pointer.x, e.clientY - pointer.y);
+      var dt = Math.max(16, now - pointer.t);
+      languagePulseMap(Math.min(1.5, dist / dt * .16));
+      pointer = { x:e.clientX, y:e.clientY, t:now };
+    }, { passive:true });
+    section.addEventListener('pointerup', function(){ pointer = null; }, { passive:true });
+    section.addEventListener('pointercancel', function(){ pointer = null; }, { passive:true });
+    section.addEventListener('wheel', function(e) { languagePulseMap(Math.min(1.4, Math.abs(e.deltaY || e.deltaX || 0) * .006)); }, { passive:true });
   }
 
   function renderLanguageHome(state, words) {
@@ -6092,12 +6379,13 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     home.innerHTML = '<section class="lang-hero-card ' + (state.networkOpen ? 'networking' : '') + '" onclick="languageToggleNetwork(event)">'
       + '<div class="lang-orbit" aria-hidden="true"><i></i><i></i><i></i></div>'
       + '<div class="lang-hero-top"><div><h2>Today Words</h2></div><div class="lang-total-badge">' + stats.totalDone + '<span>/' + stats.totalGoal + '</span></div></div>'
-      + (state.networkOpen ? languageNetworkHtml(todayWords) : '')
+      + (state.networkOpen ? languageNetworkHtml() : '')
       + '<div class="lang-progress"><div class="lang-progress-fill" style="width:' + stats.totalPct + '%"></div></div>'
       + '<div class="lang-plan-row"><div><strong>' + stats.todayTotal + '</strong><span>today target</span></div><div><strong>' + stats.daysLeft + '</strong><span>days left</span></div><div><strong>' + stats.todayPct + '%</strong><span>today done</span></div></div>'
       + '<div class="lang-step-row"><button onclick="changeLanguageDaily(-5, event)" aria-label="decrease daily words">−</button><span>' + state.daySize + '</span><button onclick="changeLanguageDaily(5, event)" aria-label="increase daily words">+</button></div>'
       + '<button class="lang-primary big" onclick="languageSetView(\'preview\')">Preview Today</button></section>'
       + '<section class="lang-today-list"><div class="lang-list-head"><span>Word release</span><button onclick="languageSetView(\'dictation\')">Start Dictation</button></div><div class="lang-word-list">' + todayWords.map(languageWordHtml).join('') + '</div></section>';
+    if (state.networkOpen) renderLanguageMap(state, words);
   }
 
   function languageRenderStage(html) { var stage = document.getElementById('lang-stage'); if (stage) stage.innerHTML = html; }
@@ -6193,6 +6481,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function renderLanguageLab() {
     var home = document.getElementById('lang-home'), stage = document.getElementById('lang-stage'); if (!home || !stage) return;
+    languageWatchScroll();
     loadLanguageWords().then(function(words) {
       langRuntime.words = words;
       var state = languageEnsureToday(languageLoadState(), words);
