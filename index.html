@@ -3443,7 +3443,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-09-01-zhenjing-polish';
+  var APP_VERSION = '2026-09-01-zhenjing-carry-review';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5943,13 +5943,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function languagePickTodayIds(state, words) {
-    var all = words.map(function(w){ return w.id; }).filter(function(id){ return !state.completed[id]; });
+    var carry = {};
+    (state.carryWrong || []).forEach(function(id){ carry[id] = true; });
+    var all = words.map(function(w){ return w.id; }).filter(function(id){ return !state.completed[id] && !carry[id]; });
     var base = languageShuffleSeeded(all, state.seed + ':' + languageTodayStamp() + ':' + state.history.length);
-    var wrong = (state.carryWrong || []).filter(function(id){ return !state.completed[id]; });
-    var carryCount = wrong.length < 5 ? wrong.length : Math.min(10, Math.max(5, wrong.length));
-    var carry = languageShuffleSeeded(wrong, state.seed + ':carry:' + languageTodayStamp()).slice(0, carryCount);
     var used = {}, ids = [];
-    carry.forEach(function(id){ if (!used[id]) { used[id] = true; ids.push(id); } });
     base.forEach(function(id){ if (!used[id] && ids.length < state.daySize) { used[id] = true; ids.push(id); } });
     return ids;
   }
@@ -5982,9 +5980,25 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var today = languageTodayStamp();
     if (state.today && state.today.complete !== true) return state;
     if (state.today && state.today.date === today && state.today.complete === true) return state;
-    state.today = { date:today, ids:languagePickTodayIds(state, words), complete:false, issuedAt:new Date().toISOString() };
+    state.today = { date:today, ids:languagePickTodayIds(state, words), wrongIds:[], complete:false, issuedAt:new Date().toISOString() };
     state.view = 'home'; state.dictation = null; state.selectedWrong = {};
     return state;
+  }
+
+  function languageTodayDisplayIds(state) {
+    if (!state.today) return [];
+    if (state.today.complete === true) return Array.isArray(state.today.wrongIds) ? state.today.wrongIds : [];
+    return Array.isArray(state.today.ids) ? state.today.ids : [];
+  }
+
+  function languageDictationIds(state) {
+    var ids = Array.isArray(state.today && state.today.ids) ? state.today.ids.slice() : [];
+    if (state.today && state.today.complete !== true) {
+      var used = {};
+      ids.forEach(function(id){ used[id] = true; });
+      (state.carryWrong || []).forEach(function(id){ if (!used[id]) { used[id] = true; ids.push(id); } });
+    }
+    return ids;
   }
 
   function languageStats(state, words) {
@@ -6059,7 +6073,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function renderLanguageHome(state, words) {
     state = languageEnsureToday(state, words); languageSaveState(state);
     var stats = languageStats(state, words), map = languageWordMap(words);
-    var todayWords = (state.today.ids || []).map(function(id){ return map[id]; }).filter(Boolean);
+    var todayWords = languageTodayDisplayIds(state).map(function(id){ return map[id]; }).filter(Boolean);
     var home = document.getElementById('lang-home'); if (!home) return;
     document.querySelector('.language-lab')?.classList.remove('studying');
     home.innerHTML = '<section class="lang-hero-card ' + (state.networkOpen ? 'networking' : '') + '" onclick="languageToggleNetwork(event)">'
@@ -6083,15 +6097,16 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function renderLanguagePreview(state, words) {
     var map = languageWordMap(words);
-    var todayWords = (state.today.ids || []).map(function(id){ return map[id]; }).filter(Boolean);
+    var todayWords = languageTodayDisplayIds(state).map(function(id){ return map[id]; }).filter(Boolean);
     document.querySelector('.language-lab')?.classList.add('studying');
     languageRenderStage('<div class="lang-study-screen preview"><div class="lang-study-head"><button class="lang-study-back" onclick="languageSetView(\'home\')">‹</button><div><div class="lang-kicker">Preview</div><h2>Today Words</h2></div><button class="lang-primary small" onclick="languageSetView(\'dictation\')">Dictation</button></div><div class="lang-word-list study">' + todayWords.map(languageWordHtml).join('') + '</div><button class="lang-primary big sticky" onclick="languageSetView(\'dictation\')">Confirm Dictation</button></div>');
   }
 
   function languageStartDictation(state) {
-    var source = (state.today.date || '') + ':' + (state.today.ids || []).join('|');
+    var dictationIds = languageDictationIds(state);
+    var source = (state.today.date || '') + ':' + dictationIds.join('|');
     if (!state.dictation || state.dictation.source !== source) {
-      state.dictation = { source:source, ids:languageShuffle(state.today.ids || []), index:0, heard:[] };
+      state.dictation = { source:source, ids:languageShuffle(dictationIds), index:0, heard:[] };
       state.selectedWrong = {}; languageSaveState(state);
     }
   }
@@ -6126,7 +6141,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function renderLanguageMark(state, words) {
     var map = languageWordMap(words);
-    var todayWords = (state.today.ids || []).map(function(id){ return map[id]; }).filter(Boolean);
+    var todayWords = languageDictationIds(state).map(function(id){ return map[id]; }).filter(Boolean);
     document.querySelector('.language-lab')?.classList.add('studying'); languageStopDictationTimer();
     languageRenderStage('<div class="lang-study-screen mark"><div class="lang-study-head"><button class="lang-study-back" onclick="languageSetView(\'dictation\')">‹</button><div><div class="lang-kicker">Mark</div><h2>Select Misses</h2></div><button class="lang-ghost" onclick="languageClearWrongSelection()">Clear</button></div><div class="lang-mark-grid">' + todayWords.map(function(word, i){ var active = state.selectedWrong && state.selectedWrong[word.id]; return '<button class="lang-mark-chip ' + (active ? 'wrong' : '') + '" style="--i:'+i+'" onclick="languageToggleWrong(\''+word.id+'\')"><strong>' + escapeHtml(word.word) + '</strong><span>' + escapeHtml(languageCleanText(word.cn)) + '</span></button>'; }).join('') + '</div><button class="lang-primary big sticky" onclick="languageCompleteToday()">Confirm Today</button></div>');
   }
@@ -6140,8 +6155,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     (state.today.ids || []).forEach(function(id){ state.completed[id] = { date:languageTodayStamp(), wrong:wrong.indexOf(id) > -1 }; });
     var carryCount = wrong.length < 5 ? wrong.length : Math.min(10, Math.max(5, wrong.length));
     state.carryWrong = languageShuffle(wrong).slice(0, carryCount);
+    state.today.wrongIds = wrong;
     state.today.complete = true; state.history.unshift({ date:state.today.date, total:(state.today.ids || []).length, wrong:wrong.length }); state.history = state.history.slice(0,90);
-    state.view = 'home'; state.dictation = null; state.selectedWrong = {}; languageSaveState(state);
+    state.view = 'preview'; state.dictation = null; state.selectedWrong = {}; languageSaveState(state);
     var section = document.getElementById('sec-timetable');
     if (section) section.scrollTop = 0;
     renderLanguageLab();
