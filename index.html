@@ -3443,7 +3443,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-09-01-zhenjing-carry-review';
+  var APP_VERSION = '2026-09-01-zhenjing-natural-voice';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -6015,12 +6015,25 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (langRuntime.preferredVoice || !('speechSynthesis' in window)) return langRuntime.preferredVoice;
     var voices = [];
     try { voices = window.speechSynthesis.getVoices() || []; } catch(e) {}
-    var names = ['Samantha','Daniel','Karen','Moira','Serena','Kate','Google UK English Female','Google UK English Male'];
-    langRuntime.preferredVoice = voices.find(function(v){ return names.indexOf(v.name) > -1; })
-      || voices.find(function(v){ return /^en-(AU|GB)/i.test(v.lang || ''); })
-      || voices.find(function(v){ return /^en/i.test(v.lang || ''); })
-      || null;
+    if (!voices.length) return null;
+    function scoreVoice(v) {
+      var name = (v.name || '').toLowerCase(), lang = (v.lang || '').toLowerCase();
+      var score = /^en/.test(lang) ? 10 : 0;
+      if (/en-(au|gb)/.test(lang)) score += 16;
+      if (/enhanced|premium|neural|natural|online/.test(name)) score += 20;
+      if (/samantha|daniel|karen|moira|serena|kate|tessa|google uk english/.test(name)) score += 14;
+      if (/compact|default/.test(name)) score -= 8;
+      return score;
+    }
+    langRuntime.preferredVoice = voices.slice().sort(function(a,b){ return scoreVoice(b) - scoreVoice(a); })[0] || null;
     return langRuntime.preferredVoice;
+  }
+
+  if ('speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.onvoiceschanged = function(){ langRuntime.preferredVoice = null; languagePreferredVoice(); };
+      setTimeout(languagePreferredVoice, 300);
+    } catch(e) {}
   }
 
   function languageSpeak(text) {
@@ -6031,7 +6044,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var voice = languagePreferredVoice();
       if (voice) u.voice = voice;
       u.lang = voice && voice.lang ? voice.lang : 'en-GB';
-      u.rate=.78; u.pitch=.92;
+      u.rate=.72; u.pitch=.98; u.volume=1;
       window.speechSynthesis.speak(u);
     } catch(e) {}
   }
