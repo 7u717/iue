@@ -3481,7 +3481,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-09-02-import-meaning';
+  var APP_VERSION = '2026-09-02-import-translate';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5910,7 +5910,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var LANG_RESET_KEY = 'iue.lang.zhenjing.reset.2026-09-01';
   var LANG_DATA_SRC = 'data/ielts-zhenjing.js?v=' + encodeURIComponent(APP_VERSION);
   var langWordsPromise = null;
-  var langRuntime = { words:null, wordMap:null, wordMapSize:0, dictationTimer:null, preferredVoice:null, map:null, mapFrame:null, mapBoost:0, scrollWatch:false, mapSuppressClick:0, phoneticFetching:{} };
+  var langRuntime = { words:null, wordMap:null, wordMapSize:0, dictationTimer:null, preferredVoice:null, map:null, mapFrame:null, mapBoost:0, scrollWatch:false, mapSuppressClick:0, phoneticFetching:{}, translationFetching:{} };
 
   function languageTodayStamp() {
     var d = new Date();
@@ -6017,7 +6017,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         cn: note.cn || word.cn || '',
         phonetic: note.phonetic || word.phonetic || '',
         pos: note.pos || word.pos || '',
-        topic: note.topic || word.topic || '',
+        topic: Object.prototype.hasOwnProperty.call(note, 'topic') ? note.topic : (word.topic || ''),
         example: typeof note.example === 'string' ? note.example : (word.example || ''),
         extra: typeof note.extra === 'string' ? note.extra : (word.extra || '')
       });
@@ -6098,7 +6098,19 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return { todayDone:done, todayTotal:ids.length, todayPct:ids.length?Math.round(done/ids.length*100):0, totalDone:totalDone, totalGoal:words.length, totalPct:words.length?Math.round(totalDone/words.length*100):0, daysLeft:daysLeft };
   }
 
-  function languageCleanText(text) { return String(text || '').replace(/\n/g, '; ').replace(/\s+/g, ' ').trim(); }
+  function languageCleanText(text) {
+    return String(text || '')
+      .replace(/\n/g, '; ')
+      .replace(/\s+/g, ' ')
+      .replace(/^(?:意为|意思是|意思为|释义[:：]?|中文[:：]?|meaning[:：]?)\s*/i, '')
+      .trim();
+  }
+
+  function languageDisplayMeta(word) {
+    var pos = word && word.pos && word.pos !== 'personal' ? word.pos : '';
+    var topic = word && word.topic && word.topic !== 'Personal' ? word.topic : '';
+    return [pos, word && word.phonetic, topic].filter(Boolean).join(' · ');
+  }
 
   function languagePersonalId(term) {
     return 'pw-' + languageHash(String(term || '').toLowerCase().replace(/\s+/g, ' ').trim()).toString(36);
@@ -6214,6 +6226,37 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       .finally(function(){ delete langRuntime.phoneticFetching[id]; });
   }
 
+  function languageFetchTranslation(id) {
+    var state = languageLoadState();
+    var baseMap = languageWordMap(langRuntime.baseWords || []);
+    var word = (state.personalWords && state.personalWords[id]) || baseMap[id];
+    if (!word || word.cn || !word.word || langRuntime.translationFetching[id]) return;
+    langRuntime.translationFetching[id] = true;
+    fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(word.word) + '&langpair=en|zh-CN')
+      .then(function(res){ if (!res.ok) throw new Error('translation unavailable'); return res.json(); })
+      .then(function(data) {
+        var translated = data && data.responseData && data.responseData.translatedText ? languageCleanText(data.responseData.translatedText) : '';
+        if (!translated || translated.toLowerCase() === String(word.word).toLowerCase()) return;
+        var latest = languageLoadState();
+        latest.personalNotes = latest.personalNotes || {};
+        latest.personalNotes[id] = latest.personalNotes[id] || { topic:'', example:'', extra:'' };
+        latest.personalNotes[id].cn = translated;
+        latest.personalNotes[id].topic = '';
+        latest.personalNotes[id].example = '';
+        latest.personalNotes[id].extra = '';
+        if (latest.personalWords && latest.personalWords[id] && !latest.personalWords[id].cn) latest.personalWords[id].cn = translated;
+        languageSaveState(latest);
+        if (latest.view === 'home' || latest.view === 'preview' || latest.view === 'import') renderLanguageLab();
+      })
+      .catch(function(){})
+      .finally(function(){ delete langRuntime.translationFetching[id]; });
+  }
+
+  function languageEnrichImportedWord(id, needsTranslation) {
+    languageFetchPhonetic(id);
+    if (needsTranslation) languageFetchTranslation(id);
+  }
+
   function languagePreferredVoice() {
     if (langRuntime.preferredVoice || !('speechSynthesis' in window)) return langRuntime.preferredVoice;
     var voices = [];
@@ -6260,7 +6303,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return '<article class="lang-word-card" style="--i:'+index+'">'
       + '<span class="lang-word-index">' + String(index + 1).padStart(2, '0') + '</span>'
       + '<button class="lang-audio" onclick="languageSpeak(' + languageJsArg(word.word) + ')" aria-label="play word"><span></span></button>'
-      + '<div class="lang-word-main"><div class="lang-word-title">' + escapeHtml(word.word) + '</div><div class="lang-word-meta">' + escapeHtml([word.pos, word.phonetic, word.topic].filter(Boolean).join(' · ')) + '</div></div>'
+      + '<div class="lang-word-main"><div class="lang-word-title">' + escapeHtml(word.word) + '</div><div class="lang-word-meta">' + escapeHtml(languageDisplayMeta(word)) + '</div></div>'
       + (word.cn ? '<div class="lang-meaning">' + escapeHtml(languageCleanText(word.cn)) + '</div>' : '')
       + (word.example ? '<div class="lang-example">' + escapeHtml(languageCleanText(word.example)) + '</div>' : '')
       + (word.extra ? '<div class="lang-extra">' + escapeHtml(languageCleanText(word.extra)) + '</div>' : '')
@@ -6319,14 +6362,13 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var term = languageNormalizeImportTerm(item && item.term);
       if (!term) return;
       var id = existingByTerm[languageTermKey(term)] || languagePersonalId(term);
+      var importedCn = languageCleanText(item.cn || '');
       if (!existingByTerm[languageTermKey(term)] && !state.personalWords[id]) {
-        state.personalWords[id] = { id:id, word:term, pos:languageIsPhrase(term) ? 'phrase' : 'personal', phonetic:'', cn:languageCleanText(item.cn || ''), topic:'Personal', example:'', extra:'' };
-      } else if (state.personalWords[id] && item.cn && !state.personalWords[id].cn) {
-        state.personalWords[id].cn = languageCleanText(item.cn);
+        state.personalWords[id] = { id:id, word:term, pos:languageIsPhrase(term) ? 'phrase' : '', phonetic:'', cn:importedCn, topic:'', example:'', extra:'' };
+      } else if (state.personalWords[id] && importedCn && !state.personalWords[id].cn) {
+        state.personalWords[id].cn = importedCn;
       }
-      if (item.cn) {
-        state.personalNotes[id] = { cn:languageCleanText(item.cn), topic:'Personal', example:'', extra:'' };
-      }
+      state.personalNotes[id] = { cn:importedCn, topic:'', example:'', extra:'' };
       if (!used[id]) {
         used[id] = true;
         ids.push(id);
@@ -6344,7 +6386,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     state.importDraft = { text:'', candidates:[], selected:{} };
     state.view = 'home';
     languageSaveState(state);
-    added.forEach(languageFetchPhonetic);
+    added.forEach(function(id) {
+      var map = languageWordMap(languageAllWords(state, words));
+      var word = map[id];
+      var hasChinese = !!(word && word.cn);
+      languageEnrichImportedWord(id, !hasChinese);
+    });
     renderLanguageLab();
   }
 
