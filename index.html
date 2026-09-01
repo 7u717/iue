@@ -1475,6 +1475,7 @@
     .lang-list-head span { color:var(--muted);font-size:11px;font-weight:850;text-transform:uppercase;letter-spacing:.08em; }
     .lang-list-head button,
     .lang-ghost { height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.045);color:var(--text);font-size:12px;font-weight:850;padding:0 12px; }
+    .lang-list-actions { display:flex;align-items:center;gap:8px; }
     .lang-word-list { display:flex;flex-direction:column;gap:10px;margin-top:12px; }
     .lang-word-list.study { padding-bottom:74px; }
     .lang-word-card { position:relative;display:grid;grid-template-columns:42px 1fr;gap:10px;padding:12px;border:1px solid rgba(255,255,255,.075);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.026));animation:langWordIn .28s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i) * 18ms); }
@@ -1506,6 +1507,22 @@
     .lang-mark-chip.wrong { background:rgba(255,69,58,.13);border-color:rgba(255,99,91,.48);box-shadow:0 0 24px rgba(255,69,58,.12);transform:translateY(-2px) scale(1.015); }
     .lang-mark-chip.wrong::after { content:"Miss";position:absolute;right:10px;top:10px;color:#FF9A94;font-size:10px;font-weight:900; }
     .lang-empty { border:1px dashed rgba(255,255,255,.13);border-radius:18px;padding:22px 14px;color:var(--muted);text-align:center;font-size:13px;font-weight:700;line-height:1.4; }
+    .lang-import-box { position:relative;z-index:1;display:flex;flex-direction:column;gap:12px; }
+    .lang-import-box textarea {
+      width:100%;min-height:184px;resize:vertical;border:1px solid rgba(255,255,255,.09);border-radius:20px;
+      background:rgba(255,255,255,.045);color:var(--text);padding:14px;font-size:15px;font-weight:650;line-height:1.45;
+      outline:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2);
+    }
+    .lang-import-box textarea:focus { border-color:rgba(147,197,253,.34);box-shadow:0 0 0 3px rgba(147,197,253,.08); }
+    .lang-import-tools { display:grid;grid-template-columns:1fr 1fr;gap:10px; }
+    .lang-import-tools button { height:44px;border-radius:18px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.045);color:var(--text);font-size:13px;font-weight:850; }
+    .lang-import-chips { display:flex;flex-wrap:wrap;gap:8px;padding-bottom:76px; }
+    .lang-import-chip {
+      border:1px solid rgba(147,197,253,.18);border-radius:999px;background:rgba(147,197,253,.07);color:#DCEEFF;
+      min-height:35px;padding:0 12px;font-size:13px;font-weight:820;transition:transform .16s ease,opacity .16s ease,background .16s ease,border-color .16s ease;
+    }
+    .lang-import-chip.off { opacity:.28;background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.08);color:var(--muted); }
+    .lang-import-chip:active { transform:scale(.96); }
     .language-lab.adjusting .lang-hero-card,
     .language-lab.adjusting .lang-today-list,
     .language-lab.adjusting .lang-word-card { animation:none; }
@@ -3462,7 +3479,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-09-01-zhenjing-reset';
+  var APP_VERSION = '2026-09-02-personal-import';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5891,7 +5908,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var LANG_RESET_KEY = 'iue.lang.zhenjing.reset.2026-09-01';
   var LANG_DATA_SRC = 'data/ielts-zhenjing.js?v=' + encodeURIComponent(APP_VERSION);
   var langWordsPromise = null;
-  var langRuntime = { words:null, wordMap:null, wordMapSize:0, dictationTimer:null, preferredVoice:null, map:null, mapFrame:null, mapBoost:0, scrollWatch:false, mapSuppressClick:0 };
+  var langRuntime = { words:null, wordMap:null, wordMapSize:0, dictationTimer:null, preferredVoice:null, map:null, mapFrame:null, mapBoost:0, scrollWatch:false, mapSuppressClick:0, phoneticFetching:{} };
 
   function languageTodayStamp() {
     var d = new Date();
@@ -5899,7 +5916,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function languageDefaultState() {
-    return { version:2, daySize:20, seed:Math.floor(Math.random()*1000000000), completed:{}, history:[], carryWrong:[], today:null, view:'home', networkOpen:false, dictation:null, selectedWrong:{} };
+    return { version:2, daySize:20, seed:Math.floor(Math.random()*1000000000), completed:{}, history:[], carryWrong:[], today:null, view:'home', networkOpen:false, dictation:null, selectedWrong:{}, personalWords:{}, importDraft:{ text:'', candidates:[], selected:{} } };
   }
 
   function languageResetTestProgressOnce() {
@@ -5927,6 +5944,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       parsed.carryWrong = Array.isArray(parsed.carryWrong) ? parsed.carryWrong : [];
       parsed.networkOpen = parsed.networkOpen === true;
       parsed.selectedWrong = parsed.selectedWrong && typeof parsed.selectedWrong === 'object' ? parsed.selectedWrong : {};
+      parsed.personalWords = parsed.personalWords && typeof parsed.personalWords === 'object' ? parsed.personalWords : {};
+      parsed.importDraft = parsed.importDraft && typeof parsed.importDraft === 'object' ? parsed.importDraft : { text:'', candidates:[], selected:{} };
+      parsed.importDraft.text = String(parsed.importDraft.text || '');
+      parsed.importDraft.candidates = Array.isArray(parsed.importDraft.candidates) ? parsed.importDraft.candidates : [];
+      parsed.importDraft.selected = parsed.importDraft.selected && typeof parsed.importDraft.selected === 'object' ? parsed.importDraft.selected : {};
       return parsed;
     } catch(e) { return languageDefaultState(); }
   }
@@ -5971,9 +5993,23 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function languageShuffle(list) { return languageShuffleSeeded(list, Date.now() + ':' + Math.random()); }
 
   function languageWordMap(words) {
-    if (langRuntime.wordMap && langRuntime.wordMapSize === words.length) return langRuntime.wordMap;
     var map = {}; words.forEach(function(w){ map[w.id] = w; });
-    langRuntime.wordMap = map; langRuntime.wordMapSize = words.length; return map;
+    return map;
+  }
+
+  function languagePersonalList(state) {
+    return Object.keys(state.personalWords || {}).map(function(id){ return state.personalWords[id]; }).filter(Boolean);
+  }
+
+  function languageAllWords(state, words) {
+    var seen = {};
+    var merged = [];
+    (words || []).concat(languagePersonalList(state)).forEach(function(word) {
+      if (!word || !word.id || seen[word.id]) return;
+      seen[word.id] = true;
+      merged.push(word);
+    });
+    return merged;
   }
 
   function languagePickTodayIds(state, words) {
@@ -6050,6 +6086,87 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function languageCleanText(text) { return String(text || '').replace(/\n/g, '; ').replace(/\s+/g, ' ').trim(); }
 
+  function languagePersonalId(term) {
+    return 'pw-' + languageHash(String(term || '').toLowerCase().replace(/\s+/g, ' ').trim()).toString(36);
+  }
+
+  function languageTermKey(term) {
+    return String(term || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  }
+
+  function languageIsPhrase(term) {
+    return String(term || '').trim().split(/\s+/).filter(Boolean).length > 1;
+  }
+
+  function languageNormalizeImportTerm(term) {
+    term = String(term || '').replace(/[“”]/g, '"').replace(/[‘’]/g, "'").replace(/\s+/g, ' ').trim();
+    term = term.replace(/^[^A-Za-z]+|[^A-Za-z]+$/g, '');
+    if (!term) return '';
+    return languageIsPhrase(term) ? term.toLowerCase() : term.toLowerCase();
+  }
+
+  function languageExtractCandidates(text) {
+    text = String(text || '');
+    var found = [], seen = {};
+    var stop = {
+      the:1,and:1,that:1,this:1,with:1,from:1,have:1,has:1,had:1,not:1,for:1,are:1,was:1,were:1,will:1,would:1,could:1,should:1,
+      there:1,their:1,they:1,them:1,than:1,then:1,into:1,onto:1,over:1,under:1,between:1,about:1,because:1,while:1,where:1,which:1,what:1,when:1,
+      been:1,being:1,you:1,your:1,our:1,its:1,his:1,her:1,she:1,him:1,all:1,any:1,can:1,may:1,might:1,must:1,during:1,before:1,after:1
+    };
+    function add(term) {
+      term = languageNormalizeImportTerm(term);
+      if (!term || term.length < 3 || seen[term]) return;
+      if (term.split(/\s+/).length > 5 || term.length > 64) return;
+      seen[term] = true;
+      found.push(term);
+    }
+    var phraseCovered = {};
+    text.split(/[\n\r,;，；、.!?。！？]+/).forEach(function(part) {
+      var words = (part.match(/[A-Za-z][A-Za-z'-]*/g) || []).filter(function(w){ return w.length > 1; });
+      var smallWords = words.filter(function(w){ return stop[languageTermKey(w)]; }).length;
+      if (words.length > 1 && words.length <= 5 && smallWords <= 1) {
+        add(words.join(' '));
+        words.forEach(function(w){ phraseCovered[languageTermKey(w)] = true; });
+      }
+      if (words.length === 1) add(words[0]);
+    });
+    (text.match(/[A-Za-z][A-Za-z'-]{2,}/g) || []).forEach(function(word) {
+      var term = languageNormalizeImportTerm(word);
+      if (!stop[term] && !phraseCovered[term]) add(term);
+    });
+    return found.slice(0, 80);
+  }
+
+  function languagePhoneticLookupTerm(term) {
+    return !languageIsPhrase(term) && /^[a-z][a-z'-]+$/i.test(term);
+  }
+
+  function languageFetchPhonetic(id) {
+    var state = languageLoadState();
+    var word = state.personalWords && state.personalWords[id];
+    if (!word || word.phonetic || !languagePhoneticLookupTerm(word.word) || langRuntime.phoneticFetching[id]) return;
+    langRuntime.phoneticFetching[id] = true;
+    fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(word.word))
+      .then(function(res){ if (!res.ok) throw new Error('phonetic unavailable'); return res.json(); })
+      .then(function(data) {
+        var entry = Array.isArray(data) ? data[0] : null;
+        var phonetic = entry && entry.phonetic ? entry.phonetic : '';
+        if (!phonetic && entry && Array.isArray(entry.phonetics)) {
+          var hit = entry.phonetics.find(function(p){ return p && p.text; });
+          phonetic = hit ? hit.text : '';
+        }
+        if (!phonetic) return;
+        var latest = languageLoadState();
+        if (latest.personalWords && latest.personalWords[id] && !latest.personalWords[id].phonetic) {
+          latest.personalWords[id].phonetic = phonetic;
+          languageSaveState(latest);
+          if (latest.view === 'home' || latest.view === 'preview' || latest.view === 'import') renderLanguageLab();
+        }
+      })
+      .catch(function(){})
+      .finally(function(){ delete langRuntime.phoneticFetching[id]; });
+  }
+
   function languagePreferredVoice() {
     if (langRuntime.preferredVoice || !('speechSynthesis' in window)) return langRuntime.preferredVoice;
     var voices = [];
@@ -6088,17 +6205,103 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     } catch(e) {}
   }
 
-  function languageEscapedSpeak(word) { return String(word || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+  function languageJsArg(text) { return JSON.stringify(String(text || '')).replace(/</g, '\\u003c'); }
 
   function languageWordHtml(word, index) {
     return '<article class="lang-word-card" style="--i:'+index+'">'
       + '<span class="lang-word-index">' + String(index + 1).padStart(2, '0') + '</span>'
-      + '<button class="lang-audio" onclick="languageSpeak(\'' + escapeHtml(languageEscapedSpeak(word.word)) + '\')" aria-label="play word"><span></span></button>'
+      + '<button class="lang-audio" onclick="languageSpeak(' + languageJsArg(word.word) + ')" aria-label="play word"><span></span></button>'
       + '<div class="lang-word-main"><div class="lang-word-title">' + escapeHtml(word.word) + '</div><div class="lang-word-meta">' + escapeHtml([word.pos, word.phonetic, word.topic].filter(Boolean).join(' · ')) + '</div></div>'
-      + '<div class="lang-meaning">' + escapeHtml(languageCleanText(word.cn)) + '</div>'
+      + (word.cn ? '<div class="lang-meaning">' + escapeHtml(languageCleanText(word.cn)) + '</div>' : '')
       + (word.example ? '<div class="lang-example">' + escapeHtml(languageCleanText(word.example)) + '</div>' : '')
       + (word.extra ? '<div class="lang-extra">' + escapeHtml(languageCleanText(word.extra)) + '</div>' : '')
       + '</article>';
+  }
+
+  function languageImportTextChanged(value) {
+    var state = languageLoadState();
+    state.importDraft = state.importDraft || { text:'', candidates:[], selected:{} };
+    state.importDraft.text = String(value || '');
+    languageSaveState(state);
+  }
+
+  function languageRefreshImportCandidates() {
+    var state = languageLoadState();
+    var draft = state.importDraft || { text:'', candidates:[], selected:{} };
+    var candidates = languageExtractCandidates(draft.text || '');
+    var selected = {};
+    candidates.forEach(function(term) {
+      selected[term] = draft.selected && typeof draft.selected[term] !== 'undefined' ? !!draft.selected[term] : true;
+    });
+    state.importDraft = { text:draft.text || '', candidates:candidates, selected:selected };
+    languageSaveState(state);
+    renderLanguageLab();
+  }
+
+  function languageToggleImportCandidate(term) {
+    var state = languageLoadState();
+    state.importDraft = state.importDraft || { text:'', candidates:[], selected:{} };
+    state.importDraft.selected = state.importDraft.selected || {};
+    state.importDraft.selected[term] = !state.importDraft.selected[term];
+    languageSaveState(state);
+    renderLanguageLab();
+  }
+
+  function languageAddImportCandidates() {
+    var state = languageLoadState();
+    var words = langRuntime.baseWords || langRuntime.words || [];
+    state = languageEnsureToday(state, words);
+    var draft = state.importDraft || { text:'', candidates:[], selected:{} };
+    var terms = (draft.candidates || []).filter(function(term){ return draft.selected && draft.selected[term]; });
+    if (!terms.length && draft.text) terms = languageExtractCandidates(draft.text);
+    if (!terms.length) return renderLanguageLab();
+    state.personalWords = state.personalWords || {};
+    var existingByTerm = {};
+    languageAllWords(state, words).forEach(function(word){ if (word && word.word) existingByTerm[languageTermKey(word.word)] = word.id; });
+    var ids = Array.isArray(state.today && state.today.ids) ? state.today.ids.slice() : [];
+    if (state.today && state.today.complete === true && state.today.date === languageTodayStamp()) {
+      ids = Array.isArray(state.today.wrongIds) ? state.today.wrongIds.slice() : [];
+    }
+    var used = {};
+    ids.forEach(function(id){ used[id] = true; });
+    var added = [];
+    terms.forEach(function(term) {
+      term = languageNormalizeImportTerm(term);
+      if (!term) return;
+      var id = existingByTerm[languageTermKey(term)] || languagePersonalId(term);
+      if (!existingByTerm[languageTermKey(term)] && !state.personalWords[id]) {
+        state.personalWords[id] = { id:id, word:term, pos:languageIsPhrase(term) ? 'phrase' : 'personal', phonetic:'', cn:'', topic:'Personal', example:'', extra:'' };
+      }
+      if (!used[id]) {
+        used[id] = true;
+        ids.push(id);
+        added.push(id);
+      }
+      if (state.completed && state.completed[id]) delete state.completed[id];
+    });
+    if (added.length) {
+      state.today.ids = ids;
+      state.today.complete = false;
+      state.today.wrongIds = [];
+      state.dictation = null;
+      state.selectedWrong = {};
+    }
+    state.importDraft = { text:'', candidates:[], selected:{} };
+    state.view = 'home';
+    languageSaveState(state);
+    added.forEach(languageFetchPhonetic);
+    renderLanguageLab();
+  }
+
+  function renderLanguageImport(state) {
+    var draft = state.importDraft || { text:'', candidates:[], selected:{} };
+    var candidates = draft.candidates || [];
+    var selectedCount = candidates.filter(function(term){ return draft.selected && draft.selected[term]; }).length;
+    document.querySelector('.language-lab')?.classList.add('studying');
+    languageRenderStage('<div class="lang-study-screen import"><div class="lang-study-head"><button class="lang-study-back" onclick="languageSetView(\'home\')">‹</button><div><div class="lang-kicker">Import</div><h2>Paste Words</h2></div><button class="lang-ghost" onclick="languageRefreshImportCandidates()">Extract</button></div>'
+      + '<div class="lang-import-box"><textarea id="lang-import-text" oninput="languageImportTextChanged(this.value)" placeholder="Paste words, phrases, or a paragraph...">' + escapeHtml(draft.text || '') + '</textarea>'
+      + '<div class="lang-import-tools"><button onclick="languageRefreshImportCandidates()">Extract</button><button onclick="languageAddImportCandidates()">Add ' + selectedCount + '</button></div>'
+      + '<div class="lang-import-chips">' + candidates.map(function(term){ return '<button class="lang-import-chip ' + (draft.selected && draft.selected[term] ? '' : 'off') + '" onclick="languageToggleImportCandidate(' + languageJsArg(term) + ')">' + escapeHtml(term) + '</button>'; }).join('') + '</div></div></div>');
   }
 
   function languageWeakIds(state) {
@@ -6387,7 +6590,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function renderLanguageHome(state, words) {
     state = languageEnsureToday(state, words); languageSaveState(state);
-    var stats = languageStats(state, words), map = languageWordMap(words);
+    var allWords = languageAllWords(state, words);
+    var stats = languageStats(state, allWords), map = languageWordMap(allWords);
     var todayWords = languageTodayDisplayIds(state).map(function(id){ return map[id]; }).filter(Boolean);
     var home = document.getElementById('lang-home'); if (!home) return;
     document.querySelector('.language-lab')?.classList.remove('studying');
@@ -6399,8 +6603,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       + '<div class="lang-plan-row"><div><strong>' + stats.todayTotal + '</strong><span>today target</span></div><div><strong>' + stats.daysLeft + '</strong><span>days left</span></div><div><strong>' + stats.todayPct + '%</strong><span>today done</span></div></div>'
       + '<div class="lang-step-row"><button onclick="changeLanguageDaily(-5, event)" aria-label="decrease daily words">−</button><span>' + state.daySize + '</span><button onclick="changeLanguageDaily(5, event)" aria-label="increase daily words">+</button></div>'
       + '<button class="lang-primary big" onclick="languageSetView(\'preview\')">Preview Today</button></section>'
-      + '<section class="lang-today-list"><div class="lang-list-head"><span>Word release</span><button onclick="languageSetView(\'dictation\')">Start Dictation</button></div><div class="lang-word-list">' + todayWords.map(languageWordHtml).join('') + '</div></section>';
-    if (state.networkOpen) renderLanguageMap(state, words);
+      + '<section class="lang-today-list"><div class="lang-list-head"><span>Word release</span><div class="lang-list-actions"><button onclick="languageSetView(\'import\')">Import</button><button onclick="languageSetView(\'dictation\')">Start Dictation</button></div></div><div class="lang-word-list">' + todayWords.map(languageWordHtml).join('') + '</div></section>';
+    if (state.networkOpen) renderLanguageMap(state, allWords);
   }
 
   function languageRenderStage(html) { var stage = document.getElementById('lang-stage'); if (stage) stage.innerHTML = html; }
@@ -6483,7 +6687,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (event) { event.stopPropagation(); event.preventDefault(); }
     var state = languageLoadState(); state.daySize = Math.max(5, Math.min(120, (Number(state.daySize) || 20) + delta));
     if (state.today && state.today.complete === true) state.today = null;
-    if (langRuntime.words && langRuntime.words.length) state = languageResizeToday(state, langRuntime.words);
+    if (langRuntime.baseWords && langRuntime.baseWords.length) state = languageResizeToday(state, langRuntime.baseWords);
     languageSaveState(state);
     var y = window.scrollY || document.documentElement.scrollTop || 0;
     document.querySelector('.language-lab')?.classList.add('adjusting');
@@ -6498,11 +6702,14 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var home = document.getElementById('lang-home'), stage = document.getElementById('lang-stage'); if (!home || !stage) return;
     languageWatchScroll();
     loadLanguageWords().then(function(words) {
-      langRuntime.words = words;
+      langRuntime.baseWords = words;
       var state = languageEnsureToday(languageLoadState(), words);
-      if (state.view === 'preview') return renderLanguagePreview(state, words);
-      if (state.view === 'dictation') return renderLanguageDictation(state, words);
-      if (state.view === 'mark') return renderLanguageMark(state, words);
+      var allWords = languageAllWords(state, words);
+      langRuntime.words = allWords;
+      if (state.view === 'preview') return renderLanguagePreview(state, allWords);
+      if (state.view === 'dictation') return renderLanguageDictation(state, allWords);
+      if (state.view === 'mark') return renderLanguageMark(state, allWords);
+      if (state.view === 'import') return renderLanguageImport(state);
       languageStopDictationTimer(); stage.innerHTML = ''; renderLanguageHome(state, words);
     }).catch(function(){ home.innerHTML = '<div class="lang-empty">Words unavailable</div>'; });
   }
