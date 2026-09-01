@@ -3481,7 +3481,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-09-02-import-translate';
+  var APP_VERSION = '2026-09-02-import-repair';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5910,7 +5910,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var LANG_RESET_KEY = 'iue.lang.zhenjing.reset.2026-09-01';
   var LANG_DATA_SRC = 'data/ielts-zhenjing.js?v=' + encodeURIComponent(APP_VERSION);
   var langWordsPromise = null;
-  var langRuntime = { words:null, wordMap:null, wordMapSize:0, dictationTimer:null, preferredVoice:null, map:null, mapFrame:null, mapBoost:0, scrollWatch:false, mapSuppressClick:0, phoneticFetching:{}, translationFetching:{} };
+  var langRuntime = { words:null, wordMap:null, wordMapSize:0, dictationTimer:null, preferredVoice:null, map:null, mapFrame:null, mapBoost:0, scrollWatch:false, mapSuppressClick:0, phoneticFetching:{}, translationFetching:{}, repairedTestImports:false };
 
   function languageTodayStamp() {
     var d = new Date();
@@ -5954,8 +5954,51 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         return typeof item === 'string' ? { term:item, cn:'' } : { term:String(item.term || ''), cn:String(item.cn || '') };
       }).filter(function(item){ return item.term; }) : [];
       parsed.importDraft.selected = parsed.importDraft.selected && typeof parsed.importDraft.selected === 'object' ? parsed.importDraft.selected : {};
+      parsed = languageCleanCodexTestImports(parsed);
       return parsed;
     } catch(e) { return languageDefaultState(); }
+  }
+
+  function languageCleanCodexTestImports(state) {
+    if (!state || langRuntime.repairedTestImports || state.codexImportRepair === '2026-09-02') return state;
+    var dirty = false;
+    var testIds = ['pw-1q3390x', 'pw-1sildgs'];
+    state.personalWords = state.personalWords || {};
+    state.personalNotes = state.personalNotes || {};
+    testIds.forEach(function(id) {
+      if (state.personalWords[id]) { delete state.personalWords[id]; dirty = true; }
+      if (state.personalNotes[id]) { delete state.personalNotes[id]; dirty = true; }
+    });
+    if (state.personalNotes['zj-2699'] && languageCleanText(state.personalNotes['zj-2699'].cn) === '减轻；缓和') {
+      delete state.personalNotes['zj-2699'];
+      dirty = true;
+    }
+    if (state.today && Array.isArray(state.today.ids)) {
+      var target = Math.max(5, Math.min(120, Number(state.daySize) || 20));
+      testIds.forEach(function(id) {
+        var before = state.today.ids.length;
+        state.today.ids = state.today.ids.filter(function(x){ return x !== id; });
+        if (state.today.ids.length !== before) dirty = true;
+      });
+      if (state.today.ids.length > target && state.today.ids[state.today.ids.length - 1] === 'zj-2699') {
+        state.today.ids.pop();
+        dirty = true;
+      }
+    }
+    if (state.today && Array.isArray(state.today.wrongIds)) {
+      var beforeWrong = state.today.wrongIds.length;
+      state.today.wrongIds = state.today.wrongIds.filter(function(id){ return testIds.indexOf(id) === -1; });
+      if (state.today.wrongIds.length !== beforeWrong) dirty = true;
+    }
+    if (Array.isArray(state.carryWrong)) {
+      var beforeCarry = state.carryWrong.length;
+      state.carryWrong = state.carryWrong.filter(function(id){ return testIds.indexOf(id) === -1; });
+      if (state.carryWrong.length !== beforeCarry) dirty = true;
+    }
+    state.codexImportRepair = '2026-09-02';
+    langRuntime.repairedTestImports = true;
+    if (dirty) setTimeout(function(){ languageSaveState(state); }, 0);
+    return state;
   }
 
   function languageSaveState(state) {
@@ -6107,7 +6150,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function languageDisplayMeta(word) {
-    var pos = word && word.pos && word.pos !== 'personal' ? word.pos : '';
+    var pos = word && word.pos && word.pos !== 'personal' ? word.pos : languageInferPos(word && word.word);
     var topic = word && word.topic && word.topic !== 'Personal' ? word.topic : '';
     return [pos, word && word.phonetic, topic].filter(Boolean).join(' · ');
   }
@@ -6122,6 +6165,19 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function languageIsPhrase(term) {
     return String(term || '').trim().split(/\s+/).filter(Boolean).length > 1;
+  }
+
+  function languageInferPos(term) {
+    term = String(term || '').trim().toLowerCase();
+    if (!term) return '';
+    if (languageIsPhrase(term)) return 'phrase';
+    if (/(tion|sion|ment|ness|ity|ance|ence|ship|ism|ist|er|or|ure|age)$/.test(term)) return 'n.';
+    if (/ly$/.test(term)) return 'adv.';
+    if (/(ous|ive|al|ic|ical|able|ible|less|ful|ary)$/.test(term)) return 'adj.';
+    if (/(ate|ize|ise|ify|en)$/.test(term)) return 'v.';
+    if (/ing$/.test(term)) return 'v./n.';
+    if (/ed$/.test(term)) return 'v./adj.';
+    return '';
   }
 
   function languageNormalizeImportTerm(term) {
@@ -6257,6 +6313,17 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (needsTranslation) languageFetchTranslation(id);
   }
 
+  function languageQueueMissingTranslations(words) {
+    var queued = 0;
+    (words || []).forEach(function(word) {
+      if (!word || word.cn || queued >= 8) return;
+      if (word.id && !langRuntime.translationFetching[word.id]) {
+        queued++;
+        languageFetchTranslation(word.id);
+      }
+    });
+  }
+
   function languagePreferredVoice() {
     if (langRuntime.preferredVoice || !('speechSynthesis' in window)) return langRuntime.preferredVoice;
     var voices = [];
@@ -6364,7 +6431,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var id = existingByTerm[languageTermKey(term)] || languagePersonalId(term);
       var importedCn = languageCleanText(item.cn || '');
       if (!existingByTerm[languageTermKey(term)] && !state.personalWords[id]) {
-        state.personalWords[id] = { id:id, word:term, pos:languageIsPhrase(term) ? 'phrase' : '', phonetic:'', cn:importedCn, topic:'', example:'', extra:'' };
+        state.personalWords[id] = { id:id, word:term, pos:languageInferPos(term), phonetic:'', cn:importedCn, topic:'', example:'', extra:'' };
       } else if (state.personalWords[id] && importedCn && !state.personalWords[id].cn) {
         state.personalWords[id].cn = importedCn;
       }
@@ -6695,6 +6762,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var allWords = languageAllWords(state, words);
     var stats = languageStats(state, allWords), map = languageWordMap(allWords);
     var todayWords = languageTodayDisplayIds(state).map(function(id){ return map[id]; }).filter(Boolean);
+    languageQueueMissingTranslations(todayWords);
     var home = document.getElementById('lang-home'); if (!home) return;
     document.querySelector('.language-lab')?.classList.remove('studying');
     home.innerHTML = '<section class="lang-hero-card ' + (state.networkOpen ? 'networking' : '') + '" onclick="languageToggleNetwork(event)">'
