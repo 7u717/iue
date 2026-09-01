@@ -1518,9 +1518,11 @@
     .lang-import-tools button { height:44px;border-radius:18px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.045);color:var(--text);font-size:13px;font-weight:850; }
     .lang-import-chips { display:flex;flex-wrap:wrap;gap:8px;padding-bottom:76px; }
     .lang-import-chip {
-      border:1px solid rgba(147,197,253,.18);border-radius:999px;background:rgba(147,197,253,.07);color:#DCEEFF;
-      min-height:35px;padding:0 12px;font-size:13px;font-weight:820;transition:transform .16s ease,opacity .16s ease,background .16s ease,border-color .16s ease;
+      text-align:left;border:1px solid rgba(147,197,253,.18);border-radius:16px;background:rgba(147,197,253,.07);color:#DCEEFF;
+      min-height:35px;padding:8px 12px;font-size:13px;font-weight:820;transition:transform .16s ease,opacity .16s ease,background .16s ease,border-color .16s ease;
     }
+    .lang-import-chip strong { display:block;font-size:13px;line-height:1.15; }
+    .lang-import-chip span { display:block;margin-top:4px;color:rgba(245,247,251,.58);font-size:11px;line-height:1.2; }
     .lang-import-chip.off { opacity:.28;background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.08);color:var(--muted); }
     .lang-import-chip:active { transform:scale(.96); }
     .language-lab.adjusting .lang-hero-card,
@@ -3479,7 +3481,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-09-02-personal-import';
+  var APP_VERSION = '2026-09-02-import-meaning';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5916,7 +5918,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function languageDefaultState() {
-    return { version:2, daySize:20, seed:Math.floor(Math.random()*1000000000), completed:{}, history:[], carryWrong:[], today:null, view:'home', networkOpen:false, dictation:null, selectedWrong:{}, personalWords:{}, importDraft:{ text:'', candidates:[], selected:{} } };
+    return { version:2, daySize:20, seed:Math.floor(Math.random()*1000000000), completed:{}, history:[], carryWrong:[], today:null, view:'home', networkOpen:false, dictation:null, selectedWrong:{}, personalWords:{}, personalNotes:{}, importDraft:{ text:'', candidates:[], selected:{} } };
   }
 
   function languageResetTestProgressOnce() {
@@ -5945,9 +5947,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       parsed.networkOpen = parsed.networkOpen === true;
       parsed.selectedWrong = parsed.selectedWrong && typeof parsed.selectedWrong === 'object' ? parsed.selectedWrong : {};
       parsed.personalWords = parsed.personalWords && typeof parsed.personalWords === 'object' ? parsed.personalWords : {};
+      parsed.personalNotes = parsed.personalNotes && typeof parsed.personalNotes === 'object' ? parsed.personalNotes : {};
       parsed.importDraft = parsed.importDraft && typeof parsed.importDraft === 'object' ? parsed.importDraft : { text:'', candidates:[], selected:{} };
       parsed.importDraft.text = String(parsed.importDraft.text || '');
-      parsed.importDraft.candidates = Array.isArray(parsed.importDraft.candidates) ? parsed.importDraft.candidates : [];
+      parsed.importDraft.candidates = Array.isArray(parsed.importDraft.candidates) ? parsed.importDraft.candidates.map(function(item) {
+        return typeof item === 'string' ? { term:item, cn:'' } : { term:String(item.term || ''), cn:String(item.cn || '') };
+      }).filter(function(item){ return item.term; }) : [];
       parsed.importDraft.selected = parsed.importDraft.selected && typeof parsed.importDraft.selected === 'object' ? parsed.importDraft.selected : {};
       return parsed;
     } catch(e) { return languageDefaultState(); }
@@ -6007,6 +6012,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     (words || []).concat(languagePersonalList(state)).forEach(function(word) {
       if (!word || !word.id || seen[word.id]) return;
       seen[word.id] = true;
+      var note = state.personalNotes && state.personalNotes[word.id];
+      if (note) word = Object.assign({}, word, {
+        cn: note.cn || word.cn || '',
+        phonetic: note.phonetic || word.phonetic || '',
+        pos: note.pos || word.pos || '',
+        topic: note.topic || word.topic || '',
+        example: typeof note.example === 'string' ? note.example : (word.example || ''),
+        extra: typeof note.extra === 'string' ? note.extra : (word.extra || '')
+      });
       merged.push(word);
     });
     return merged;
@@ -6113,26 +6127,48 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       there:1,their:1,they:1,them:1,than:1,then:1,into:1,onto:1,over:1,under:1,between:1,about:1,because:1,while:1,where:1,which:1,what:1,when:1,
       been:1,being:1,you:1,your:1,our:1,its:1,his:1,her:1,she:1,him:1,all:1,any:1,can:1,may:1,might:1,must:1,during:1,before:1,after:1
     };
-    function add(term) {
+    function add(term, cn) {
       term = languageNormalizeImportTerm(term);
       if (!term || term.length < 3 || seen[term]) return;
       if (term.split(/\s+/).length > 5 || term.length > 64) return;
       seen[term] = true;
-      found.push(term);
+      found.push({ term:term, cn:languageCleanText(cn || '') });
+    }
+    function parseLine(line) {
+      line = String(line || '').trim();
+      if (!line) return false;
+      var match = line.match(/^\s*([A-Za-z][A-Za-z'\- ]{1,63}?)\s*(?:[:：=／/|,，;；]+|\s+[\-–—]\s+|\s{2,})\s*([\u3400-\u9fff][\s\S]*)$/);
+      if (match) {
+        add(match[1], match[2]);
+        return true;
+      }
+      match = line.match(/^\s*([A-Za-z][A-Za-z'\- ]{1,63}?)\s+([\u3400-\u9fff][\s\S]*)$/);
+      if (match) {
+        add(match[1], match[2]);
+        return true;
+      }
+      return false;
     }
     var phraseCovered = {};
-    text.split(/[\n\r,;，；、.!?。！？]+/).forEach(function(part) {
+    text.split(/[\n\r]+/).forEach(function(line) {
+      if (parseLine(line)) {
+        var first = line.match(/^\s*([A-Za-z][A-Za-z'\- ]{1,63}?)(?=\s*(?:[:：=／/|,，;；]+|\s+[\-–—]\s+|\s{2,}|[\u3400-\u9fff]))/);
+        (first && first[1] ? first[1].match(/[A-Za-z][A-Za-z'-]*/g) || [] : []).forEach(function(w){ phraseCovered[languageTermKey(w)] = true; });
+        return;
+      }
+      line.split(/[,;，；、.!?。！？]+/).forEach(function(part) {
       var words = (part.match(/[A-Za-z][A-Za-z'-]*/g) || []).filter(function(w){ return w.length > 1; });
       var smallWords = words.filter(function(w){ return stop[languageTermKey(w)]; }).length;
       if (words.length > 1 && words.length <= 5 && smallWords <= 1) {
-        add(words.join(' '));
+        add(words.join(' '), '');
         words.forEach(function(w){ phraseCovered[languageTermKey(w)] = true; });
       }
-      if (words.length === 1) add(words[0]);
+      if (words.length === 1) add(words[0], '');
+      });
     });
     (text.match(/[A-Za-z][A-Za-z'-]{2,}/g) || []).forEach(function(word) {
       var term = languageNormalizeImportTerm(word);
-      if (!stop[term] && !phraseCovered[term]) add(term);
+      if (!stop[term] && !phraseCovered[term]) add(term, '');
     });
     return found.slice(0, 80);
   }
@@ -6143,7 +6179,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function languageFetchPhonetic(id) {
     var state = languageLoadState();
-    var word = state.personalWords && state.personalWords[id];
+    var baseMap = languageWordMap(langRuntime.baseWords || []);
+    var word = (state.personalWords && state.personalWords[id]) || baseMap[id];
     if (!word || word.phonetic || !languagePhoneticLookupTerm(word.word) || langRuntime.phoneticFetching[id]) return;
     langRuntime.phoneticFetching[id] = true;
     fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(word.word))
@@ -6155,10 +6192,20 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
           var hit = entry.phonetics.find(function(p){ return p && p.text; });
           phonetic = hit ? hit.text : '';
         }
-        if (!phonetic) return;
+        var pos = '';
+        if (entry && Array.isArray(entry.meanings) && entry.meanings[0] && entry.meanings[0].partOfSpeech) pos = entry.meanings[0].partOfSpeech;
+        if (!phonetic && !pos) return;
         var latest = languageLoadState();
-        if (latest.personalWords && latest.personalWords[id] && !latest.personalWords[id].phonetic) {
-          latest.personalWords[id].phonetic = phonetic;
+        if (latest.personalWords && latest.personalWords[id]) {
+          if (phonetic && !latest.personalWords[id].phonetic) latest.personalWords[id].phonetic = phonetic;
+          if (pos && (!latest.personalWords[id].pos || latest.personalWords[id].pos === 'personal')) latest.personalWords[id].pos = pos;
+          languageSaveState(latest);
+          if (latest.view === 'home' || latest.view === 'preview' || latest.view === 'import') renderLanguageLab();
+        } else {
+          latest.personalNotes = latest.personalNotes || {};
+          latest.personalNotes[id] = latest.personalNotes[id] || {};
+          if (phonetic && !latest.personalNotes[id].phonetic) latest.personalNotes[id].phonetic = phonetic;
+          if (pos && !latest.personalNotes[id].pos) latest.personalNotes[id].pos = pos;
           languageSaveState(latest);
           if (latest.view === 'home' || latest.view === 'preview' || latest.view === 'import') renderLanguageLab();
         }
@@ -6205,7 +6252,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     } catch(e) {}
   }
 
-  function languageJsArg(text) { return JSON.stringify(String(text || '')).replace(/</g, '\\u003c'); }
+  function languageJsArg(text) {
+    return JSON.stringify(String(text || '')).replace(/&/g, '\\u0026').replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/"/g, '&quot;');
+  }
 
   function languageWordHtml(word, index) {
     return '<article class="lang-word-card" style="--i:'+index+'">'
@@ -6230,8 +6279,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var draft = state.importDraft || { text:'', candidates:[], selected:{} };
     var candidates = languageExtractCandidates(draft.text || '');
     var selected = {};
-    candidates.forEach(function(term) {
-      selected[term] = draft.selected && typeof draft.selected[term] !== 'undefined' ? !!draft.selected[term] : true;
+    candidates.forEach(function(item) {
+      selected[item.term] = draft.selected && typeof draft.selected[item.term] !== 'undefined' ? !!draft.selected[item.term] : true;
     });
     state.importDraft = { text:draft.text || '', candidates:candidates, selected:selected };
     languageSaveState(state);
@@ -6252,10 +6301,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var words = langRuntime.baseWords || langRuntime.words || [];
     state = languageEnsureToday(state, words);
     var draft = state.importDraft || { text:'', candidates:[], selected:{} };
-    var terms = (draft.candidates || []).filter(function(term){ return draft.selected && draft.selected[term]; });
-    if (!terms.length && draft.text) terms = languageExtractCandidates(draft.text);
-    if (!terms.length) return renderLanguageLab();
+    var items = (draft.candidates || []).filter(function(item){ return item && draft.selected && draft.selected[item.term]; });
+    if (!items.length && draft.text) items = languageExtractCandidates(draft.text);
+    if (!items.length) return renderLanguageLab();
     state.personalWords = state.personalWords || {};
+    state.personalNotes = state.personalNotes || {};
     var existingByTerm = {};
     languageAllWords(state, words).forEach(function(word){ if (word && word.word) existingByTerm[languageTermKey(word.word)] = word.id; });
     var ids = Array.isArray(state.today && state.today.ids) ? state.today.ids.slice() : [];
@@ -6265,12 +6315,17 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var used = {};
     ids.forEach(function(id){ used[id] = true; });
     var added = [];
-    terms.forEach(function(term) {
-      term = languageNormalizeImportTerm(term);
+    items.forEach(function(item) {
+      var term = languageNormalizeImportTerm(item && item.term);
       if (!term) return;
       var id = existingByTerm[languageTermKey(term)] || languagePersonalId(term);
       if (!existingByTerm[languageTermKey(term)] && !state.personalWords[id]) {
-        state.personalWords[id] = { id:id, word:term, pos:languageIsPhrase(term) ? 'phrase' : 'personal', phonetic:'', cn:'', topic:'Personal', example:'', extra:'' };
+        state.personalWords[id] = { id:id, word:term, pos:languageIsPhrase(term) ? 'phrase' : 'personal', phonetic:'', cn:languageCleanText(item.cn || ''), topic:'Personal', example:'', extra:'' };
+      } else if (state.personalWords[id] && item.cn && !state.personalWords[id].cn) {
+        state.personalWords[id].cn = languageCleanText(item.cn);
+      }
+      if (item.cn) {
+        state.personalNotes[id] = { cn:languageCleanText(item.cn), topic:'Personal', example:'', extra:'' };
       }
       if (!used[id]) {
         used[id] = true;
@@ -6296,12 +6351,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function renderLanguageImport(state) {
     var draft = state.importDraft || { text:'', candidates:[], selected:{} };
     var candidates = draft.candidates || [];
-    var selectedCount = candidates.filter(function(term){ return draft.selected && draft.selected[term]; }).length;
+    var selectedCount = candidates.filter(function(item){ return item && draft.selected && draft.selected[item.term]; }).length;
     document.querySelector('.language-lab')?.classList.add('studying');
     languageRenderStage('<div class="lang-study-screen import"><div class="lang-study-head"><button class="lang-study-back" onclick="languageSetView(\'home\')">‹</button><div><div class="lang-kicker">Import</div><h2>Paste Words</h2></div><button class="lang-ghost" onclick="languageRefreshImportCandidates()">Extract</button></div>'
-      + '<div class="lang-import-box"><textarea id="lang-import-text" oninput="languageImportTextChanged(this.value)" placeholder="Paste words, phrases, or a paragraph...">' + escapeHtml(draft.text || '') + '</textarea>'
+      + '<div class="lang-import-box"><textarea id="lang-import-text" oninput="languageImportTextChanged(this.value)" placeholder="mitigate 减轻；缓和&#10;flight envelope 飞行包线">' + escapeHtml(draft.text || '') + '</textarea>'
       + '<div class="lang-import-tools"><button onclick="languageRefreshImportCandidates()">Extract</button><button onclick="languageAddImportCandidates()">Add ' + selectedCount + '</button></div>'
-      + '<div class="lang-import-chips">' + candidates.map(function(term){ return '<button class="lang-import-chip ' + (draft.selected && draft.selected[term] ? '' : 'off') + '" onclick="languageToggleImportCandidate(' + languageJsArg(term) + ')">' + escapeHtml(term) + '</button>'; }).join('') + '</div></div></div>');
+      + '<div class="lang-import-chips">' + candidates.map(function(item){ return '<button class="lang-import-chip ' + (draft.selected && draft.selected[item.term] ? '' : 'off') + '" onclick="languageToggleImportCandidate(' + languageJsArg(item.term) + ')"><strong>' + escapeHtml(item.term) + '</strong>' + (item.cn ? '<span>' + escapeHtml(item.cn) + '</span>' : '') + '</button>'; }).join('') + '</div></div></div>');
   }
 
   function languageWeakIds(state) {
@@ -6612,7 +6667,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function languageSetView(view) {
     var state = languageLoadState(); state.view = view || 'home';
     if (state.view !== 'dictation') languageStopDictationTimer();
-    languageSaveState(state); renderLanguageLab();
+    languageSaveState(state);
+    if (state.view === 'dictation' && langRuntime.words && langRuntime.words.length) {
+      renderLanguageDictation(state, langRuntime.words);
+      return;
+    }
+    renderLanguageLab();
   }
 
   function renderLanguagePreview(state, words) {
@@ -6646,7 +6706,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (!word) return renderLanguageMark(state, words);
     var index = (state.dictation.index || 0) + 1, total = (state.dictation.ids || []).length;
     languageRenderStage('<div class="lang-study-screen dictation"><div class="lang-study-head"><button class="lang-study-back" onclick="languageSetView(\'preview\')">‹</button><div><div class="lang-kicker">Dictation</div><h2>Listen only</h2></div><button class="lang-ghost" onclick="languageSetView(\'mark\')">Mark</button></div><div class="lang-listen-core"><button class="lang-listen-button" onclick="languageReplayDictation()"><span></span></button><div class="lang-listen-count">' + index + ' / ' + total + '</div><div class="lang-listen-ring"><i></i></div></div><div class="lang-dictation-actions"><button onclick="languageReplayDictation()">Replay</button><button onclick="languageNextDictation(false)">Next</button></div></div>');
-    setTimeout(function(){ languageSpeak(word.word); }, 120); languageScheduleDictation();
+    languageSpeak(word.word); languageScheduleDictation();
   }
 
   function languageReplayDictation() { var state = languageLoadState(); var word = languageDictationCurrent(state, langRuntime.words || []); if (word) languageSpeak(word.word); }
@@ -6656,7 +6716,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var id = state.dictation.ids[state.dictation.index || 0]; if (id && state.dictation.heard.indexOf(id) === -1) state.dictation.heard.push(id);
     state.dictation.index = (state.dictation.index || 0) + 1;
     if (state.dictation.index >= state.dictation.ids.length) state.view = 'mark';
-    languageSaveState(state); renderLanguageLab();
+    languageSaveState(state);
+    if (!auto && langRuntime.words && langRuntime.words.length) {
+      renderLanguageDictation(state, langRuntime.words);
+    } else {
+      renderLanguageLab();
+    }
   }
 
   function renderLanguageMark(state, words) {
