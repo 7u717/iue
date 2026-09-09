@@ -1953,19 +1953,19 @@
 </div>
 
 
-<!-- ===== PHYS1121 ===== -->
-<div class="course-section" id="sec-phys1121">
+<!-- ===== PHYS1131 ===== -->
+<div class="course-section" id="sec-phys1131">
   <div class="course-switcher" aria-label="专业课切换"></div>
   <div class="course-header phys">
     <div class="course-icon" data-course-icon="phys"></div>
     <div class="course-meta">
-      <div class="course-code">PHYS1121</div>
-      <div class="course-name">Physics 1A · 2026 T3</div>
+      <div class="course-code">PHYS1131</div>
+      <div class="course-name">Higher Physics 1A · 2026 T3</div>
     </div>
   </div>
   <div class="topic-group">
     <div class="group-label">成绩追踪</div>
-    <div class="topic-card" style="padding:16px;" id="gt-phys1121"></div>
+    <div class="topic-card" style="padding:16px;" id="gt-phys1131"></div>
     <div class="exam-alert">Dates pending · 先按参考 assessment breakdown 追踪，Moodle 出来后校准。</div>
   </div>
 </div>
@@ -3481,7 +3481,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-09-02-import-repair';
+  var APP_VERSION = '2026-09-09-phys1131-timetable';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -3496,7 +3496,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var COURSE_CATALOG = [
     { id:'math', code:'MATH1231', icon:'M1B', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
     { id:'engg', code:'ENGG1300', icon:'MECH', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
-    { id:'phys1121', code:'PHYS1121', icon:'P1A', short:'Phys', color:'var(--phys-color)', name:'Physics 1A', tags:['Planned','Core','2026 T3'], status:'archived', term:'2026 T3', order:4 },
+    { id:'phys1131', code:'PHYS1131', icon:'P1A', short:'Phys', color:'var(--phys-color)', name:'Higher Physics 1A', tags:['Planned','Core','2026 T3'], status:'archived', term:'2026 T3', order:4 },
     { id:'engg1811', code:'ENGG1811', icon:'CODE', short:'Code', color:'var(--engg-color)', name:'Computing for Engineers', tags:['Planned','Core','2026 T3'], status:'archived', term:'2026 T3', order:5 },
     { id:'phys1160', code:'PHYS1160', icon:'AST', short:'Astro', color:'var(--phys-color)', name:'Introduction to Astronomy', tags:['Planned','Free Elective','2026 T3'], status:'archived', term:'2026 T3', order:6 },
     { id:'desn1000', code:'DESN1000', icon:'DES', short:'Design', color:'var(--desn-color)', name:'Introduction to Engineering Design and Innovation', tags:['Prereq','Core','2027 T1'], status:'archived', term:'2027 T1', order:7 },
@@ -3527,13 +3527,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var currentCountdownView = localStorage.getItem('iue.countdownView.v1') || 'upcoming';
   if (['upcoming','history'].indexOf(currentCountdownView) === -1) currentCountdownView = 'upcoming';
   var T3_WEEKLY_TIMETABLE = [
-    { day:'MON', time:'11:00', durationMin:60, course:'engg1811', title:'ENGG1811', kind:'Lecture', kindClass:'lec', loc:'Online' },
-    { day:'TUE', time:'14:00', durationMin:60, course:'phys1121', title:'PHYS1121', kind:'Lecture', kindClass:'lec', loc:'In Person' },
-    { day:'TUE', time:'16:00', durationMin:120, course:'engg1811', title:'ENGG1811', kind:'Laboratory', kindClass:'wks', loc:'In Person' },
-    { day:'WED', time:'11:00', durationMin:60, course:'engg1811', title:'ENGG1811', kind:'Lecture', kindClass:'lec', loc:'Online' },
-    { day:'WED', time:'13:00', durationMin:60, course:'phys1121', title:'PHYS1121', kind:'Other', kindClass:'tut', loc:'In Person' },
-    { day:'THU', time:'11:00', durationMin:60, course:'phys1121', title:'PHYS1121', kind:'Lecture', kindClass:'lec', loc:'In Person' },
-    { day:'THU', time:'16:00', durationMin:120, course:'phys1121', title:'PHYS1121', kind:'Laboratory', kindClass:'wks', loc:'In Person' },
+    { day:'MON', time:'11:00', durationMin:120, course:'engg1811', title:'ENGG1811', kind:'Lecture', kindClass:'lec', loc:'Online' },
+    { day:'MON', time:'18:00', durationMin:120, course:'engg1811', title:'ENGG1811', kind:'Laboratory', kindClass:'wks', loc:'Harp M15570' },
+    { day:'WED', time:'09:00', durationMin:120, course:'phys1131', title:'PHYS1131', kind:'Other', kindClass:'tut', loc:'OMB 230' },
+    { day:'WED', time:'11:00', durationMin:120, course:'engg1811', title:'ENGG1811', kind:'Lecture', kindClass:'lec', loc:'Online' },
+    { day:'THU', time:'16:00', durationMin:180, course:'phys1131', title:'PHYS1131', kind:'Laboratory', kindClass:'wks', loc:'OMB 114' },
+    { day:'FRI', time:'17:00', durationMin:60, course:'phys1131', title:'PHYS1131', kind:'Laboratory', kindClass:'wks', loc:'OMB 114' },
     { day:'WEB', time:'Online', course:'phys1160', title:'PHYS1160', kind:'Web Delivery', kindClass:'lec', loc:'Self-paced' }
   ];
   var COURSE_META = {
@@ -3598,10 +3597,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       ],
       rules: ['Fully online in the older UNSW outline, with no prerequisites or co-requisites listed.', 'Treat as WAM booster only after confirming 2026 T3 Moodle dates and exact task format.']
     },
-    PHYS1121: {
+    PHYS1131: {
       target:'80+',
       targetNote:'Core physics 前置课提前到 2026 T3；目标 80+，别让基础物理卡后续 aero。',
-      source:'UNSW PHYS1121 2021 official outline; current 2026 T3 Moodle may update details',
+      source:'UNSW Higher Physics 1A reference; current 2026 T3 Moodle may update details',
       assessments:[
         { name:'Experiments / labs', weight:'20%', note:'Lab work; older outline used pass/fail lab marking' },
         { name:'Online quizzes', weight:'10%', note:'Weekly quiz bank, best/highest attempt style in older outline' },
@@ -3743,7 +3742,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var COURSE_SMART = {
     MATH1231: { type:'Math', prereqs:['MATH1131'], unlocks:['MATH2018','MATH2089'], note:'数学底座课，后面二年级数学会接着用。' },
     ENGG1300: { type:'ENGG', unlocks:['MMAN2300','ENGG2400'], note:'工程力学底座，后续固体/力学课会继续用。' },
-    PHYS1121: { type:'Phys', prereqs:['MATH1131'], unlocks:['AERO3630','AERO3660'], note:'aero 方向的物理底座，尽量别拖。' },
+    PHYS1131: { type:'Phys', prereqs:['MATH1131'], unlocks:['AERO3630','AERO3660'], note:'aero 方向的物理底座，尽量别拖。' },
     ENGG1811: { type:'ENGG', unlocks:['Coding confidence'], note:'编程基础，对科研/数据处理/IC 申请都加分。' },
     PHYS1160: { type:'Free', booster:true, note:'Free Elective 里的 WAM booster 候选。' },
     DESN1000: { type:'Design', unlocks:['DESN2000','DESN3000'], note:'设计表达和小组推进能力会延续到后续 DESN。' },
@@ -3753,7 +3752,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     MATH2089: { type:'Math', prereqs:['MATH1231'], unlocks:['simulation','data analysis'], note:'数值方法和统计，对科研/仿真/数据处理很有用。' },
     MMAN2700: { type:'MMAN', prereqs:['MATH1231'], unlocks:['AERO3660'], note:'热力学会接推进和能量系统。' },
     ENGG2400: { type:'ENGG', prereqs:['ENGG1300'], unlocks:['AERO3410'], note:'固体力学是结构方向关键前置能力。' },
-    ENGG2500: { type:'ENGG', prereqs:['MATH1231','PHYS1121'], unlocks:['AERO3630'], note:'流体是 aero 核心前置，final 重。' },
+    ENGG2500: { type:'ENGG', prereqs:['MATH1231','PHYS1131'], unlocks:['AERO3630'], note:'流体是 aero 核心前置，final 重。' },
     MMAN2300: { type:'MMAN', prereqs:['ENGG1300'], unlocks:['AERO vehicle dynamics'], note:'工程力学 2，别堆到期末。' },
     DESN2000: { type:'Design', prereqs:['DESN1000'], unlocks:['DESN3000'], booster:true, note:'过程型设计课，组队顺的话适合拉分。' },
     AERO3410: { type:'Aero', prereqs:['ENGG2400'], unlocks:['AERO4110'], note:'航空结构核心。' },
@@ -3790,9 +3789,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var MYPLAN_REQUIREMENTS = [
     {
       id:'level1', title:'Level 1 Core Courses', uoc:48,
-      notes:['Selected: PHYS1121, MATH1131, MATH1231, ENGG1811'],
+      notes:['Selected: PHYS1131, MATH1131, MATH1231, ENGG1811'],
       courses:[
-        {code:'PHYS1121', name:'Physics 1A', uoc:6, selected:true},
+        {code:'PHYS1131', name:'Higher Physics 1A', uoc:6, selected:true},
         {code:'MATH1131', name:'Mathematics 1A', uoc:6, selected:true},
         {code:'MATH1231', name:'Mathematics 1B', uoc:6, selected:true},
         {code:'ENGG1811', name:'Computing for Engineers', uoc:6, selected:true},
@@ -3896,7 +3895,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var MYPLAN_TERMS = [
     { term:'2026 T1', uoc:6, reason:'已拿到的基础 UOC。', courses:['MATH1131'] },
     { term:'2026 T2', uoc:12, reason:'当前在学，先稳住数学和工程力学。', courses:['MATH1231','ENGG1300'] },
-    { term:'2026 T3', uoc:18, reason:'提前补 PHYS1121，同时用 ENGG1811 和 PHYS1160 拉 WAM。', courses:['PHYS1121','ENGG1811','PHYS1160'] },
+    { term:'2026 T3', uoc:18, reason:'提前补 PHYS1131，同时用 ENGG1811 和 PHYS1160 拉 WAM。', courses:['PHYS1131','ENGG1811','PHYS1160'] },
     { term:'2027 T1', uoc:18, reason:'把 ELEC1111 后移，先用 MATH2089 稳住节奏和 WAM。', courses:['DESN1000','MATH2089','MMAN1130'] },
     { term:'2027 T2', uoc:18, reason:'电路放到这一学期单独面对，同时继续数学和热力学。', courses:['MATH2018','ELEC1111','MMAN2700'] },
     { term:'2027 T3', uoc:18, reason:'完成 Year 2 工程力学核心，打开 Level 3 aerospace。', courses:['ENGG2400','ENGG2500','MMAN2300'] },
@@ -3915,7 +3914,19 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     try {
       var saved = JSON.parse(localStorage.getItem('iue.activeCourses.v1') || 'null');
       if (Array.isArray(saved) && saved.length) {
-        return saved.filter(function(id){ return COURSE_CATALOG.some(function(c){ return c.id === id; }); }).slice(0, ACTIVE_COURSE_LIMIT);
+        var migrated = saved.map(function(id){ return id === 'phys1121' ? 'phys1131' : id; });
+        if (migrated.join('|') !== saved.join('|')) {
+          try {
+            localStorage.setItem('iue.activeCourses.v1', JSON.stringify(migrated));
+            setTimeout(function(){ if (typeof markCloudDirty === 'function') markCloudDirty(); }, 0);
+          } catch (err) {}
+        }
+        var seen = {};
+        return migrated.filter(function(id){
+          if (seen[id]) return false;
+          seen[id] = true;
+          return COURSE_CATALOG.some(function(c){ return c.id === id; });
+        }).slice(0, ACTIVE_COURSE_LIMIT);
       }
     } catch (e) {}
     return ['math', 'engg'];
@@ -4376,7 +4387,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (text.indexOf('MATH1231') > -1) return 'math';
     if (text.indexOf('MMAN1130') > -1 || text.indexOf('TOOLS') > -1 || text.indexOf('DSIGN') > -1 || text.indexOf('MANUF') > -1) return 'mman';
     if (text.indexOf('ENGG1300') > -1 || text.indexOf('Mini-design') > -1) return 'engg';
-    if (text.indexOf('PHYS1121') > -1) return 'phys1121';
+    if (text.indexOf('PHYS1131') > -1) return 'phys1131';
     if (text.indexOf('ENGG1811') > -1) return 'engg1811';
     if (text.indexOf('PHYS1160') > -1) return 'phys1160';
     return '';
@@ -5330,14 +5341,14 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         { id:'eg_proj', label:'Mini-design Project', note:'14/08/2026 · 8:00pm截止',    w:30, date:'2026-08-14T20:00:00+10:00' }
       ]
     },
-    phys1121: {
+    phys1131: {
       color: 'var(--phys-color)',
       items: [
-        { id:'p1121_lab', label:'Experiments / Labs', note:'20% · Dates pending · lab details from Moodle', w:20 },
-        { id:'p1121_quiz', label:'Online Quizzes', note:'10% · Weekly quiz rhythm · confirm best-attempt rules', w:10 },
-        { id:'p1121_t1', label:'Class Test 1', note:'10% · Date pending', w:10 },
-        { id:'p1121_t2', label:'Class Test 2', note:'10% · Date pending', w:10 },
-        { id:'p1121_exam', label:'Final Exam', note:'50% · Final timetable pending · older outline used 2 hours', w:50 }
+        { id:'p1131_lab', label:'Experiments / Labs', note:'20% · Dates pending · lab details from Moodle', w:20 },
+        { id:'p1131_quiz', label:'Online Quizzes', note:'10% · Weekly quiz rhythm · confirm best-attempt rules', w:10 },
+        { id:'p1131_t1', label:'Class Test 1', note:'10% · Date pending', w:10 },
+        { id:'p1131_t2', label:'Class Test 2', note:'10% · Date pending', w:10 },
+        { id:'p1131_exam', label:'Final Exam', note:'50% · Final timetable pending · older outline used 2 hours', w:50 }
       ]
     },
     engg1811: {
@@ -5374,7 +5385,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function gtCourseCode(course) {
     var catalog = courseById(course);
-    return (catalog && catalog.code) || { math:'MATH1231', mman:'MMAN1130', engg:'ENGG1300', phys1121:'PHYS1121', engg1811:'ENGG1811', phys1160:'PHYS1160' }[course] || '';
+    return (catalog && catalog.code) || { math:'MATH1231', mman:'MMAN1130', engg:'ENGG1300', phys1131:'PHYS1131', engg1811:'ENGG1811', phys1160:'PHYS1160' }[course] || '';
   }
 
   function gtTargetNumber(course) {
@@ -5437,7 +5448,23 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (needEl) needEl.textContent = gtNeedText(course, calc.total, calc.doneW);
   }
 
-  function gtLoad() { try { return JSON.parse(localStorage.getItem('gt_v2')||'{}'); } catch(e) { return {}; } }
+  function gtLoad() {
+    try {
+      var data = JSON.parse(localStorage.getItem('gt_v2')||'{}');
+      if (data && data.__phys1131Migrated !== true) {
+        Object.keys(data).forEach(function(key) {
+          if (key.indexOf('p1121_') === 0) {
+            var nextKey = key.replace(/^p1121_/, 'p1131_');
+            if (typeof data[nextKey] === 'undefined') data[nextKey] = data[key];
+            delete data[key];
+          }
+        });
+        data.__phys1131Migrated = true;
+        setTimeout(function(){ gtSave(data); }, 0);
+      }
+      return data || {};
+    } catch(e) { return {}; }
+  }
   function gtSave(d) { try { localStorage.setItem('gt_v2', JSON.stringify(d)); } catch(e) {}; markCloudDirty(); }
 
   function gtItemId(course, index, name) {
@@ -5664,7 +5691,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   renderGT('math');
   renderGT('mman');
   renderGT('engg');
-  renderGT('phys1121');
+  renderGT('phys1131');
   renderGT('engg1811');
   renderGT('phys1160');
 
@@ -5680,7 +5707,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function dashCourseName(course) {
     var catalog = courseById(course);
-    return (catalog && catalog.code) || { math:'MATH1231', mman:'MMAN1130', engg:'ENGG1300', phys1121:'PHYS1121', engg1811:'ENGG1811', phys1160:'PHYS1160' }[course] || course;
+    return (catalog && catalog.code) || { math:'MATH1231', mman:'MMAN1130', engg:'ENGG1300', phys1131:'PHYS1131', engg1811:'ENGG1811', phys1160:'PHYS1160' }[course] || course;
   }
 
   function dashCourseShortTask(course) {
@@ -7300,6 +7327,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       }
       if (payload.savedAt) localStorage.setItem(CLOUD_LAST_REMOTE_KEY, payload.savedAt);
       loadMobiusChecklist();
+      activeCourseIds = loadActiveCourses();
+      COURSE_SWIPE_ORDER = swipeOrder();
       updateProgress();
       activeCourseIds.forEach(function(courseId){ renderGT(courseId); });
       renderCountdown();
