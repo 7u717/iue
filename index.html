@@ -1212,6 +1212,7 @@
       padding: 10px 10px; background: var(--surface2); border-radius: 14px;
       border: 1px solid rgba(255,255,255,.045);
     }
+    .tt-row[data-nav="true"] { cursor:pointer; }
     .tt-day {
       font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:800;width:42px;text-align:center;
       color:var(--text);background:#0b0b0b;border:1px solid var(--border);border-radius:10px;
@@ -1384,8 +1385,9 @@
       display:grid;grid-template-columns:25px minmax(0,1fr);gap:8px;align-items:center;
       padding:5px 9px;border-radius:14px;border:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.055);box-shadow:0 8px 22px rgba(0,0,0,.18);
-      cursor:pointer;animation:dashClassIn .26s ease both;
+      animation:dashClassIn .26s ease both;
     }
+    .dash-class[data-action="true"] { cursor:pointer; }
     .dash-class:nth-child(2) { animation-delay:.03s; }
     .dash-class:nth-child(3) { animation-delay:.06s; }
     .dash-class svg { width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 8px currentColor); }
@@ -3481,7 +3483,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-09-09-phys1131-no-friday';
+  var APP_VERSION = '2026-09-10-timetable-apple-maps';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -4392,6 +4394,32 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return '';
   }
 
+  function mapSearchUrl(query) {
+    return 'https://maps.apple.com/?daddr=' + encodeURIComponent(query);
+  }
+
+  function timetableNavForLoc(loc) {
+    loc = String(loc || '').trim();
+    if (!loc || /^(online|self-paced)$/i.test(loc) || /online/i.test(loc)) return '';
+    if (/old main building|^omb\b|omb\s*\d+/i.test(loc)) return mapSearchUrl('Old Main Building UNSW Kensington');
+    if (/harp/i.test(loc)) return mapSearchUrl('Harp Building UNSW Kensington');
+    if (/physicsth|physics\s*th|physics theatre/i.test(loc)) return mapSearchUrl('Physics Theatre UNSW Kensington');
+    if (/lawrence|h13/i.test(loc)) return mapSearchUrl('Lawrence East Building UNSW Kensington');
+    if (/sitar/i.test(loc)) return mapSearchUrl('SitarME UNSW Kensington');
+    return mapSearchUrl('UNSW ' + loc + ' Kensington');
+  }
+
+  function jsAttrString(value) {
+    return JSON.stringify(String(value || '')).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function timetableAction(row, course) {
+    if (row && row.link) return { attr:' onclick="openExternal(' + jsAttrString(row.link) + ')" data-action="true"', nav:true };
+    var nav = (row && row.nav) || timetableNavForLoc(row && row.loc);
+    if (nav) return { attr:' onclick="openExternal(' + jsAttrString(nav) + ')" data-action="true" data-nav="true"', nav:true };
+    return { attr:'', nav:false };
+  }
+
   function timetableRowHtml(row, options) {
     options = options || {};
     var weightClass = row.course === 'math' ? 'math' : (row.course === 'mman' ? 'mman' : 'engg');
@@ -4400,6 +4428,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       : '<span class="tt-kind '+(row.kindClass || 'lec')+'">'+row.kind+'</span>';
     var attrs = ' class="tt-row" data-course="'+(row.course || '')+'"';
     if (options.showAlways) attrs += ' data-show-always="true"';
+    attrs += timetableAction(row, row.course).attr;
     return '<div'+attrs+'>'
       + '<div class="tt-day">'+row.day+'</div>'
       + '<div class="tt-time">'+row.time+'</div>'
@@ -7051,13 +7080,13 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var course = dashCourseFromTimetable(row);
       var color = row.color || courseColor(course);
       var iconCourse = courseById(course) || { code: row.title || '' };
-      var action = row.link ? 'openExternal(\''+row.link+'\')' : (row.nav ? 'openExternal(\''+row.nav+'\')' : 'showCourse(\''+course+'\')');
+      var action = timetableAction(row, course);
       var kindText = row.kind || '';
       if (row.isDeadline && kindText && new RegExp('\\b'+kindText+'\\b', 'i').test(row.title || '')) kindText = '';
       var titleText = (row.title || '') + (kindText ? ' ' + kindText : '');
       var hot = row.diff && row.diff <= DASH_WARNING_MS;
       var hotVars = hot ? dashUrgencyVars(row.diff) : '';
-      return '<div class="dash-class '+(row.isDeadline ? 'deadline' : '')+' '+(hot ? 'dash-hot' : '')+'" style="'+hotVars+'top:'+top.toFixed(1)+'px;height:'+height.toFixed(1)+'px;color:'+color+';" onclick="'+action+'">'
+      return '<div class="dash-class '+(row.isDeadline ? 'deadline' : '')+' '+(hot ? 'dash-hot' : '')+'" style="'+hotVars+'top:'+top.toFixed(1)+'px;height:'+height.toFixed(1)+'px;color:'+color+';"'+action.attr+'>'
         + courseIconSvg(courseIconType(iconCourse))
         + '<div><div class="dash-class-title">'+escapeHtml(titleText)+'</div>'
         + '<div class="dash-class-sub">'+escapeHtml(dashTimetableRange(row) + ' · ' + row.loc)+'</div></div>'
