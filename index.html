@@ -237,7 +237,7 @@
       -webkit-tap-highlight-color: transparent;
     }
     .tab:hover { transform: none; }
-    .tab:active { transform: scale(.985); }
+    .tab:active { transform: scale(.94); }
     .nav-icon {
       width: 29px; height: 29px;
       stroke: currentColor; fill: none;
@@ -278,7 +278,7 @@
     .tab.active-math .nav-icon,
     .tab.active-mman .nav-icon,
     .tab.active-engg .nav-icon {
-      opacity:1;filter:drop-shadow(0 0 10px rgba(140,200,255,.42));
+      opacity:1;filter:drop-shadow(0 0 12px rgba(140,200,255,.5));
     }
     .tab.active-math,
     .tab.active-mman,
@@ -294,6 +294,10 @@
       will-change: transform, opacity;
     }
     .course-section.active { display: block; }
+    .course-section.course-enter-forward { animation: courseEnterForward .22s cubic-bezier(.22,1,.36,1) both; }
+    .course-section.course-enter-back { animation: courseEnterBack .22s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes courseEnterForward { from { opacity:.72;transform:translate3d(18px,0,0); } to { opacity:1;transform:translate3d(0,0,0); } }
+    @keyframes courseEnterBack { from { opacity:.72;transform:translate3d(-18px,0,0); } to { opacity:1;transform:translate3d(0,0,0); } }
 
     /* COURSE HEADER - dark card style */
     .course-header {
@@ -1211,8 +1215,12 @@
       align-items: center; gap: 8px;
       padding: 10px 10px; background: var(--surface2); border-radius: 14px;
       border: 1px solid rgba(255,255,255,.045);
+      transition:transform .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease;
+      -webkit-tap-highlight-color:transparent;
     }
     .tt-row[data-nav="true"] { cursor:pointer; }
+    .tt-row[data-nav="true"]:hover { border-color:rgba(147,197,253,.14);background:rgba(255,255,255,.06); }
+    .tt-row[data-nav="true"]:active { transform:scale(.985);border-color:rgba(147,197,253,.2); }
     .tt-day {
       font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:800;width:42px;text-align:center;
       color:var(--text);background:#0b0b0b;border:1px solid var(--border);border-radius:10px;
@@ -1315,8 +1323,10 @@
     .dash-course {
       min-height:88px;padding:0;background:transparent;border:0;border-radius:0;cursor:pointer;
       display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;
+      transition:transform .16s ease,filter .16s ease;
+      -webkit-tap-highlight-color:transparent;
     }
-    .dash-course:active { transform:scale(.985); }
+    .dash-course:active { transform:scale(.985);filter:brightness(1.12); }
     .dash-course-ring {
       width:56px;height:56px;border-radius:50%;display:grid;place-items:center;position:relative;
     }
@@ -1370,6 +1380,7 @@
       background:linear-gradient(180deg,rgba(29,155,240,.16),rgba(29,155,240,.035));
       box-shadow:0 0 0 1px rgba(147,197,253,.055) inset,0 0 14px rgba(29,155,240,.09);
     }
+    .dash-day:active { transform:scale(.97); }
     .dash-day-dots { display:flex;gap:3px;height:5px;align-items:center;justify-content:center; }
     .dash-day-dots i { width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.72; }
     .dash-lane { display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px; }
@@ -1386,8 +1397,21 @@
       padding:5px 9px;border-radius:14px;border:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.055);box-shadow:0 8px 22px rgba(0,0,0,.18);
       animation:dashClassIn .26s ease both;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease;
+      -webkit-tap-highlight-color:transparent;
     }
     .dash-class[data-action="true"] { cursor:pointer; }
+    .dash-class[data-action="true"]:hover { background:rgba(255,255,255,.072); }
+    .dash-class[data-action="true"]:active { transform:scale(.985);border-color:color-mix(in srgb, currentColor 34%, rgba(255,255,255,.12)); }
+    .dash-class[data-nav="true"]::after {
+      content:'↗';position:absolute;right:8px;top:6px;font-size:10px;font-weight:800;
+      color:currentColor;opacity:.42;line-height:1;
+    }
+    .dash-class.dash-next {
+      border-color:color-mix(in srgb, currentColor 42%, rgba(255,255,255,.12));
+      box-shadow:0 10px 26px rgba(0,0,0,.22), -3px 0 0 currentColor inset;
+    }
+    .dash-class.dash-soon .dash-class-sub { color:#ffd6a3; }
     .dash-class:nth-child(2) { animation-delay:.03s; }
     .dash-class:nth-child(3) { animation-delay:.06s; }
     .dash-class svg { width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 8px currentColor); }
@@ -1400,6 +1424,42 @@
     .dash-class-empty { color:var(--muted);font-size:13px;padding:12px 0 0 10px;line-height:1.4; }
     @keyframes dashClassIn { from { opacity:0;transform:translateY(8px); } to { opacity:1;transform:none; } }
     @keyframes dashPulse { 0%,100% { opacity:1;transform:scale(1); } 50% { opacity:.78;transform:scale(.985); } }
+    .dash-week { animation:dashWeekIn .2s ease both; }
+    @keyframes dashWeekIn { from { opacity:.72;transform:translateY(5px); } to { opacity:1;transform:none; } }
+
+    .iue-toast {
+      position:fixed;left:50%;bottom:calc(var(--nav-h) + 18px);z-index:310;
+      transform:translateX(-50%) translateY(8px);opacity:0;
+      padding:10px 14px;border-radius:999px;background:rgba(24,24,26,.92);
+      border:1px solid rgba(255,255,255,.13);color:var(--text);font-size:13px;font-weight:750;
+      box-shadow:0 14px 34px rgba(0,0,0,.42);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+      animation:iueToastIn 1.45s ease both;
+    }
+    @keyframes iueToastIn { 0% { opacity:0;transform:translateX(-50%) translateY(8px) scale(.98); } 12%,82% { opacity:1;transform:translateX(-50%) translateY(0) scale(1); } 100% { opacity:0;transform:translateX(-50%) translateY(8px) scale(.98); } }
+    .schedule-sheet-backdrop {
+      position:fixed;inset:0;z-index:255;background:rgba(0,0,0,.2);
+    }
+    .schedule-sheet {
+      position:fixed;left:14px;right:14px;bottom:88px;z-index:260;
+      border:1px solid rgba(255,255,255,.12);border-radius:24px;
+      background:rgba(16,16,18,.94);box-shadow:0 22px 60px rgba(0,0,0,.58);
+      backdrop-filter:blur(26px) saturate(1.18);-webkit-backdrop-filter:blur(26px) saturate(1.18);
+      padding:15px;animation:dashSheetIn .2s ease both;
+    }
+    .schedule-sheet-title { font-size:16px;font-weight:850;margin-bottom:4px; }
+    .schedule-sheet-sub { font-size:12px;color:var(--muted);margin-bottom:12px; }
+    .schedule-sheet-actions { display:grid;gap:8px; }
+    .schedule-sheet-actions button {
+      min-height:42px;border-radius:14px;border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.055);color:var(--text);font-size:14px;font-weight:800;
+      transition:transform .16s ease,background .16s ease,border-color .16s ease;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .schedule-sheet-actions button:active { transform:scale(.975);background:rgba(255,255,255,.08); }
+    .schedule-sheet-actions button.primary {
+      background:linear-gradient(180deg,rgba(147,197,253,.24),rgba(29,155,240,.12));
+      border-color:rgba(147,197,253,.28);color:#d9ecff;
+    }
 
     .dash-grade-sheet {
       position:fixed;left:14px;right:14px;bottom:88px;z-index:260;
@@ -3483,7 +3543,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-09-10-timetable-apple-maps';
+  var APP_VERSION = '2026-09-12-polish-interactions';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -4413,11 +4473,17 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return JSON.stringify(String(value || '')).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
+  function htmlAttr(value) {
+    return String(value || '').replace(/[&<>"']/g, function(ch) {
+      return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch];
+    });
+  }
+
   function timetableAction(row, course) {
-    if (row && row.link) return { attr:' onclick="openExternal(' + jsAttrString(row.link) + ')" data-action="true"', nav:true };
+    if (row && row.link) return { attr:' onclick="openExternal(' + jsAttrString(row.link) + ')" data-action="true" data-nav-url="'+htmlAttr(row.link)+'"', nav:true, url:row.link };
     var nav = (row && row.nav) || timetableNavForLoc(row && row.loc);
-    if (nav) return { attr:' onclick="openExternal(' + jsAttrString(nav) + ')" data-action="true" data-nav="true"', nav:true };
-    return { attr:'', nav:false };
+    if (nav) return { attr:' onclick="openExternal(' + jsAttrString(nav) + ')" data-action="true" data-nav="true" data-nav-url="'+htmlAttr(nav)+'"', nav:true, url:nav };
+    return { attr:'', nav:false, url:'' };
   }
 
   function timetableRowHtml(row, options) {
@@ -4426,7 +4492,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var badge = row.weight
       ? '<span class="tt-weight '+weightClass+'">'+row.weight+'</span>'
       : '<span class="tt-kind '+(row.kindClass || 'lec')+'">'+row.kind+'</span>';
-    var attrs = ' class="tt-row" data-course="'+(row.course || '')+'"';
+    var attrs = ' class="tt-row" data-course="'+htmlAttr(row.course || '')+'" data-title="'+htmlAttr(row.title || '')+'" data-range="'+htmlAttr(row.time || '')+'" data-loc="'+htmlAttr(row.loc || '')+'"';
     if (options.showAlways) attrs += ' data-show-always="true"';
     attrs += timetableAction(row, row.course).attr;
     return '<div'+attrs+'>'
@@ -4492,9 +4558,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function showCourse(course, options) {
     options = options || {};
     if (!document.getElementById('sec-' + course) && courseById(course)) ensureCourseSection(course);
+    var previousActive = document.querySelector('.course-section.active');
+    var previousCourse = previousActive ? previousActive.id.replace('sec-', '') : '';
     var _secs = document.querySelectorAll('.course-section');
     for (var _i=0; _i<_secs.length; _i++) {
       _secs[_i].classList.remove('active');
+      _secs[_i].classList.remove('course-enter-forward', 'course-enter-back');
       _secs[_i].style.transition = '';
       _secs[_i].style.transform = '';
       _secs[_i].style.opacity = '';
@@ -4506,6 +4575,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var activeSection = document.getElementById('sec-' + course);
     if (!activeSection) return;
     activeSection.classList.add('active');
+    if (previousCourse && previousCourse !== course && !options.preserveScroll && !options.instantScroll) {
+      var order = ['dashboard','timetable','countdown'].concat(swipeOrder(), ['myplan']);
+      var previousIndex = order.indexOf(previousCourse);
+      var nextIndex = order.indexOf(course);
+      activeSection.classList.add(nextIndex >= previousIndex ? 'course-enter-forward' : 'course-enter-back');
+      setTimeout(function(){
+        activeSection.classList.remove('course-enter-forward', 'course-enter-back');
+      }, 240);
+    }
     activeSection.scrollLeft = 0;
     if (options.preserveScroll) {
       activeSection.scrollTop = options.scrollTop || 0;
@@ -4543,6 +4621,137 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function openExternal(url) {
     window.open(url, '_blank', 'noopener');
   }
+
+  var schedulePressTimer = null;
+  var schedulePressStart = null;
+  var scheduleSuppressClickUntil = 0;
+
+  function scheduleActionTarget(target) {
+    return target && target.closest ? target.closest('.dash-class[data-action="true"], .tt-row[data-action="true"]') : null;
+  }
+
+  function closeScheduleActionSheet() {
+    var sheet = document.getElementById('schedule-action-sheet');
+    var backdrop = document.getElementById('schedule-action-backdrop');
+    if (sheet) sheet.remove();
+    if (backdrop) backdrop.remove();
+  }
+
+  function showToast(message) {
+    var old = document.querySelector('.iue-toast');
+    if (old) old.remove();
+    var toast = document.createElement('div');
+    toast.className = 'iue-toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(function(){ if (toast.parentNode) toast.remove(); }, 1500);
+  }
+
+  function copyText(text) {
+    text = String(text || '').trim();
+    if (!text) return Promise.resolve(false);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).then(function(){ return true; }).catch(function(){ return false; });
+    }
+    var area = document.createElement('textarea');
+    area.value = text;
+    area.setAttribute('readonly', '');
+    area.style.position = 'fixed';
+    area.style.left = '-9999px';
+    document.body.appendChild(area);
+    area.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch(e) {}
+    area.remove();
+    return Promise.resolve(ok);
+  }
+
+  function showScheduleActionSheet(target) {
+    var url = target && target.dataset ? target.dataset.navUrl : '';
+    var title = (target && target.dataset && target.dataset.title) || 'Schedule';
+    var loc = (target && target.dataset && target.dataset.loc) || '';
+    var range = (target && target.dataset && target.dataset.range) || '';
+    var course = (target && target.dataset && target.dataset.course) || '';
+    closeScheduleActionSheet();
+    var backdrop = document.createElement('div');
+    backdrop.id = 'schedule-action-backdrop';
+    backdrop.className = 'schedule-sheet-backdrop';
+    backdrop.onclick = closeScheduleActionSheet;
+    var sheet = document.createElement('div');
+    sheet.id = 'schedule-action-sheet';
+    sheet.className = 'schedule-sheet';
+    var sub = [range, loc].filter(Boolean).join(' · ');
+    var canOpenCourse = course && (courseById(course) || course === 'courses');
+    sheet.innerHTML =
+      '<div class="schedule-sheet-title">'+escapeHtml(title)+'</div>'
+      + '<div class="schedule-sheet-sub">'+escapeHtml(sub || 'No location')+'</div>'
+      + '<div class="schedule-sheet-actions">'
+      + (url ? '<button class="primary" data-sheet-action="maps">Open Maps</button>' : '')
+      + (loc ? '<button data-sheet-action="copy">Copy location</button>' : '')
+      + (canOpenCourse ? '<button data-sheet-action="course">Open course</button>' : '')
+      + '<button data-sheet-action="close">Cancel</button>'
+      + '</div>';
+    sheet.addEventListener('click', function(event) {
+      var button = event.target && event.target.closest ? event.target.closest('button[data-sheet-action]') : null;
+      if (!button) return;
+      var action = button.getAttribute('data-sheet-action');
+      if (action === 'maps' && url) {
+        closeScheduleActionSheet();
+        openExternal(url);
+      } else if (action === 'copy') {
+        copyText(loc).then(function(ok){ showToast(ok ? 'Location copied' : loc); });
+        closeScheduleActionSheet();
+      } else if (action === 'course' && canOpenCourse) {
+        closeScheduleActionSheet();
+        showCourse(course);
+      } else {
+        closeScheduleActionSheet();
+      }
+    });
+    document.body.appendChild(backdrop);
+    document.body.appendChild(sheet);
+  }
+
+  function schedulePointerDown(event) {
+    var target = scheduleActionTarget(event.target);
+    if (!target) return;
+    schedulePressStart = { x:event.clientX || 0, y:event.clientY || 0, target:target };
+    clearTimeout(schedulePressTimer);
+    schedulePressTimer = setTimeout(function(){
+      scheduleSuppressClickUntil = Date.now() + 650;
+      showScheduleActionSheet(target);
+    }, 540);
+  }
+
+  function schedulePointerMove(event) {
+    if (!schedulePressStart) return;
+    var dx = (event.clientX || 0) - schedulePressStart.x;
+    var dy = (event.clientY || 0) - schedulePressStart.y;
+    if (Math.sqrt(dx*dx + dy*dy) > 12) schedulePointerEnd();
+  }
+
+  function schedulePointerEnd() {
+    clearTimeout(schedulePressTimer);
+    schedulePressTimer = null;
+    schedulePressStart = null;
+  }
+
+  document.addEventListener('pointerdown', schedulePointerDown, { passive:true });
+  document.addEventListener('pointermove', schedulePointerMove, { passive:true });
+  document.addEventListener('pointerup', schedulePointerEnd, { passive:true });
+  document.addEventListener('pointercancel', schedulePointerEnd, { passive:true });
+  document.addEventListener('click', function(event) {
+    if (Date.now() > scheduleSuppressClickUntil) return;
+    if (!scheduleActionTarget(event.target)) return;
+    event.preventDefault();
+    event.stopPropagation();
+  }, true);
+  document.addEventListener('contextmenu', function(event) {
+    var target = scheduleActionTarget(event.target);
+    if (!target) return;
+    event.preventDefault();
+    showScheduleActionSheet(target);
+  });
 
   function swipeOrder() {
     return activeCourseIds.concat(['courses']);
@@ -7047,6 +7256,20 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       dashboardScheduleDay = dashAutoScheduleDay(rowsByDay, now);
     }
     var dayRows = rowsByDay[dashboardScheduleDay] || [];
+    var todayDay = DASH_WEEK_DAYS[(now.getDay() + 6) % 7];
+    var nowMin = now.getHours() * 60 + now.getMinutes();
+    var nextClassIndex = -1;
+    var nextClassStart = Infinity;
+    if (dashboardScheduleDay === todayDay) {
+      dayRows.forEach(function(row, index) {
+        if (row.isDeadline) return;
+        var start = dashTimetableMinutes(row.time);
+        if (start != null && start >= nowMin && start < nextClassStart) {
+          nextClassStart = start;
+          nextClassIndex = index;
+        }
+      });
+    }
     var dayButtons = DASH_WEEK_DAYS.map(function(day) {
       var dots = (rowsByDay[day] || []).slice(0,4).map(function(){ return '<i></i>'; }).join('');
       return '<button class="dash-day '+(day === dashboardScheduleDay ? 'active' : '')+'" onclick="setDashboardScheduleDay(\''+day+'\')">'
@@ -7072,7 +7295,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         top: Math.max(0, (t - minStart) / span * laneHeight)
       });
     }
-    var events = dayRows.map(function(row) {
+    var events = dayRows.map(function(row, rowIndex) {
       var start = dashTimetableMinutes(row.time);
       if (start == null) return '';
       var top = Math.max(0, (start - minStart) / span * laneHeight);
@@ -7086,7 +7309,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var titleText = (row.title || '') + (kindText ? ' ' + kindText : '');
       var hot = row.diff && row.diff <= DASH_WARNING_MS;
       var hotVars = hot ? dashUrgencyVars(row.diff) : '';
-      return '<div class="dash-class '+(row.isDeadline ? 'deadline' : '')+' '+(hot ? 'dash-hot' : '')+'" style="'+hotVars+'top:'+top.toFixed(1)+'px;height:'+height.toFixed(1)+'px;color:'+color+';"'+action.attr+'>'
+      var nextClass = rowIndex === nextClassIndex;
+      var soonClass = !row.isDeadline && dashboardScheduleDay === todayDay && start >= nowMin && start - nowMin <= 30;
+      var dataAttrs = ' data-course="'+htmlAttr(course)+'" data-title="'+htmlAttr(titleText)+'" data-range="'+htmlAttr(dashTimetableRange(row))+'" data-loc="'+htmlAttr(row.loc || '')+'"';
+      return '<div class="dash-class '+(row.isDeadline ? 'deadline' : '')+' '+(hot ? 'dash-hot' : '')+' '+(nextClass ? 'dash-next' : '')+' '+(soonClass ? 'dash-soon' : '')+'" style="'+hotVars+'top:'+top.toFixed(1)+'px;height:'+height.toFixed(1)+'px;color:'+color+';"'+dataAttrs+action.attr+'>'
         + courseIconSvg(courseIconType(iconCourse))
         + '<div><div class="dash-class-title">'+escapeHtml(titleText)+'</div>'
         + '<div class="dash-class-sub">'+escapeHtml(dashTimetableRange(row) + ' · ' + row.loc)+'</div></div>'
