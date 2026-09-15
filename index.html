@@ -438,12 +438,20 @@
     .subtopic::before { content: "·"; color: var(--dim); flex-shrink: 0; margin-top: 1px; }
 
     .plan-hero {
-      background: linear-gradient(135deg, rgba(255,255,255,.16), rgba(191,219,254,.16) 45%, rgba(255,255,255,.05));
-      border: 1px solid rgba(191,219,254,.18);
-      border-radius: 18px;
+      position:relative;overflow:hidden;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(147,197,253,.18), transparent 34%),
+        linear-gradient(145deg, rgba(255,255,255,.105), rgba(255,255,255,.028) 58%, rgba(0,0,0,.14));
+      border: 1px solid rgba(255,255,255,.105);
+      border-radius: 22px;
       padding: 18px;
       margin-bottom: 18px;
-      box-shadow: var(--shadow-sm);
+      box-shadow: 0 18px 44px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.075);
+      transform:translateZ(0);
+    }
+    .plan-hero::after {
+      content:"";position:absolute;left:18px;right:18px;bottom:0;height:1px;
+      background:linear-gradient(90deg,transparent,rgba(147,197,253,.34),transparent);
     }
     .plan-kicker {
       font-size: 11px;
@@ -470,15 +478,16 @@
     .plan-stats {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
+      gap: 7px;
       margin-top: 16px;
     }
     .plan-stat {
-      background: rgba(0,0,0,.22);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px;
+      background: rgba(0,0,0,.20);
+      border: 1px solid rgba(255,255,255,.075);
+      border-radius: 15px;
+      padding: 10px 9px;
       min-width: 0;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
     }
     .plan-stat-num {
       font-family: 'Space Grotesk', sans-serif;
@@ -496,17 +505,18 @@
     }
     .plan-total-bar,
     .plan-mini-bar {
-      height: 5px;
+      height: 6px;
       border-radius: 999px;
-      background: rgba(255,255,255,.08);
+      background: rgba(255,255,255,.07);
       overflow: hidden;
-      margin-top: 12px;
+      margin-top: 13px;
     }
     .plan-total-fill,
     .plan-mini-fill {
       height: 100%;
       border-radius: inherit;
-      background: linear-gradient(90deg, #EFF6FF, #93C5FD);
+      background: linear-gradient(90deg, #F8FAFC, #BFDBFE 48%, #93C5FD);
+      box-shadow:0 0 18px rgba(147,197,253,.28);
     }
     .plan-row {
       display: flex;
@@ -1130,6 +1140,34 @@
     .competency-option:active { transform:scale(.965); }
     .competency-option.active { color:#071019;border-color:rgba(209,215,226,.78);background:linear-gradient(180deg,#F8FAFC,#AEB9C8); }
     .competency-option.cn.active { color:#2a0707;border-color:rgba(248,113,113,.68);background:linear-gradient(180deg,#fecaca,#f87171); }
+    .phys-gate { display:grid;gap:10px; }
+    .phys-gate-panel {
+      border:1px solid rgba(255,255,255,.08);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+      padding:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04);transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+    .phys-gate-panel:active { transform:scale(.992);border-color:rgba(147,197,253,.22); }
+    .phys-gate-main { display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px; }
+    .phys-gate-label { font-size:13px;font-weight:780;color:var(--text);line-height:1.25; }
+    .phys-gate-note { margin-top:3px;font-size:10.8px;line-height:1.38;color:var(--muted); }
+    .phys-gate-status {
+      padding:5px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);
+      color:var(--muted);font-size:10px;font-weight:850;white-space:nowrap;
+    }
+    .phys-gate-status.pass { color:#071019;background:linear-gradient(180deg,#dbeafe,#93c5fd);border-color:rgba(147,197,253,.75); }
+    .phys-lab-dots { display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px; }
+    .phys-lab-dot,.phys-score-dot,.phys-attempt-dot {
+      min-height:34px;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:rgba(255,255,255,.035);
+      color:var(--muted);font-size:11px;font-weight:850;transition:transform .16s ease,border-color .16s ease,background .16s ease,color .16s ease,box-shadow .16s ease;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .phys-lab-dot:active,.phys-score-dot:active,.phys-attempt-dot:active { transform:scale(.94); }
+    .phys-lab-dot.active,.phys-score-dot.active,.phys-attempt-dot.active {
+      color:#071019;border-color:rgba(147,197,253,.72);background:linear-gradient(180deg,#dbeafe,#93c5fd);
+      box-shadow:0 8px 20px rgba(147,197,253,.12);
+    }
+    .phys-score-grid { display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:8px; }
+    .phys-attempt-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px; }
+    .phys-gate-foot { margin-top:9px;font-size:10.8px;line-height:1.35;color:var(--muted); }
     .competency-resources { margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:grid;gap:8px; }
     .competency-resource { display:grid;grid-template-columns:8px 1fr;gap:9px;align-items:start;font-size:11.5px;line-height:1.4;color:var(--muted); }
     .competency-resource i { width:8px;height:8px;border-radius:50%;margin-top:4px;background:var(--gt-color,var(--engg-color));opacity:.72; }
@@ -2116,6 +2154,27 @@
   <div class="topic-group">
     <div class="group-label">成绩追踪</div>
     <div class="topic-card" style="padding:16px;" id="gt-comp1511"></div>
+  </div>
+  <div class="topic-group">
+    <div class="group-label">Week 1 Lab</div>
+    <div class="topic-card" style="padding:16px;">
+      <div class="engg-week-summary">COMP1511 Lab 01 · setup + first C programs · no marks, due Week 2 Monday 18:00.</div>
+      <div class="engg-week-pills">
+        <span>VLab</span><span>terminal</span><span>dcc</span><span>give</span>
+      </div>
+      <div class="engg-checklist" id="comp1511-week1-checks">
+        <div class="engg-check" data-comp-check="understand" onclick="toggleCompCheck(this)"><span class="engg-check-box"></span><span class="engg-check-label">Read how the Week 1 lab works</span></div>
+        <div class="engg-check" data-comp-check="vlab" onclick="toggleCompCheck(this)"><span class="engg-check-box"></span><span class="engg-check-label">Log into VLab and open a terminal</span></div>
+        <div class="engg-check" data-comp-check="setup" onclick="toggleCompCheck(this)"><span class="engg-check-box"></span><span class="engg-check-label">Run <code>1511 setup</code> and <code>1511 colors</code></span></div>
+        <div class="engg-check" data-comp-check="commands" onclick="toggleCompCheck(this)"><span class="engg-check-box"></span><span class="engg-check-label">Practise <code>pwd</code>, <code>ls</code>, <code>cd</code>, <code>mkdir</code>, <code>cp</code></span></div>
+        <div class="engg-check" data-comp-check="badpun" onclick="toggleCompCheck(this)"><span class="engg-check-box"></span><span class="engg-check-label">Create, compile, run and submit <code>bad_pun.c</code></span></div>
+        <div class="engg-check" data-comp-check="bird" onclick="toggleCompCheck(this)"><span class="engg-check-box"></span><span class="engg-check-label">Complete and submit <code>bird.c</code></span></div>
+        <div class="engg-check" data-comp-check="bunny" onclick="toggleCompCheck(this)"><span class="engg-check-box"></span><span class="engg-check-label">Fix and submit <code>bunny.c</code></span></div>
+      </div>
+      <div class="course-action-row">
+        <a class="course-action-pill primary" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/lab/01/questions" target="_blank" rel="noopener">Open lab</a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -3613,7 +3672,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-09-16-phys1131-pass-tracker';
+  var APP_VERSION = '2026-09-16-phys1131-countdown-comp1511';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5369,6 +5428,32 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     });
   }
 
+  function compCheckKey() { return 'iue.comp1511.weekChecks.v1'; }
+
+  function loadCompChecks() {
+    var values = {};
+    try { values = JSON.parse(localStorage.getItem(compCheckKey()) || '{}') || {}; } catch(e) { values = {}; }
+    document.querySelectorAll('#comp1511-week1-checks .engg-check').forEach(function(item) {
+      var done = !!values[item.dataset.compCheck];
+      item.classList.toggle('checked', done);
+      var box = item.querySelector('.engg-check-box');
+      if (box) box.textContent = done ? '✓' : '';
+    });
+  }
+
+  function toggleCompCheck(el) {
+    if (!el) return;
+    el.classList.toggle('checked');
+    var box = el.querySelector('.engg-check-box');
+    if (box) box.textContent = el.classList.contains('checked') ? '✓' : '';
+    var values = {};
+    document.querySelectorAll('#comp1511-week1-checks .engg-check').forEach(function(item) {
+      if (item.dataset.compCheck) values[item.dataset.compCheck] = item.classList.contains('checked');
+    });
+    try { localStorage.setItem(compCheckKey(), JSON.stringify(values)); } catch(e) {}
+    markCloudDirty();
+  }
+
   function updateProgress() {
     var items = document.querySelectorAll('#mobius-list .checklist-item');
     var totals = { calc: 0, alg: 0 };
@@ -5400,6 +5485,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     document.getElementById('alg-pct').textContent = algPct + '%';
   }
   loadMobiusChecklist();
+  loadCompChecks();
   updateProgress();
 
   // ===== COUNTDOWN =====
@@ -5424,8 +5510,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     { name: 'MMAN1130 MANUF1 图纸',           date: '2026-07-17T23:55:00+10:00', tag: '15%', color: 'var(--mman-color)', gtId: 'mm_mf1' },
     { name: 'ENGG1300 Test 2',               date: '2026-07-18T10:00:00+10:00', tag: '30%', color: 'var(--engg-color)', gtId: 'eg_t2',  loc: 'F10 June Griffith M10', nav: 'https://maps.apple.com/?q=UNSW+F10+June+Griffith+Building+Kensington', examTable:true, durationMin:120 },
     { name: 'MATH1231 Lab Test 2',            date: '2026-07-27T15:00:00+10:00', tag: '15%', color: 'var(--math-color)', gtId: 'mg_lt2', loc: 'H13 Lawrence East M020', nav: 'https://maps.apple.com/?q=UNSW+H13+Lawrence+East+Building+Kensington', examTable:true, durationMin:60 },
-    { name: 'PHYS1131 Test 1',                date: '2026-10-29T17:00:00+11:00', tag: 'Week 7 · 4 questions', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_t1', loc:'OMB 114', nav:'https://maps.apple.com/?q=Old+Main+Building+UNSW+Kensington', examTable:true, durationMin:40 },
-    { name: 'PHYS1131 Test 2',                date: '2026-11-19T17:00:00+11:00', tag: 'Week 10 · 4 questions', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_t2', loc:'OMB 114', nav:'https://maps.apple.com/?q=Old+Main+Building+UNSW+Kensington', examTable:true, durationMin:40 },
+    { name: 'PHYS1131 Test 1',                date: '2026-10-29T17:00:00+11:00', term:'2026 T3', tag: 'Test', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_t1', loc:'OMB 114', nav:'https://maps.apple.com/?q=Old+Main+Building+UNSW+Kensington', examTable:true, durationMin:40 },
+    { name: 'PHYS1131 Test 2',                date: '2026-11-19T17:00:00+11:00', term:'2026 T3', tag: 'Test', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_t2', loc:'OMB 114', nav:'https://maps.apple.com/?q=Old+Main+Building+UNSW+Kensington', examTable:true, durationMin:40 },
     { name: 'MMAN1130 MANUF2 工艺单',         date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf2' },
     { name: 'MMAN1130 MANUF3 CAM',            date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf3' },
     { name: 'MATH1231 Assignment',            date: '2026-08-04T23:59:00+10:00', tag: '10%', color: 'var(--math-color)', gtId: 'mg_asgn'},
@@ -6019,18 +6105,19 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function gtPhys1131Row(id, label, note, score, known, pass, attempt, color) {
-    return '<div class="competency-row">'
-      + '<div class="competency-row-main"><div>'
-      + '<div class="competency-title">'+label+'</div>'
-      + '<div class="competency-note">'+note+'</div>'
-      + '</div><div class="competency-status-pill">'+gtPhys1131TestText(score, known, attempt)+'</div></div>'
-      + '<div class="competency-options" style="grid-template-columns:repeat(3,minmax(0,1fr));">'
-      + [1,2,3].map(function(n){ return '<button class="competency-option '+(attempt === n ? 'active' : '')+'" onclick="gtPhysSetAttempt(\''+id+'\','+n+')">Attempt '+n+'</button>'; }).join('')
+    return '<div class="phys-gate-panel">'
+      + '<div class="phys-gate-main"><div>'
+      + '<div class="phys-gate-label">'+label+'</div>'
+      + '<div class="phys-gate-note">'+note+'</div>'
+      + '</div><div class="phys-gate-status '+(pass ? 'pass' : '')+'">'+gtPhys1131TestText(score, known, attempt)+'</div></div>'
+      + '<div class="phys-attempt-grid">'
+      + [1,2,3].map(function(n){ return '<button class="phys-attempt-dot '+(attempt === n ? 'active' : '')+'" onclick="gtPhysSetAttempt(\''+id+'\','+n+')">A'+n+'</button>'; }).join('')
       + '</div>'
-      + '<div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:9px;">'
-      + '<input class="grade-input" type="number" min="0" max="4" step="0.5" placeholder="score / 4" value="'+(known ? score : '')+'" oninput="gtPhysSetScore(\''+id+'\', this.value)">'
-      + '<div style="font-size:12px;font-weight:800;color:'+(pass ? color : 'var(--muted)')+'">'+(known ? (pass ? 'PASS' : 'RETAKE') : '--')+'</div>'
-      + '</div></div>';
+      + '<div class="phys-score-grid">'
+      + [0,1,2,3,4].map(function(n){ return '<button class="phys-score-dot '+(known && score === n ? 'active' : '')+'" onclick="gtPhysSetScore(\''+id+'\','+n+')">'+n+'</button>'; }).join('')
+      + '</div>'
+      + '<div class="phys-gate-foot">'+(known ? (pass ? '2/4 or above: full credit.' : 'Below 2/4: keep this marked for retake.') : 'Tap the score after the attempt.')+'</div>'
+      + '</div>';
   }
 
   function gtRenderThreshold(course, cfg, data) {
@@ -6047,16 +6134,30 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       + '<div class="competency-track"><div class="competency-fill" style="width:'+(calc.passed/3*100).toFixed(0)+'%;"></div></div>'
       + '<div class="competency-rule">Labs: pass 5 of 6 for full credit; fewer than 5 = 0. Tests: 4 questions, score 2/4 or above = full credit; below 2 triggers retake, with two retake chances.</div>'
       + '</div>';
-    html += '<div class="competency-row">'
-      + '<div class="competency-row-main"><div><div class="competency-title">Labs</div><div class="competency-note">6 labs total · 5/6 required for full credit</div></div><div class="competency-status-pill">'+calc.labs+'/6 · '+(calc.labPass ? 'full' : '0')+'</div></div>'
-      + '<div style="display:grid;grid-template-columns:42px 1fr 42px;gap:8px;align-items:center;margin-top:10px;">'
-      + '<button class="schedule-sheet-action" onclick="gtPhysSetLabs(-1)">−</button>'
-      + '<div class="competency-track" style="height:10px;"><div class="competency-fill" style="width:'+(calc.labs/6*100).toFixed(0)+'%;"></div></div>'
-      + '<button class="schedule-sheet-action" onclick="gtPhysSetLabs(1)">+</button>'
-      + '</div></div>';
+    html += '<div class="phys-gate">'
+      + '<div class="phys-gate-panel">'
+      + '<div class="phys-gate-main"><div><div class="phys-gate-label">Labs</div><div class="phys-gate-note">6 labs total · 5/6 required for full credit</div></div><div class="phys-gate-status '+(calc.labPass ? 'pass' : '')+'">'+calc.labs+'/6 · '+(calc.labPass ? 'full' : '0')+'</div></div>'
+      + '<div class="phys-lab-dots">'
+      + [1,2,3,4,5,6].map(function(n){ return '<button class="phys-lab-dot '+(calc.labs >= n ? 'active' : '')+'" onclick="gtPhysSetLabCount('+n+')">'+n+'</button>'; }).join('')
+      + '</div>'
+      + '<div class="phys-gate-foot">Tap the highest completed lab number. Five or six labs = full credit.</div>'
+      + '</div>';
     html += gtPhys1131Row('p1131_t1', 'Test 1', 'First attempt Week 7 · retakes Week 11/12 · 40 minutes after start', calc.t1Score, calc.t1Known, calc.t1Pass, parseInt(t1.attempt || 1, 10), color);
     html += gtPhys1131Row('p1131_t2', 'Test 2', 'First attempt Week 10 · retakes Week 11/12 · 40 minutes after start', calc.t2Score, calc.t2Known, calc.t2Pass, parseInt(t2.attempt || 1, 10), color);
+    html += '</div>';
     return html;
+  }
+
+  function gtPhysSetLabCount(count) {
+    var data = gtLoad();
+    if (!data.p1131_labs) data.p1131_labs = {};
+    var current = parseInt(data.p1131_labs.count || 0, 10) || 0;
+    var next = current === count ? Math.max(0, count - 1) : Math.max(0, Math.min(6, count));
+    data.p1131_labs.count = next;
+    data.p1131_labs.done = next >= 5;
+    gtSave(data);
+    renderGT('phys1131');
+    renderDashboard();
   }
 
   function gtPhysSetLabs(delta) {
@@ -7902,6 +8003,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       }
       if (payload.savedAt) localStorage.setItem(CLOUD_LAST_REMOTE_KEY, payload.savedAt);
       loadMobiusChecklist();
+      loadCompChecks();
       activeCourseIds = loadActiveCourses();
       COURSE_SWIPE_ORDER = swipeOrder();
       updateProgress();
