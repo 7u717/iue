@@ -1214,6 +1214,16 @@
     .comp-week-section strong { display:block;font-size:11px;font-weight:850;color:var(--engg-color);letter-spacing:.02em;margin-bottom:4px; }
     .comp-week-section p { margin:0;font-size:11.5px;line-height:1.55;color:var(--muted); }
     .comp-week-section code { font-family:'SF Mono',Menlo,monospace;color:var(--text);background:rgba(255,255,255,.055);border-radius:6px;padding:1px 4px; }
+    .comp-task-list { display:grid;gap:8px;margin-top:7px; }
+    .comp-task-card {
+      border:1px solid rgba(255,255,255,.075);border-radius:14px;background:rgba(255,255,255,.027);padding:10px 11px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+    }
+    .comp-task-card strong { margin:0 0 5px;font-size:12px;color:var(--text);letter-spacing:0; }
+    .comp-task-card p { font-size:11px;line-height:1.48; }
+    .comp-command-row { display:flex;flex-wrap:wrap;gap:5px;margin-top:7px; }
+    .comp-command-row code { font-size:10px;color:#dce7f7;background:rgba(147,197,253,.09);border:1px solid rgba(147,197,253,.12); }
+    .comp-task-done { margin-top:7px;font-size:10.5px;font-weight:760;color:#9fb0c5;line-height:1.35; }
     .gt-row.comp-expand-row { padding:12px 0; }
     .comp-expand-chevron {
       width:22px;height:22px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;
@@ -5488,7 +5498,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   var COMP1511_LAB_WEEKS = [2,3,4,5,6,7,8,9,10];
   var COMP1511_WEEK_PACKAGES = [
-    { week:1, title:'Lab 01 · 从零开始', status:'released', teacher:'官网 Week 01 已放 lectures、tutorial activities、problem set 和 check off。老师要你先会用 CSE/VLab 环境，再完成 setup、bad_pun、bird、bunny、about_me 这些入门练习；Problem Set 1 不计分，但要练会提交。', teach:'这周先别怕 C。你真正要学的是一条固定流程：打开 terminal，知道自己在哪个文件夹，写 .c 文件，用 dcc 编译，用 ./运行，看懂第一个 error，再用 autotest 检查，最后用 give 提交。', steps:'准备：打开 COMP1511 官网、VLab、VS Code/terminal。课上：跟着 lecture 看什么是 program、printf、main、compile。要会：pwd/ls/cd/mkdir/cp，dcc file.c -o file，./file，1511 autotest，give。怎么做：每道题都按“读题→建文件→写一点→编译→运行→autotest→give”。' },
+    { week:1, title:'Lab 01 · 从零开始', status:'released', teacher:'官网 Week 01 已放 lectures、tutorial activities、problem set 和 check off。老师要你先会用 CSE/VLab 环境，再完成 setup、bad_pun、bird、bunny、about_me 这些入门练习；Problem Set 1 不计分，但要练会提交，截止 Week 2 Monday 18:00。', teach:'这周先别怕 C。你真正要学的是一条固定流程：打开 terminal，知道自己在哪个文件夹，写 .c 文件，用 dcc 编译，用 ./运行，看懂第一个 error，再用 autotest 检查，最后用 give 提交。', steps:'准备：打开 COMP1511 官网、VLab、VS Code/terminal。课上：跟着 lecture 看什么是 program、printf、main、compile。要会：pwd/ls/cd/mkdir/cp，dcc file.c -o file，./file，1511 autotest，give。怎么做：每道题都按“读题→建文件→写一点→编译→运行→autotest→give”。', tasks:[
+      { name:'Setup · VLab + terminal', goal:'装好/打开 VLab，登录 zID，打开 terminal，并把 1511 的基础环境设置好。', commands:['1511 setup','1511 colors'], done:'重新打开 terminal 后能正常输入命令。' },
+      { name:'Terminal basics · lab01 folder', goal:'练会 pwd、ls、cd、mkdir、cp，然后创建并进入本周文件夹。', commands:['pwd','ls','mkdir lab01','cd lab01','cp old.c new.c'], done:'你在 lab01 文件夹里，知道怎么确认当前位置。' },
+      { name:'Exercise 1 · bad_pun', goal:'创建 bad_pun.c，保存一个最小 C 程序，编译、运行、autotest，再 give 提交。', commands:['code bad_pun.c','dcc bad_pun.c -o bad_pun','./bad_pun','1511 autotest bad_pun','give cs1511 lab01_bad_pun bad_pun.c'], done:'bad_pun 能运行，give 接受提交。' },
+      { name:'Exercise 2 · bird', goal:'把 bad_pun.c 复制成 bird.c，修改 printf 输出官方要求的 ASCII bird，然后编译、运行、检查、提交。', commands:['cp bad_pun.c bird.c','code bird.c','dcc bird.c -o bird','./bird','1511 autotest bird','give cs1511 lab01_bird bird.c'], done:'bird 输出和官方页面一致，autotest/give 通过。' },
+      { name:'Exercise 3 · bunny', goal:'复制官方给的 bunny.c，先读错误，再一次只修一个小问题，直到它能编译运行。', commands:['cp ~cs1511/public_html/26T3/tlb/01/bunny.c .','cat bunny.c','dcc bunny.c -o bunny','code bunny.c','1511 autotest bunny','give cs1511 lab01_bunny bunny.c'], done:'bunny 编译成功，输出正确，give 接受提交。' },
+      { name:'Exercise 4 · about_me', goal:'复制 about_me.c，修掉语法错误，然后把输出内容改成你自己的回答。', commands:['cp ~cs1511/public_html/26T3/tlb/01/about_me.c .','dcc about_me.c -o about_me','code about_me.c','./about_me','1511 autotest about_me','give cs1511 lab01_about_me about_me.c'], done:'about_me 能运行，个人回答已填好，give 接受提交。' },
+      { name:'Check-off + communication', goal:'在 lab 里完成 tutor check-off；如果不能到场，联系课程邮箱。再回复 tutor 邮件，并在课程 forum 介绍帖下留言。', commands:['check-off in lab','reply tutor email','forum intro comment'], done:'check-off、邮件、forum 三件事都完成。' }
+    ] },
     { week:2, title:'输入、变量、表达式', status:'official-shell', teacher:'官网已有 Week 02 lecture 入口；具体 lab/problem set 等老师发布后再按页面补。', teach:'把程序想成一个小机器：输入进来，存进变量，经过表达式计算，再输出结果。新手重点不是背语法，而是分清 int、double、char 和 scanf/printf 的格式。', steps:'准备：复习 Week 1 的编译/提交流程。课上：盯住变量类型、赋值、算术表达式、格式化输入输出。要会：读题找输入/输出样例，把样例手算一遍，再写 C。怎么做：每写完一个 scanf/printf 就编译运行一次。' },
     { week:3, title:'if / else 与判断', status:'official-shell', teacher:'官网已有 Week 03 lecture 入口；lab 细节待发布。', teach:'这一周核心是让程序“分路走”。你要练的是条件表达式、比较运算、逻辑 AND/OR/NOT，以及 if / else if / else 的顺序。', steps:'准备：先做 5 个生活判断例子，比如 pass/fail、odd/even。课上：看清每个 branch 什么时候执行。要会：把英文条件翻译成 C 条件。怎么做：先画判断树，再写代码；每个 branch 都用一个测试样例跑到。' },
     { week:4, title:'while / for 循环', status:'official-shell', teacher:'官网已有 Week 04 lecture 入口；这一周页面目前显示 lecture 资料入口，后续任务以官网为准。', teach:'循环就是重复做事。新手最容易错在“什么时候开始、什么时候停、每次怎么变”。', steps:'准备：复习变量更新。课上：重点看 while、for、counter、sum、sentinel input。要会：写出循环不变量：当前做到第几个、累计了什么。怎么做：先用纸列前三轮，再写代码；卡住时打印 counter 和 sum。' },
@@ -5579,6 +5597,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
             + '<div class="comp-week-section"><strong>老师要求</strong><p>'+escapeHtml(item.teacher)+'</p></div>'
             + '<div class="comp-week-section"><strong>中文讲解</strong><p>'+escapeHtml(item.teach)+'</p></div>'
             + '<div class="comp-week-section"><strong>怎么做</strong><p>'+escapeHtml(item.steps)+'</p></div>'
+            + (item.tasks ? '<div class="comp-week-section"><strong>Problem set 任务</strong><div class="comp-task-list">'+item.tasks.map(function(task){
+              return '<div class="comp-task-card"><strong>'+escapeHtml(task.name)+'</strong><p>'+escapeHtml(task.goal)+'</p>'
+                + '<div class="comp-command-row">'+(task.commands || []).map(function(cmd){ return '<code>'+escapeHtml(cmd)+'</code>'; }).join('')+'</div>'
+                + '<div class="comp-task-done">完成标准：'+escapeHtml(task.done)+'</div></div>';
+            }).join('')+'</div></div>' : '')
             + '</div>' : '')
           + '</div>';
       }).join('')
