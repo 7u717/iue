@@ -1165,6 +1165,9 @@
       color:#080d14;border-color:rgba(184,196,216,.72);background:linear-gradient(180deg,#eef2f8,#9eabba);
       box-shadow:0 8px 20px rgba(184,196,216,.12);
     }
+    .phys-attempt-dot.locked {
+      opacity:.35;filter:saturate(.45);pointer-events:none;background:rgba(255,255,255,.025);border-color:rgba(255,255,255,.045);
+    }
     .phys-score-grid { display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:8px; }
     .phys-attempt-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px; }
     .phys-gate-foot { margin-top:9px;font-size:10.8px;line-height:1.35;color:var(--muted); }
@@ -1223,6 +1226,16 @@
     }
     .course-action-pill:active { transform:scale(.965);background:rgba(255,255,255,.075); }
     .course-action-pill.primary { color:#071019;background:linear-gradient(180deg,#F8FAFC,#AEB9C8);border-color:rgba(209,215,226,.7); }
+    .course-jump-button {
+      position:relative;display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:12px;padding:14px 15px;border-radius:20px;
+      border:1px solid rgba(209,215,226,.22);background:radial-gradient(circle at 18% 0%,rgba(209,215,226,.2),transparent 36%),linear-gradient(145deg,rgba(255,255,255,.085),rgba(255,255,255,.025));
+      color:var(--text);text-decoration:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 14px 34px rgba(0,0,0,.18);overflow:hidden;
+      transition:transform .18s cubic-bezier(.22,1,.36,1),border-color .18s ease,background .18s ease;
+    }
+    .course-jump-button:active { transform:scale(.982);border-color:rgba(209,215,226,.42); }
+    .course-jump-button strong { display:block;font-size:14px;font-weight:850;line-height:1.15; }
+    .course-jump-button span { display:block;margin-top:4px;font-size:11px;font-weight:700;color:var(--muted);line-height:1.25; }
+    .course-jump-button i { width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08);font-style:normal;font-size:18px;color:var(--engg-color);flex-shrink:0; }
     .glossary-mini { display:grid;gap:8px; }
     .glossary-row { padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07); }
     .glossary-row:last-child { border-bottom:none; }
@@ -2186,11 +2199,7 @@
     <div class="topic-card" style="padding:16px;" id="gt-comp1511"></div>
   </div>
   <div class="topic-group">
-    <div class="group-label">Lab Component</div>
-    <div class="topic-card" style="padding:16px;" id="comp1511-lab-plan"></div>
-  </div>
-  <div class="topic-group">
-    <div class="group-label">Week 1 Learning Map</div>
+    <div class="group-label">Beginner Learning Map</div>
     <div class="topic-card" style="padding:16px;" id="comp1511-study-map"></div>
   </div>
 </div>
@@ -5449,11 +5458,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   var COMP1511_LAB_WEEKS = [2,3,4,5,6,7,8,9,10];
   var COMP1511_STUDY_MAP = [
-    { title:'CSE + VLab', text:'Sign in, find terminal, understand where files live.' },
-    { title:'Terminal basics', text:'Practise pwd, ls, cd, mkdir, cp until they feel automatic.' },
-    { title:'First C program', text:'Edit, save, compile with dcc, run with ./program.' },
-    { title:'Autotest + give', text:'Use 1511 autotest before give; only the last give submission is marked.' },
-    { title:'Debugging habit', text:'Read compiler errors from top to bottom and fix one problem at a time.' }
+    { title:'1 · Log in to VLab', text:'Use zID + zPass, open the Linux desktop, then find or open a terminal.' },
+    { title:'2 · Set up terminal once', text:'Run 1511 setup, then 1511 colors, close the terminal and reopen it.' },
+    { title:'3 · Know where you are', text:'Practise pwd, ls, cd, mkdir and cp; create lab01 and move into it before coding.' },
+    { title:'4 · Open files with code', text:'Use code bad_pun.c, code bird.c, code bunny.c; save before compiling.' },
+    { title:'5 · Compile and run', text:'Use dcc file.c -o name, then ./name. If dcc complains, read the first error first.' },
+    { title:'6 · Autotest before submit', text:'Run 1511 autotest bad_pun / bird / bunny. Passing autotest means the simple check is happy.' },
+    { title:'7 · Submit with give', text:'Use give cs1511 lab01_bad_pun bad_pun.c and the matching give command for each task.' },
+    { title:'8 · Week 1 tasks', text:'Finish setup, bad_pun, bird, bunny, about_me and the remaining lab tasks from top to bottom.' },
+    { title:'9 · From Week 2 onward', text:'One-dot and two-dot exercises are the main path to full lab marks; three-dot exercises are backup buffer.' }
   ];
 
   function compLoad() {
@@ -5485,9 +5498,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return { secured:Math.min(15, secured), buffer:buffer };
   }
 
-  function renderComp1511LabPlan() {
-    var host = document.getElementById('comp1511-lab-plan');
-    if (!host) return;
+  function comp1511LabPlanMarkup() {
     var values = compLoad();
     var stats = compLabStats(values);
     var html = '<div class="comp-lab-shell">'
@@ -5510,16 +5521,22 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         + '</div></div>';
     });
     html += '</div></div>';
-    host.innerHTML = html;
+    return html;
+  }
+
+  function renderComp1511LabPlan() {
+    var host = document.getElementById('comp1511-lab-plan');
+    if (!host) return;
+    host.innerHTML = comp1511LabPlanMarkup();
   }
 
   function renderComp1511StudyMap() {
     var host = document.getElementById('comp1511-study-map');
     if (!host) return;
-    host.innerHTML = '<div class="engg-week-summary">Week 1 is about getting the workflow clean before marks start.</div>'
+    host.innerHTML = '<div class="engg-week-summary">Start from zero: follow the teacher lab page from top to bottom, tick the app as each workflow becomes familiar.</div>'
       + '<div class="comp-study-grid">'
       + COMP1511_STUDY_MAP.map(function(item){ return '<div class="comp-study-card"><strong>'+escapeHtml(item.title)+'</strong><span>'+escapeHtml(item.text)+'</span></div>'; }).join('')
-      + '</div><div class="course-action-row"><a class="course-action-pill primary" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/lab/01/questions" target="_blank" rel="noopener">Open Week 1 lab</a></div>';
+      + '</div><a class="course-jump-button" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/lab/01/questions" target="_blank" rel="noopener"><div><strong>Open COMP1511 Lab 01</strong><span>teacher tasks · setup · exercises · autotest · give</span></div><i>↗</i></a>';
   }
 
   function compToggleStage(week, key) {
@@ -6175,9 +6192,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var t1Pass = t1Known && t1Score >= 2;
     var t2Pass = t2Known && t2Score >= 2;
     var passed = (labPass ? 1 : 0) + (t1Pass ? 1 : 0) + (t2Pass ? 1 : 0);
+    var progress = ((labs / 6) + (t1Known ? 1 : 0) + (t2Known ? 1 : 0)) / 3 * 100;
     var recorded = (labs > 0 ? 1 : 0) + (t1Known ? 1 : 0) + (t2Known ? 1 : 0);
     var nextItem = !labPass ? { label:'Labs' } : (!t1Pass ? { label:'Test 1' } : (!t2Pass ? { label:'Test 2' } : null));
-    return { cfg:gtConfig(course), type:'threshold', total:passed / 3 * 100, doneW:recorded / 3 * 100, remaining:Math.max(0, 3 - recorded), nextItem:nextItem, passed:passed, recorded:recorded, labs:labs, labPass:labPass, t1Score:t1Score, t2Score:t2Score, t1Known:t1Known, t2Known:t2Known, t1Pass:t1Pass, t2Pass:t2Pass };
+    return { cfg:gtConfig(course), type:'threshold', total:progress, doneW:progress, remaining:Math.max(0, 3 - recorded), nextItem:nextItem, passed:passed, recorded:recorded, labs:labs, labPass:labPass, t1Score:t1Score, t2Score:t2Score, t1Known:t1Known, t2Known:t2Known, t1Pass:t1Pass, t2Pass:t2Pass };
   }
 
   function gtPhys1131TestText(score, known, attempt) {
@@ -6193,7 +6211,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       + '<div class="phys-gate-note">'+note+'</div>'
       + '</div><div class="phys-gate-status '+(pass ? 'pass' : '')+'">'+gtPhys1131TestText(score, known, attempt)+'</div></div>'
       + '<div class="phys-attempt-grid">'
-      + [1,2,3].map(function(n){ return '<button class="phys-attempt-dot '+(attempt === n ? 'active' : '')+'" onclick="gtPhysSetAttempt(\''+id+'\','+n+')">A'+n+'</button>'; }).join('')
+      + [1,2,3].map(function(n){
+        var locked = n > 1 && !known;
+        return '<button class="phys-attempt-dot '+(attempt === n ? 'active' : '')+' '+(locked ? 'locked' : '')+'" onclick="gtPhysSetAttempt(\''+id+'\','+n+')">A'+n+'</button>';
+      }).join('')
       + '</div>'
       + '<div class="phys-score-grid">'
       + [0,1,2,3,4].map(function(n){ return '<button class="phys-score-dot '+(known && score === n ? 'active' : '')+'" onclick="gtPhysSetScore(\''+id+'\','+n+')">'+n+'</button>'; }).join('')
@@ -6256,6 +6277,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function gtPhysSetAttempt(id, attempt) {
     var data = gtLoad();
     if (!data[id]) data[id] = {};
+    if (attempt > 1 && typeof data[id].score === 'undefined') return;
     data[id].attempt = attempt;
     gtSave(data);
     renderGT('phys1131');
@@ -6340,6 +6362,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
           html += '<div class="gt-status">点击标记完成</div>';
         }
         html += '</div>';
+        if (course === 'comp1511' && it.id === 'c1511_labs') {
+          html += '<div style="margin:-2px 0 12px 28px;" onclick="event.stopPropagation()">'+comp1511LabPlanMarkup()+'</div>';
+        }
       }
     }
     el.innerHTML = html;
@@ -7873,7 +7898,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var primaryLabel = next.link ? '打开 Moodle' : '查看课程';
       commandEl.innerHTML =
         '<div class="dash-command-main">'
-        +'<div><div class="dash-command-label">Now</div><div class="dash-command-title">'+next.name+'</div><div class="dash-command-meta">'+dashFormatDate(next.date)+' · '+dashCourseName(course)+tagText+locText+'</div>'
+        +'<div><div class="dash-command-label">Now</div><div class="dash-command-title">'+next.name+'</div><div class="dash-command-meta">'+dashFormatDate(next.date)+tagText+locText+'</div>'
         +'<div class="dash-actions"><button class="dash-action primary" onclick="'+primaryAction+'">'+primaryLabel+'</button><button class="dash-action" onclick="showCourse(\'countdown\')">全部倒计时</button></div></div>'
         +'<div class="dash-command-count '+(hot?'dash-hot':'')+'"'+dashUrgencyStyle(next.diff)+'><div class="dash-command-num">'+left.num+'</div><div class="dash-command-unit">'+left.unit+'</div></div>'
         +'</div>'
