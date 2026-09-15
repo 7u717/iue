@@ -1176,6 +1176,10 @@
       border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:13px;background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.018));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
     }
+    .comp-lab-shell.compact { margin-top:0;padding:4px 0 2px; }
+    .comp-lab-shell.compact .comp-lab-head {
+      border-radius:16px;padding:11px;background:rgba(255,255,255,.022);box-shadow:none;
+    }
     .comp-lab-score { display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:10px; }
     .comp-lab-score strong { font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:820;color:var(--engg-color);line-height:1; }
     .comp-lab-score span { font-size:10.5px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em; }
@@ -1201,6 +1205,23 @@
     .comp-study-card { border:1px solid rgba(255,255,255,.07);border-radius:15px;background:rgba(255,255,255,.025);padding:11px 12px; }
     .comp-study-card strong { display:block;font-size:12.5px;color:var(--text);line-height:1.25; }
     .comp-study-card span { display:block;margin-top:4px;font-size:11px;color:var(--muted);line-height:1.38; }
+    .comp-week-packages { display:grid;gap:9px;margin-top:10px; }
+    .comp-week-package { border:1px solid rgba(255,255,255,.075);border-radius:18px;background:rgba(255,255,255,.026);overflow:hidden; }
+    .comp-week-package.open { background:radial-gradient(circle at 18% 0%,rgba(209,215,226,.12),transparent 34%),rgba(255,255,255,.035); }
+    .comp-week-package .topic-header { padding:12px 13px; }
+    .comp-week-body { padding:0 13px 13px;display:grid;gap:9px; }
+    .comp-week-section { border-top:1px solid rgba(255,255,255,.065);padding-top:9px; }
+    .comp-week-section strong { display:block;font-size:11px;font-weight:850;color:var(--engg-color);letter-spacing:.02em;margin-bottom:4px; }
+    .comp-week-section p { margin:0;font-size:11.5px;line-height:1.55;color:var(--muted); }
+    .comp-week-section code { font-family:'SF Mono',Menlo,monospace;color:var(--text);background:rgba(255,255,255,.055);border-radius:6px;padding:1px 4px; }
+    .gt-row.comp-expand-row { padding:12px 0; }
+    .comp-expand-chevron {
+      width:22px;height:22px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;
+      border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);color:var(--muted);
+      font-size:14px;font-weight:850;transition:transform .18s ease,border-color .18s ease,color .18s ease;
+    }
+    .comp-expand-row.open .comp-expand-chevron { transform:rotate(90deg);border-color:rgba(209,215,226,.24);color:var(--engg-color); }
+    .comp-expand-panel { margin:-2px 0 12px 32px;border-bottom:1px solid var(--border);padding-bottom:12px; }
     .competency-resources { margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:grid;gap:8px; }
     .competency-resource { display:grid;grid-template-columns:8px 1fr;gap:9px;align-items:start;font-size:11.5px;line-height:1.4;color:var(--muted); }
     .competency-resource i { width:8px;height:8px;border-radius:50%;margin-top:4px;background:var(--gt-color,var(--engg-color));opacity:.72; }
@@ -1967,8 +1988,8 @@
     <div class="header-link-wrap" id="header-link-wrap">
       <button class="header-link-button" type="button" onclick="toggleHeaderLinks(event)">Link</button>
       <div class="header-link-menu">
-        <a href="https://moodle.telt.unsw.edu.au/course" target="_blank" rel="noopener">Moodle</a>
-        <a href="https://my.unsw.edu.au" target="_blank" rel="noopener">myUNSW</a>
+        <a href="https://moodle.telt.unsw.edu.au/course" onclick="openExternal(this.href);return false;">Moodle</a>
+        <a href="https://my.unsw.edu.au" onclick="openExternal(this.href);return false;">myUNSW</a>
       </div>
     </div>
     <button class="header-plan-button" type="button" onclick="toggleMyPlan()">MyPlan</button>
@@ -2146,9 +2167,17 @@
 
 <!-- ===== TIMETABLE ===== -->
 <div class="course-section" id="sec-timetable">
-  <div class="language-lab" id="language-lab">
-    <div class="lang-home" id="lang-home"></div>
-    <div id="lang-stage"></div>
+  <div class="topic-group">
+    <div class="group-label">2026 T3 · Weekly Timetable</div>
+    <div class="topic-card" style="padding:16px;">
+      <div id="weekly-timetable-list"></div>
+    </div>
+  </div>
+  <div class="topic-group">
+    <div class="group-label">Assessment Timetable</div>
+    <div class="topic-card" style="padding:16px;">
+      <div id="exam-timetable-list"></div>
+    </div>
   </div>
 </div>
 
@@ -2197,6 +2226,8 @@
   <div class="topic-group">
     <div class="group-label">成绩追踪</div>
     <div class="topic-card" style="padding:16px;" id="gt-comp1511"></div>
+    <a class="course-jump-button" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/" onclick="openExternal(this.href);return false;"><div><strong>Open COMP1511 Hub</strong><span>官网每周内容 · lectures · labs · resources</span></div><i>↗</i></a>
+    <a class="course-jump-button" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/lab/01/questions" onclick="openExternal(this.href);return false;"><div><strong>Open Lab 01</strong><span>官方题目 · setup · exercises · autotest · give</span></div><i>↗</i></a>
   </div>
   <div class="topic-group">
     <div class="group-label">Beginner Learning Map</div>
@@ -4782,7 +4813,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     updateCourseVisibility();
     if (course === 'myplan') renderMyPlan();
     if (course === 'dashboard' && typeof renderDashboard === 'function') renderDashboard();
-    if (course === 'timetable' && typeof renderLanguageLab === 'function') renderLanguageLab();
+    if (course === 'timetable' && typeof renderTimetable === 'function') renderTimetable();
     if (options.preserveScroll) {
       requestAnimationFrame(function(){
         activeSection.scrollTop = options.scrollTop || 0;
@@ -4791,7 +4822,14 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function openExternal(url) {
-    window.open(url, '_blank', 'noopener');
+    var target = String(url || '');
+    if (!target) return;
+    try {
+      var opened = window.open(target, '_blank', 'noopener');
+      if (!opened) window.location.href = target;
+    } catch(e) {
+      window.location.href = target;
+    }
   }
 
   var schedulePressTimer = null;
@@ -5457,16 +5495,17 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function compCheckKey() { return 'iue.comp1511.weekChecks.v1'; }
 
   var COMP1511_LAB_WEEKS = [2,3,4,5,6,7,8,9,10];
-  var COMP1511_STUDY_MAP = [
-    { title:'1 · Log in to VLab', text:'Use zID + zPass, open the Linux desktop, then find or open a terminal.' },
-    { title:'2 · Set up terminal once', text:'Run 1511 setup, then 1511 colors, close the terminal and reopen it.' },
-    { title:'3 · Know where you are', text:'Practise pwd, ls, cd, mkdir and cp; create lab01 and move into it before coding.' },
-    { title:'4 · Open files with code', text:'Use code bad_pun.c, code bird.c, code bunny.c; save before compiling.' },
-    { title:'5 · Compile and run', text:'Use dcc file.c -o name, then ./name. If dcc complains, read the first error first.' },
-    { title:'6 · Autotest before submit', text:'Run 1511 autotest bad_pun / bird / bunny. Passing autotest means the simple check is happy.' },
-    { title:'7 · Submit with give', text:'Use give cs1511 lab01_bad_pun bad_pun.c and the matching give command for each task.' },
-    { title:'8 · Week 1 tasks', text:'Finish setup, bad_pun, bird, bunny, about_me and the remaining lab tasks from top to bottom.' },
-    { title:'9 · From Week 2 onward', text:'One-dot and two-dot exercises are the main path to full lab marks; three-dot exercises are backup buffer.' }
+  var COMP1511_WEEK_PACKAGES = [
+    { week:1, title:'Lab 01 · 从零开始', status:'released', teacher:'官网 Week 01 已放 lectures、tutorial activities、problem set 和 check off。老师要你先会用 CSE/VLab 环境，再完成 setup、bad_pun、bird、bunny、about_me 这些入门练习；Problem Set 1 不计分，但要练会提交。', teach:'这周先别怕 C。你真正要学的是一条固定流程：打开 terminal，知道自己在哪个文件夹，写 .c 文件，用 dcc 编译，用 ./运行，看懂第一个 error，再用 autotest 检查，最后用 give 提交。', steps:'准备：打开 COMP1511 官网、VLab、VS Code/terminal。课上：跟着 lecture 看什么是 program、printf、main、compile。要会：pwd/ls/cd/mkdir/cp，dcc file.c -o file，./file，1511 autotest，give。怎么做：每道题都按“读题→建文件→写一点→编译→运行→autotest→give”。' },
+    { week:2, title:'输入、变量、表达式', status:'official-shell', teacher:'官网已有 Week 02 lecture 入口；具体 lab/problem set 等老师发布后再按页面补。', teach:'把程序想成一个小机器：输入进来，存进变量，经过表达式计算，再输出结果。新手重点不是背语法，而是分清 int、double、char 和 scanf/printf 的格式。', steps:'准备：复习 Week 1 的编译/提交流程。课上：盯住变量类型、赋值、算术表达式、格式化输入输出。要会：读题找输入/输出样例，把样例手算一遍，再写 C。怎么做：每写完一个 scanf/printf 就编译运行一次。' },
+    { week:3, title:'if / else 与判断', status:'official-shell', teacher:'官网已有 Week 03 lecture 入口；lab 细节待发布。', teach:'这一周核心是让程序“分路走”。你要练的是条件表达式、比较运算、逻辑 AND/OR/NOT，以及 if / else if / else 的顺序。', steps:'准备：先做 5 个生活判断例子，比如 pass/fail、odd/even。课上：看清每个 branch 什么时候执行。要会：把英文条件翻译成 C 条件。怎么做：先画判断树，再写代码；每个 branch 都用一个测试样例跑到。' },
+    { week:4, title:'while / for 循环', status:'official-shell', teacher:'官网已有 Week 04 lecture 入口；这一周页面目前显示 lecture 资料入口，后续任务以官网为准。', teach:'循环就是重复做事。新手最容易错在“什么时候开始、什么时候停、每次怎么变”。', steps:'准备：复习变量更新。课上：重点看 while、for、counter、sum、sentinel input。要会：写出循环不变量：当前做到第几个、累计了什么。怎么做：先用纸列前三轮，再写代码；卡住时打印 counter 和 sum。' },
+    { week:5, title:'函数与拆问题', status:'official-shell', teacher:'官网已有 Week 05 lecture 入口；具体 exercises 待发布。', teach:'函数不是为了高级，是为了把大题拆成小题。你要会写函数签名、参数、return，并知道什么时候该拆。', steps:'准备：把之前一题重写成 helper function。课上：关注 function prototype、return type、参数传递。要会：把“计算/判断/打印”拆开。怎么做：main 只留流程，每个小函数只做一件事。' },
+    { week:6, title:'Flex week / 整理前半段', status:'pending', teacher:'官网 Week 06 当前未显示具体内容。这里先作为缓冲周：补 Week 1-5 未完成的 lab/problem sets。', teach:'如果你前面有任何一周没完全会，这周不要硬冲新东西。把环境、if、loop、function 补牢比赶进度重要。', steps:'准备：列出所有 autotest 没过的题。课上/自学：重做错题，不看答案先写伪代码。要会：能独立从空文件写到 give。怎么做：每天 30-45 分钟，只修一个薄弱点。' },
+    { week:7, title:'数组与批量数据', status:'official-shell', teacher:'官网已有 Week 07 lecture 入口；具体 lab 以发布页面为准。', teach:'数组就是一排格子。你要学会 index 从 0 开始、数组长度、循环遍历，以及不要越界。', steps:'准备：复习 for loop。课上：盯住 array declaration、read many numbers、max/min/sum。要会：用 loop 访问 arr[i]。怎么做：先写固定长度，再改成读入长度；每次访问 index 前想清楚范围。' },
+    { week:8, title:'字符串与字符处理', status:'official-shell', teacher:'官网已有 Week 08 lecture 入口；lab 细节待发布。', teach:'C 的 string 本质是 char array，最后有 null terminator。新手重点是别把字符、字符串、数组长度混在一起。', steps:'准备：复习 char 和 array。课上：看 strlen、字符串遍历、字符判断。要会：逐字符处理输入。怎么做：先打印每个字符和它的位置，再做题目要求的转换/统计。' },
+    { week:9, title:'struct / 更复杂的数据', status:'official-shell', teacher:'官网已有 Week 09 lecture 入口；具体题目待发布。', teach:'struct 是把相关数据捆在一起。你可以把它想成一张小资料卡，比如 student 有 name、zid、mark。', steps:'准备：复习数组和函数。课上：关注 struct 定义、访问字段、struct array。要会：把现实对象翻译成字段。怎么做：先设计数据结构，再写输入/输出，再写处理函数。' },
+    { week:10, title:'复习、debug、提交稳定性', status:'official-shell', teacher:'官网已有 Week 10 lecture 入口；Assignments 区当前显示 no assignments released yet。', teach:'最后阶段重点是稳定：读懂题、拆步骤、跑测试、修 bug。不是写得花，而是能交出能过的版本。', steps:'准备：整理所有 give/autotest 记录。课上：复盘常见错误：类型、边界、循环停止、数组越界、输出格式。要会：看到错误信息知道先查哪。怎么做：保留一个 debug checklist，提交前按 checklist 过一遍。' }
   ];
 
   function compLoad() {
@@ -5501,11 +5540,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function comp1511LabPlanMarkup() {
     var values = compLoad();
     var stats = compLabStats(values);
-    var html = '<div class="comp-lab-shell">'
+    var html = '<div class="comp-lab-shell compact">'
       + '<div class="comp-lab-head">'
       + '<div class="comp-lab-score"><div><strong>'+stats.secured+'/15</strong><span>lab component plan</span></div><div><strong>'+stats.buffer+'</strong><span>bonus buffer</span></div></div>'
       + '<div class="comp-lab-progress"><div class="comp-lab-fill" style="width:'+(stats.secured/15*100).toFixed(0)+'%;"></div></div>'
-      + '<div class="comp-lab-note" style="margin-top:9px;">Problem Set 1 is setup only. Later problem sets are capped at 15 total; one-dot/two-dot work is the main path, three-dot work is buffer.</div>'
+      + '<div class="comp-lab-note" style="margin-top:9px;">Problem Set 1 是练流程；后面的 problem sets 总分 capped at 15。一星/二星是主线，三星题只是保险分。</div>'
       + '</div>'
       + '<div class="comp-week-grid">';
     COMP1511_LAB_WEEKS.forEach(function(week) {
@@ -5533,10 +5572,30 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function renderComp1511StudyMap() {
     var host = document.getElementById('comp1511-study-map');
     if (!host) return;
-    host.innerHTML = '<div class="engg-week-summary">Start from zero: follow the teacher lab page from top to bottom, tick the app as each workflow becomes familiar.</div>'
-      + '<div class="comp-study-grid">'
-      + COMP1511_STUDY_MAP.map(function(item){ return '<div class="comp-study-card"><strong>'+escapeHtml(item.title)+'</strong><span>'+escapeHtml(item.text)+'</span></div>'; }).join('')
-      + '</div><a class="course-jump-button" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/lab/01/questions" target="_blank" rel="noopener"><div><strong>Open COMP1511 Lab 01</strong><span>teacher tasks · setup · exercises · autotest · give</span></div><i>↗</i></a>';
+    var openWeek = 1;
+    try { openWeek = +(localStorage.getItem('iue.comp1511.openWeek.v1') || 1); } catch(e) {}
+    host.innerHTML = '<div class="engg-week-summary">按每周包学：先看中文拆解，再照老师页面做题。这里不会硬塞一大段，点开一周只看一周。</div>'
+      + '<div class="comp-week-packages">'
+      + COMP1511_WEEK_PACKAGES.map(function(item){
+        var open = item.week === openWeek;
+        return '<div class="comp-week-package '+(open ? 'open' : '')+'">'
+          + '<div class="topic-header" onclick="compOpenWeekPackage('+item.week+')">'
+          + '<div><div class="topic-title">Week '+item.week+' · '+escapeHtml(item.title.replace(/^Lab \\d+ ·\\s*/,''))+'</div>'
+          + '<div class="topic-sub">'+(item.status === 'released' ? '已按官方 Lab 01 整理' : '待官方页面发布后补全')+'</div></div>'
+          + '<div class="topic-arrow">'+(open ? '−' : '+')+'</div></div>'
+          + (open ? '<div class="comp-week-body">'
+            + '<div class="comp-week-section"><strong>老师要求</strong><p>'+escapeHtml(item.teacher)+'</p></div>'
+            + '<div class="comp-week-section"><strong>中文讲解</strong><p>'+escapeHtml(item.teach)+'</p></div>'
+            + '<div class="comp-week-section"><strong>怎么做</strong><p>'+escapeHtml(item.steps)+'</p></div>'
+            + '</div>' : '')
+          + '</div>';
+      }).join('')
+      + '</div>';
+  }
+
+  function compOpenWeekPackage(week) {
+    try { localStorage.setItem('iue.comp1511.openWeek.v1', String(week)); } catch(e) {}
+    renderComp1511StudyMap();
   }
 
   function compToggleStage(week, key) {
@@ -5544,7 +5603,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var state = compWeekState(values, week);
     state[key] = !state[key];
     compSave(values);
-    renderComp1511LabPlan();
+    renderGT('comp1511');
     renderDashboard();
   }
 
@@ -6336,6 +6395,16 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (it.mobius) {
         html += gtRenderMobius(data, cfg.color);
       } else {
+        if (course === 'comp1511' && it.id === 'c1511_labs') {
+          var labsOpen = data.c1511_labs_open !== false;
+          html += '<div class="gt-row comp-expand-row '+(labsOpen ? 'open' : '')+'" onclick="gtToggleCompLabsExpand()">'
+            + '<div class="comp-expand-chevron">›</div>'
+            + '<div class="gt-info"><div class="gt-name" style="display:flex;align-items:center;">'+it.label+'</div><div class="gt-note">'+it.note+'</div></div>'
+            + '<div class="gt-weight" style="color:'+cfg.color+'">'+it.w+'%</div>'
+            + '</div>';
+          if (labsOpen) html += '<div class="comp-expand-panel" onclick="event.stopPropagation()">'+comp1511LabPlanMarkup()+'</div>';
+          continue;
+        }
         var d = data[it.id]||{};
         var done = !!d.done;
         var pct='', contrib='';
@@ -6362,12 +6431,16 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
           html += '<div class="gt-status">点击标记完成</div>';
         }
         html += '</div>';
-        if (course === 'comp1511' && it.id === 'c1511_labs') {
-          html += '<div style="margin:-2px 0 12px 28px;" onclick="event.stopPropagation()">'+comp1511LabPlanMarkup()+'</div>';
-        }
       }
     }
     el.innerHTML = html;
+  }
+
+  function gtToggleCompLabsExpand() {
+    var data = gtLoad();
+    data.c1511_labs_open = data.c1511_labs_open === false ? true : false;
+    gtSave(data);
+    renderGT('comp1511');
   }
 
   function gtToggle(el) {
@@ -8117,7 +8190,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       activeCourseIds.forEach(function(courseId){ renderGT(courseId); });
       renderCountdown();
       renderDashboard();
-      if (document.getElementById('sec-timetable') && document.getElementById('sec-timetable').classList.contains('active')) renderLanguageLab();
+      if (document.getElementById('sec-timetable') && document.getElementById('sec-timetable').classList.contains('active')) renderTimetable();
       updateTabBadges();
       initProfileWidgets();
     } finally {
