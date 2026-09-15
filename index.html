@@ -2167,17 +2167,9 @@
 
 <!-- ===== TIMETABLE ===== -->
 <div class="course-section" id="sec-timetable">
-  <div class="topic-group">
-    <div class="group-label">2026 T3 · Weekly Timetable</div>
-    <div class="topic-card" style="padding:16px;">
-      <div id="weekly-timetable-list"></div>
-    </div>
-  </div>
-  <div class="topic-group">
-    <div class="group-label">Assessment Timetable</div>
-    <div class="topic-card" style="padding:16px;">
-      <div id="exam-timetable-list"></div>
-    </div>
+  <div class="language-lab" id="language-lab">
+    <div class="lang-home" id="lang-home"></div>
+    <div id="lang-stage"></div>
   </div>
 </div>
 
@@ -4813,7 +4805,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     updateCourseVisibility();
     if (course === 'myplan') renderMyPlan();
     if (course === 'dashboard' && typeof renderDashboard === 'function') renderDashboard();
-    if (course === 'timetable' && typeof renderTimetable === 'function') renderTimetable();
+    if (course === 'timetable' && typeof renderLanguageLab === 'function') renderLanguageLab();
     if (options.preserveScroll) {
       requestAnimationFrame(function(){
         activeSection.scrollTop = options.scrollTop || 0;
@@ -8190,7 +8182,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       activeCourseIds.forEach(function(courseId){ renderGT(courseId); });
       renderCountdown();
       renderDashboard();
-      if (document.getElementById('sec-timetable') && document.getElementById('sec-timetable').classList.contains('active')) renderTimetable();
+      if (document.getElementById('sec-timetable') && document.getElementById('sec-timetable').classList.contains('active')) renderLanguageLab();
       updateTabBadges();
       initProfileWidgets();
     } finally {
