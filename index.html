@@ -2116,148 +2116,6 @@
   <div class="topic-group">
     <div class="group-label">成绩追踪</div>
     <div class="topic-card" style="padding:16px;" id="gt-comp1511"></div>
-    <div class="exam-alert">26T3 confirmed · labs 15%, A1 20%, A2 25%, final 40%. Assignment briefs and final date stay pending until published.</div>
-  </div>
-  <div class="topic-group">
-    <div class="group-label">Course Map</div>
-    <div class="topic-card open" id="tc-comp1511-map">
-      <div class="topic-header" onclick="toggleTopic('tc-comp1511-map')">
-        <div class="topic-left">
-          <div class="topic-dot engg-dot"></div>
-          <div class="topic-title">26T3 course structure</div>
-        </div>
-        <div class="topic-chevron">▼</div>
-      </div>
-      <div class="topic-body">
-        <div class="subtopic">Programming Fundamentals 从零开始用 C 解决问题：理解题目、计划、写代码、编译、测试、读错误、debug，再改进。</div>
-        <div class="course-brief-grid">
-          <div class="course-brief-stat"><strong>6 UOC</strong><span>2026 T3</span></div>
-          <div class="course-brief-stat"><strong>C + Linux</strong><span>VLab, terminal, dcc</span></div>
-          <div class="course-brief-stat"><strong>4 parts</strong><span>Labs, A1, A2, Final</span></div>
-          <div class="course-brief-stat"><strong>Hurdles</strong><span>array + linked list exam hurdles</span></div>
-        </div>
-        <div class="course-action-row">
-          <button type="button" class="course-action-pill primary" onclick="openExternal('https://cgi.cse.unsw.edu.au/~cs1511/current/')">Open course site</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="topic-group">
-    <div class="group-label">Learning Loop</div>
-    <div class="topic-card" id="tc-comp1511-loop">
-      <div class="topic-header" onclick="toggleTopic('tc-comp1511-loop')">
-        <div class="topic-left">
-          <div class="topic-dot engg-dot"></div>
-          <div class="topic-title">每周怎么学</div>
-        </div>
-        <div class="topic-chevron">▼</div>
-      </div>
-      <div class="topic-body">
-        <div class="course-flow">
-          <div class="course-flow-row"><div><div class="course-flow-title">Two lectures</div><div class="course-flow-sub">看 C 概念和 live coding，先懂代码为什么这样写。</div></div></div>
-          <div class="course-flow-row"><div><div class="course-flow-title">Tutorial</div><div class="course-flow-sub">1 小时跟 tutor 做 problem-solving 和代码阅读。</div></div></div>
-          <div class="course-flow-row"><div><div class="course-flow-title">Lab + check-off</div><div class="course-flow-sub">2 小时动手写 C，完成每周 check-off 和问题集。</div></div></div>
-          <div class="course-flow-row"><div><div class="course-flow-title">Problem set</div><div class="course-flow-sub">通常 Sunday 6pm release，下一周 Monday 6pm due；Week 1 是 setup/practice。</div></div></div>
-          <div class="course-flow-row"><div><div class="course-flow-title">Debug loop</div><div class="course-flow-sub">think → code → compile → run → read errors → debug → improve。</div></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="topic-group">
-    <div class="group-label">Week 1</div>
-    <div class="topic-card open" id="tc-comp1511-week1">
-      <div class="topic-header" onclick="toggleTopic('tc-comp1511-week1')">
-        <div class="topic-left">
-          <div class="topic-dot engg-dot"></div>
-          <div class="topic-title">Linux, first C programs, variables and constants</div>
-        </div>
-        <div class="topic-chevron">▼</div>
-      </div>
-      <div class="topic-body">
-        <div class="engg-week-summary">这一周先把 CSE 环境跑起来：登录 VLab、用 Linux terminal、写第一份 C 程序、用 `dcc` 编译，再学变量、输入输出、算术和 constants。</div>
-        <div class="engg-week-pills">
-          <span class="engg-week-pill">VLab</span>
-          <span class="engg-week-pill">Linux terminal</span>
-          <span class="engg-week-pill">dcc</span>
-          <span class="engg-week-pill">printf / scanf</span>
-          <span class="engg-week-pill">int / double / char</span>
-          <span class="engg-week-pill">constants</span>
-        </div>
-        <div class="course-flow">
-          <div class="course-flow-row"><div><div class="course-flow-title">Lecture 1</div><div class="course-flow-sub">课程节奏、Linux、terminal 命令、第一份 C 程序：`#include <stdio.h>`、`main`、`printf`、`return 0`。</div></div></div>
-          <div class="course-flow-row"><div><div class="course-flow-title">Lecture 2</div><div class="course-flow-sub">CPU/RAM/files、`int` / `double` / `char`、`printf` format、`scanf` 和 `&`。</div></div></div>
-          <div class="course-flow-row"><div><div class="course-flow-title">Lab 01</div><div class="course-flow-sub">跑 `1511 setup`、`1511 colors`，用 `dcc file.c -o program` 编译，再 `./program` 运行。</div></div></div>
-        </div>
-        <div class="engg-checklist" id="comp1511-week1-checks">
-          <div class="engg-check" data-comp-check="w1-vlab" onclick="toggleCompCheck(this)"><div class="engg-check-box"></div><div class="engg-check-label">能登录 VLab，并打开 terminal。</div></div>
-          <div class="engg-check" data-comp-check="w1-setup" onclick="toggleCompCheck(this)"><div class="engg-check-box"></div><div class="engg-check-label">已经跑过 `1511 setup` 和 `1511 colors`。</div></div>
-          <div class="engg-check" data-comp-check="w1-terminal" onclick="toggleCompCheck(this)"><div class="engg-check-box"></div><div class="engg-check-label">会用 `pwd`、`ls`、`cd`、`mkdir`、`cp`。</div></div>
-          <div class="engg-check" data-comp-check="w1-compile" onclick="toggleCompCheck(this)"><div class="engg-check-box"></div><div class="engg-check-label">能解释 compile (`dcc`) 和 run (`./program`) 的区别。</div></div>
-          <div class="engg-check" data-comp-check="w1-main" onclick="toggleCompCheck(this)"><div class="engg-check-box"></div><div class="engg-check-label">能写一个有 `main`、`printf`、`return 0;` 的 C 程序。</div></div>
-          <div class="engg-check" data-comp-check="w1-types" onclick="toggleCompCheck(this)"><div class="engg-check-box"></div><div class="engg-check-label">会声明、初始化并打印 `int`、`double`、`char`。</div></div>
-          <div class="engg-check" data-comp-check="w1-scanf" onclick="toggleCompCheck(this)"><div class="engg-check-box"></div><div class="engg-check-label">会用 `scanf`，知道什么时候需要 `&`。</div></div>
-          <div class="engg-check" data-comp-check="w1-autotest" onclick="toggleCompCheck(this)"><div class="engg-check-box"></div><div class="engg-check-label">提交前会跑 `1511 autotest`。</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="topic-group">
-    <div class="group-label">Assessment Rules</div>
-    <div class="topic-card" id="tc-comp1511-rules">
-      <div class="topic-header" onclick="toggleTopic('tc-comp1511-rules')">
-        <div class="topic-left">
-          <div class="topic-dot engg-dot"></div>
-          <div class="topic-title">Assessment rules</div>
-        </div>
-        <div class="topic-chevron">▼</div>
-      </div>
-      <div class="topic-body">
-        <div class="course-flow">
-          <div class="course-flow-row"><div><div class="course-flow-title">Labs / problem sets</div><div class="course-flow-sub">15% · up to 2 marks per week, capped at 15; weekly check-off matters.</div></div></div>
-          <div class="course-flow-row"><div><div class="course-flow-title">Assignments</div><div class="course-flow-sub">A1 20% released Week 4 due Week 7; A2 25% released Week 7 due Week 10.</div></div></div>
-          <div class="course-flow-row"><div><div class="course-flow-title">Final exam</div><div class="course-flow-sub">40% · 3 hours · in-person C programming exam; final date pending.</div></div></div>
-          <div class="course-flow-row"><div><div class="course-flow-title">Pass rule</div><div class="course-flow-sub">Need at least 50 overall and must pass the array + linked-list exam hurdles.</div></div></div>
-          <div class="course-flow-row"><div><div class="course-flow-title">AI rule</div><div class="course-flow-sub">Individual assessment code must be your own; do not submit AI-written code.</div></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="topic-group">
-    <div class="group-label">Setup</div>
-    <div class="topic-card" id="tc-comp1511-setup">
-      <div class="topic-header" onclick="toggleTopic('tc-comp1511-setup')">
-        <div class="topic-left">
-          <div class="topic-dot engg-dot"></div>
-          <div class="topic-title">Tools setup</div>
-        </div>
-        <div class="topic-chevron">▼</div>
-      </div>
-      <div class="topic-body">
-        <div class="subtopic">这门课主要使用 CSE/VLab Linux 环境、terminal、VS Code 和 `dcc`。Week 1 先完成 VLab、`1511 setup`、`1511 colors` 和第一份 C 程序。</div>
-      </div>
-    </div>
-  </div>
-  <div class="topic-group">
-    <div class="group-label">Glossary</div>
-    <div class="topic-card" id="tc-comp1511-glossary">
-      <div class="topic-header" onclick="toggleTopic('tc-comp1511-glossary')">
-        <div class="topic-left">
-          <div class="topic-dot engg-dot"></div>
-          <div class="topic-title">Starter terms</div>
-        </div>
-        <div class="topic-chevron">▼</div>
-      </div>
-      <div class="topic-body">
-        <div class="glossary-mini">
-          <div class="glossary-row"><div class="glossary-term">terminal <span class="glossary-zh">命令行</span></div><div class="glossary-def">用文字命令操作文件、文件夹、编译和运行程序的地方。</div></div>
-          <div class="glossary-row"><div class="glossary-term">dcc <span class="glossary-zh">课程编译器</span></div><div class="glossary-def">COMP1511 使用的 C 编译命令，可以帮你发现常见错误。</div></div>
-          <div class="glossary-row"><div class="glossary-term">compile <span class="glossary-zh">编译</span></div><div class="glossary-def">把 `.c` 源代码转换成可以运行的程序。</div></div>
-          <div class="glossary-row"><div class="glossary-term">printf <span class="glossary-zh">输出</span></div><div class="glossary-def">把文字或变量值显示到 terminal。</div></div>
-          <div class="glossary-row"><div class="glossary-term">scanf <span class="glossary-zh">读取输入</span></div><div class="glossary-def">从用户输入里读值；通常要用 `&` 给出变量的内存位置。</div></div>
-          <div class="glossary-row"><div class="glossary-term">hurdle <span class="glossary-zh">门槛要求</span></div><div class="glossary-def">除了总分达标外，还必须单独通过的考试要求。</div></div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -3755,7 +3613,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-09-15-comp1511-current';
+  var APP_VERSION = '2026-09-16-timetable-course-cleanup';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -3802,10 +3660,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   if (['upcoming','history'].indexOf(currentCountdownView) === -1) currentCountdownView = 'upcoming';
   var T3_WEEKLY_TIMETABLE = [
     { day:'MON', time:'11:00', durationMin:120, course:'comp1511', title:'COMP1511', kind:'Lecture', kindClass:'lec', loc:'Online' },
-    { day:'MON', time:'15:00', durationMin:60, course:'comp1511', title:'COMP1511', kind:'Tutorial', kindClass:'tut', loc:'H13-W 2035' },
-    { day:'MON', time:'16:00', durationMin:120, course:'comp1511', title:'COMP1511', kind:'Laboratory', kindClass:'wks', loc:'SitarME306' },
-    { day:'WED', time:'09:00', durationMin:120, course:'phys1131', title:'PHYS1131', kind:'Other', kindClass:'tut', loc:'OMB 230' },
+    { day:'TUE', time:'14:00', durationMin:120, course:'phys1131', title:'PHYS1131', kind:'Lecture', kindClass:'lec', loc:'PhysicsTh' },
     { day:'TUE', time:'16:00', durationMin:120, course:'comp1511', title:'COMP1511', kind:'Lecture', kindClass:'lec', loc:'Online' },
+    { day:'WED', time:'09:00', durationMin:120, course:'phys1131', title:'PHYS1131', kind:'Other', kindClass:'tut', loc:'OMB 230' },
+    { day:'WED', time:'17:00', durationMin:60, course:'comp1511', title:'COMP1511', kind:'Tutorial', kindClass:'tut', loc:'Webst 250' },
+    { day:'WED', time:'18:00', durationMin:120, course:'comp1511', title:'COMP1511', kind:'Laboratory', kindClass:'wks', loc:'AltoOMB149' },
+    { day:'THU', time:'11:00', durationMin:120, course:'phys1131', title:'PHYS1131', kind:'Lecture', kindClass:'lec', loc:'PhysicsTh' },
     { day:'THU', time:'16:00', durationMin:180, course:'phys1131', title:'PHYS1131', kind:'Laboratory', kindClass:'wks', loc:'OMB 114' },
     { day:'WEB', time:'Online', course:'phys1160', title:'PHYS1160', kind:'Web Delivery', kindClass:'lec', loc:'Self-paced' }
   ];
