@@ -1,0 +1,20 @@
+{
+  "course": {"code": "COMP1511", "title": "Programming Fundamentals", "term": "26T3"},
+  "overviewZh": "从零学习用 C 语言解决问题：在 Linux 环境中写程序、编译、运行、测试和 debug。",
+  "weeklyLoop": ["两场 lecture", "1 小时 tutorial", "2 小时 lab + check-off", "weekly problem set"],
+  "assessment": [
+    {"title": "Labs/problem sets", "weight": 15, "status": "active"},
+    {"title": "Assignment 1", "weight": 20, "release": "Week 4", "due": "Week 7", "status": "not released"},
+    {"title": "Assignment 2", "weight": 25, "release": "Week 7", "due": "Week 10", "status": "not released"},
+    {"title": "Final exam", "weight": 40, "duration": "3 hours", "hurdles": ["array", "linked list"], "status": "date pending"}
+  ],
+  "weeks": [{
+    "week": 1,
+    "title": "Linux, first C programs, variables and constants",
+    "summaryZh": "VLab/Linux/terminal 入门；写、编译和运行第一份 C 程序；变量、int/double/char、printf、scanf、算术和常量。",
+    "status": "released",
+    "note": "Official Week 1 PDFs are public official teaching materials, but this public app stores only a compact private-study summary."
+  }],
+  "sourceUrl": "https://cgi.cse.unsw.edu.au/~cs1511/current/",
+  "lastVerified": "2026-09-15"
+}
