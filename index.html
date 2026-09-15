@@ -1142,10 +1142,10 @@
     .competency-option.cn.active { color:#2a0707;border-color:rgba(248,113,113,.68);background:linear-gradient(180deg,#fecaca,#f87171); }
     .phys-gate { display:grid;gap:10px; }
     .phys-gate-panel {
-      border:1px solid rgba(255,255,255,.08);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
-      padding:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04);transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      border:1px solid rgba(255,255,255,.08);border-radius:20px;background:radial-gradient(circle at 16% 0%,rgba(184,196,216,.12),transparent 34%),linear-gradient(145deg,rgba(255,255,255,.058),rgba(255,255,255,.018));
+      padding:13px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 14px 32px rgba(0,0,0,.14);transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
-    .phys-gate-panel:active { transform:scale(.992);border-color:rgba(147,197,253,.22); }
+    .phys-gate-panel:active { transform:scale(.992);border-color:rgba(184,196,216,.24); }
     .phys-gate-main { display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px; }
     .phys-gate-label { font-size:13px;font-weight:780;color:var(--text);line-height:1.25; }
     .phys-gate-note { margin-top:3px;font-size:10.8px;line-height:1.38;color:var(--muted); }
@@ -1153,7 +1153,7 @@
       padding:5px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);
       color:var(--muted);font-size:10px;font-weight:850;white-space:nowrap;
     }
-    .phys-gate-status.pass { color:#071019;background:linear-gradient(180deg,#dbeafe,#93c5fd);border-color:rgba(147,197,253,.75); }
+    .phys-gate-status.pass { color:#080d14;background:linear-gradient(180deg,#eef2f8,#9eabba);border-color:rgba(184,196,216,.78); }
     .phys-lab-dots { display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px; }
     .phys-lab-dot,.phys-score-dot,.phys-attempt-dot {
       min-height:34px;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:rgba(255,255,255,.035);
@@ -1162,12 +1162,42 @@
     }
     .phys-lab-dot:active,.phys-score-dot:active,.phys-attempt-dot:active { transform:scale(.94); }
     .phys-lab-dot.active,.phys-score-dot.active,.phys-attempt-dot.active {
-      color:#071019;border-color:rgba(147,197,253,.72);background:linear-gradient(180deg,#dbeafe,#93c5fd);
-      box-shadow:0 8px 20px rgba(147,197,253,.12);
+      color:#080d14;border-color:rgba(184,196,216,.72);background:linear-gradient(180deg,#eef2f8,#9eabba);
+      box-shadow:0 8px 20px rgba(184,196,216,.12);
     }
     .phys-score-grid { display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:8px; }
     .phys-attempt-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px; }
     .phys-gate-foot { margin-top:9px;font-size:10.8px;line-height:1.35;color:var(--muted); }
+    .comp-lab-shell { display:grid;gap:11px; }
+    .comp-lab-head {
+      border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:13px;background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.018));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+    }
+    .comp-lab-score { display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:10px; }
+    .comp-lab-score strong { font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:820;color:var(--engg-color);line-height:1; }
+    .comp-lab-score span { font-size:10.5px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em; }
+    .comp-lab-progress { height:7px;border-radius:999px;background:rgba(255,255,255,.075);overflow:hidden; }
+    .comp-lab-fill { height:100%;border-radius:999px;background:linear-gradient(90deg,#F8FAFC,#D1D7E2 55%,#AEB9C8);transition:width .3s cubic-bezier(.22,1,.36,1); }
+    .comp-week-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px; }
+    .comp-week-tile {
+      border:1px solid rgba(255,255,255,.075);border-radius:16px;background:rgba(255,255,255,.027);padding:10px 8px;min-height:74px;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+    }
+    .comp-week-tile:active { transform:scale(.975);border-color:rgba(209,215,226,.22); }
+    .comp-week-title { display:flex;align-items:center;justify-content:space-between;gap:5px;font-size:11px;font-weight:850;color:var(--text); }
+    .comp-week-mark { font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:850;color:var(--engg-color); }
+    .comp-week-actions { display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:9px; }
+    .comp-week-action {
+      height:22px;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(255,255,255,.035);
+      color:var(--muted);font-size:9px;font-weight:850;transition:transform .14s ease,background .14s ease,color .14s ease,border-color .14s ease;
+    }
+    .comp-week-action:active { transform:scale(.92); }
+    .comp-week-action.active { color:#080d14;background:linear-gradient(180deg,#F8FAFC,#AEB9C8);border-color:rgba(209,215,226,.78); }
+    .comp-lab-note { font-size:10.8px;line-height:1.4;color:var(--muted); }
+    .comp-study-grid { display:grid;gap:8px;margin-top:10px; }
+    .comp-study-card { border:1px solid rgba(255,255,255,.07);border-radius:15px;background:rgba(255,255,255,.025);padding:11px 12px; }
+    .comp-study-card strong { display:block;font-size:12.5px;color:var(--text);line-height:1.25; }
+    .comp-study-card span { display:block;margin-top:4px;font-size:11px;color:var(--muted);line-height:1.38; }
     .competency-resources { margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:grid;gap:8px; }
     .competency-resource { display:grid;grid-template-columns:8px 1fr;gap:9px;align-items:start;font-size:11.5px;line-height:1.4;color:var(--muted); }
     .competency-resource i { width:8px;height:8px;border-radius:50%;margin-top:4px;background:var(--gt-color,var(--engg-color));opacity:.72; }
@@ -2156,25 +2186,12 @@
     <div class="topic-card" style="padding:16px;" id="gt-comp1511"></div>
   </div>
   <div class="topic-group">
-    <div class="group-label">Week 1 Lab</div>
-    <div class="topic-card" style="padding:16px;">
-      <div class="engg-week-summary">COMP1511 Lab 01 · setup + first C programs · no marks, due Week 2 Monday 18:00.</div>
-      <div class="engg-week-pills">
-        <span>VLab</span><span>terminal</span><span>dcc</span><span>give</span>
-      </div>
-      <div class="engg-checklist" id="comp1511-week1-checks">
-        <div class="engg-check" data-comp-check="understand" onclick="toggleCompCheck(this)"><span class="engg-check-box"></span><span class="engg-check-label">Read how the Week 1 lab works</span></div>
-        <div class="engg-check" data-comp-check="vlab" onclick="toggleCompCheck(this)"><span class="engg-check-box"></span><span class="engg-check-label">Log into VLab and open a terminal</span></div>
-        <div class="engg-check" data-comp-check="setup" onclick="toggleCompCheck(this)"><span class="engg-check-box"></span><span class="engg-check-label">Run <code>1511 setup</code> and <code>1511 colors</code></span></div>
-        <div class="engg-check" data-comp-check="commands" onclick="toggleCompCheck(this)"><span class="engg-check-box"></span><span class="engg-check-label">Practise <code>pwd</code>, <code>ls</code>, <code>cd</code>, <code>mkdir</code>, <code>cp</code></span></div>
-        <div class="engg-check" data-comp-check="badpun" onclick="toggleCompCheck(this)"><span class="engg-check-box"></span><span class="engg-check-label">Create, compile, run and submit <code>bad_pun.c</code></span></div>
-        <div class="engg-check" data-comp-check="bird" onclick="toggleCompCheck(this)"><span class="engg-check-box"></span><span class="engg-check-label">Complete and submit <code>bird.c</code></span></div>
-        <div class="engg-check" data-comp-check="bunny" onclick="toggleCompCheck(this)"><span class="engg-check-box"></span><span class="engg-check-label">Fix and submit <code>bunny.c</code></span></div>
-      </div>
-      <div class="course-action-row">
-        <a class="course-action-pill primary" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/lab/01/questions" target="_blank" rel="noopener">Open lab</a>
-      </div>
-    </div>
+    <div class="group-label">Lab Component</div>
+    <div class="topic-card" style="padding:16px;" id="comp1511-lab-plan"></div>
+  </div>
+  <div class="topic-group">
+    <div class="group-label">Week 1 Learning Map</div>
+    <div class="topic-card" style="padding:16px;" id="comp1511-study-map"></div>
   </div>
 </div>
 
@@ -3672,7 +3689,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-09-16-phys1131-countdown-comp1511';
+  var APP_VERSION = '2026-09-16-comp1511-lab-plan-phys-polish';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5430,28 +5447,93 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function compCheckKey() { return 'iue.comp1511.weekChecks.v1'; }
 
-  function loadCompChecks() {
-    var values = {};
-    try { values = JSON.parse(localStorage.getItem(compCheckKey()) || '{}') || {}; } catch(e) { values = {}; }
-    document.querySelectorAll('#comp1511-week1-checks .engg-check').forEach(function(item) {
-      var done = !!values[item.dataset.compCheck];
-      item.classList.toggle('checked', done);
-      var box = item.querySelector('.engg-check-box');
-      if (box) box.textContent = done ? '✓' : '';
-    });
+  var COMP1511_LAB_WEEKS = [2,3,4,5,6,7,8,9,10];
+  var COMP1511_STUDY_MAP = [
+    { title:'CSE + VLab', text:'Sign in, find terminal, understand where files live.' },
+    { title:'Terminal basics', text:'Practise pwd, ls, cd, mkdir, cp until they feel automatic.' },
+    { title:'First C program', text:'Edit, save, compile with dcc, run with ./program.' },
+    { title:'Autotest + give', text:'Use 1511 autotest before give; only the last give submission is marked.' },
+    { title:'Debugging habit', text:'Read compiler errors from top to bottom and fix one problem at a time.' }
+  ];
+
+  function compLoad() {
+    try { return JSON.parse(localStorage.getItem(compCheckKey()) || '{}') || {}; } catch(e) { return {}; }
   }
 
-  function toggleCompCheck(el) {
-    if (!el) return;
-    el.classList.toggle('checked');
-    var box = el.querySelector('.engg-check-box');
-    if (box) box.textContent = el.classList.contains('checked') ? '✓' : '';
-    var values = {};
-    document.querySelectorAll('#comp1511-week1-checks .engg-check').forEach(function(item) {
-      if (item.dataset.compCheck) values[item.dataset.compCheck] = item.classList.contains('checked');
-    });
+  function compSave(values) {
     try { localStorage.setItem(compCheckKey(), JSON.stringify(values)); } catch(e) {}
     markCloudDirty();
+  }
+
+  function compWeekState(values, week) {
+    var key = 'w' + week;
+    if (!values[key]) values[key] = {};
+    return values[key];
+  }
+
+  function compWeekSecured(weekState) {
+    return weekState.checkoff && weekState.core && weekState.submit ? 2 : 0;
+  }
+
+  function compLabStats(values) {
+    var secured = 0, buffer = 0;
+    COMP1511_LAB_WEEKS.forEach(function(week) {
+      var state = compWeekState(values, week);
+      secured += compWeekSecured(state);
+      if (state.bonus) buffer += 1;
+    });
+    return { secured:Math.min(15, secured), buffer:buffer };
+  }
+
+  function renderComp1511LabPlan() {
+    var host = document.getElementById('comp1511-lab-plan');
+    if (!host) return;
+    var values = compLoad();
+    var stats = compLabStats(values);
+    var html = '<div class="comp-lab-shell">'
+      + '<div class="comp-lab-head">'
+      + '<div class="comp-lab-score"><div><strong>'+stats.secured+'/15</strong><span>lab component plan</span></div><div><strong>'+stats.buffer+'</strong><span>bonus buffer</span></div></div>'
+      + '<div class="comp-lab-progress"><div class="comp-lab-fill" style="width:'+(stats.secured/15*100).toFixed(0)+'%;"></div></div>'
+      + '<div class="comp-lab-note" style="margin-top:9px;">Problem Set 1 is setup only. Later problem sets are capped at 15 total; one-dot/two-dot work is the main path, three-dot work is buffer.</div>'
+      + '</div>'
+      + '<div class="comp-week-grid">';
+    COMP1511_LAB_WEEKS.forEach(function(week) {
+      var state = compWeekState(values, week);
+      var mark = compWeekSecured(state);
+      html += '<div class="comp-week-tile">'
+        + '<div class="comp-week-title"><span>W'+week+'</span><span class="comp-week-mark">'+mark+'/2</span></div>'
+        + '<div class="comp-week-actions">'
+        + ['checkoff','core','bonus','submit'].map(function(key) {
+          var label = {checkoff:'chk', core:'core', bonus:'3dot', submit:'give'}[key];
+          return '<button class="comp-week-action '+(state[key] ? 'active' : '')+'" onclick="compToggleStage('+week+',\''+key+'\')">'+label+'</button>';
+        }).join('')
+        + '</div></div>';
+    });
+    html += '</div></div>';
+    host.innerHTML = html;
+  }
+
+  function renderComp1511StudyMap() {
+    var host = document.getElementById('comp1511-study-map');
+    if (!host) return;
+    host.innerHTML = '<div class="engg-week-summary">Week 1 is about getting the workflow clean before marks start.</div>'
+      + '<div class="comp-study-grid">'
+      + COMP1511_STUDY_MAP.map(function(item){ return '<div class="comp-study-card"><strong>'+escapeHtml(item.title)+'</strong><span>'+escapeHtml(item.text)+'</span></div>'; }).join('')
+      + '</div><div class="course-action-row"><a class="course-action-pill primary" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/lab/01/questions" target="_blank" rel="noopener">Open Week 1 lab</a></div>';
+  }
+
+  function compToggleStage(week, key) {
+    var values = compLoad();
+    var state = compWeekState(values, week);
+    state[key] = !state[key];
+    compSave(values);
+    renderComp1511LabPlan();
+    renderDashboard();
+  }
+
+  function loadCompChecks() {
+    renderComp1511LabPlan();
+    renderComp1511StudyMap();
   }
 
   function updateProgress() {
