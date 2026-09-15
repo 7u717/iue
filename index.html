@@ -3613,7 +3613,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-09-16-timetable-course-cleanup';
+  var APP_VERSION = '2026-09-16-phys1131-pass-tracker';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -3732,16 +3732,14 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     },
     PHYS1131: {
       target:'80+',
-      targetNote:'Core physics 前置课提前到 2026 T3；目标 80+，别让基础物理卡后续 aero。',
-      source:'UNSW Higher Physics 1A reference; current 2026 T3 Moodle may update details',
+      targetNote:'Core physics 前置课提前到 2026 T3；现在按 Labs + Test 通过规则追踪。',
+      source:'PHYS1131 2026 T3 assessment table supplied by user; Moodle remains final authority',
       assessments:[
-        { name:'Experiments / labs', weight:'20%', note:'Lab work; older outline used pass/fail lab marking' },
-        { name:'Online quizzes', weight:'10%', note:'Weekly quiz bank, best/highest attempt style in older outline' },
-        { name:'Class test 1', weight:'10%', note:'Invigilated quiz/test style' },
-        { name:'Class test 2', weight:'10%', note:'Invigilated quiz/test style' },
-        { name:'Final Exam', weight:'50%', note:'Whole syllabus; older outline lists 2-hour exam' }
+        { name:'Labs', weight:'Pass rule', note:'6 labs total; pass 5 for full credit, fewer than 5 gives 0.' },
+        { name:'Test 1', weight:'4 questions', note:'First attempt Week 7; 2/4 or above gives full credit, below 2 goes to retake.' },
+        { name:'Test 2', weight:'4 questions', note:'First attempt Week 10; 2/4 or above gives full credit, below 2 goes to retake.' }
       ],
-      rules:['数学基础已满足；2026 T3 具体 lab / test 以 Moodle 为准。']
+      rules:['Test 1 retakes are during Week 11 and Week 12.', 'Test 2 retakes are during Week 11 and Week 12.', 'Each test is 40 minutes after the start of the attempt.']
     },
     ELEC1111: {
       target:'78+',
@@ -5426,6 +5424,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     { name: 'MMAN1130 MANUF1 图纸',           date: '2026-07-17T23:55:00+10:00', tag: '15%', color: 'var(--mman-color)', gtId: 'mm_mf1' },
     { name: 'ENGG1300 Test 2',               date: '2026-07-18T10:00:00+10:00', tag: '30%', color: 'var(--engg-color)', gtId: 'eg_t2',  loc: 'F10 June Griffith M10', nav: 'https://maps.apple.com/?q=UNSW+F10+June+Griffith+Building+Kensington', examTable:true, durationMin:120 },
     { name: 'MATH1231 Lab Test 2',            date: '2026-07-27T15:00:00+10:00', tag: '15%', color: 'var(--math-color)', gtId: 'mg_lt2', loc: 'H13 Lawrence East M020', nav: 'https://maps.apple.com/?q=UNSW+H13+Lawrence+East+Building+Kensington', examTable:true, durationMin:60 },
+    { name: 'PHYS1131 Test 1',                date: '2026-10-29T17:00:00+11:00', tag: 'Week 7 · 4 questions', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_t1', loc:'OMB 114', nav:'https://maps.apple.com/?q=Old+Main+Building+UNSW+Kensington', examTable:true, durationMin:40 },
+    { name: 'PHYS1131 Test 2',                date: '2026-11-19T17:00:00+11:00', tag: 'Week 10 · 4 questions', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_t2', loc:'OMB 114', nav:'https://maps.apple.com/?q=Old+Main+Building+UNSW+Kensington', examTable:true, durationMin:40 },
     { name: 'MMAN1130 MANUF2 工艺单',         date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf2' },
     { name: 'MMAN1130 MANUF3 CAM',            date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf3' },
     { name: 'MATH1231 Assignment',            date: '2026-08-04T23:59:00+10:00', tag: '10%', color: 'var(--math-color)', gtId: 'mg_asgn'},
@@ -5669,12 +5669,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     },
     phys1131: {
       color: 'var(--phys-color)',
+      type: 'threshold',
       items: [
-        { id:'p1131_lab', label:'Experiments / Labs', note:'20% · Dates pending · lab details from Moodle', w:20 },
-        { id:'p1131_quiz', label:'Online Quizzes', note:'10% · Weekly quiz rhythm · confirm best-attempt rules', w:10 },
-        { id:'p1131_t1', label:'Class Test 1', note:'10% · Date pending', w:10 },
-        { id:'p1131_t2', label:'Class Test 2', note:'10% · Date pending', w:10 },
-        { id:'p1131_exam', label:'Final Exam', note:'50% · Final timetable pending · older outline used 2 hours', w:50 }
+        { id:'p1131_labs', label:'Labs', note:'6 labs · pass 5/6 for full credit; fewer than 5 = 0', w:1 },
+        { id:'p1131_t1', label:'Test 1', note:'Week 7 first attempt · 4 questions · score >=2/4 = full; below 2 = retake in Week 11/12', w:1 },
+        { id:'p1131_t2', label:'Test 2', note:'Week 10 first attempt · 4 questions · score >=2/4 = full; below 2 = retake in Week 11/12', w:1 }
       ]
     },
     comp1511: {
@@ -5793,6 +5792,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var total = 0, doneW = 0, nextItem = null;
     if (!cfg || !cfg.items || !cfg.items.length) return { cfg:cfg, total:0, doneW:0, remaining:100, nextItem:null };
     if (cfg.type === 'competency') return gtCompetencyCalc(course, data);
+    if (cfg.type === 'threshold') return gtThresholdCalc(course, data);
     cfg.items.forEach(function(it) {
       if (it.mobius) {
         var mc = gtMobiusCalc(data);
@@ -5813,7 +5813,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function gtUpdateHeader(course) {
     var calc = gtCourseCalc(course, gtLoad());
     if (!calc.cfg) return;
-    if (calc.type === 'competency') {
+    if (calc.type === 'competency' || calc.type === 'threshold') {
       renderGT(course);
       return;
     }
@@ -5997,6 +5997,99 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return html;
   }
 
+  function gtThresholdCalc(course, data) {
+    var labs = Math.max(0, Math.min(6, parseInt((data.p1131_labs && data.p1131_labs.count) || 0, 10) || 0));
+    var labPass = labs >= 5;
+    var t1Score = parseFloat((data.p1131_t1 && data.p1131_t1.score) || '');
+    var t2Score = parseFloat((data.p1131_t2 && data.p1131_t2.score) || '');
+    var t1Known = !isNaN(t1Score);
+    var t2Known = !isNaN(t2Score);
+    var t1Pass = t1Known && t1Score >= 2;
+    var t2Pass = t2Known && t2Score >= 2;
+    var passed = (labPass ? 1 : 0) + (t1Pass ? 1 : 0) + (t2Pass ? 1 : 0);
+    var recorded = (labs > 0 ? 1 : 0) + (t1Known ? 1 : 0) + (t2Known ? 1 : 0);
+    var nextItem = !labPass ? { label:'Labs' } : (!t1Pass ? { label:'Test 1' } : (!t2Pass ? { label:'Test 2' } : null));
+    return { cfg:gtConfig(course), type:'threshold', total:passed / 3 * 100, doneW:recorded / 3 * 100, remaining:Math.max(0, 3 - recorded), nextItem:nextItem, passed:passed, recorded:recorded, labs:labs, labPass:labPass, t1Score:t1Score, t2Score:t2Score, t1Known:t1Known, t2Known:t2Known, t1Pass:t1Pass, t2Pass:t2Pass };
+  }
+
+  function gtPhys1131TestText(score, known, attempt) {
+    if (!known) return '未记录';
+    if (score >= 2) return score + '/4 · full';
+    return score + '/4 · retake ' + Math.min(3, (attempt || 1) + 1);
+  }
+
+  function gtPhys1131Row(id, label, note, score, known, pass, attempt, color) {
+    return '<div class="competency-row">'
+      + '<div class="competency-row-main"><div>'
+      + '<div class="competency-title">'+label+'</div>'
+      + '<div class="competency-note">'+note+'</div>'
+      + '</div><div class="competency-status-pill">'+gtPhys1131TestText(score, known, attempt)+'</div></div>'
+      + '<div class="competency-options" style="grid-template-columns:repeat(3,minmax(0,1fr));">'
+      + [1,2,3].map(function(n){ return '<button class="competency-option '+(attempt === n ? 'active' : '')+'" onclick="gtPhysSetAttempt(\''+id+'\','+n+')">Attempt '+n+'</button>'; }).join('')
+      + '</div>'
+      + '<div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:9px;">'
+      + '<input class="grade-input" type="number" min="0" max="4" step="0.5" placeholder="score / 4" value="'+(known ? score : '')+'" oninput="gtPhysSetScore(\''+id+'\', this.value)">'
+      + '<div style="font-size:12px;font-weight:800;color:'+(pass ? color : 'var(--muted)')+'">'+(known ? (pass ? 'PASS' : 'RETAKE') : '--')+'</div>'
+      + '</div></div>';
+  }
+
+  function gtRenderThreshold(course, cfg, data) {
+    var calc = gtThresholdCalc(course, data);
+    var color = cfg.color || courseColor(course);
+    var t1 = data.p1131_t1 || {};
+    var t2 = data.p1131_t2 || {};
+    var html = '<div class="competency-head">'
+      + '<div class="competency-top">'
+      + '<div><div class="competency-code">PHYS1131 tracker</div>'
+      + '<div class="competency-sub">Labs + Test hurdles · pass/fail credit</div></div>'
+      + '<div class="competency-status-pill">'+calc.passed+'/3 passed</div>'
+      + '</div>'
+      + '<div class="competency-track"><div class="competency-fill" style="width:'+(calc.passed/3*100).toFixed(0)+'%;"></div></div>'
+      + '<div class="competency-rule">Labs: pass 5 of 6 for full credit; fewer than 5 = 0. Tests: 4 questions, score 2/4 or above = full credit; below 2 triggers retake, with two retake chances.</div>'
+      + '</div>';
+    html += '<div class="competency-row">'
+      + '<div class="competency-row-main"><div><div class="competency-title">Labs</div><div class="competency-note">6 labs total · 5/6 required for full credit</div></div><div class="competency-status-pill">'+calc.labs+'/6 · '+(calc.labPass ? 'full' : '0')+'</div></div>'
+      + '<div style="display:grid;grid-template-columns:42px 1fr 42px;gap:8px;align-items:center;margin-top:10px;">'
+      + '<button class="schedule-sheet-action" onclick="gtPhysSetLabs(-1)">−</button>'
+      + '<div class="competency-track" style="height:10px;"><div class="competency-fill" style="width:'+(calc.labs/6*100).toFixed(0)+'%;"></div></div>'
+      + '<button class="schedule-sheet-action" onclick="gtPhysSetLabs(1)">+</button>'
+      + '</div></div>';
+    html += gtPhys1131Row('p1131_t1', 'Test 1', 'First attempt Week 7 · retakes Week 11/12 · 40 minutes after start', calc.t1Score, calc.t1Known, calc.t1Pass, parseInt(t1.attempt || 1, 10), color);
+    html += gtPhys1131Row('p1131_t2', 'Test 2', 'First attempt Week 10 · retakes Week 11/12 · 40 minutes after start', calc.t2Score, calc.t2Known, calc.t2Pass, parseInt(t2.attempt || 1, 10), color);
+    return html;
+  }
+
+  function gtPhysSetLabs(delta) {
+    var data = gtLoad();
+    if (!data.p1131_labs) data.p1131_labs = {};
+    var next = Math.max(0, Math.min(6, (parseInt(data.p1131_labs.count || 0, 10) || 0) + delta));
+    data.p1131_labs.count = next;
+    data.p1131_labs.done = next >= 5;
+    gtSave(data);
+    renderGT('phys1131');
+    renderDashboard();
+  }
+
+  function gtPhysSetAttempt(id, attempt) {
+    var data = gtLoad();
+    if (!data[id]) data[id] = {};
+    data[id].attempt = attempt;
+    gtSave(data);
+    renderGT('phys1131');
+  }
+
+  function gtPhysSetScore(id, value) {
+    var data = gtLoad();
+    if (!data[id]) data[id] = {};
+    data[id].score = value;
+    var score = parseFloat(value);
+    data[id].done = !isNaN(score) && score >= 2;
+    gtSave(data);
+    renderGT('phys1131');
+    renderCountdown();
+    renderDashboard();
+  }
+
   function renderGT(course) {
     var cfg = gtConfig(course);
     var el = document.getElementById('gt-'+course);
@@ -6010,6 +6103,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var data = gtLoad();
     if (cfg.type === 'competency') {
       el.innerHTML = gtRenderCompetency(course, cfg, data);
+      return;
+    }
+    if (cfg.type === 'threshold') {
+      el.innerHTML = gtRenderThreshold(course, cfg, data);
       return;
     }
 
