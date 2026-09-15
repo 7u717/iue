@@ -5372,32 +5372,6 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     });
   }
 
-  function compCheckKey() { return 'iue.comp1511.weekChecks.v1'; }
-
-  function loadCompChecks() {
-    var values = {};
-    try { values = JSON.parse(localStorage.getItem(compCheckKey()) || '{}') || {}; } catch(e) { values = {}; }
-    document.querySelectorAll('#comp1511-week1-checks .engg-check').forEach(function(item) {
-      var done = !!values[item.dataset.compCheck];
-      item.classList.toggle('checked', done);
-      var box = item.querySelector('.engg-check-box');
-      if (box) box.textContent = done ? '✓' : '';
-    });
-  }
-
-  function toggleCompCheck(el) {
-    if (!el) return;
-    el.classList.toggle('checked');
-    var box = el.querySelector('.engg-check-box');
-    if (box) box.textContent = el.classList.contains('checked') ? '✓' : '';
-    var values = {};
-    document.querySelectorAll('#comp1511-week1-checks .engg-check').forEach(function(item) {
-      if (item.dataset.compCheck) values[item.dataset.compCheck] = item.classList.contains('checked');
-    });
-    try { localStorage.setItem(compCheckKey(), JSON.stringify(values)); } catch(e) {}
-    markCloudDirty();
-  }
-
   function updateProgress() {
     var items = document.querySelectorAll('#mobius-list .checklist-item');
     var totals = { calc: 0, alg: 0 };
@@ -5429,7 +5403,6 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     document.getElementById('alg-pct').textContent = algPct + '%';
   }
   loadMobiusChecklist();
-  loadCompChecks();
   updateProgress();
 
   // ===== COUNTDOWN =====
@@ -7833,7 +7806,6 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       }
       if (payload.savedAt) localStorage.setItem(CLOUD_LAST_REMOTE_KEY, payload.savedAt);
       loadMobiusChecklist();
-      loadCompChecks();
       activeCourseIds = loadActiveCourses();
       COURSE_SWIPE_ORDER = swipeOrder();
       updateProgress();
