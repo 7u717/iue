@@ -11,14 +11,14 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-10-13-phys1160-apod"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-10-13-baked-progress"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="vendor/katex/katex.min.css?v=2026-10-13-phys1160-apod"/>
-  <script src="vendor/katex/katex.min.js?v=2026-10-13-phys1160-apod"></script>
-  <script src="vendor/katex/auto-render.min.js?v=2026-10-13-phys1160-apod"></script>
-  <script src="math1231/final-exam/questions.js?v=2026-10-13-phys1160-apod"></script>
+  <link rel="stylesheet" href="vendor/katex/katex.min.css?v=2026-10-13-baked-progress"/>
+  <script src="vendor/katex/katex.min.js?v=2026-10-13-baked-progress"></script>
+  <script src="vendor/katex/auto-render.min.js?v=2026-10-13-baked-progress"></script>
+  <script src="math1231/final-exam/questions.js?v=2026-10-13-baked-progress"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -3731,7 +3731,39 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-10-13-phys1160-apod';
+  // ===================== IUE BAKED PROGRESS (bot-maintained) =====================
+  // Source of truth for the keys listed here. On every load (and after every cloud pull)
+  // these values overwrite ONLY these keys inside localStorage; every other key is untouched.
+  //   gt:   merged into localStorage 'gt_v2'                      (key -> whole value object)
+  //   comp: merged into localStorage 'iue.comp1511.weekChecks.v1' (week -> whole stage object)
+  // To update: edit values below, bump APP_VERSION, push.
+  var IUE_BAKED_PROGRESS = {
+    updatedAt: '2026-10-13',
+    gt: {
+      p1131_labs: { count:2, done:false },          // PHYS1131 labs completed: 2/6
+      p1160_q1: { missed:true },                     // PHYS1160 Quiz 1 missed (0)
+      p1160_q2: { s:'9.9', m:'10' },                 // PHYS1160 Quiz 2 9.9/10
+      p1160_q3: { missed:true }                      // PHYS1160 Quiz 3 missed (0)
+    },
+    comp: {
+      w2: { checkoff:true, core:true, submit:true }, // COMP1511 Lab02 2/2
+      w3: { checkoff:true, core:true, submit:true }  // COMP1511 Lab03 2/2
+    }
+  };
+  function applyBakedProgress() {
+    function merge(storageKey, patch) {
+      if (!patch || !Object.keys(patch).length) return;
+      var cur = {};
+      try { cur = JSON.parse(localStorage.getItem(storageKey) || '{}') || {}; } catch (e) { cur = {}; }
+      Object.keys(patch).forEach(function(k){ cur[k] = JSON.parse(JSON.stringify(patch[k])); });
+      try { localStorage.setItem(storageKey, JSON.stringify(cur)); } catch (e) {}
+    }
+    merge('gt_v2', IUE_BAKED_PROGRESS.gt);
+    merge('iue.comp1511.weekChecks.v1', IUE_BAKED_PROGRESS.comp);
+  }
+  applyBakedProgress();
+  // ===============================================================================
+  var APP_VERSION = '2026-10-13-baked-progress';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5967,8 +5999,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       items: [
         { id:'p1160_quiz', label:'Weekly Quizzes', note:'10% · 8 次 × 10 分 · 总分/80×10 · 不去最低', w:10, quizSet:true },
         { id:'p1160_report', label:'Short Report', note:'25% · Date pending', w:25 },
-        { id:'p1160_apod_plan', label:'APOD Plan', note:'5% · 个人书面 · Turnitin DOCX · 截止 16/10/2026 23:59 · 28/10 出分', w:5, date:'2026-10-16T23:59:00+11:00' },
-        { id:'p1160_apod_final', label:'APOD Final', note:'35% · 个人书面 · ≤3000 词 · 截止 13/11/2026 23:59 · 27/11 出分', w:35, date:'2026-11-13T23:59:00+11:00' },
+        { id:'p1160_apod_plan', label:'APOD Plan', note:'5% · 个人书面 · Turnitin DOCX · 截止 16/10/2026 23:59 · 28/10 出分', w:5, date:'2026-10-16T23:59:00+11:00', apod:true },
+        { id:'p1160_apod_final', label:'APOD Final', note:'35% · 个人书面 · ≤3000 词 · 截止 13/11/2026 23:59 · 27/11 出分', w:35, date:'2026-11-13T23:59:00+11:00', apod:true },
         { id:'p1160_exp', label:'Experiment', note:'25% · Date pending', w:25 }
       ]
     }
@@ -6429,56 +6461,91 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       max: (sum + (n - recorded)) / n * w,
       contrib: sum / n * w, doneW: Math.round(recorded / n * w * 10) / 10 };
   }
+  var gtQuizJustOpened = false;
+  function gtQuizChipSub(i, q, st) {
+    if (st.status === 'done') return (Math.round(st.pct*1000)/100).toString().replace(/\.0+$/,'');
+    if (st.status === 'missed') return '0 · miss';
+    var due = P1160_QUIZ_DUE[i];
+    if (due && new Date(due) < new Date()) return '待记分';
+    return (P1160_QUIZ_DUE_LABEL[i] || '').replace(/ 00:59$/,'') || 'TBC';
+  }
   function gtRenderQuizSet(it, data, color) {
     var qc = gtQuizSetCalc(data, it.w);
     var expanded = data.p1160_quiz_open !== false;
+    var sel = Math.max(1, Math.min(qc.n, parseInt(data.p1160_quiz_sel, 10) || 0));
+    if (!data.p1160_quiz_sel) {
+      for (var k = 1; k <= qc.n; k++) { if (qc.quizzes[k-1].status === 'upcoming') { sel = k; break; } }
+    }
     var html = '<div class="gt-row comp-expand-row '+(expanded?'open':'')+'" onclick="gtQuizToggleOpen()">'
       + '<div class="comp-expand-chevron">›</div>'
-      + '<div class="gt-info"><div class="gt-name">'+it.label+'</div><div class="gt-note">'+it.note+'</div></div>'
+      + '<div class="gt-info"><div class="gt-name">'+it.label+'</div><div class="gt-note">'+qc.recorded+'/'+qc.n+' recorded · sum/80 × 10 · no drop</div></div>'
       + '<div class="gt-weight" style="color:'+color+'">'+it.w+'%</div>'
-      + '<div class="gt-status" style="color:'+color+'">'+(qc.recorded ? qc.contrib.toFixed(1)+'%' : '--')+'<br><span style="font-size:10px;opacity:.8">'+qc.recorded+'/'+qc.n+'</span></div>'
       + '</div>';
     if (!expanded) return html;
-    html += '<div style="background:var(--bg);border-radius:10px;padding:4px 8px;margin-bottom:4px;" onclick="event.stopPropagation()">';
-    var labels = { done:'已完成', missed:'错过 · 0', upcoming:'未做 / 未开放' };
+    var anim = gtQuizJustOpened ? ' style="animation:langCardIn .32s cubic-bezier(.22,1,.36,1) both;"' : '';
+    gtQuizJustOpened = false;
+    html += '<div class="comp-expand-panel" onclick="event.stopPropagation()"'+anim+'><div class="phys-gate-panel">';
+    html += '<div class="phys-gate-main"><div><div class="phys-gate-label">'+qc.contrib.toFixed(2)+' / '+it.w+'%</div>'
+      + '<div class="phys-gate-note">平均 '+(qc.avg===null?'--':(qc.avg*100).toFixed(0)+'%')+' · 最高还能到 '+qc.max.toFixed(2)+'%</div></div>'
+      + '<div class="phys-gate-status '+(qc.recorded===qc.n?'pass':'')+'">'+qc.recorded+'/'+qc.n+'</div></div>';
+    html += '<div class="phys-lab-dots" style="grid-template-columns:repeat(4,minmax(0,1fr));">';
     for (var i = 1; i <= qc.n; i++) {
       var q = data['p1160_q'+i] || {}, st = qc.quizzes[i-1];
-      html += '<div style="display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;">';
-      html += '<div style="width:62px;flex-shrink:0;line-height:1.2;"><div style="font-size:12px;font-weight:600;color:var(--text)">Q'+i+'</div><div style="font-size:10px;color:var(--dim)">'+(P1160_QUIZ_DUE_LABEL[i]||'日期待补')+'</div></div>';
-      html += '<input class="gt-score-inp" type="number" min="0" step="0.1" placeholder="得" value="'+(q.s!==undefined?q.s:'')+'" data-q="'+i+'" data-field="s" oninput="gtQuizScore(this)" style="width:44px;"'+(q.missed?' disabled':'')+'>';
-      html += '<span style="color:var(--dim);font-size:12px;">/</span>';
-      html += '<input class="gt-score-inp" type="number" min="0" step="0.1" placeholder="10" value="'+(q.m||'')+'" data-q="'+i+'" data-field="m" oninput="gtQuizScore(this)" style="width:44px;"'+(q.missed?' disabled':'')+'>';
-      html += '<button type="button" class="gt-quiz-miss" onclick="gtQuizToggleMissed('+i+')" style="font-size:10px;padding:3px 7px;border-radius:999px;border:1px solid var(--border);background:'+(q.missed?color:'transparent')+';color:'+(q.missed?'#fff':'var(--muted)')+';cursor:pointer;">错过</button>';
-      html += '<div id="gt-quiz-st-'+i+'" style="margin-left:auto;font-size:11px;font-weight:700;'+(st.status==='done'?'color:'+color:'color:var(--dim)')+'">'+gtQuizLabel(i, st)+'</div>';
-      html += '</div>';
+      var extra = st.status === 'missed' ? 'opacity:.5;' : '';
+      var cls = 'phys-lab-dot' + (st.status === 'done' ? ' active' : '');
+      var ring = i === sel ? 'box-shadow:0 0 0 1.5px var(--phys-color);' : '';
+      html += '<button class="'+cls+'" onclick="gtQuizSelect('+i+')" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-height:44px;'+extra+ring+'">'
+        + '<span>Q'+i+'</span><span style="font-size:9px;font-weight:700;opacity:.78;">'+gtQuizChipSub(i, q, st)+'</span></button>';
     }
-    html += '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:8px;font-size:12px;flex-wrap:wrap;">';
-    html += '<span style="color:var(--muted)">平均 '+(qc.avg===null?'--':(qc.avg*100).toFixed(1)+'%')+' · 已记 '+qc.recorded+'/'+qc.n+'</span>';
-    html += '<span style="font-weight:700;color:'+color+'">当前 '+qc.contrib.toFixed(2)+' / '+it.w+'% · 最高可到 '+qc.max.toFixed(2)+'%</span>';
     html += '</div>';
-    html += '<div style="display:flex;align-items:center;gap:6px;padding-top:6px;font-size:11px;color:var(--muted);">Quiz 数量 '
-      + '<button type="button" onclick="gtQuizSetCount(-1)" style="width:24px;height:24px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;">−</button>'
-      + '<b style="color:var(--text)">'+qc.n+'</b>'
-      + '<button type="button" onclick="gtQuizSetCount(1)" style="width:24px;height:24px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;">+</button></div>';
-    html += '<div class="gt-note" style="padding:6px 0 4px;line-height:1.5;">计分：总分 ÷ (数量×10) × '+it.w+'%（8 次 × 10 分 = 80），不去掉最低分。来源：'+P1160_QUIZ_SOURCE+'。满分留空默认 10。</div>';
+    var sq = data['p1160_q'+sel] || {}, sst = qc.quizzes[sel-1];
+    var curScore = sst.status === 'done' ? +sq.s : (sst.status === 'missed' ? 0 : null);
+    html += '<div class="phys-gate-foot" style="display:flex;justify-content:space-between;gap:8px;"><span style="color:var(--text);font-weight:780;">Q'+sel+' · '+(P1160_QUIZ_DUE_LABEL[sel]||'日期待补')+'</span><span>'+gtQuizLabel(sel, sst)+'</span></div>';
+    html += '<div class="phys-score-grid" style="grid-template-columns:repeat(6,minmax(0,1fr));">';
+    [0,2,4,6,8,10].forEach(function(n){
+      html += '<button class="phys-score-dot '+(curScore===n && sst.status==='done'?'active':'')+'" onclick="gtQuizSetScore('+sel+','+n+')">'+n+'</button>';
+    });
     html += '</div>';
+    html += '<div class="phys-attempt-grid">'
+      + '<button class="phys-attempt-dot" style="cursor:text;padding:0 8px;display:flex;align-items:center;gap:4px;"><input class="gt-score-inp" type="number" min="0" max="10" step="0.1" inputmode="decimal" placeholder="分" value="'+(sst.status==='done'?sq.s:'')+'" data-q="'+sel+'" data-field="s" onchange="gtQuizScore(this)" onclick="event.stopPropagation()" style="width:100%;background:transparent;border:none;text-align:center;font:inherit;color:inherit;padding:0;">/10</button>'
+      + '<button class="phys-attempt-dot '+(sst.status==='missed'?'active':'')+'" onclick="gtQuizToggleMissed('+sel+')">Missed</button>'
+      + '<button class="phys-attempt-dot '+(sst.status==='upcoming'?'locked':'')+'" onclick="gtQuizClear('+sel+')">Clear</button>'
+      + '</div>';
+    html += '<div class="phys-gate-foot">来源：'+P1160_QUIZ_SOURCE+'。点 Q 选择，点分数或输入小数记分。</div>';
+    html += '</div></div>';
     return html;
   }
-  function gtQuizRefresh() { renderGT('phys1160'); if (typeof renderDashboard === 'function') renderDashboard(); }
-  function gtQuizToggleOpen() { var d = gtLoad(); d.p1160_quiz_open = d.p1160_quiz_open === false; gtSave(d); gtQuizRefresh(); }
-  function gtQuizToggleMissed(i) { var d = gtLoad(), k = 'p1160_q'+i; if (!d[k]) d[k] = {}; d[k].missed = !d[k].missed; gtSave(d); gtQuizRefresh(); }
+  function gtQuizRefresh() { renderGT('phys1160'); if (typeof renderDashboard === 'function') renderDashboard(); if (typeof renderCountdown === 'function') renderCountdown(); }
+  function gtQuizToggleOpen() { var d = gtLoad(); d.p1160_quiz_open = d.p1160_quiz_open === false; gtQuizJustOpened = d.p1160_quiz_open; gtSave(d); gtQuizRefresh(); }
+  function gtQuizSelect(i) { var d = gtLoad(); d.p1160_quiz_sel = i; gtSave(d); gtQuizRefresh(); }
+  function gtQuizSetScore(i, n) { var d = gtLoad(), k = 'p1160_q'+i; d[k] = { s:String(n), m:'10' }; d.p1160_quiz_sel = i; gtSave(d); gtQuizRefresh(); }
+  function gtQuizClear(i) { var d = gtLoad(); delete d['p1160_q'+i]; gtSave(d); gtQuizRefresh(); }
+  function gtQuizToggleMissed(i) { var d = gtLoad(), k = 'p1160_q'+i; var was = d[k] && d[k].missed; d[k] = was ? {} : { missed:true }; gtSave(d); gtQuizRefresh(); }
   function gtQuizSetCount(delta) { var d = gtLoad(); d.p1160_quiz_n = Math.max(1, Math.min(20, gtQuizSetN(d) + delta)); gtSave(d); gtQuizRefresh(); }
   function gtQuizScore(el) {
     var d = gtLoad(), k = 'p1160_q'+el.dataset.q;
-    if (!d[k]) d[k] = {};
-    d[k][el.dataset.field] = el.value;
-    gtSave(d);
-    var it = { w:10 }, qc = gtQuizSetCalc(d, 10), st = qc.quizzes[+el.dataset.q - 1];
-    var stEl = document.getElementById('gt-quiz-st-'+el.dataset.q);
-    if (stEl && st) stEl.textContent = gtQuizLabel(+el.dataset.q, st);
-    gtUpdateHeader('phys1160');
-    if (typeof renderDashboard === 'function') renderDashboard();
+    var v = el.value === '' ? '' : String(Math.max(0, Math.min(10, +el.value)));
+    d[k] = v === '' ? {} : { s:v, m:'10' };
+    gtSave(d); gtQuizRefresh();
   }
+
+  function gtRenderApodPanel(it, data, color) {
+    var d = data[it.id] || {};
+    var done = !!d.done, hasScore = done && d.s !== undefined && d.s !== '' && +d.m > 0;
+    var status = hasScore ? (Math.round(+d.s / +d.m * 100) + '% · +' + (+d.s / +d.m * it.w).toFixed(1) + '%') : (done ? '已交 · 待出分' : (it.date && new Date(it.date) < new Date() ? '已截止' : '未交'));
+    var html = '<div class="phys-gate-panel" style="margin:6px 0;">'
+      + '<div class="phys-gate-main"><div><div class="phys-gate-label">'+it.label+' <span style="color:'+color+';font-family:Space Grotesk,sans-serif;">'+it.w+'%</span></div>'
+      + '<div class="phys-gate-note">'+it.note+'</div></div>'
+      + '<div class="phys-gate-status '+(done?'pass':'')+'">'+status+'</div></div>'
+      + '<div class="phys-attempt-grid">'
+      + '<button class="phys-attempt-dot '+(!done?'active':'')+'" onclick="gtApodSet(\''+it.id+'\',false)">未交</button>'
+      + '<button class="phys-attempt-dot '+(done?'active':'')+'" onclick="gtApodSet(\''+it.id+'\',true)">已交</button>'
+      + '<button class="phys-attempt-dot '+(done?'':'locked')+'" style="display:flex;align-items:center;gap:3px;padding:0 6px;cursor:text;"><input class="gt-score-inp" type="number" min="0" step="0.1" inputmode="decimal" placeholder="分" value="'+(d.s||'')+'" data-course="phys1160" data-id="'+it.id+'" data-field="s" onchange="gtApodScore(this)" onclick="event.stopPropagation()" style="width:100%;background:transparent;border:none;text-align:center;font:inherit;color:inherit;padding:0;">/'+(d.m||100)+'</button>'
+      + '</div></div>';
+    return html;
+  }
+  function gtApodSet(id, done) { var d = gtLoad(); if (!d[id]) d[id] = {}; d[id].done = done; gtSave(d); renderGT('phys1160'); renderCountdown(); renderDashboard(); }
+  function gtApodScore(el) { var d = gtLoad(), id = el.dataset.id; if (!d[id]) d[id] = {}; d[id].s = el.value; if (!d[id].m) d[id].m = '100'; gtSave(d); renderGT('phys1160'); renderDashboard(); }
 
   function renderGT(course) {
     var cfg = gtConfig(course);
@@ -6522,6 +6589,13 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         html += gtRenderMobius(data, cfg.color);
       } else if (it.quizSet) {
         html += gtRenderQuizSet(it, data, cfg.color);
+      } else if (it.apod) {
+        html += gtRenderApodPanel(it, data, cfg.color);
+        if (it.id === 'p1160_apod_final') {
+          var imgs = (courseMeta('PHYS1160').apodImages || []);
+          if (imgs.length) html += '<div class="phys-gate-foot" style="margin:2px 2px 4px;">APOD 分配图片 · 三选一（PHYS1160 Assessment Info Doc, T3 2026）</div>'
+            + '<div class="phys-attempt-grid" style="margin:0 0 10px;">' + imgs.map(function(im){ return '<a class="phys-attempt-dot" href="'+im.url+'" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;text-decoration:none;">'+im.date+'</a>'; }).join('') + '</div>';
+        }
       } else {
         if (course === 'comp1511' && it.id === 'c1511_labs') {
           var labsOpen = data.c1511_labs_open !== false;
@@ -6560,12 +6634,6 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         }
         html += '</div>';
       }
-    }
-    if (course === 'phys1160') {
-      var imgs = (courseMeta('PHYS1160').apodImages || []);
-      if (imgs.length) html += '<div class="course-preview-rule" style="margin-top:10px;line-height:1.7;"><span style="color:'+cfg.color+';font-weight:800;">APOD 分配图片</span>（三选一）· '
-        + imgs.map(function(im){ return '<a href="'+im.url+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:'+cfg.color+';text-decoration:underline;white-space:nowrap;">'+im.date+'</a>'; }).join(' · ')
-        + '<br><span class="gt-note">来源：PHYS1160 Assessment Info Doc, T3 2026</span></div>';
     }
     el.innerHTML = html;
   }
@@ -8316,6 +8384,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         if (payload.items['iue.lang.zhenjing.v2'] === null || typeof payload.items['iue.lang.zhenjing.v2'] === 'undefined') localStorage.removeItem('iue.lang.zhenjing.v2');
       }
       if (payload.savedAt) localStorage.setItem(CLOUD_LAST_REMOTE_KEY, payload.savedAt);
+      applyBakedProgress();
       loadMobiusChecklist();
       loadCompChecks();
       activeCourseIds = loadActiveCourses();
