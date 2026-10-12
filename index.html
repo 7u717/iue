@@ -11,14 +11,14 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-08-21-math-icon-centered"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-10-13-phys1160-quizzes"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="vendor/katex/katex.min.css?v=2026-08-17-final-review"/>
-  <script src="vendor/katex/katex.min.js?v=2026-08-17-final-review"></script>
-  <script src="vendor/katex/auto-render.min.js?v=2026-08-17-final-review"></script>
-  <script src="math1231/final-exam/questions.js?v=2026-08-17-final-review"></script>
+  <link rel="stylesheet" href="vendor/katex/katex.min.css?v=2026-10-13-phys1160-quizzes"/>
+  <script src="vendor/katex/katex.min.js?v=2026-10-13-phys1160-quizzes"></script>
+  <script src="vendor/katex/auto-render.min.js?v=2026-10-13-phys1160-quizzes"></script>
+  <script src="math1231/final-exam/questions.js?v=2026-10-13-phys1160-quizzes"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -3731,7 +3731,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-09-16-comp1511-lab-plan-phys-polish';
+  var APP_VERSION = '2026-10-13-phys1160-quizzes';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -3744,11 +3744,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     thesis: 'var(--thesis-color)'
   };
   var COURSE_CATALOG = [
-    { id:'math', code:'MATH1231', icon:'M1B', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:2 },
-    { id:'engg', code:'ENGG1300', icon:'MECH', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Current','Core','2026 T2'], status:'active', term:'2026 T2', order:3 },
-    { id:'phys1131', code:'PHYS1131', icon:'P1A', short:'Phys', color:'var(--phys-color)', name:'Higher Physics 1A', tags:['Planned','Core','2026 T3'], status:'archived', term:'2026 T3', order:4 },
+    { id:'math', code:'MATH1231', icon:'M1B', short:'Math', color:'var(--math-color)', name:'Mathematics 1B · Calculus · Linear Algebra · Probability', tags:['Completed','Core','2026 T2'], status:'archived', term:'2026 T2', order:2 },
+    { id:'engg', code:'ENGG1300', icon:'MECH', short:'Mech', color:'var(--engg-color)', name:'Engineering Mechanics · Statics · Dynamics', tags:['Completed','Core','2026 T2'], status:'archived', term:'2026 T2', order:3 },
+    { id:'phys1131', code:'PHYS1131', icon:'P1A', short:'Phys', color:'var(--phys-color)', name:'Higher Physics 1A', tags:['Current','Core','2026 T3'], status:'active', term:'2026 T3', order:4 },
     { id:'comp1511', code:'COMP1511', icon:'CODE', short:'Code', color:'var(--engg-color)', name:'Programming Fundamentals', tags:['Current','Core','2026 T3'], status:'active', term:'2026 T3', order:5 },
-    { id:'phys1160', code:'PHYS1160', icon:'AST', short:'Astro', color:'var(--phys-color)', name:'Introduction to Astronomy', tags:['Planned','Free Elective','2026 T3'], status:'archived', term:'2026 T3', order:6 },
+    { id:'phys1160', code:'PHYS1160', icon:'AST', short:'Astro', color:'var(--phys-color)', name:'Introduction to Astronomy', tags:['Current','Free Elective','2026 T3'], status:'active', term:'2026 T3', order:6 },
     { id:'desn1000', code:'DESN1000', icon:'DES', short:'Design', color:'var(--desn-color)', name:'Introduction to Engineering Design and Innovation', tags:['Prereq','Core','2027 T1'], status:'archived', term:'2027 T1', order:7 },
     { id:'elec1111', code:'ELEC1111', icon:'ELEC', short:'Elec', color:'var(--elec-color)', name:'Electrical Circuit Fundamentals', tags:['Prereq','Core','2027 T2'], status:'archived', term:'2027 T2', order:8 },
     { id:'mman', code:'MMAN1130', icon:'CAD', short:'Design', color:'var(--mman-color)', name:'Design and Manufacturing · CAD · Tools · Manufacturing', tags:['Prereq','Core','2027 T1'], status:'archived', note:'Dropped · materials kept', term:'2027 T1', order:9 },
@@ -4191,6 +4191,21 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
             setTimeout(function(){ if (typeof markCloudDirty === 'function') markCloudDirty(); }, 0);
           } catch (err) {}
         }
+        // 2026 T3 v2: drop finished T2 courses (math/engg/mman) from the rail; content stays in Library.
+        var t3v2Key = 'iue.activeCourses.2026T3.v2';
+        if (localStorage.getItem(t3v2Key) !== 'true') {
+          var oldT2 = { math:1, engg:1, mman:1 };
+          var cleaned = result.filter(function(id){ return !oldT2[id]; });
+          ['phys1131', 'comp1511', 'phys1160'].forEach(function(id){ if (cleaned.indexOf(id) < 0 && cleaned.length < ACTIVE_COURSE_LIMIT) cleaned.push(id); });
+          try {
+            localStorage.setItem(t3v2Key, 'true');
+            if (cleaned.join('|') !== result.join('|')) {
+              result = cleaned;
+              localStorage.setItem('iue.activeCourses.v1', JSON.stringify(result));
+              setTimeout(function(){ if (typeof markCloudDirty === 'function') markCloudDirty(); }, 0);
+            }
+          } catch (err) {}
+        }
         return result;
       }
     } catch (e) {}
@@ -4420,7 +4435,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function defaultCourseId() {
-    return activeCourseIds[0] || 'math';
+    return activeCourseIds[0] || 'phys1131';
   }
 
   function showDefaultCourse() {
@@ -4444,7 +4459,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       activeCourseIds.push(id);
     } else {
       activeCourseIds = activeCourseIds.filter(function(courseId){ return courseId !== id; });
-      if (!activeCourseIds.length) activeCourseIds = ['math'];
+      if (!activeCourseIds.length) activeCourseIds = ['phys1131'];
     }
     lastToggledCourseId = id;
     saveActiveCourses();
@@ -5952,7 +5967,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     phys1160: {
       color: 'var(--phys-color)',
       items: [
-        { id:'p1160_quiz', label:'Weekly Quizzes', note:'10% · Online rhythm · confirm quiz windows', w:10 },
+        { id:'p1160_quiz', label:'Weekly Quizzes', note:'10% · 每次 quiz 等权平均 · 次数/drop 规则未经 26T3 官方 outline 确认', w:10, quizSet:true },
         { id:'p1160_report', label:'Short Report', note:'25% · Date pending', w:25 },
         { id:'p1160_apod', label:'APOD Project', note:'40% · Date pending', w:40 },
         { id:'p1160_exp', label:'Experiment', note:'25% · Date pending', w:25 }
@@ -6056,6 +6071,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (it.mobius) {
         var mc = gtMobiusCalc(data);
         if (mc.count > 0) { total += mc.contrib; doneW += 10; }
+      } else if (it.quizSet && gtQuizSetHasData(data)) {
+        var qc = gtQuizSetCalc(data, it.w);
+        total += qc.contrib; doneW += qc.doneW;
+        if (qc.recorded < qc.n && !nextItem) nextItem = it;
       } else {
         var d = data[it.id] || {};
         if (d.done) {
@@ -6369,6 +6388,89 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     renderDashboard();
   }
 
+  // ===== PHYS1160 per-quiz tracker =====
+  // gt_v2 keys: p1160_quiz_n (quiz count, default 3), p1160_q1..p1160_qN = {s, m, missed}, p1160_quiz_open.
+  // Legacy p1160_quiz {done,s,m} still used if no per-quiz data exists.
+  var P1160_QUIZ_DEFAULT_N = 3;
+  var P1160_QUIZ_SOURCE = 'UNSW PHYS1160 26T3 Course Outline 未能在线核实（官网 outline 页需登录/动态加载）· 以 Moodle 公布为准';
+  function gtQuizSetN(data) {
+    var n = parseInt(data.p1160_quiz_n, 10);
+    return (n >= 1 && n <= 20) ? n : P1160_QUIZ_DEFAULT_N;
+  }
+  function gtQuizSetHasData(data) {
+    for (var i = 1; i <= 20; i++) { var q = data['p1160_q'+i]; if (q && (q.missed || q.s !== undefined && q.s !== '')) return true; }
+    return false;
+  }
+  function gtQuizState(q) {
+    q = q || {};
+    if (q.missed) return { status:'missed', pct:0 };
+    if (q.s !== undefined && q.s !== '' && !isNaN(+q.s)) {
+      var m = (q.m !== undefined && q.m !== '' && +q.m > 0) ? +q.m : 10;
+      return { status:'done', pct:Math.max(0, Math.min(1, +q.s / m)) };
+    }
+    return { status:'upcoming', pct:null };
+  }
+  function gtQuizSetCalc(data, w) {
+    var n = gtQuizSetN(data), sum = 0, recorded = 0, quizzes = [];
+    for (var i = 1; i <= n; i++) {
+      var st = gtQuizState(data['p1160_q'+i]);
+      quizzes.push(st);
+      if (st.pct !== null) { sum += st.pct; recorded++; }
+    }
+    return { n:n, recorded:recorded, quizzes:quizzes, avg: recorded ? sum / recorded : null,
+      contrib: sum / n * w, doneW: Math.round(recorded / n * w * 10) / 10 };
+  }
+  function gtRenderQuizSet(it, data, color) {
+    var qc = gtQuizSetCalc(data, it.w);
+    var expanded = data.p1160_quiz_open !== false;
+    var html = '<div class="gt-row comp-expand-row '+(expanded?'open':'')+'" onclick="gtQuizToggleOpen()">'
+      + '<div class="comp-expand-chevron">›</div>'
+      + '<div class="gt-info"><div class="gt-name">'+it.label+'</div><div class="gt-note">'+it.note+'</div></div>'
+      + '<div class="gt-weight" style="color:'+color+'">'+it.w+'%</div>'
+      + '<div class="gt-status" style="color:'+color+'">'+(qc.recorded ? qc.contrib.toFixed(1)+'%' : '--')+'<br><span style="font-size:10px;opacity:.8">'+qc.recorded+'/'+qc.n+'</span></div>'
+      + '</div>';
+    if (!expanded) return html;
+    html += '<div style="background:var(--bg);border-radius:10px;padding:4px 8px;margin-bottom:4px;" onclick="event.stopPropagation()">';
+    var labels = { done:'已完成', missed:'错过 · 0', upcoming:'未做 / 未开放' };
+    for (var i = 1; i <= qc.n; i++) {
+      var q = data['p1160_q'+i] || {}, st = qc.quizzes[i-1];
+      html += '<div style="display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;">';
+      html += '<div style="font-size:12px;font-weight:600;width:24px;flex-shrink:0;color:var(--text)">Q'+i+'</div>';
+      html += '<input class="gt-score-inp" type="number" min="0" step="0.1" placeholder="得" value="'+(q.s!==undefined?q.s:'')+'" data-q="'+i+'" data-field="s" oninput="gtQuizScore(this)" style="width:44px;"'+(q.missed?' disabled':'')+'>';
+      html += '<span style="color:var(--dim);font-size:12px;">/</span>';
+      html += '<input class="gt-score-inp" type="number" min="0" step="0.1" placeholder="10" value="'+(q.m||'')+'" data-q="'+i+'" data-field="m" oninput="gtQuizScore(this)" style="width:44px;"'+(q.missed?' disabled':'')+'>';
+      html += '<button type="button" class="gt-quiz-miss" onclick="gtQuizToggleMissed('+i+')" style="font-size:10px;padding:3px 7px;border-radius:999px;border:1px solid var(--border);background:'+(q.missed?color:'transparent')+';color:'+(q.missed?'#fff':'var(--muted)')+';cursor:pointer;">错过</button>';
+      html += '<div id="gt-quiz-st-'+i+'" style="margin-left:auto;font-size:11px;font-weight:700;'+(st.status==='done'?'color:'+color:'color:var(--dim)')+'">'+(st.pct!==null?Math.round(st.pct*100)+'% · ':'')+labels[st.status]+'</div>';
+      html += '</div>';
+    }
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:8px;font-size:12px;flex-wrap:wrap;">';
+    html += '<span style="color:var(--muted)">平均 '+(qc.avg===null?'--':(qc.avg*100).toFixed(1)+'%')+' · 已记 '+qc.recorded+'/'+qc.n+'</span>';
+    html += '<span style="font-weight:700;color:'+color+'">→ '+qc.contrib.toFixed(2)+' / '+it.w+'%</span>';
+    html += '</div>';
+    html += '<div style="display:flex;align-items:center;gap:6px;padding-top:6px;font-size:11px;color:var(--muted);">Quiz 数量 '
+      + '<button type="button" onclick="gtQuizSetCount(-1)" style="width:24px;height:24px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;">−</button>'
+      + '<b style="color:var(--text)">'+qc.n+'</b>'
+      + '<button type="button" onclick="gtQuizSetCount(1)" style="width:24px;height:24px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;">+</button></div>';
+    html += '<div class="gt-note" style="padding:6px 0 4px;line-height:1.5;">计分：所有 quiz 等权平均 × '+it.w+'%，未做的按 0 计入最终（贡献 = 总得分率 ÷ 数量 × '+it.w+'%）。没有确认 drop-lowest / best-of 规则。来源：'+P1160_QUIZ_SOURCE+'。满分留空默认 10。</div>';
+    html += '</div>';
+    return html;
+  }
+  function gtQuizRefresh() { renderGT('phys1160'); if (typeof renderDashboard === 'function') renderDashboard(); }
+  function gtQuizToggleOpen() { var d = gtLoad(); d.p1160_quiz_open = d.p1160_quiz_open === false; gtSave(d); gtQuizRefresh(); }
+  function gtQuizToggleMissed(i) { var d = gtLoad(), k = 'p1160_q'+i; if (!d[k]) d[k] = {}; d[k].missed = !d[k].missed; gtSave(d); gtQuizRefresh(); }
+  function gtQuizSetCount(delta) { var d = gtLoad(); d.p1160_quiz_n = Math.max(1, Math.min(20, gtQuizSetN(d) + delta)); gtSave(d); gtQuizRefresh(); }
+  function gtQuizScore(el) {
+    var d = gtLoad(), k = 'p1160_q'+el.dataset.q;
+    if (!d[k]) d[k] = {};
+    d[k][el.dataset.field] = el.value;
+    gtSave(d);
+    var it = { w:10 }, qc = gtQuizSetCalc(d, 10), st = qc.quizzes[+el.dataset.q - 1];
+    var stEl = document.getElementById('gt-quiz-st-'+el.dataset.q);
+    if (stEl && st) stEl.textContent = (st.pct!==null?Math.round(st.pct*100)+'% · ':'') + ({done:'已完成',missed:'错过 · 0',upcoming:'未做 / 未开放'})[st.status];
+    gtUpdateHeader('phys1160');
+    if (typeof renderDashboard === 'function') renderDashboard();
+  }
+
   function renderGT(course) {
     var cfg = gtConfig(course);
     var el = document.getElementById('gt-'+course);
@@ -6409,6 +6511,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var it = cfg.items[i];
       if (it.mobius) {
         html += gtRenderMobius(data, cfg.color);
+      } else if (it.quizSet) {
+        html += gtRenderQuizSet(it, data, cfg.color);
       } else {
         if (course === 'comp1511' && it.id === 'c1511_labs') {
           var labsOpen = data.c1511_labs_open !== false;
