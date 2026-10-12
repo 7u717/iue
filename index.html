@@ -11,14 +11,14 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="iue"/>
   <title>iue</title>
-  <link rel="manifest" href="manifest.webmanifest?v=2026-10-13-phys1160-quizzes"/>
+  <link rel="manifest" href="manifest.webmanifest?v=2026-10-13-phys1160-apod"/>
   <link rel="apple-touch-icon" href="icons/iue-icon-180.png"/>
   <link rel="icon" type="image/png" sizes="192x192" href="icons/iue-icon-192.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="vendor/katex/katex.min.css?v=2026-10-13-phys1160-quizzes"/>
-  <script src="vendor/katex/katex.min.js?v=2026-10-13-phys1160-quizzes"></script>
-  <script src="vendor/katex/auto-render.min.js?v=2026-10-13-phys1160-quizzes"></script>
-  <script src="math1231/final-exam/questions.js?v=2026-10-13-phys1160-quizzes"></script>
+  <link rel="stylesheet" href="vendor/katex/katex.min.css?v=2026-10-13-phys1160-apod"/>
+  <script src="vendor/katex/katex.min.js?v=2026-10-13-phys1160-apod"></script>
+  <script src="vendor/katex/auto-render.min.js?v=2026-10-13-phys1160-apod"></script>
+  <script src="math1231/final-exam/questions.js?v=2026-10-13-phys1160-apod"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -3731,7 +3731,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
-  var APP_VERSION = '2026-10-13-phys1160-quizzes';
+  var APP_VERSION = '2026-10-13-phys1160-apod';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -3841,12 +3841,18 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       targetNote: 'Free Elective 放在前面最好拿高分，目标 85+ 用来拉整体 WAM。',
       source: 'Institution reference screenshot; older UNSW PHYS1160 outline differs, exact 2026 T3 Moodle may update details',
       assessments: [
-        { name:'Weekly Quizzes', weight:'10%', note:'Individual timed weekly quizzes in reference screenshot' },
+        { name:'Weekly Quizzes', weight:'10%', note:'8 quizzes × 10 marks · sum/80×10 · no drop-lowest (Moodle gradebook, PHYS1160 T3 2026)' },
         { name:'Short Report', weight:'25%', note:'Individual short written report' },
-        { name:'APOD Project', weight:'40%', note:'Project on Astronomy Picture of the Day' },
+        { name:'APOD Plan', weight:'5%', note:'Individual written plan · Turnitin DOCX · due Fri 16 Oct 2026 23:59 · marks 28 Oct (PHYS1160 Assessment Info Doc, T3 2026)' },
+        { name:'APOD Final', weight:'35%', note:'Individual written report, max 3000 words · due Fri 13 Nov 2026 23:59 · marks 27 Nov (PHYS1160 Assessment Info Doc, T3 2026)' },
         { name:'Experiment', weight:'25%', note:'Individual experiment task' }
       ],
-      rules: ['Fully online in the older UNSW outline, with no prerequisites or co-requisites listed.', 'Treat as WAM booster only after confirming 2026 T3 Moodle dates and exact task format.']
+      apodImages: [
+        { date:'2025-04-14', url:'https://apod.nasa.gov/apod/ap250414.html' },
+        { date:'2023-03-29', url:'https://apod.nasa.gov/apod/ap230329.html' },
+        { date:'2012-04-24', url:'https://apod.nasa.gov/apod/ap120424.html' }
+      ],
+      rules: ['APOD total 40% (Plan 5% + Final 35%), individual, written only; choose ONE of three allocated APOD images (PHYS1160 Assessment Info Doc, T3 2026).', 'Fully online in the older UNSW outline, with no prerequisites or co-requisites listed.', 'Treat as WAM booster only after confirming 2026 T3 Moodle dates and exact task format.']
     },
     PHYS1131: {
       target:'80+',
@@ -5685,6 +5691,13 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     { name: 'MATH1231 Lab Test 2',            date: '2026-07-27T15:00:00+10:00', tag: '15%', color: 'var(--math-color)', gtId: 'mg_lt2', loc: 'H13 Lawrence East M020', nav: 'https://maps.apple.com/?q=UNSW+H13+Lawrence+East+Building+Kensington', examTable:true, durationMin:60 },
     { name: 'PHYS1131 Test 1',                date: '2026-10-29T17:00:00+11:00', term:'2026 T3', tag: 'Test', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_t1', loc:'OMB 114', nav:'https://maps.apple.com/?q=Old+Main+Building+UNSW+Kensington', examTable:true, durationMin:40 },
     { name: 'PHYS1131 Test 2',                date: '2026-11-19T17:00:00+11:00', term:'2026 T3', tag: 'Test', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_t2', loc:'OMB 114', nav:'https://maps.apple.com/?q=Old+Main+Building+UNSW+Kensington', examTable:true, durationMin:40 },
+    { name: 'PHYS1160 APOD Plan',             date: '2026-10-16T23:59:00+11:00', term:'2026 T3', tag: '5%',  color: 'var(--phys-color)', course:'phys1160', gtId:'p1160_apod_plan' },
+    { name: 'PHYS1160 APOD Final',            date: '2026-11-13T23:59:00+11:00', term:'2026 T3', tag: '35%', color: 'var(--phys-color)', course:'phys1160', gtId:'p1160_apod_final' },
+    { name: 'PHYS1160 Quiz 4',                date: '2026-10-17T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:4 },
+    { name: 'PHYS1160 Quiz 5',                date: '2026-10-31T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:5 },
+    { name: 'PHYS1160 Quiz 6',                date: '2026-11-07T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:6 },
+    { name: 'PHYS1160 Quiz 7',                date: '2026-11-14T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:7 },
+    { name: 'PHYS1160 Quiz 8',                date: '2026-11-21T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:8 },
     { name: 'MMAN1130 MANUF2 工艺单',         date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf2' },
     { name: 'MMAN1130 MANUF3 CAM',            date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf3' },
     { name: 'MATH1231 Assignment',            date: '2026-08-04T23:59:00+10:00', tag: '10%', color: 'var(--math-color)', gtId: 'mg_asgn'},
@@ -5709,7 +5722,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function deadlineIsDone(d, gtData, mobiusDone) {
-    return !!((d.gtId && gtData[d.gtId] && gtData[d.gtId].done) || (d.mobiusWeek && mobiusDone[String(d.mobiusWeek)]));
+    return !!((d.gtId && gtData[d.gtId] && gtData[d.gtId].done) || (d.mobiusWeek && mobiusDone[String(d.mobiusWeek)]) || (d.quizNo && gtQuizState(gtData['p1160_q'+d.quizNo]).status !== 'upcoming'));
   }
 
   function deadlineTerm(d) {
@@ -5954,7 +5967,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       items: [
         { id:'p1160_quiz', label:'Weekly Quizzes', note:'10% · 8 次 × 10 分 · 总分/80×10 · 不去最低', w:10, quizSet:true },
         { id:'p1160_report', label:'Short Report', note:'25% · Date pending', w:25 },
-        { id:'p1160_apod', label:'APOD Project', note:'40% · Date pending', w:40 },
+        { id:'p1160_apod_plan', label:'APOD Plan', note:'5% · 个人书面 · Turnitin DOCX · 截止 16/10/2026 23:59 · 28/10 出分', w:5, date:'2026-10-16T23:59:00+11:00' },
+        { id:'p1160_apod_final', label:'APOD Final', note:'35% · 个人书面 · ≤3000 词 · 截止 13/11/2026 23:59 · 27/11 出分', w:35, date:'2026-11-13T23:59:00+11:00' },
         { id:'p1160_exp', label:'Experiment', note:'25% · Date pending', w:25 }
       ]
     }
@@ -6546,6 +6560,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         }
         html += '</div>';
       }
+    }
+    if (course === 'phys1160') {
+      var imgs = (courseMeta('PHYS1160').apodImages || []);
+      if (imgs.length) html += '<div class="course-preview-rule" style="margin-top:10px;line-height:1.7;"><span style="color:'+cfg.color+';font-weight:800;">APOD 分配图片</span>（三选一）· '
+        + imgs.map(function(im){ return '<a href="'+im.url+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:'+cfg.color+';text-decoration:underline;white-space:nowrap;">'+im.date+'</a>'; }).join(' · ')
+        + '<br><span class="gt-note">来源：PHYS1160 Assessment Info Doc, T3 2026</span></div>';
     }
     el.innerHTML = html;
   }
@@ -8144,7 +8164,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     visibleDeadlines().forEach(function(d) {
       var diff = new Date(d.date) - now;
       var hours = diff / (1000*60*60);
-      var done = d.gtId && data[d.gtId] && data[d.gtId].done;
+      var done = (d.gtId && data[d.gtId] && data[d.gtId].done) || (d.quizNo && gtQuizState(data['p1160_q'+d.quizNo]).status !== 'upcoming');
       if (!done && hours > 0 && hours <= 72) {
         urgentCount++;
       }
