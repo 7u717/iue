@@ -3993,6 +3993,22 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
   applyBakedProgress();
   // ===============================================================================
+
+  var ACCESS_SALT = '280edd9a9fe5cc68317ea42f6962f34f';
+  var ACCESS_HASH = '08495ceb974d3988f21295075f72014b457a3117b2fd02c0e07bec027a1626b2';
+  function checkAccessCode(ev) {
+    if (ev) ev.preventDefault();
+    var input = document.getElementById('access-input');
+    var out = document.getElementById('access-result');
+    var value = (input && input.value || '').trim();
+    if (!value || !window.crypto || !crypto.subtle) { if (out) out.textContent = value ? '此浏览器不支持核对' : ''; return; }
+    crypto.subtle.digest('SHA-256', new TextEncoder().encode(ACCESS_SALT + value)).then(function(buf) {
+      var hex = Array.prototype.map.call(new Uint8Array(buf), function(b){ return ('0' + b.toString(16)).slice(-2); }).join('');
+      var ok = hex === ACCESS_HASH;
+      if (out) { out.textContent = ok ? '✓ 访问码正确' : '✗ 访问码不对'; out.style.color = ok ? '#d7f5e3' : '#ffb4a8'; }
+      if (ok && input) input.value = '';
+    });
+  }
   var APP_VERSION = '2026-10-14-polish';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
@@ -8920,13 +8936,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   <div class="profile-info-row">
     <div>
       <div class="profile-label">访问码</div>
-      <div class="profile-value">bynciw-9najji-wypgeZ</div>
+      <div class="profile-value" id="access-mask" style="letter-spacing:.08em;">••••••-••••••-••••••</div>
+      <form id="access-check" onsubmit="checkAccessCode(event)" style="display:flex;gap:8px;margin-top:8px;"><input id="access-input" class="sync-input" type="password" autocomplete="off" placeholder="输入访问码核对" style="flex:1;margin:0;"><button class="sync-btn" type="submit">核对</button></form>
+      <div id="access-result" style="font-size:12px;color:var(--muted);margin-top:6px;min-height:16px;"></div>
     </div>
   </div>
   <div class="profile-info-row" style="border-bottom:none;">
     <div>
       <div class="profile-label">UNSW 邮箱</div>
-      <div class="profile-value">z5678040@ad.unsw.edu.au</div>
+      <div class="profile-value">z5•••••@ad.unsw.edu.au</div>
     </div>
   </div>
   <div style="font-size:12px;color:var(--muted);margin-top:16px;margin-bottom:6px;">临时备忘录</div>
