@@ -3764,7 +3764,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
   applyBakedProgress();
   // ===============================================================================
-  var APP_VERSION = '2026-10-13-comp-lab04';
+  var APP_VERSION = '2026-10-13-comp-labdone';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5727,8 +5727,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     { name: 'PHYS1160 APOD Plan',             date: '2026-10-16T23:59:00+11:00', term:'2026 T3', tag: '5%',  color: 'var(--phys-color)', course:'phys1160', gtId:'p1160_apod_plan' },
     { name: 'PHYS1160 APOD Final',            date: '2026-11-13T23:59:00+11:00', term:'2026 T3', tag: '35%', color: 'var(--phys-color)', course:'phys1160', gtId:'p1160_apod_final' },
     { name: 'PHYS1160 Quiz 4',                date: '2026-10-17T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:4 },
-    { name: 'COMP1511 Lab 04',                date: '2026-10-13T18:00:00+11:00', term:'2026 T3', tag: 'Lab', color: 'var(--engg-color)', course:'comp1511' },
-    { name: 'COMP1511 Lab 05',                date: '2026-10-26T18:00:00+11:00', term:'2026 T3', tag: 'Lab · Wk5 check-off', color: 'var(--engg-color)', course:'comp1511' },
+    { name: 'COMP1511 Lab 04',                date: '2026-10-13T18:00:00+11:00', term:'2026 T3', tag: 'Lab', color: 'var(--engg-color)', course:'comp1511', compWeek:4 },
+    { name: 'COMP1511 Lab 05',                date: '2026-10-26T18:00:00+11:00', term:'2026 T3', tag: 'Lab · Wk5 check-off', color: 'var(--engg-color)', course:'comp1511', compWeek:5 },
     { name: 'COMP1511 Assignment 1 · CS Submarine', date: '2026-10-26T18:00:00+11:00', term:'2026 T3', tag: '20% · late −5%/day', color: 'var(--engg-color)', course:'comp1511', gtId:'c1511_a1' },
     { name: 'PHYS1160 Quiz 5',                date: '2026-10-31T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:5 },
     { name: 'PHYS1160 Quiz 6',                date: '2026-11-07T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:6 },
@@ -5758,7 +5758,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function deadlineIsDone(d, gtData, mobiusDone) {
-    return !!((d.gtId && gtData[d.gtId] && gtData[d.gtId].done) || (d.mobiusWeek && mobiusDone[String(d.mobiusWeek)]) || (d.quizNo && gtQuizState(gtData['p1160_q'+d.quizNo]).status !== 'upcoming'));
+    return !!((d.gtId && gtData[d.gtId] && gtData[d.gtId].done) || (d.mobiusWeek && mobiusDone[String(d.mobiusWeek)]) || (d.quizNo && gtQuizState(gtData['p1160_q'+d.quizNo]).status !== 'upcoming') || (d.compWeek && (function(w){ return !!(w && w.checkoff && w.core && w.submit); })(compLoad()['w'+d.compWeek])));
   }
 
   function deadlineTerm(d) {
