@@ -2078,6 +2078,140 @@
   .v2-tt-queue .dash-queue-time span{font-size:11px;}
   .v2-tt-empty{color:var(--muted);font-size:13px;padding:6px 0;text-align:center;}
 </style>
+<style id="iue-polish">
+  /* ===== polish pass ===== */
+  :root{--hair:rgba(255,255,255,.08);--fill-1:rgba(255,255,255,.04);--fill-2:rgba(255,255,255,.07);--ok:#d7f5e3;--warn:#ffb4a8;}
+  /* 1 · seamless top glow: start under the header hairline, soft on every edge */
+  #sec-dashboard .v2-hero{overflow:visible;}
+  #sec-dashboard .v2-hero::before{inset:auto;top:-16px;left:-16px;right:-16px;height:340px;
+    background:radial-gradient(ellipse 62% 100% at 50% 0,rgba(147,197,253,.13),rgba(147,197,253,.05) 45%,transparent 72%);}
+  #sec-dashboard .v2-hero > *{position:relative;}
+  .v2-hero{padding:44px 16px 36px;}
+  .v2-hero-num{font-size:120px;font-weight:200;}
+  .v2-hero-unit{letter-spacing:.12em;}
+  .v2-hero-title{font-size:21px;margin-top:20px;}
+  .v2-hero-actions{margin-top:28px;gap:10px;}
+  .v2-btn{height:42px;padding:0 22px;transition:transform .18s var(--v2-ease),background-color .2s,opacity .18s;}
+  .v2-btn:not(.primary){background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12);}
+  /* course progress strip */
+  #v2-course-strip{padding:28px 0 12px;}
+  .v2-course-row{grid-template-columns:92px 1fr 64px;padding:14px 8px;}
+  .v2-course-code{font-size:12px;letter-spacing:.08em;color:rgba(255,255,255,.88);}
+  .v2-course-bar{height:3px;background:rgba(255,255,255,.08);}
+  .v2-course-score{font-size:16px;}
+  /* tab bar */
+  .tab[class*="active"]::after{bottom:7px;width:4px;height:4px;}
+  .tab .nav-icon{opacity:.38;}
+  .tab-bar .tab.tab-main{transform:none!important;}
+  /* course switcher: thin indicator */
+  .course-switch{position:relative;color:rgba(255,255,255,.42)!important;transition:color .2s!important;}
+  .course-switch.active{color:#fff!important;}
+  .course-switch.active::after,.course-switch::after{height:2px!important;border-radius:2px!important;background:#fff!important;box-shadow:none!important;}
+  .course-switch:not(.active)::after{opacity:0!important;}
+  /* course header */
+  .course-header{padding:28px 16px 24px!important;background:transparent!important;border:0!important;border-bottom:1px solid var(--hair)!important;border-radius:0!important;}
+  .course-header .course-icon{opacity:.85;}
+  .course-code{font-size:30px!important;}
+  .topic-card{border-radius:18px!important;}
+  .group-label{text-align:center;margin:28px 0 12px!important;}
+  /* generic assessment rows */
+  .gt-row{gap:14px!important;padding:14px 4px!important;}
+  .gt-check{width:22px!important;height:22px!important;border-radius:50%!important;border:1.5px solid rgba(255,255,255,.22)!important;background:transparent!important;font-size:12px!important;color:#000!important;transition:background-color .2s,border-color .2s,transform .2s var(--v2-ease);}
+  .gt-check.done{background:#fff!important;border-color:#fff!important;}
+  .gt-name{font-size:14px!important;font-weight:600!important;}
+  .gt-note{font-size:11.5px!important;color:var(--muted)!important;line-height:1.45!important;margin-top:3px;}
+  .gt-weight{font-size:13px!important;font-weight:400!important;color:rgba(255,255,255,.55)!important;font-variant-numeric:tabular-nums;min-width:40px;text-align:right;}
+  .gt-status{display:none!important;}
+  .gt-row:active{transform:none!important;background:rgba(255,255,255,.03);}
+  .comp-expand-row .comp-expand-chevron{color:rgba(255,255,255,.4);transition:transform .3s var(--v2-ease);}
+  .comp-expand-row.open .comp-expand-chevron{transform:rotate(90deg);}
+  .comp-expand-panel{padding:4px 0 12px;}
+  /* shared tactile primitives */
+  .px-summary{text-align:center;padding:8px 0 22px;border-bottom:1px solid var(--hair);margin-bottom:6px;}
+  .px-summary-num,.cx-summary-num{font-size:64px;font-weight:200;line-height:1;letter-spacing:-.04em;color:#fff;margin-top:8px;font-variant-numeric:tabular-nums;}
+  .px-summary-num span,.cx-summary-num span{font-size:24px;color:rgba(255,255,255,.35);letter-spacing:0;margin-left:2px;}
+  .px-summary-sub,.cx-summary-sub{font-size:12px;color:var(--muted);margin-top:10px;letter-spacing:.04em;}
+  .px-gates{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:22px;}
+  .px-gate{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 4px 12px;border-radius:14px;background:var(--fill-1);}
+  .px-gate i{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;}
+  .px-gate.pass i{background:#fff;border-color:#fff;}
+  .px-gate.warn i{border-color:var(--warn);}
+  .px-gate i svg,.cx-tog svg{width:12px;height:12px;fill:none;stroke:#000;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+  .px-gate b{font-size:12px;font-weight:600;color:#fff;letter-spacing:.02em;}
+  .px-gate span{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .px-block{padding:20px 0;border-bottom:1px solid var(--hair);}
+  .px-block:last-child{border-bottom:0;padding-bottom:4px;}
+  .px-block-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;}
+  .px-block-title{font-size:15px;font-weight:600;color:#fff;letter-spacing:-.01em;}
+  .px-block-note{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.4;}
+  .px-state{font-variant-numeric:tabular-nums;white-space:nowrap;color:rgba(255,255,255,.4);font-size:13px;line-height:1;padding-top:2px;}
+  .px-state b{font-size:22px;font-weight:300;color:#fff;}
+  .px-state.pass b{color:var(--ok);}
+  .px-state.warn b{color:var(--warn);}
+  /* lab stepper: one continuous capsule */
+  .px-steps{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:4px;border-radius:14px;background:var(--fill-1);box-shadow:inset 0 0 0 1px var(--hair);}
+  .px-step{position:relative;height:40px;border:0;border-radius:10px;background:transparent;color:rgba(255,255,255,.4);font:500 14px var(--v2-font);font-variant-numeric:tabular-nums;cursor:pointer;transition:background-color .25s var(--v2-ease),color .25s,transform .18s var(--v2-ease)!important;}
+  .px-step.on{background:#fff;color:#000;}
+  .px-step.goal:not(.on)::after{content:"";position:absolute;left:50%;bottom:6px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:rgba(255,255,255,.35);}
+  .px-step:active{transform:scale(.92)!important;opacity:1!important;}
+  .px-steps-legend{display:flex;justify-content:space-between;margin-top:10px;font-size:11px;color:rgba(255,255,255,.35);padding:0 4px;}
+  /* segmented control */
+  .px-field{display:grid;grid-template-columns:40px 1fr;align-items:center;gap:12px;margin-top:10px;}
+  .px-field-label{font-size:11px;color:var(--muted);letter-spacing:.04em;}
+  .px-seg{position:relative;display:grid;gap:4px;padding:4px;border-radius:12px;background:var(--fill-1);box-shadow:inset 0 0 0 1px var(--hair);}
+  .px-seg-5{grid-template-columns:repeat(5,1fr);}
+  .px-seg-3{grid-template-columns:repeat(3,1fr);}
+  .px-seg-opt{height:34px;border:0;border-radius:9px;background:transparent;color:rgba(255,255,255,.55);font:500 13px var(--v2-font);font-variant-numeric:tabular-nums;cursor:pointer;transition:background-color .25s var(--v2-ease),color .25s,transform .18s var(--v2-ease)!important;}
+  .px-seg-opt.on{background:#fff;color:#000;font-weight:600;}
+  .px-seg-opt.on.low{background:var(--warn);}
+  .px-seg-opt.locked{opacity:.3;cursor:default;}
+  .px-seg-opt:active{transform:scale(.94)!important;opacity:1!important;}
+  .px-seg-mark{display:none;}
+  .px-foot{margin-top:12px;font-size:11px;color:rgba(255,255,255,.38);text-align:center;}
+  /* COMP1511 check-off matrix */
+  .cx-shell{padding:4px 0 0;}
+  .cx-summary{text-align:center;padding:12px 0 20px;}
+  .cx-bar{height:3px;max-width:200px;margin:16px auto 0;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;}
+  .cx-bar i{display:block;height:100%;background:#fff;border-radius:3px;transition:width .5s var(--v2-ease);}
+  .cx-table{border-radius:14px;background:var(--fill-1);box-shadow:inset 0 0 0 1px var(--hair);padding:4px 0;}
+  .cx-row{display:grid;grid-template-columns:44px repeat(4,1fr) 36px;align-items:center;height:48px;padding:0 6px;position:relative;}
+  .cx-row + .cx-row:not(.cx-head)::before{content:"";position:absolute;left:12px;right:12px;top:0;height:1px;background:rgba(255,255,255,.05);}
+  .cx-head{height:34px;}
+  .cx-col{text-align:center;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:600;}
+  .cx-wk{font-size:13px;font-weight:600;color:rgba(255,255,255,.75);font-variant-numeric:tabular-nums;text-align:center;}
+  .cx-row.future .cx-wk{color:rgba(255,255,255,.35);}
+  .cx-row.now{background:rgba(255,255,255,.045);border-radius:10px;margin:0 4px;padding:0 2px;}
+  .cx-row.now .cx-wk{color:#fff;}
+  .cx-row.now::before,.cx-row.now + .cx-row::before{display:none;}
+  .cx-cell{display:flex;justify-content:center;}
+  .cx-tog{width:28px;height:28px;padding:0;border-radius:50%;border:1.5px solid rgba(255,255,255,.18);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background-color .22s var(--v2-ease),border-color .22s,transform .2s var(--v2-ease)!important;}
+  .cx-tog svg{opacity:0;transform:scale(.6);transition:opacity .2s,transform .3s var(--v2-ease);}
+  .cx-tog.on{background:#fff;border-color:#fff;}
+  .cx-tog.on svg{opacity:1;transform:none;}
+  .cx-tog.bonus{border-style:dashed;border-color:rgba(255,255,255,.16);}
+  .cx-tog.bonus.on{border-style:solid;background:rgba(255,255,255,.55);border-color:transparent;}
+  .cx-tog:active{transform:scale(.86)!important;opacity:1!important;}
+  .cx-mk{text-align:right;font-size:13px;font-weight:500;color:var(--ok);font-variant-numeric:tabular-nums;padding-right:4px;}
+  .cx-foot{font-size:11px;color:rgba(255,255,255,.38);text-align:center;margin-top:12px;line-height:1.5;padding:0 8px;}
+  /* PHYS1160 panels in the same language */
+  .phys-gate-panel{background:var(--fill-1)!important;border:0!important;box-shadow:inset 0 0 0 1px var(--hair)!important;border-radius:16px!important;}
+  .phys-gate-panel:active{transform:none!important;}
+  .phys-gate-status{border-radius:8px!important;}
+  /* link cards */
+  a.course-jump-button{border-radius:16px!important;background:var(--surface)!important;border:1px solid var(--hair)!important;box-shadow:none!important;}
+  /* countdown cards */
+  .cd-card,.countdown-card{border-radius:16px!important;box-shadow:none!important;}
+  /* courses hub: fewer pills */
+  .course-chip{background:transparent!important;border:0!important;padding:0!important;color:var(--muted)!important;font-size:11px!important;font-weight:500!important;}
+  .course-chip + .course-chip::before{content:"·";margin:0 6px;color:rgba(255,255,255,.25);}
+  .course-tile-top > :not(.course-tile-icon){background:transparent!important;border:0!important;color:var(--muted)!important;}
+  .dash-pill{border:0!important;color:var(--muted)!important;font-weight:500!important;}
+  .course-filter{background:transparent!important;border:0!important;color:rgba(255,255,255,.45)!important;box-shadow:none!important;font-weight:500!important;}
+  .course-filter.active{background:rgba(255,255,255,.1)!important;color:#fff!important;}
+  .course-action-btn{background:transparent!important;border:1px solid var(--hair)!important;box-shadow:none!important;color:rgba(255,255,255,.8)!important;}
+  .course-tile,.course-library-row{box-shadow:none!important;border:1px solid var(--hair)!important;background:var(--surface)!important;}
+  .course-tile-code{color:#fff!important;}
+</style>
 </head>
 <body>
 
@@ -2103,18 +2237,18 @@
 </header>
 
 <div class="tab-bar">
-  <button class="tab" onclick="showCourse('dashboard')" id="tab-dashboard" aria-label="总览">
-    <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M4.5 15.5a7.5 7.5 0 0 1 15 0"></path>
-      <path d="M12 15.5 15.6 10"></path>
-      <path d="M4.5 19h15"></path>
-    </svg>
-  </button>
-  <button class="tab tab-main active-math" onclick="showCourse('timetable')" id="tab-timetable" aria-label="课表">
+  <button class="tab" onclick="showCourse('timetable')" id="tab-timetable" aria-label="课表">
     <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
       <rect x="4" y="5.5" width="16" height="14" rx="2.4"></rect>
       <path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"></path>
       <path d="M8 13.5h3M8 16.3h6"></path>
+    </svg>
+  </button>
+  <button class="tab tab-main active-math" onclick="showCourse('dashboard')" id="tab-dashboard" aria-label="总览">
+    <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4.5 15.5a7.5 7.5 0 0 1 15 0"></path>
+      <path d="M12 15.5 15.6 10"></path>
+      <path d="M4.5 19h15"></path>
     </svg>
   </button>
   <button class="tab" onclick="showDefaultCourse()" id="tab-courses" aria-label="专业课">
@@ -2128,7 +2262,7 @@
 </div>
 
 <!-- ===== DASHBOARD ===== -->
-<div class="course-section" id="sec-dashboard">
+<div class="course-section active" id="sec-dashboard">
   <div style="padding-top:4px;">
     <div class="dash-feed">
       <div class="dash-post">
@@ -2272,7 +2406,7 @@
 </div>
 
 <!-- ===== TIMETABLE ===== -->
-<div class="course-section active" id="sec-timetable">
+<div class="course-section" id="sec-timetable">
   <div class="v2-tt-page" id="v2-tt-page"></div>
 </div>
 <!-- IELTS removed from v2 UI; DOM kept hidden so legacy render calls stay harmless -->
@@ -3859,7 +3993,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
   applyBakedProgress();
   // ===============================================================================
-  var APP_VERSION = '2026-10-13-v2-live';
+  var APP_VERSION = '2026-10-14-polish';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -4563,7 +4697,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function toggleMyPlan() {
     var active = document.querySelector('.course-section.active');
-    showCourse(active && active.id === 'sec-myplan' ? 'timetable' : 'myplan');
+    showCourse(active && active.id === 'sec-myplan' ? 'dashboard' : 'myplan');
   }
 
   var lastToggledCourseId = null;
@@ -4908,14 +5042,14 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       _secs[_i].style.opacity = '';
     }
     var _tabs = document.querySelectorAll('.tab');
-    for (var _j=0; _j<_tabs.length; _j++) { _tabs[_j].className = _tabs[_j].id === 'tab-timetable' ? 'tab tab-main' : 'tab'; }
+    for (var _j=0; _j<_tabs.length; _j++) { _tabs[_j].className = _tabs[_j].id === 'tab-dashboard' ? 'tab tab-main' : 'tab'; }
     var planButton = document.querySelector('.header-plan-button');
     if (planButton) planButton.classList.toggle('active', course === 'myplan');
     var activeSection = document.getElementById('sec-' + course);
     if (!activeSection) return;
     activeSection.classList.add('active');
     if (previousCourse && previousCourse !== course && !options.preserveScroll && !options.instantScroll) {
-      var order = ['dashboard','timetable','countdown'].concat(swipeOrder(), ['myplan']);
+      var order = ['timetable','dashboard','countdown'].concat(swipeOrder(), ['myplan']);
       var previousIndex = order.indexOf(previousCourse);
       var nextIndex = order.indexOf(course);
       activeSection.classList.add(nextIndex >= previousIndex ? 'course-enter-forward' : 'course-enter-back');
@@ -4935,7 +5069,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var tab = document.getElementById('tab-' + tabCourse);
     var colorMap = { dashboard: 'active-math', timetable: 'active-math', countdown: 'active-engg', courses: 'active-engg', math: 'active-math', mman: 'active-mman', engg: 'active-engg', myplan: 'active-math' };
     if (tab) {
-      if (tabCourse === 'timetable') tab.className = 'tab tab-main';
+      if (tabCourse === 'dashboard') tab.className = 'tab tab-main';
       tab.classList.add(colorMap[course] || colorMap[tabCourse] || 'active-math');
     }
     if (course === 'courses') {
@@ -5157,7 +5291,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var current = swipeStartCourse || currentSwipeCourse();
     if (current === 'myplan') {
       suppressNextSwipeClick = true;
-      animateCourseIn('timetable', direction);
+      animateCourseIn('dashboard', direction);
       swipeActiveSection = null;
       swipeHorizontal = false;
       setTimeout(function(){ suppressNextSwipeClick = false; }, 260);
@@ -5681,29 +5815,40 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return { secured:Math.min(15, secured), buffer:buffer };
   }
 
+  function compTermWeek(now) {
+    var start = new Date('2026-09-14T00:00:00+10:00');
+    var d = Math.floor(((now || new Date()) - start) / (7*24*3600*1000)) + 1;
+    return d;
+  }
+
   function comp1511LabPlanMarkup() {
     var values = compLoad();
     var stats = compLabStats(values);
-    var html = '<div class="comp-lab-shell compact">'
-      + '<div class="comp-lab-head">'
-      + '<div class="comp-lab-score"><div><strong>'+stats.secured+'/15</strong><span>lab component plan</span></div><div><strong>'+stats.buffer+'</strong><span>bonus buffer</span></div></div>'
-      + '<div class="comp-lab-progress"><div class="comp-lab-fill" style="width:'+(stats.secured/15*100).toFixed(0)+'%;"></div></div>'
-      + '<div class="comp-lab-note" style="margin-top:9px;">Problem Set 1 是练流程；后面的 problem sets 总分 capped at 15。一星/二星是主线，三星题只是保险分。</div>'
-      + '</div>'
-      + '<div class="comp-week-grid">';
+    var nowWeek = compTermWeek(new Date());
+    var cols = [
+      { key:'checkoff', label:'Check' },
+      { key:'core', label:'Core' },
+      { key:'submit', label:'Give' },
+      { key:'bonus', label:'Bonus' }
+    ];
+    var html = '<div class="cx-shell">'
+      + '<div class="cx-summary"><div class="cx-summary-num">'+stats.secured+'<span>/15</span></div>'
+      + '<div class="cx-summary-sub">lab 分已拿到'+(stats.buffer ? ' · 附加题 '+stats.buffer+' 周' : '')+'</div>'
+      + '<div class="cx-bar"><i style="width:'+(stats.secured/15*100).toFixed(1)+'%"></i></div></div>'
+      + '<div class="cx-table">'
+      + '<div class="cx-row cx-head"><div class="cx-wk"></div>'+cols.map(function(c){ return '<div class="cx-col">'+c.label+'</div>'; }).join('')+'<div class="cx-mk"></div></div>';
     COMP1511_LAB_WEEKS.forEach(function(week) {
       var state = compWeekState(values, week);
       var mark = compWeekSecured(state);
-      html += '<div class="comp-week-tile">'
-        + '<div class="comp-week-title"><span>W'+week+'</span><span class="comp-week-mark">'+mark+'/2</span></div>'
-        + '<div class="comp-week-actions">'
-        + ['checkoff','core','bonus','submit'].map(function(key) {
-          var label = {checkoff:'chk', core:'core', bonus:'3dot', submit:'give'}[key];
-          return '<button class="comp-week-action '+(state[key] ? 'active' : '')+'" onclick="compToggleStage('+week+',\''+key+'\')">'+label+'</button>';
+      var cls = (week === nowWeek ? ' now' : '') + (week > nowWeek ? ' future' : '') + (mark ? ' secured' : '');
+      html += '<div class="cx-row'+cls+'"><div class="cx-wk">W'+week+'</div>'
+        + cols.map(function(c){
+          var on = !!state[c.key];
+          return '<div class="cx-cell"><button class="cx-tog '+(on ? 'on' : '')+(c.key === 'bonus' ? ' bonus' : '')+'" aria-pressed="'+on+'" aria-label="W'+week+' '+c.label+'" onclick="compToggleStage('+week+',\''+c.key+'\')">'+PX_CHECK+'</button></div>';
         }).join('')
-        + '</div></div>';
+        + '<div class="cx-mk">'+(mark ? '+'+mark : '')+'</div></div>';
     });
-    html += '</div></div>';
+    html += '</div><div class="cx-foot">Check-off + Core + Give 都完成 = 本周 2 分 · 总分上限 15 · Bonus 只是保险</div></div>';
     return html;
   }
 
@@ -6207,7 +6352,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         if (qc.recorded < qc.n && !nextItem) nextItem = it;
       } else {
         var d = data[it.id] || {};
-        if (d.done) {
+        if (it.id === 'c1511_labs' && !d.done && typeof compLabStats === 'function') {
+          var ls = compLabStats(compLoad());
+          total += Math.min(it.w, ls.secured); doneW += Math.min(it.w, ls.secured);
+          if (ls.secured < it.w && !nextItem) nextItem = it;
+        } else if (d.done) {
           total += (d.s && d.m && +d.m > 0) ? (+d.s / +d.m) * it.w : it.w;
           doneW += it.w;
         } else if (!nextItem) {
@@ -6423,26 +6572,33 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   function gtPhys1131TestText(score, known, attempt) {
     if (!known) return '未记录';
-    if (score >= 2) return score + '/4 · full';
-    return score + '/4 · retake ' + Math.min(3, (attempt || 1) + 1);
+    if (score >= 2) return '通过';
+    return '需重考';
   }
 
+  var PX_CHECK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.3 12.5 4.9"/></svg>';
+
   function gtPhys1131Row(id, label, note, score, known, pass, attempt, color) {
-    return '<div class="phys-gate-panel">'
-      + '<div class="phys-gate-main"><div>'
-      + '<div class="phys-gate-label">'+label+'</div>'
-      + '<div class="phys-gate-note">'+note+'</div>'
-      + '</div><div class="phys-gate-status '+(pass ? 'pass' : '')+'">'+gtPhys1131TestText(score, known, attempt)+'</div></div>'
-      + '<div class="phys-attempt-grid">'
+    var state = known ? (pass ? 'pass' : 'warn') : '';
+    return '<div class="px-block">'
+      + '<div class="px-block-head"><div><div class="px-block-title">'+label+'</div><div class="px-block-note">'+note+'</div></div>'
+      + '<div class="px-state '+state+'">'+(known ? '<b>'+score+'</b><span>/4</span>' : '<span>—</span>')+'</div></div>'
+      + '<div class="px-field"><div class="px-field-label">得分</div>'
+      + '<div class="px-seg px-seg-5" role="radiogroup">'
+      + [0,1,2,3,4].map(function(n){
+        var on = known && score === n;
+        return '<button class="px-seg-opt '+(on ? 'on ' : '')+(n < 2 ? 'low' : '')+'" role="radio" aria-checked="'+on+'" onclick="gtPhysSetScore(\''+id+'\','+n+')">'+n+'</button>';
+      }).join('')
+      + '<i class="px-seg-mark" style="left:40%"></i></div></div>'
+      + '<div class="px-field"><div class="px-field-label">尝试</div>'
+      + '<div class="px-seg px-seg-3" role="radiogroup">'
       + [1,2,3].map(function(n){
         var locked = n > 1 && !known;
-        return '<button class="phys-attempt-dot '+(attempt === n ? 'active' : '')+' '+(locked ? 'locked' : '')+'" onclick="gtPhysSetAttempt(\''+id+'\','+n+')">A'+n+'</button>';
+        var on = attempt === n;
+        return '<button class="px-seg-opt '+(on ? 'on ' : '')+(locked ? 'locked' : '')+'" role="radio" aria-checked="'+on+'"'+(locked ? ' disabled' : '')+' onclick="gtPhysSetAttempt(\''+id+'\','+n+')">'+(n === 1 ? '首考' : '重考 '+(n-1))+'</button>';
       }).join('')
-      + '</div>'
-      + '<div class="phys-score-grid">'
-      + [0,1,2,3,4].map(function(n){ return '<button class="phys-score-dot '+(known && score === n ? 'active' : '')+'" onclick="gtPhysSetScore(\''+id+'\','+n+')">'+n+'</button>'; }).join('')
-      + '</div>'
-      + '<div class="phys-gate-foot">'+(known ? (pass ? '2/4 or above: full credit.' : 'Below 2/4: keep this marked for retake.') : 'Tap the score after the attempt.')+'</div>'
+      + '</div></div>'
+      + '<div class="px-foot">'+(known ? (pass ? '≥ 2/4，满分通过' : '低于 2/4，记得报名重考') : '考完点一下分数即可')+'</div>'
       + '</div>';
   }
 
@@ -6451,26 +6607,33 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var color = cfg.color || courseColor(course);
     var t1 = data.p1131_t1 || {};
     var t2 = data.p1131_t2 || {};
-    var html = '<div class="competency-head">'
-      + '<div class="competency-top">'
-      + '<div><div class="competency-code">PHYS1131 tracker</div>'
-      + '<div class="competency-sub">Labs + Test hurdles · pass/fail credit</div></div>'
-      + '<div class="competency-status-pill">'+calc.passed+'/3 passed</div>'
+    var gates = [
+      { label:'Labs', pass:calc.labPass, known:false, value:calc.labs+'/6' },
+      { label:'Test 1', pass:calc.t1Pass, known:calc.t1Known, value:calc.t1Known ? calc.t1Score+'/4' : '—' },
+      { label:'Test 2', pass:calc.t2Pass, known:calc.t2Known, value:calc.t2Known ? calc.t2Score+'/4' : '—' }
+    ];
+    var html = '<div class="px-summary">'
+      + '<div class="v2-kicker">Hurdles</div>'
+      + '<div class="px-summary-num">'+calc.passed+'<span>/3</span></div>'
+      + '<div class="px-summary-sub">'+(calc.passed === 3 ? '全部达标' : (calc.nextItem ? '下一关 · '+calc.nextItem.label : ''))+'</div>'
+      + '<div class="px-gates">'
+      + gates.map(function(g){
+        return '<div class="px-gate '+(g.pass ? 'pass' : (g.known ? 'warn' : ''))+'"><i>'+(g.pass ? PX_CHECK : '')+'</i><b>'+g.label+'</b><span>'+g.value+'</span></div>';
+      }).join('')
+      + '</div></div>';
+    var labs = calc.labs;
+    html += '<div class="px-block">'
+      + '<div class="px-block-head"><div><div class="px-block-title">Labs</div><div class="px-block-note">完成 5 / 6 次即满分，少于 5 次为 0</div></div>'
+      + '<div class="px-state '+(calc.labPass ? 'pass' : '')+'"><b>'+labs+'</b><span>/6</span></div></div>'
+      + '<div class="px-steps" role="group" aria-label="Labs completed">'
+      + [1,2,3,4,5,6].map(function(n){
+        return '<button class="px-step '+(labs >= n ? 'on ' : '')+(n === 5 ? 'goal' : '')+'" aria-pressed="'+(labs >= n)+'" aria-label="Lab '+n+'" onclick="gtPhysSetLabCount('+n+')"><span>'+n+'</span></button>';
+      }).join('')
       + '</div>'
-      + '<div class="competency-track"><div class="competency-fill" style="width:'+(calc.passed/3*100).toFixed(0)+'%;"></div></div>'
-      + '<div class="competency-rule">Labs: pass 5 of 6 for full credit; fewer than 5 = 0. Tests: 4 questions, score 2/4 or above = full credit; below 2 triggers retake, with two retake chances.</div>'
+      + '<div class="px-steps-legend"><span>点到已完成的最后一次</span><span>满分线 5</span></div>'
       + '</div>';
-    html += '<div class="phys-gate">'
-      + '<div class="phys-gate-panel">'
-      + '<div class="phys-gate-main"><div><div class="phys-gate-label">Labs</div><div class="phys-gate-note">6 labs total · 5/6 required for full credit</div></div><div class="phys-gate-status '+(calc.labPass ? 'pass' : '')+'">'+calc.labs+'/6 · '+(calc.labPass ? 'full' : '0')+'</div></div>'
-      + '<div class="phys-lab-dots">'
-      + [1,2,3,4,5,6].map(function(n){ return '<button class="phys-lab-dot '+(calc.labs >= n ? 'active' : '')+'" onclick="gtPhysSetLabCount('+n+')">'+n+'</button>'; }).join('')
-      + '</div>'
-      + '<div class="phys-gate-foot">Tap the highest completed lab number. Five or six labs = full credit.</div>'
-      + '</div>';
-    html += gtPhys1131Row('p1131_t1', 'Test 1', 'First attempt Week 7 · retakes Week 11/12 · 40 minutes after start', calc.t1Score, calc.t1Known, calc.t1Pass, parseInt(t1.attempt || 1, 10), color);
-    html += gtPhys1131Row('p1131_t2', 'Test 2', 'First attempt Week 10 · retakes Week 11/12 · 40 minutes after start', calc.t2Score, calc.t2Known, calc.t2Pass, parseInt(t2.attempt || 1, 10), color);
-    html += '</div>';
+    html += gtPhys1131Row('p1131_t1', 'Test 1', 'Week 7 首考 · Week 11/12 重考 · 40 分钟', calc.t1Score, calc.t1Known, calc.t1Pass, parseInt(t1.attempt || 1, 10), color);
+    html += gtPhys1131Row('p1131_t2', 'Test 2', 'Week 10 首考 · Week 11/12 重考 · 40 分钟', calc.t2Score, calc.t2Known, calc.t2Pass, parseInt(t2.attempt || 1, 10), color);
     return html;
   }
 
@@ -6509,8 +6672,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function gtPhysSetScore(id, value) {
     var data = gtLoad();
     if (!data[id]) data[id] = {};
-    data[id].score = value;
-    var score = parseFloat(value);
+    if (String(data[id].score) === String(value)) { delete data[id].score; data[id].attempt = 1; } else data[id].score = value;
+    var score = parseFloat(data[id].score);
     data[id].done = !isNaN(score) && score >= 2;
     gtSave(data);
     renderGT('phys1131');
