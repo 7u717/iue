@@ -2211,6 +2211,31 @@
   .course-action-btn{background:transparent!important;border:1px solid var(--hair)!important;box-shadow:none!important;color:rgba(255,255,255,.8)!important;}
   .course-tile,.course-library-row{box-shadow:none!important;border:1px solid var(--hair)!important;background:var(--surface)!important;}
   .course-tile-code{color:#fff!important;}
+  /* overview: deadline alerts + weekly summary */
+  .v2-alerts{padding:24px 0 12px;border-bottom:1px solid var(--border);}
+  .v2-alert-row{display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:14px;padding:12px 8px;border-radius:12px;cursor:pointer;}
+  .v2-alert-row:active{background:rgba(255,255,255,.04);}
+  .v2-alert-when{text-align:center;line-height:1.2;}
+  .v2-alert-when b{display:block;font-size:11px;font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.55);}
+  .v2-alert-row.today .v2-alert-when b{color:var(--warn);}
+  .v2-alert-when span{display:block;font-size:15px;font-weight:300;color:#fff;font-variant-numeric:tabular-nums;margin-top:2px;}
+  .v2-alert-title{font-size:14px;font-weight:600;color:#fff;line-height:1.3;}
+  .v2-alert-sub{font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:.04em;}
+  .v2-alert-left{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .v2-week{padding:28px 8px 32px;text-align:center;}
+  .v2-week .v2-section-title{margin-bottom:4px;}
+  .v2-week-range{font-size:12px;color:rgba(255,255,255,.4);font-variant-numeric:tabular-nums;}
+  .v2-week-stats{display:grid;grid-template-columns:repeat(3,1fr);margin:20px 0 8px;}
+  .v2-week-stats div + div{border-left:1px solid var(--hair);}
+  .v2-week-stats b{display:block;font-size:34px;font-weight:200;color:#fff;line-height:1;font-variant-numeric:tabular-nums;}
+  .v2-week-stats .bad b{color:var(--warn);}
+  .v2-week-stats span{display:block;font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:.06em;}
+  .v2-week-group{margin-top:20px;}
+  .v2-week-label{font-size:10px;letter-spacing:.14em;color:rgba(255,255,255,.4);margin-bottom:6px;}
+  .v2-week-group.bad .v2-week-label{color:var(--warn);}
+  .v2-week-item{display:flex;justify-content:center;align-items:baseline;gap:10px;padding:6px 0;font-size:13px;color:rgba(255,255,255,.85);}
+  .v2-week-item em{font-style:normal;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .v2-week-empty{font-size:13px;color:rgba(255,255,255,.3);}
 </style>
 </head>
 <body>
@@ -8404,6 +8429,75 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
   window.addEventListener('resize', function(){ var a=document.querySelector('.course-section.active'); if (a && a.id==='sec-timetable') renderTimetablePage(); });
 
+  function sydKey(date) {
+    var p = new Intl.DateTimeFormat('en-CA', { timeZone:'Australia/Sydney', year:'numeric', month:'2-digit', day:'2-digit' }).format(new Date(date));
+    return p;
+  }
+  function sydKeyShift(key, days) {
+    var d = new Date(key + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + days);
+    return d.toISOString().slice(0, 10);
+  }
+  function sydWeekStart(key) {
+    var dow = new Date(key + 'T12:00:00Z').getUTCDay();
+    return sydKeyShift(key, -((dow + 6) % 7));
+  }
+  function sydTime(date) {
+    return new Intl.DateTimeFormat('en-GB', { timeZone:'Australia/Sydney', hour:'2-digit', minute:'2-digit', hour12:false }).format(new Date(date));
+  }
+  function sydShortDate(date) {
+    var k = sydKey(date), wd = ['周日','周一','周二','周三','周四','周五','周六'][new Date(k + 'T12:00:00Z').getUTCDay()];
+    return (+k.slice(5,7)) + '/' + (+k.slice(8,10)) + ' ' + wd;
+  }
+
+  function v2AlertsMarkup(now, data, mobiusDone) {
+    var today = sydKey(now), tomorrow = sydKeyShift(today, 1);
+    var items = visibleDeadlines().filter(function(d){
+      var k = sydKey(d.date);
+      return (k === today || k === tomorrow) && new Date(d.date) > now && !dashIsDeadlineDone(d, data, mobiusDone);
+    }).sort(function(a,b){ return new Date(a.date) - new Date(b.date); });
+    if (!items.length) return '';
+    return '<div class="v2-alerts"><div class="v2-section-title">截止提醒</div>'
+      + items.map(function(d){
+        var isToday = sydKey(d.date) === today;
+        var course = dashCourseFromDeadline(d);
+        var hrs = Math.max(0, (new Date(d.date) - now) / 3600000);
+        var left = hrs < 1 ? Math.max(1, Math.round(hrs * 60)) + ' 分钟' : Math.floor(hrs) + ' 小时';
+        return '<div class="v2-alert-row'+(isToday ? ' today' : '')+'" onclick="showCourse(\''+course+'\')">'
+          + '<div class="v2-alert-when"><b>'+(isToday ? '今天' : '明天')+'</b><span>'+sydTime(d.date)+'</span></div>'
+          + '<div class="v2-alert-main"><div class="v2-alert-title">'+escapeHtml(String(d.name).replace(/<[^>]+>/g,''))+'</div><div class="v2-alert-sub">'+escapeHtml(dashCourseName(course))+'</div></div>'
+          + '<div class="v2-alert-left">'+left+'</div></div>';
+      }).join('') + '</div>';
+  }
+
+  function v2WeeklyMarkup(now, data, mobiusDone) {
+    var today = sydKey(now), ws = sydWeekStart(today), we = sydKeyShift(ws, 7), nwe = sydKeyShift(ws, 14);
+    var done = [], missed = [], next = [];
+    visibleDeadlines().forEach(function(d){
+      var k = sydKey(d.date), isDone = dashIsDeadlineDone(d, data, mobiusDone), past = new Date(d.date) <= now;
+      if (k >= ws && k < we && isDone) done.push(d);
+      else if (k >= ws && k < we && past && !isDone) missed.push(d);
+      else if (k >= we && k < nwe && !isDone) next.push(d);
+    });
+    var byDate = function(a,b){ return new Date(a.date) - new Date(b.date); };
+    done.sort(byDate); missed.sort(byDate); next.sort(byDate);
+    var name = function(d){ return escapeHtml(String(d.name).replace(/<[^>]+>/g,'')); };
+    var list = function(arr, withDate){
+      if (!arr.length) return '<div class="v2-week-empty">—</div>';
+      return arr.map(function(d){ return '<div class="v2-week-item"><span>'+name(d)+'</span>'+(withDate ? '<em>'+sydShortDate(d.date)+'</em>' : '')+'</div>'; }).join('');
+    };
+    var m1 = ws.slice(5).replace('-','/').replace(/^0/,'').replace('/0','/'), m2 = sydKeyShift(ws, 6).slice(5).replace('-','/').replace(/^0/,'').replace('/0','/');
+    return '<div class="v2-week">'
+      + '<div class="v2-section-title">每周小结</div><div class="v2-week-range">'+m1+' – '+m2+'</div>'
+      + '<div class="v2-week-stats">'
+      + '<div><b>'+done.length+'</b><span>已完成</span></div>'
+      + '<div class="'+(missed.length ? 'bad' : '')+'"><b>'+missed.length+'</b><span>已错过</span></div>'
+      + '<div><b>'+next.length+'</b><span>下周截止</span></div></div>'
+      + (done.length ? '<div class="v2-week-group"><div class="v2-week-label">本周完成</div>'+list(done, false)+'</div>' : '')
+      + (missed.length ? '<div class="v2-week-group bad"><div class="v2-week-label">错过 / 逾期</div>'+list(missed, true)+'</div>' : '')
+      + '<div class="v2-week-group"><div class="v2-week-label">下周</div>'+list(next, true)+'</div>'
+      + '</div>';
+  }
+
   function renderDashboard() {
     var commandEl = document.getElementById('dash-command');
     if (!commandEl || typeof GT === 'undefined') return;
@@ -8458,7 +8552,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         +'<div class="v2-hero-meta">'+dashFormatDate(next.date)+tagText+locText+'</div>'
         +'<div class="v2-hero-actions"><button class="v2-btn primary" onclick="'+primaryAction+'">'+primaryLabel+'</button><button class="v2-btn" onclick="showCourse(\'countdown\')">全部倒计时</button></div>'
         +'</div>'
+        +v2AlertsMarkup(now, data, mobiusDone)
         +'<div id="v2-course-strip"></div>'
+        +v2WeeklyMarkup(now, data, mobiusDone)
         ;
     } else {
       commandEl.innerHTML =
