@@ -2674,6 +2674,10 @@ header > div:first-child{width:32px!important;height:32px!important;box-shadow:0
 .gt1-of{align-self:flex-end;height:48px;padding:0 6px;border:0;background:none;color:var(--r-t3);font-size:17px;font-variant-numeric:tabular-nums;cursor:pointer;}
 .gt1-sheet.max-known .gt1-fields i{display:none;}
 .gt1-sheet.max-known .gt1-fields{gap:10px;}
+.dash-class.multi{align-items:start!important;padding-top:7px!important;}
+.dash-class.multi > div{min-width:0;}
+.dash-class.multi .dash-class-sub{line-height:15px!important;}
+#sec-timetable{touch-action:pan-y;}
 </style>
 </head>
 <body>
@@ -4460,7 +4464,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-14-score-sheet-live';
+  var APP_VERSION = '2026-10-14-tt-overlap';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -8769,7 +8773,42 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (localStorage.getItem('iue.dashboardDayDate.v1') !== dashDateStamp(now)) {
       dashboardScheduleDay = dashAutoScheduleDay(rowsByDay, now);
     }
-    var dayRows = rowsByDay[dashboardScheduleDay] || [];
+    var dayRows = (function(rows){
+      var out = [], byTime = {};
+      rows.forEach(function(r){
+        if (!r.isDeadline) { out.push(r); return; }
+        var g = byTime[r.time];
+        if (!g) { g = byTime[r.time] = Object.assign({}, r, { group: [r] }); out.push(g); }
+        else { g.group.push(r); g.diff = Math.min(g.diff, r.diff); }
+      });
+      out.forEach(function(r){
+        if (r.group && r.group.length > 1) {
+          r.multi = r.group.map(function(x){ return String(x.title || '').replace(/<[^>]+>/g,''); });
+          r.title = r.time + ' · ' + r.group.length + ' 项截止'; r.kind = ''; r.link = null; r.nav = null;
+          r.durationMin = Math.max(r.durationMin || 30, 30 + 22 * r.group.length);
+        }
+      });
+      // side-by-side lanes for overlapping blocks
+      var ends = [];
+      out.forEach(function(r){
+        var st = dashTimetableMinutes(r.time); if (st == null) return;
+        r._s = st; r._e = st + (r.durationMin || 60);
+      });
+      out.forEach(function(r){
+        if (r._s == null) return;
+        var cluster = out.filter(function(o){ return o._s != null && o._s < r._e && r._s < o._e; });
+        r._cols = cluster.length;
+      });
+      var placed = [];
+      out.forEach(function(r){
+        if (r._s == null) return;
+        var used = placed.filter(function(o){ return o._s < r._e && r._s < o._e; }).map(function(o){ return o._lane; });
+        var lane = 0; while (used.indexOf(lane) > -1) lane++;
+        r._lane = lane; placed.push(r);
+      });
+      out.forEach(function(r){ if (r._s != null) r._cols = Math.max(r._cols || 1, (r._lane || 0) + 1); });
+      return out;
+    })(rowsByDay[dashboardScheduleDay] || []);
     var todayDay = DASH_WEEK_DAYS[(now.getDay() + 6) % 7];
     var nowMin = now.getHours() * 60 + now.getMinutes();
     var nextClassIndex = -1;
@@ -8841,10 +8880,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var nextClass = rowIndex === nextClassIndex;
       var soonClass = !row.isDeadline && dashboardScheduleDay === todayDay && start >= nowMin && start - nowMin <= 30;
       var dataAttrs = ' data-course="'+htmlAttr(course)+'" data-title="'+htmlAttr(titleText)+'" data-range="'+htmlAttr(dashTimetableRange(row))+'" data-loc="'+htmlAttr(row.loc || '')+'"';
-      return '<div class="dash-class '+(row.isDeadline ? 'deadline' : '')+' '+(hot ? 'dash-hot' : '')+' '+(nextClass ? 'dash-next' : '')+' '+(soonClass ? 'dash-soon' : '')+'" style="'+hotVars+'top:'+top.toFixed(1)+'px;height:'+height.toFixed(1)+'px;color:'+color+';"'+dataAttrs+action.attr+'>'
+      var laneCss = (row._cols > 1) ? 'left:calc(9px + (100% - 9px) * '+(row._lane / row._cols).toFixed(4)+');right:auto;width:calc((100% - 9px) / '+row._cols+' - 4px);' : '';
+      if (row.multi) height = Math.max(height, 26 + 15 * row.multi.length);
+      return '<div class="dash-class '+(row.isDeadline ? 'deadline' : '')+(row.multi ? ' multi' : '')+' '+(hot ? 'dash-hot' : '')+' '+(nextClass ? 'dash-next' : '')+' '+(soonClass ? 'dash-soon' : '')+'" style="'+hotVars+laneCss+'top:'+top.toFixed(1)+'px;height:'+height.toFixed(1)+'px;color:'+color+';"'+dataAttrs+action.attr+'>'
         + courseIconSvg(courseIconType(iconCourse))
         + '<div><div class="dash-class-title">'+escapeHtml(titleText)+'</div>'
-        + '<div class="dash-class-sub">'+escapeHtml(dashTimetableRange(row) + ' · ' + row.loc)+'</div></div>'
+        + (row.multi ? row.multi.map(function(n){ return '<div class="dash-class-sub">'+escapeHtml(n)+'</div>'; }).join('') : '<div class="dash-class-sub">'+escapeHtml(dashTimetableRange(row) + ' · ' + row.loc)+'</div>') + '</div>'
         + '</div>';
     }).join('');
     if (!events) events = '<div class="dash-class-empty">这天没有固定课，可以留给复习、整理和补 Moodle。</div>';
@@ -8879,6 +8920,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
   (function(){
     var host = document.getElementById('v2-tt-page'); if (!host) return;
+    var zoneEl = document.getElementById('sec-timetable') || host;
     var sx = 0, sy = 0, zone = null, live = null, horiz = null;
     function step(dir, isWeek){
       var i = DASH_WEEK_DAYS.indexOf(dashboardScheduleDay);
@@ -8892,20 +8934,19 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var t = host.querySelector('.dash-events');
       if (t) t.classList.add('r3-xfade');
     }
-    host.addEventListener('touchstart', function(e){
-      var z = e.target.closest && e.target.closest('.r3-week, .dash-week');
-      if (!z || e.touches.length !== 1) { zone = null; return; }
-      zone = z.classList.contains('r3-week') ? 'week' : 'day';
+    zoneEl.addEventListener('touchstart', function(e){
+      if (e.touches.length !== 1 || (e.target.closest && e.target.closest('input, textarea, select'))) { zone = null; return; }
+      zone = 'day';
       live = host.querySelector('.dash-events');
       sx = e.touches[0].clientX; sy = e.touches[0].clientY; horiz = null;
     }, { passive:true });
-    host.addEventListener('touchmove', function(e){
+    zoneEl.addEventListener('touchmove', function(e){
       if (!zone || !live) return;
       var dx = e.touches[0].clientX - sx, dy = e.touches[0].clientY - sy;
       if (horiz === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) horiz = Math.abs(dx) > Math.abs(dy);
       if (horiz) { e.preventDefault(); live.style.transition = 'none'; live.style.opacity = String(1 - Math.min(.35, Math.abs(dx)/500)); }
     }, { passive:false });
-    host.addEventListener('touchend', function(e){
+    zoneEl.addEventListener('touchend', function(e){
       if (!zone || !live) return;
       var dx = e.changedTouches[0].clientX - sx, wasH = horiz, z = zone;
       live.style.transition = 'opacity .25s ease'; live.style.opacity = '';
