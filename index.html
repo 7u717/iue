@@ -2671,6 +2671,9 @@ header > div:first-child{width:32px!important;height:32px!important;box-shadow:0
 .gt1-btn.ghost{background:var(--r-s3);color:var(--r-t1);}
 .gt1-btn:active{transform:scale(.95);}
 @media (prefers-reduced-motion:reduce){.gt1-sheet,.gt1-backdrop{transition:none!important;}}
+.gt1-of{align-self:flex-end;height:48px;padding:0 6px;border:0;background:none;color:var(--r-t3);font-size:17px;font-variant-numeric:tabular-nums;cursor:pointer;}
+.gt1-sheet.max-known .gt1-fields i{display:none;}
+.gt1-sheet.max-known .gt1-fields{gap:10px;}
 </style>
 </head>
 <body>
@@ -4457,7 +4460,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-14-score-sheet';
+  var APP_VERSION = '2026-10-14-score-sheet-live';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -6708,6 +6711,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       color: 'var(--phys-color)',
       items: [
         { id:'p1160_quiz', label:'Weekly Quizzes', note:'10% · 8 次 × 10 分 · 总分/80×10 · 不去最低', w:10, quizSet:true },
+        // grade items may set an optional default max (满分), e.g. max:20 — values to be supplied later
         { id:'p1160_report', label:'Short Report', note:'25% · Date pending', w:25 },
         { id:'p1160_apod_plan', label:'APOD Plan', note:'5% · 个人书面 · Turnitin DOCX · 截止 16/10/2026 23:59 · 28/10 出分', w:5, date:'2026-10-16T23:59:00+11:00', apod:true },
         { id:'p1160_apod_final', label:'APOD Final', note:'35% · 个人书面 · ≤3000 词 · 截止 13/11/2026 23:59 · 27/11 出分', w:35, date:'2026-11-13T23:59:00+11:00', apod:true },
@@ -7336,7 +7340,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         html += '<div class="gt-check'+(done?' done':'')+'"'+(done?' style="'+courseFillCss(course, cfg.color)+'border-color:'+cfg.color+'"':'')+'>'+(done?'✓':'')+'</div>';
         html += '<div class="gt-info"><div class="gt-name gt1-name">'+it.label+urgentDot+'</div><div class="gt-note gt1-meta">'+it.note+'</div></div>';
         var big = '—', sub = done ? contrib : '';
+        var knownMax = d.m || it.max || '';
         if (done && d.s && d.m && +d.m > 0) big = escapeHtml(String(d.s))+'<span>/'+escapeHtml(String(d.m))+'</span>';
+        else if (knownMax) big = '—<span>/'+escapeHtml(String(knownMax))+'</span>';
         else if (done) big = '✓';
         html += '<div class="gt1-score" onclick="event.stopPropagation();gtSheetOpen(\''+course+'\',\''+it.id+'\')" role="button" aria-label="输入分数"><b>'+big+'</b><em>'+(sub || it.w+'%')+'</em></div>';
         html += '</div>';
@@ -9664,9 +9670,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   <div class="gt1-fields">
     <label><span>得分</span><input id="gt1-s" inputmode="decimal" autocomplete="off" oninput="gtSheetPreview()"></label>
     <i>/</i>
-    <label><span>满分</span><input id="gt1-m" inputmode="decimal" autocomplete="off" oninput="gtSheetPreview()"></label>
+    <label id="gt1-m-wrap"><span>满分</span><input id="gt1-m" inputmode="decimal" autocomplete="off" oninput="gtSheetPreview()"></label>
+    <button class="gt1-of" id="gt1-of" type="button" onclick="gtSheetEditMax()" hidden></button>
   </div>
-  <button class="gt1-full" type="button" onclick="gtSheetFull()">满分</button>
+  <button class="gt1-full" id="gt1-full" type="button" onclick="gtSheetFull()">满分</button>
   <div class="gt1-actions"><button class="gt1-btn ghost" type="button" onclick="gtSheetClear()">清除</button><button class="gt1-btn" type="button" onclick="gtSheetSave()">保存</button></div>
 </div>
 <script>
@@ -9680,11 +9687,17 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var d = gtLoad()[id] || {};
     cur = { course: course, id: id, w: +it.w };
     el('gt1-title').textContent = String(it.label).replace(/<[^>]+>/g, '');
-    el('gt1-s').value = d.s || ''; el('gt1-m').value = d.m || '';
+    var mx = d.m || (it.max != null ? String(it.max) : '');
+    el('gt1-s').value = d.s || ''; el('gt1-m').value = mx;
+    var known = !!mx;
+    el('gt1-m-wrap').hidden = known; el('gt1-of').hidden = !known; el('gt1-of').textContent = 'of ' + mx;
+    el('gt1-sheet').classList.toggle('max-known', known);
+    el('gt1-full').hidden = !known;
     gtSheetPreview();
     var sh = el('gt1-sheet'), bd = el('gt1-backdrop');
     sh.hidden = bd.hidden = false; sh.style.transform = '';
     requestAnimationFrame(function(){ sh.classList.add('open'); bd.classList.add('open'); });
+    if (mx) setTimeout(function(){ el('gt1-s').focus(); }, 380);
   };
   window.gtSheetClose = function(){
     var sh = el('gt1-sheet'), bd = el('gt1-backdrop');
@@ -9699,6 +9712,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     el('gt1-big').innerHTML = ok ? (escapeHtml(el('gt1-s').value.trim()) + '<span>/' + escapeHtml(el('gt1-m').value.trim()) + '</span>') : '—';
     el('gt1-prev').textContent = ok ? (Math.round(sv / mv * 1000) / 10 + '%  ·  +' + (sv / mv * cur.w).toFixed(1) + '%') : ('占 ' + cur.w + '%');
   };
+  window.gtSheetEditMax = function(){ el('gt1-m-wrap').hidden = false; el('gt1-of').hidden = true; el('gt1-full').hidden = false; el('gt1-m').focus(); };
   window.gtSheetFull = function(){ var m = el('gt1-m').value.trim(); if (!m) { el('gt1-m').focus(); return; } el('gt1-s').value = m; gtSheetPreview(); };
   function commit(s, m){
     var data = gtLoad(); if (!data[cur.id]) data[cur.id] = {};
