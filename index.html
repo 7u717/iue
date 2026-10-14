@@ -2590,14 +2590,31 @@ header > div:first-child{width:32px!important;height:32px!important;box-shadow:0
 @keyframes r3InL{from{opacity:0;transform:translate3d(28px,0,0)}to{opacity:1;transform:none}}
 @keyframes r3InR{from{opacity:0;transform:translate3d(-28px,0,0)}to{opacity:1;transform:none}}
 .dash-week{touch-action:pan-y;}
+/* splash v3 — 1.5s, transform/opacity only */
+.iue-splash{background:#000!important;animation:r3SplashOut .5s cubic-bezier(.4,0,.2,1) 1s forwards!important;will-change:opacity;}
+.iue-splash-mark{animation:r3SplashMark 1.5s cubic-bezier(.22,1,.36,1) both!important;display:flex!important;flex-direction:column;align-items:center;gap:16px!important;will-change:transform;}
+.iue-splash-logo{display:flex;gap:.34em;font-family:var(--r-num)!important;font-size:34px!important;font-weight:200!important;letter-spacing:0!important;color:#f5f5f7!important;line-height:1;}
+.iue-splash-logo span{display:inline-block;opacity:0;transform:translate3d(0,10px,0);animation:r3SplashLetter .7s cubic-bezier(.22,1,.36,1) forwards;}
+.iue-splash-logo span:nth-child(2){animation-delay:.08s}
+.iue-splash-logo span:nth-child(3){animation-delay:.16s}
+.iue-splash-line{width:44px;height:1px;background:rgba(255,255,255,.55);transform:scaleX(0);animation:r3SplashLine .7s cubic-bezier(.65,0,.35,1) .3s forwards;}
+.iue-splash-dots{display:none!important;}
+@keyframes r3SplashLetter{to{opacity:1;transform:none}}
+@keyframes r3SplashLine{0%{transform:scaleX(0);opacity:1}70%{transform:scaleX(1);opacity:1}100%{transform:scaleX(1);opacity:.25}}
+@keyframes r3SplashMark{0%,65%{transform:scale(1)}100%{transform:scale(1.06)}}
+@keyframes r3SplashOut{to{opacity:0;visibility:hidden}}
+@media (prefers-reduced-motion:reduce){
+  .iue-splash{animation:r3SplashOut .25s ease .3s forwards!important;}
+  .iue-splash-mark,.iue-splash-logo span,.iue-splash-line{animation:none!important;opacity:1!important;transform:none!important;}
+}
 </style>
 </head>
 <body>
 
 <div class="iue-splash" aria-hidden="true">
   <div class="iue-splash-mark">
-    <div class="iue-splash-logo">iue</div>
-    <div class="iue-splash-dots"><i></i><i></i><i></i></div>
+    <div class="iue-splash-logo"><span>i</span><span>u</span><span>e</span></div>
+    <div class="iue-splash-line"></div>
   </div>
 </div>
 
@@ -4376,7 +4393,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-14-acc-faceid';
+  var APP_VERSION = '2026-10-14-splash';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -9538,5 +9555,6 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
 
 
+<script>(function(){var s=document.querySelector(".iue-splash");if(s)setTimeout(function(){s.remove();},1700);})();</script>
 </body>
 </html>
