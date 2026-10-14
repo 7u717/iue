@@ -2638,6 +2638,39 @@ header > div:first-child{width:32px!important;height:32px!important;box-shadow:0
 #v2-tt-page .r3-day-num{transition:background .25s ease,box-shadow .25s ease!important;}
 #v2-tt-page .r3-day:active .r3-day-num{transform:none!important;}
 @media (prefers-reduced-motion:reduce){#v2-tt-page .dash-events.r3-xfade{animation:none!important}}
+/* score-sheet rows */
+.gt-row[data-id]{display:grid!important;grid-template-columns:24px minmax(0,1fr) auto!important;align-items:center!important;gap:14px!important;}
+.gt1-name{display:block!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;-webkit-line-clamp:unset!important;}
+.gt1-meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.gt1-score{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;min-width:64px;padding:4px 0 4px 10px;cursor:pointer;}
+.gt1-score b{font-family:var(--r-num);font-size:22px;font-weight:300;letter-spacing:-.02em;line-height:1.05;color:var(--r-t1);font-variant-numeric:tabular-nums;}
+.gt1-score b span{font-size:13px;color:var(--r-t3);font-weight:400;margin-left:1px;}
+.gt1-score em{font-style:normal;font-size:11px;color:var(--r-t3);margin-top:3px;font-variant-numeric:tabular-nums;}
+.gt1-score:active b{opacity:.6;}
+/* sheet */
+.gt1-backdrop{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;transition:opacity .3s ease;}
+.gt1-backdrop.open{opacity:1;}
+.gt1-sheet{position:fixed;left:50%;bottom:0;z-index:801;width:100%;max-width:420px;margin-left:-210px;padding:10px 24px calc(24px + env(safe-area-inset-bottom));background:rgba(22,22,24,.96);backdrop-filter:blur(30px) saturate(160%);-webkit-backdrop-filter:blur(30px) saturate(160%);border-radius:28px 28px 0 0;box-shadow:inset 0 .5px 0 rgba(255,255,255,.12);text-align:center;transform:translate3d(0,105%,0);transition:transform .38s cubic-bezier(.22,1,.36,1);}
+@media (max-width:420px){.gt1-sheet{left:0;margin-left:0;}}
+.gt1-sheet.open{transform:translate3d(0,0,0);}
+.gt1-grab{width:36px;height:5px;border-radius:3px;background:rgba(255,255,255,.22);margin:0 auto 18px;}
+.gt1-title{font-size:15px;font-weight:600;color:var(--r-t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gt1-big{font-family:var(--r-num);font-size:64px;font-weight:200;letter-spacing:-.04em;line-height:1;margin:20px 0 6px;color:var(--r-t1);font-variant-numeric:tabular-nums;}
+.gt1-big span{font-size:28px;color:var(--r-t3);margin-left:2px;}
+.gt1-prev{font-size:13px;color:var(--r-t2);font-variant-numeric:tabular-nums;white-space:pre;min-height:18px;}
+.gt1-fields{display:flex;align-items:flex-end;justify-content:center;gap:12px;margin:24px 0 12px;}
+.gt1-fields label{display:flex;flex-direction:column;gap:6px;align-items:center;}
+.gt1-fields label span{font-size:11px;color:var(--r-t3);letter-spacing:.06em;}
+.gt1-fields input{width:110px;height:48px;border:0;border-radius:14px;background:var(--r-s2);box-shadow:inset 0 0 0 .5px var(--r-line);color:var(--r-t1);font-size:22px;text-align:center;font-variant-numeric:tabular-nums;outline:0;-webkit-user-select:text;user-select:text;}
+.gt1-fields input:focus{box-shadow:inset 0 0 0 1px var(--r-t2);}
+.gt1-fields i{font-style:normal;color:var(--r-t4);font-size:22px;padding-bottom:10px;}
+.gt1-full{background:none;border:0;color:var(--r-t2);font-size:13px;padding:6px 12px;cursor:pointer;}
+.gt1-full:active{color:var(--r-t1);}
+.gt1-actions{display:flex;justify-content:center;gap:10px;margin-top:18px;}
+.gt1-btn{flex:0 0 138px;height:46px;border-radius:999px;border:0;background:var(--r-t1);color:#000;font-size:15px;font-weight:600;cursor:pointer;transition:transform .2s var(--r-ease);}
+.gt1-btn.ghost{background:var(--r-s3);color:var(--r-t1);}
+.gt1-btn:active{transform:scale(.95);}
+@media (prefers-reduced-motion:reduce){.gt1-sheet,.gt1-backdrop{transition:none!important;}}
 </style>
 </head>
 <body>
@@ -4424,7 +4457,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-14-tt-steady';
+  var APP_VERSION = '2026-10-14-score-sheet';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -7301,18 +7334,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         var urgentDot = urgent ? '<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#EF4444;margin-left:6px;flex-shrink:0;"></span>' : '';
         html += '<div class="gt-row" data-course="'+course+'" data-id="'+it.id+'" onclick="gtToggle(this)">';
         html += '<div class="gt-check'+(done?' done':'')+'"'+(done?' style="'+courseFillCss(course, cfg.color)+'border-color:'+cfg.color+'"':'')+'>'+(done?'✓':'')+'</div>';
-        html += '<div class="gt-info"><div class="gt-name" style="display:flex;align-items:center;">'+it.label+urgentDot+'</div><div class="gt-note">'+it.note+'</div></div>';
-        html += '<div class="gt-weight" style="color:'+cfg.color+'">'+it.w+'%</div>';
-        if (done) {
-          html += '<div class="gt-score-wrap" onclick="event.stopPropagation()">';
-          html += '<input class="gt-score-inp" type="number" min="0" placeholder="得分" value="'+(d.s||'')+'" data-course="'+course+'" data-id="'+it.id+'" data-field="s" oninput="gtScore(this)">';
-          html += '<span style="color:var(--dim);font-size:12px;">/</span>';
-          html += '<input class="gt-score-inp" type="number" min="0" placeholder="满分" value="'+(d.m||'')+'" data-course="'+course+'" data-id="'+it.id+'" data-field="m" oninput="gtScore(this)">';
-          html += '</div>';
-          html += '<div class="gt-contrib" style="color:'+cfg.color+'">'+pct+'<br><span style="font-size:10px;opacity:.8">'+contrib+'</span></div>';
-        } else {
-          html += '<div class="gt-status">点击标记完成</div>';
-        }
+        html += '<div class="gt-info"><div class="gt-name gt1-name">'+it.label+urgentDot+'</div><div class="gt-note gt1-meta">'+it.note+'</div></div>';
+        var big = '—', sub = done ? contrib : '';
+        if (done && d.s && d.m && +d.m > 0) big = escapeHtml(String(d.s))+'<span>/'+escapeHtml(String(d.m))+'</span>';
+        else if (done) big = '✓';
+        html += '<div class="gt1-score" onclick="event.stopPropagation();gtSheetOpen(\''+course+'\',\''+it.id+'\')" role="button" aria-label="输入分数"><b>'+big+'</b><em>'+(sub || it.w+'%')+'</em></div>';
         html += '</div>';
       }
     }
@@ -9627,6 +9653,68 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (k.row) { var st = el.querySelector('.gt-status, .gt-need-text'); if (st) st.classList.add('r3-fade-ok'); }
     }, 30);
   }, true);
+})();
+</script>
+<div class="gt1-backdrop" id="gt1-backdrop" onclick="gtSheetClose()" hidden></div>
+<div class="gt1-sheet" id="gt1-sheet" role="dialog" aria-modal="true" hidden>
+  <div class="gt1-grab"></div>
+  <div class="gt1-title" id="gt1-title"></div>
+  <div class="gt1-big" id="gt1-big">—</div>
+  <div class="gt1-prev" id="gt1-prev">&nbsp;</div>
+  <div class="gt1-fields">
+    <label><span>得分</span><input id="gt1-s" inputmode="decimal" autocomplete="off" oninput="gtSheetPreview()"></label>
+    <i>/</i>
+    <label><span>满分</span><input id="gt1-m" inputmode="decimal" autocomplete="off" oninput="gtSheetPreview()"></label>
+  </div>
+  <button class="gt1-full" type="button" onclick="gtSheetFull()">满分</button>
+  <div class="gt1-actions"><button class="gt1-btn ghost" type="button" onclick="gtSheetClear()">清除</button><button class="gt1-btn" type="button" onclick="gtSheetSave()">保存</button></div>
+</div>
+<script>
+(function(){
+  var cur = null;
+  function el(id){ return document.getElementById(id); }
+  function num(v){ v = String(v || '').replace(',', '.').trim(); return v === '' ? NaN : +v; }
+  function item(course, id){ var c = gtConfig(course); return c && c.items.filter(function(x){ return x.id === id; })[0]; }
+  window.gtSheetOpen = function(course, id){
+    var it = item(course, id); if (!it) return;
+    var d = gtLoad()[id] || {};
+    cur = { course: course, id: id, w: +it.w };
+    el('gt1-title').textContent = String(it.label).replace(/<[^>]+>/g, '');
+    el('gt1-s').value = d.s || ''; el('gt1-m').value = d.m || '';
+    gtSheetPreview();
+    var sh = el('gt1-sheet'), bd = el('gt1-backdrop');
+    sh.hidden = bd.hidden = false; sh.style.transform = '';
+    requestAnimationFrame(function(){ sh.classList.add('open'); bd.classList.add('open'); });
+  };
+  window.gtSheetClose = function(){
+    var sh = el('gt1-sheet'), bd = el('gt1-backdrop');
+    sh.classList.remove('open'); bd.classList.remove('open'); sh.style.transform = '';
+    if (document.activeElement) document.activeElement.blur();
+    setTimeout(function(){ if (!sh.classList.contains('open')) { sh.hidden = bd.hidden = true; } }, 320);
+  };
+  window.gtSheetPreview = function(){
+    if (!cur) return;
+    var sv = num(el('gt1-s').value), mv = num(el('gt1-m').value);
+    var ok = !isNaN(sv) && !isNaN(mv) && mv > 0;
+    el('gt1-big').innerHTML = ok ? (escapeHtml(el('gt1-s').value.trim()) + '<span>/' + escapeHtml(el('gt1-m').value.trim()) + '</span>') : '—';
+    el('gt1-prev').textContent = ok ? (Math.round(sv / mv * 1000) / 10 + '%  ·  +' + (sv / mv * cur.w).toFixed(1) + '%') : ('占 ' + cur.w + '%');
+  };
+  window.gtSheetFull = function(){ var m = el('gt1-m').value.trim(); if (!m) { el('gt1-m').focus(); return; } el('gt1-s').value = m; gtSheetPreview(); };
+  function commit(s, m){
+    var data = gtLoad(); if (!data[cur.id]) data[cur.id] = {};
+    data[cur.id].s = s; data[cur.id].m = m;
+    if (s !== '' || m !== '') data[cur.id].done = true;
+    gtSave(data); renderGT(cur.course); renderCountdown(); renderDashboard();
+    gtSheetClose();
+  }
+  window.gtSheetSave = function(){ if (cur) commit(el('gt1-s').value.trim(), el('gt1-m').value.trim()); };
+  window.gtSheetClear = function(){ if (cur) commit('', ''); };
+  // drag to dismiss
+  var sh = el('gt1-sheet'), y0 = null, dy = 0;
+  sh.addEventListener('touchstart', function(e){ if (e.target.closest('input,button')) return; y0 = e.touches[0].clientY; dy = 0; sh.style.transition = 'none'; }, { passive: true });
+  sh.addEventListener('touchmove', function(e){ if (y0 === null) return; dy = Math.max(0, e.touches[0].clientY - y0); sh.style.transform = 'translate3d(0,' + dy + 'px,0)'; }, { passive: true });
+  sh.addEventListener('touchend', function(){ if (y0 === null) return; y0 = null; sh.style.transition = ''; if (dy > 90) gtSheetClose(); else sh.style.transform = ''; });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && sh.classList.contains('open')) gtSheetClose(); });
 })();
 </script>
 </body>
