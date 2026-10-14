@@ -2263,6 +2263,29 @@
   .tab-bar .tab:active .nav-icon{transform:scale(.86)!important;}
   .tab-bar .tab:active{transform:none!important;opacity:1!important;}
   .tab-dot{top:6px!important;right:10px!important;border-color:#1c1c1e!important;}
+  /* refinement: one consistent active language */
+  .tab-bar{gap:4px!important;padding:5px!important;}
+  .tab-bar .tab{width:60px!important;height:48px!important;min-height:48px!important;transition:background-color .35s var(--v2-ease),color .3s,box-shadow .35s!important;}
+  .tab-bar .tab .nav-icon{width:22px!important;height:22px!important;stroke-width:1.75!important;}
+  .tab-bar .tab[class*="active"]:not(.tab-main){background:rgba(255,255,255,.1)!important;}
+  .tab-bar .tab.tab-main{width:60px!important;}
+  .tab-bar .tab.tab-main:not([class*="active"]){background:transparent!important;color:#5f6168!important;}
+  .tab-bar .tab.tab-main[class*="active"]{background:#f2f2f2!important;color:#000!important;box-shadow:0 4px 16px rgba(0,0,0,.4)!important;}
+  .tab-bar .tab:active .nav-icon{transform:scale(.84)!important;}
+  .tab-bar .tab[class*="active"] .nav-icon{animation:navPop .42s var(--v2-ease);}
+  @keyframes navPop{0%{transform:scale(.82)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+  .tab-dot{min-width:15px!important;height:15px!important;font-size:9px!important;top:4px!important;right:7px!important;border-width:1.5px!important;box-shadow:none!important;}
+  header{height:var(--header-h);}
+  .header-title{font-size:14px;letter-spacing:.04em;transition:opacity .25s;}
+  header > div:first-child{transition:transform .2s var(--v2-ease);}
+  header > div:first-child:active{transform:scale(.92);}
+  .course-section.active{animation:v2In .5s var(--v2-ease) both!important;}
+  @keyframes v2In{from{opacity:0;transform:translate3d(0,8px,0)}to{opacity:1;transform:none}}
+  .course-section.course-enter-forward,.course-section.course-enter-back{animation-duration:.32s!important;}
+  .v2-btn:active,.px-seg-opt:active,.px-step:active{transform:scale(.95)!important;}
+  .v2-hero-actions .v2-btn{min-width:120px;}
+  .v2-course-row:active,.v2-alert-row:active,.dash-queue-row:active{transform:scale(.985)!important;opacity:1!important;background:rgba(255,255,255,.04);}
+  @media (prefers-reduced-motion:reduce){.tab-bar .tab .nav-icon{animation:none!important}}
 </style>
 </head>
 <body>
