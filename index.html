@@ -4464,7 +4464,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-14-grid-tests';
+  var APP_VERSION = '2026-10-14-test-replace';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -8757,7 +8757,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         durationMin: d.durationMin || (d.examTable ? 90 : 30),
         course: course,
         title: d.name,
-        kind: d.examTable ? 'Exam' : 'Due',
+        kind: /\b(test|exam|midterm)\b/i.test(String(d.name||'')) ? '' : (d.examTable ? 'Exam' : 'Due'),
+        dateKey: dashDateStamp(dt),
         kindClass: d.examTable ? 'wks' : 'tut',
         loc: (d.loc ? d.loc : dashFormatDate(d.date)),
         color: d.color,
@@ -8776,6 +8777,21 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       dashboardScheduleDay = dashAutoScheduleDay(rowsByDay, now);
     }
     var dayRows = (function(rows){
+      // date actually shown for the selected weekday (matches the week strip)
+      var base = new Date(now.getFullYear(), now.getMonth(), now.getDate()), wdB = base.getDay();
+      base.setDate(base.getDate() + (wdB === 0 ? 1 : (wdB === 6 ? 2 : 1 - wdB)) + 7 * (window.v2WeekOffset || 0) + DASH_WEEK_DAYS.indexOf(dashboardScheduleDay));
+      var shownKey = dashDateStamp(base);
+      rows = rows.filter(function(r){ return !r.isDeadline || r.dateKey === shownKey; });
+      // a test/exam replaces the same course's overlapping class on that date
+      var tests = rows.filter(function(r){ return r.isDeadline; });
+      rows = rows.filter(function(r){
+        if (r.isDeadline) return true;
+        var cs = dashTimetableMinutes(r.time), ce = cs + (r.durationMin || 60), rc = dashCourseFromTimetable(r);
+        return !tests.some(function(t){
+          var ts = dashTimetableMinutes(t.time), te = ts + (t.durationMin || 30);
+          return t.course === rc && ts < ce && cs < te;
+        });
+      });
       var out = [], byTime = {};
       rows.forEach(function(r){
         if (!r.isDeadline) { out.push(r); return; }
