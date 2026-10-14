@@ -2581,6 +2581,10 @@ header > div:first-child{width:32px!important;height:32px!important;box-shadow:0
 .r3-day-dot.none{visibility:hidden;}
 .r3-day.sel .r3-day-dot{background:var(--r-t1);}
 .dash-week{padding-top:14px!important;}
+/* long titles: wrap to 2 lines, never cut */
+.dash-queue-title,.v2-alert-title,.cd-name,.course-library-title,.v2-hero-title{white-space:normal!important;overflow:hidden!important;text-overflow:clip!important;display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2!important;word-break:normal;overflow-wrap:anywhere;}
+.dash-queue-row > div:nth-child(2),.v2-alert-main,.cd-left{min-width:0!important;}
+.dash-queue-row,.v2-alert-row,.cd-card{align-items:center!important;}
 </style>
 </head>
 <body>
