@@ -2565,6 +2565,22 @@ header > div:first-child{width:32px!important;height:32px!important;box-shadow:0
 .plan-term,.plan-term-card{background:var(--r-s2)!important;box-shadow:none!important;border:0!important;border-radius:16px!important;}
 .header-link-wrap{position:relative!important;}.header-link-menu{left:auto!important;right:0!important;transform-origin:top right!important;}
 .header-link-menu{width:auto!important;max-width:none!important;min-width:168px!important;right:-40px!important;top:calc(100% + 8px)!important;}.header-link-menu a{text-align:left!important;}
+/* week strip (Apple Calendar style) */
+#v2-tt-page .dash-days{display:none!important;}
+.r3-week{padding:6px 0 22px;}
+.r3-week-month{text-align:center;font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--r-t3);margin-bottom:10px;}
+.r3-week-days{display:grid;grid-template-columns:repeat(5,1fr);}
+.r3-day{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.r3-day-wd{font-size:11px;font-weight:500;color:var(--r-t3);line-height:1;}
+.r3-day-num{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--r-num);font-size:19px;font-weight:500;color:var(--r-t1);font-variant-numeric:tabular-nums;letter-spacing:-.02em;transition:background .3s var(--r-ease),box-shadow .3s var(--r-ease),transform .25s var(--r-spring);}
+.r3-day.sel .r3-day-num{box-shadow:inset 0 0 0 1px rgba(255,255,255,.28);}
+.r3-day.today .r3-day-num{background:var(--r-t1);color:#000;font-weight:600;box-shadow:none;}
+.r3-day.today .r3-day-wd{color:var(--r-t1);}
+.r3-day:active .r3-day-num{transform:scale(.9);}
+.r3-day-dot{width:4px;height:4px;border-radius:50%;background:var(--r-t3);}
+.r3-day-dot.none{visibility:hidden;}
+.r3-day.sel .r3-day-dot{background:var(--r-t1);}
+.dash-week{padding-top:14px!important;}
 </style>
 </head>
 <body>
@@ -8679,6 +8695,18 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         }
       });
     }
+    var wsBase = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var wdN = wsBase.getDay();
+    wsBase.setDate(wsBase.getDate() + (wdN === 0 ? 1 : (wdN === 6 ? 2 : 1 - wdN)));
+    var stripLabels = ['一','二','三','四','五'];
+    v2WeekStripHtml = '<div class="r3-week"><div class="r3-week-month">'+(wsBase.getMonth()+1)+'月</div><div class="r3-week-days">'
+      + DASH_WEEK_DAYS.map(function(day, i) {
+        var d = new Date(wsBase); d.setDate(wsBase.getDate() + i);
+        var isToday = dashDateStamp(d) === dashDateStamp(now);
+        var hasClass = T3_WEEKLY_TIMETABLE.some(function(r){ return r.day === day; });
+        return '<button class="r3-day'+(isToday ? ' today' : '')+(day === dashboardScheduleDay ? ' sel' : '')+'" onclick="setDashboardScheduleDay(\''+day+'\')" aria-label="'+day+'">'
+          + '<span class="r3-day-wd">'+stripLabels[i]+'</span><span class="r3-day-num">'+d.getDate()+'</span><i class="r3-day-dot'+(hasClass ? '' : ' none')+'"></i></button>';
+      }).join('') + '</div></div>';
     var dayButtons = DASH_WEEK_DAYS.map(function(day) {
       var dots = (rowsByDay[day] || []).slice(0,4).map(function(){ return '<i></i>'; }).join('');
       return '<button class="dash-day '+(day === dashboardScheduleDay ? 'active' : '')+'" onclick="setDashboardScheduleDay(\''+day+'\')">'
@@ -8735,6 +8763,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   var v2QueueHtml = '';
+  var v2WeekStripHtml = '';
   function renderTimetablePage() {
     var host = document.getElementById('v2-tt-page');
     if (!host || typeof T3_WEEKLY_TIMETABLE === 'undefined') return;
@@ -8742,9 +8771,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var lane = Math.max(300, Math.min(560, vh - 420));
     var now = new Date();
     var wd = ['周日','周一','周二','周三','周四','周五','周六'][now.getDay()];
-    host.innerHTML = '<div class="v2-tt-head"><div class="v2-kicker">本周课表</div><div class="v2-tt-date">'+(now.getMonth()+1)+'月'+now.getDate()+'日 · '+wd+'</div></div>'
+    var grid = renderDashboardTimetable(lane);
+    host.innerHTML = v2WeekStripHtml
       + '<div class="v2-tt-queue"><div class="v2-section-title">最近日程</div><div class="dash-queue">'+(v2QueueHtml || '<div class="v2-tt-empty">未来两周没有未完成考核。</div>')+'</div></div>'
-      + renderDashboardTimetable(lane);
+      + grid;
   }
   window.addEventListener('resize', function(){ var a=document.querySelector('.course-section.active'); if (a && a.id==='sec-timetable') renderTimetablePage(); });
 
