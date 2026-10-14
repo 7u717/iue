@@ -2585,104 +2585,14 @@ header > div:first-child{width:32px!important;height:32px!important;box-shadow:0
 .dash-queue-title,.v2-alert-title,.cd-name,.course-library-title,.v2-hero-title{white-space:normal!important;overflow:hidden!important;text-overflow:clip!important;display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2!important;word-break:normal;overflow-wrap:anywhere;}
 .dash-queue-row > div:nth-child(2),.v2-alert-main,.cd-left{min-width:0!important;}
 .dash-queue-row,.v2-alert-row,.cd-card{align-items:center!important;}
+.r3-in-l{animation:r3InL .38s cubic-bezier(.22,1,.36,1);}
+.r3-in-r{animation:r3InR .38s cubic-bezier(.22,1,.36,1);}
+@keyframes r3InL{from{opacity:0;transform:translate3d(28px,0,0)}to{opacity:1;transform:none}}
+@keyframes r3InR{from{opacity:0;transform:translate3d(-28px,0,0)}to{opacity:1;transform:none}}
+.dash-week{touch-action:pan-y;}
 </style>
 </head>
 <body>
-<style id="iue-lock-css">
-.iue-lock{position:fixed;inset:0;z-index:600;background:#000;display:flex;align-items:center;justify-content:center;transition:opacity .45s cubic-bezier(.22,1,.36,1);}
-.iue-lock.gone{opacity:0;pointer-events:none;}
-.iue-lock-in{display:flex;flex-direction:column;align-items:center;width:260px;text-align:center;}
-.iue-lock-logo{font-size:28px;font-weight:600;letter-spacing:-.03em;color:#f5f5f7;margin-bottom:6px;}
-.iue-lock-sub{font-size:12px;color:#6e6e73;letter-spacing:.06em;margin-bottom:34px;min-height:16px;}
-.iue-lock-face{width:64px;height:64px;border-radius:50%;border:0;background:#1c1c1e;color:#f5f5f7;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .2s cubic-bezier(.22,1,.36,1);}
-.iue-lock-face:active{transform:scale(.92);}
-.iue-lock-face svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
-.iue-lock-link{margin-top:22px;background:none;border:0;color:#a1a1a6;font-size:13px;cursor:pointer;}
-.iue-lock-form{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;}
-.iue-lock-input{width:200px;height:44px;border-radius:999px;border:0;background:#141415;box-shadow:inset 0 0 0 .5px rgba(255,255,255,.11);color:#f5f5f7;text-align:center;font-size:17px;letter-spacing:.3em;outline:0;-webkit-user-select:text;user-select:text;}
-.iue-lock-input:focus{box-shadow:inset 0 0 0 1px #6e6e73;}
-.iue-lock-btn{height:40px;min-width:120px;padding:0 18px;border-radius:999px;border:0;background:#f5f5f7;color:#000;font-size:15px;font-weight:600;cursor:pointer;}
-.iue-lock-btn.ghost{background:#1c1c1e;color:#f5f5f7;}
-.iue-lock-btn:active{transform:scale(.95);}
-.iue-lock-shake{animation:iueLockShake .4s;}
-@keyframes iueLockShake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
-[hidden]{display:none!important;}
-</style>
-<div class="iue-lock" id="iue-lock">
-  <div class="iue-lock-in">
-    <div class="iue-lock-logo">iue</div>
-    <div class="iue-lock-sub" id="iue-lock-sub">已锁定</div>
-    <div id="iue-lock-face-view" hidden>
-      <button class="iue-lock-face" type="button" onclick="iueLockFace()" aria-label="Face ID"><svg viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M9 9.5v1M15 9.5v1M12 9.5v3.5h-1M9.5 16c1.5 1 3.5 1 5 0"/></svg></button>
-      <button class="iue-lock-link" type="button" onclick="iueLockShowPw()">输入密码</button>
-    </div>
-    <form class="iue-lock-form" id="iue-lock-pw-view" onsubmit="iueLockPw(event)" hidden>
-      <input class="iue-lock-input" id="iue-lock-input" type="password" autocomplete="current-password" aria-label="密码">
-      <button class="iue-lock-btn" type="submit">解锁</button>
-    </form>
-    <div class="iue-lock-form" id="iue-lock-enroll-view" hidden>
-      <button class="iue-lock-btn" type="button" onclick="iueLockEnroll()">启用 Face ID</button>
-      <button class="iue-lock-link" type="button" onclick="iueLockOpen()" style="margin-top:4px;">以后再说</button>
-    </div>
-  </div>
-</div>
-<script>
-(function(){
-  var LOCK_SALT = '6a5559b19ec7c232fd7cc0d13e3e131a';
-  var LOCK_HASH = '4ac317b9cff0949f021a8011d15b16661aa4c6d7d04ac4d7035c8a3e23c7e94a';
-  var CRED_KEY = 'iue.faceid.credId.v1';
-  var lock = document.getElementById('iue-lock');
-  var rpId = /(^|\.)7u717\.github\.io$/.test(location.hostname) ? '7u717.github.io' : location.hostname;
-  function view(id){ ['iue-lock-face-view','iue-lock-pw-view','iue-lock-enroll-view'].forEach(function(v){ document.getElementById(v).hidden = v !== id; }); }
-  function sub(t){ document.getElementById('iue-lock-sub').textContent = t; }
-  function b64(buf){ return btoa(String.fromCharCode.apply(null, new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
-  function unb64(s){ s = s.replace(/-/g,'+').replace(/_/g,'/'); while (s.length % 4) s += '='; var b = atob(s), a = new Uint8Array(b.length); for (var i=0;i<b.length;i++) a[i]=b.charCodeAt(i); return a; }
-  function rand(n){ var a = new Uint8Array(n); crypto.getRandomValues(a); return a; }
-  function credId(){ try { return localStorage.getItem(CRED_KEY); } catch(e) { return null; } }
-  function canPasskey(){ return !!(window.PublicKeyCredential && navigator.credentials && window.isSecureContext); }
-  window.iueLockOpen = function(){ try { sessionStorage.setItem('iue.unlocked', '1'); } catch(e) {} lock.classList.add('gone'); setTimeout(function(){ lock.hidden = true; }, 500); };
-  window.iueLockShowPw = function(){ view('iue-lock-pw-view'); sub('输入密码'); setTimeout(function(){ document.getElementById('iue-lock-input').focus(); }, 50); };
-  window.iueLockPw = function(ev){
-    ev.preventDefault();
-    var inp = document.getElementById('iue-lock-input'), v = inp.value;
-    if (!v || !crypto.subtle) return;
-    crypto.subtle.digest('SHA-256', new TextEncoder().encode(LOCK_SALT + v)).then(function(buf){
-      var hex = Array.prototype.map.call(new Uint8Array(buf), function(x){ return ('0'+x.toString(16)).slice(-2); }).join('');
-      if (hex !== LOCK_HASH) { inp.value = ''; var f = document.getElementById('iue-lock-pw-view'); f.classList.remove('iue-lock-shake'); void f.offsetWidth; f.classList.add('iue-lock-shake'); sub('密码不对'); return; }
-      inp.value = '';
-      if (!credId() && canPasskey()) {
-        PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(function(ok){
-          if (ok) { view('iue-lock-enroll-view'); sub('下次用 Face ID 解锁？'); } else window.iueLockOpen();
-        }).catch(function(){ window.iueLockOpen(); });
-      } else window.iueLockOpen();
-    });
-  };
-  window.iueLockEnroll = function(){
-    navigator.credentials.create({ publicKey: {
-      challenge: rand(32), rp: { id: rpId, name: 'iue' },
-      user: { id: rand(16), name: 'iue', displayName: 'iue' },
-      pubKeyCredParams: [{ type:'public-key', alg:-7 }, { type:'public-key', alg:-257 }],
-      authenticatorSelection: { authenticatorAttachment:'platform', userVerification:'required', residentKey:'preferred' },
-      timeout: 60000, attestation: 'none'
-    }}).then(function(cred){
-      try { localStorage.setItem(CRED_KEY, b64(cred.rawId)); } catch(e) {}
-      window.iueLockOpen();
-    }).catch(function(){ sub('没启用成功，可以下次再试'); setTimeout(window.iueLockOpen, 900); });
-  };
-  window.iueLockFace = function(){
-    var id = credId(); if (!id) { window.iueLockShowPw(); return; }
-    sub('Face ID');
-    navigator.credentials.get({ publicKey: {
-      challenge: rand(32), rpId: rpId, userVerification: 'required', timeout: 60000,
-      allowCredentials: [{ type:'public-key', id: unb64(id), transports:['internal'] }]
-    }}).then(function(a){ if (a) window.iueLockOpen(); }).catch(function(){ sub('轻点重试，或输入密码'); });
-  };
-  var unlocked = false; try { unlocked = sessionStorage.getItem('iue.unlocked') === '1'; } catch(e) {}
-  if (unlocked) { lock.hidden = true; return; }
-  if (credId() && canPasskey()) { view('iue-lock-face-view'); sub('用 Face ID 解锁'); setTimeout(window.iueLockFace, 350); }
-  else window.iueLockShowPw();
-})();
-</script>
 
 <div class="iue-splash" aria-hidden="true">
   <div class="iue-splash-mark">
@@ -4466,7 +4376,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-14-faceid';
+  var APP_VERSION = '2026-10-14-acc-faceid';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5733,7 +5643,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function shouldIgnoreSwipeTarget(target) {
-    return !!(target && target.closest && target.closest('.tab-bar, .course-switcher, .course-rail, .course-filter-bar, .test-type-grid, .dash-day, .dash-class, .dash-course, .dash-queue-row, .dash-action, a, button, input, textarea, select, details, summary'));
+    return !!(target && target.closest && target.closest('.tab-bar, .course-switcher, .course-rail, .course-filter-bar, .test-type-grid, .dash-day, .dash-week, .r3-week, .dash-class, .dash-course, .dash-queue-row, .dash-action, a, button, input, textarea, select, details, summary'));
   }
 
   function setSwipeVisual(x) {
@@ -8797,6 +8707,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var wsBase = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     var wdN = wsBase.getDay();
     wsBase.setDate(wsBase.getDate() + (wdN === 0 ? 1 : (wdN === 6 ? 2 : 1 - wdN)));
+    wsBase.setDate(wsBase.getDate() + 7 * (window.v2WeekOffset || 0));
     var stripLabels = ['一','二','三','四','五'];
     v2WeekStripHtml = '<div class="r3-week"><div class="r3-week-month">'+(wsBase.getMonth()+1)+'月</div><div class="r3-week-days">'
       + DASH_WEEK_DAYS.map(function(day, i) {
@@ -8876,6 +8787,44 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       + grid;
   }
   window.addEventListener('resize', function(){ var a=document.querySelector('.course-section.active'); if (a && a.id==='sec-timetable') renderTimetablePage(); });
+  // timetable swipe: grid swipes day (crosses week edges), week strip swipes week
+  window.v2WeekOffset = 0;
+  (function(){
+    var host = document.getElementById('v2-tt-page'); if (!host) return;
+    var sx = 0, sy = 0, zone = null, live = null, horiz = null;
+    function step(dir, isWeek){
+      var i = DASH_WEEK_DAYS.indexOf(dashboardScheduleDay);
+      if (isWeek) { window.v2WeekOffset += dir; }
+      else {
+        i += dir;
+        if (i > 4) { i = 0; window.v2WeekOffset += 1; }
+        if (i < 0) { i = 4; window.v2WeekOffset -= 1; }
+      }
+      setDashboardScheduleDay(DASH_WEEK_DAYS[i]);
+      var t = host.querySelector(isWeek ? '.r3-week-days' : '.dash-events');
+      if (t) { t.classList.remove('r3-in-l','r3-in-r'); void t.offsetWidth; t.classList.add(dir > 0 ? 'r3-in-l' : 'r3-in-r'); }
+    }
+    host.addEventListener('touchstart', function(e){
+      var z = e.target.closest && e.target.closest('.r3-week, .dash-week');
+      if (!z || e.touches.length !== 1) { zone = null; return; }
+      zone = z.classList.contains('r3-week') ? 'week' : 'day';
+      live = host.querySelector(zone === 'week' ? '.r3-week-days' : '.dash-events');
+      sx = e.touches[0].clientX; sy = e.touches[0].clientY; horiz = null;
+    }, { passive:true });
+    host.addEventListener('touchmove', function(e){
+      if (!zone || !live) return;
+      var dx = e.touches[0].clientX - sx, dy = e.touches[0].clientY - sy;
+      if (horiz === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) horiz = Math.abs(dx) > Math.abs(dy);
+      if (horiz) { e.preventDefault(); live.style.transition = 'none'; live.style.transform = 'translate3d('+(dx*.35)+'px,0,0)'; live.style.opacity = String(1 - Math.min(.5, Math.abs(dx)/400)); }
+    }, { passive:false });
+    host.addEventListener('touchend', function(e){
+      if (!zone || !live) return;
+      var dx = e.changedTouches[0].clientX - sx, wasH = horiz, z = zone;
+      live.style.transition = 'transform .3s cubic-bezier(.22,1,.36,1), opacity .3s'; live.style.transform = ''; live.style.opacity = '';
+      zone = null; live = null;
+      if (wasH && Math.abs(dx) > 50) step(dx < 0 ? 1 : -1, z === 'week');
+    });
+  })();
 
   function sydKey(date) {
     var p = new Intl.DateTimeFormat('en-CA', { timeZone:'Australia/Sydney', year:'numeric', month:'2-digit', day:'2-digit' }).format(new Date(date));
@@ -9480,15 +9429,97 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   <div class="profile-info-row">
     <div>
       <div class="profile-label">访问码</div>
-      <div class="profile-value" id="access-mask" style="letter-spacing:.08em;">••••••-••••••-••••••</div>
-      <form id="access-check" onsubmit="checkAccessCode(event)" style="display:flex;gap:8px;margin-top:8px;"><input id="access-input" class="sync-input" type="password" autocomplete="off" placeholder="输入访问码核对" style="flex:1;margin:0;"><button class="sync-btn" type="submit">核对</button></form>
-      <div id="access-result" style="font-size:12px;color:var(--muted);margin-top:6px;min-height:16px;"></div>
+      <div class="acc-wrap" id="acc-wrap">
+        <div class="profile-value acc-code" id="access-mask">••••••-••••••-••••••</div>
+        <div class="acc-locked" id="acc-locked">
+          <button class="sync-btn acc-face" id="acc-face" type="button" onclick="accFace()" hidden>Face ID</button>
+          <form class="acc-form" onsubmit="accPw(event)"><input id="acc-input" class="sync-input" type="password" autocomplete="off" placeholder="输入密码查看" aria-label="密码"><button class="sync-btn" type="submit">查看</button></form>
+        </div>
+        <div class="acc-open" id="acc-open" hidden>
+          <button class="sync-btn" type="button" onclick="accCopy()">复制</button>
+          <button class="sync-btn acc-ghost" type="button" onclick="accLock()">隐藏</button>
+          <button class="sync-btn acc-ghost" id="acc-enroll" type="button" onclick="accEnroll()" hidden>启用 Face ID</button>
+        </div>
+        <div class="acc-msg" id="acc-msg"></div>
+      </div>
+<style>
+.acc-code{letter-spacing:.08em;font-variant-numeric:tabular-nums;-webkit-user-select:text!important;user-select:text!important;}
+.acc-wrap.open .acc-code{color:#f5f5f7;}
+.acc-locked,.acc-open{display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap;}
+.acc-form{display:flex;gap:8px;flex:1;min-width:200px;}
+.acc-form .sync-input{flex:1;margin:0;}
+.acc-ghost{background:transparent!important;box-shadow:inset 0 0 0 .5px rgba(255,255,255,.18)!important;}
+.acc-msg{font-size:12px;color:var(--muted);margin-top:6px;min-height:16px;}
+[hidden]{display:none!important;}
+</style>
+<script>
+(function(){
+  var ENC = { salt:'dAJn/opPvY2il/PVsEU+1w==', iv:'RpRqZk2TzcDOMl1x', ct:'RZvQ2nXW+N9dLoqLhSPifVW+tBXyLhj9D4Pdn/AfGvyjdT3a', iter:250000 };
+  var CRED_KEY = 'iue.faceid.credId.v1', DKEY = 'iue.access.key.v1';
+  var rpId = /(^|\.)7u717\.github\.io$/.test(location.hostname) ? '7u717.github.io' : location.hostname;
+  var plain = '';
+  function el(id){ return document.getElementById(id); }
+  function msg(t){ el('acc-msg').textContent = t || ''; }
+  function u8(b){ b = b.replace(/-/g,'+').replace(/_/g,'/'); while (b.length % 4) b += '='; var s = atob(b), a = new Uint8Array(s.length); for (var i=0;i<s.length;i++) a[i]=s.charCodeAt(i); return a; }
+  function b64(buf){ return btoa(String.fromCharCode.apply(null, new Uint8Array(buf))); }
+  function rand(n){ var a = new Uint8Array(n); crypto.getRandomValues(a); return a; }
+  function ls(k, v){ try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch(e) { return null; } }
+  function canPasskey(){ return !!(window.PublicKeyCredential && navigator.credentials && window.isSecureContext && window.crypto && crypto.subtle); }
+  function decryptWith(rawKey){
+    return crypto.subtle.importKey('raw', rawKey, 'AES-GCM', false, ['decrypt'])
+      .then(function(k){ return crypto.subtle.decrypt({ name:'AES-GCM', iv:u8(ENC.iv) }, k, u8(ENC.ct)); })
+      .then(function(buf){ return new TextDecoder().decode(buf); });
+  }
+  function derive(pw){
+    return crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveBits'])
+      .then(function(base){ return crypto.subtle.deriveBits({ name:'PBKDF2', salt:u8(ENC.salt), iterations:ENC.iter, hash:'SHA-256' }, base, 256); });
+  }
+  function refreshFace(){ el('acc-face').hidden = !(ls(CRED_KEY) && ls(DKEY) && canPasskey()); }
+  function show(code){
+    plain = code; el('access-mask').textContent = code; el('acc-wrap').classList.add('open');
+    el('acc-locked').hidden = true; el('acc-open').hidden = false; msg('');
+    el('acc-enroll').hidden = !!ls(CRED_KEY) || !canPasskey();
+  }
+  window.accLock = function(){ plain = ''; el('access-mask').textContent = '••••••-••••••-••••••'; el('acc-wrap').classList.remove('open'); el('acc-locked').hidden = false; el('acc-open').hidden = true; refreshFace(); msg(''); };
+  window.accPw = function(ev){
+    ev.preventDefault();
+    var inp = el('acc-input'), v = inp.value; if (!v || !window.crypto || !crypto.subtle) return;
+    msg('核对中…');
+    derive(v).then(function(raw){
+      return decryptWith(raw).then(function(code){ ls(DKEY, b64(raw)); inp.value = ''; show(code); });
+    }).catch(function(){ inp.value = ''; msg('密码不对'); });
+  };
+  window.accFace = function(){
+    var id = ls(CRED_KEY), raw = ls(DKEY); if (!id || !raw) return;
+    navigator.credentials.get({ publicKey: { challenge: rand(32), rpId: rpId, userVerification:'required', timeout:60000,
+      allowCredentials: [{ type:'public-key', id: u8(id), transports:['internal'] }] } })
+      .then(function(a){ if (!a) throw 0; return decryptWith(u8(raw)); })
+      .then(show).catch(function(){ msg('Face ID 没通过，可以输入密码'); });
+  };
+  window.accEnroll = function(){
+    navigator.credentials.create({ publicKey: {
+      challenge: rand(32), rp: { id: rpId, name:'iue' }, user: { id: rand(16), name:'iue', displayName:'iue' },
+      pubKeyCredParams: [{ type:'public-key', alg:-7 }, { type:'public-key', alg:-257 }],
+      authenticatorSelection: { authenticatorAttachment:'platform', userVerification:'required', residentKey:'preferred' },
+      timeout:60000, attestation:'none' } })
+      .then(function(c){ ls(CRED_KEY, b64(c.rawId).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')); el('acc-enroll').hidden = true; msg('已启用，下次可用 Face ID 查看'); })
+      .catch(function(){ msg('没启用成功'); });
+  };
+  window.accCopy = function(){
+    if (!plain) return;
+    var done = function(){ msg('已复制'); setTimeout(function(){ msg(''); }, 1500); };
+    var fallback = function(){ var r = document.createRange(); r.selectNodeContents(el('access-mask')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); try { document.execCommand('copy'); done(); } catch(e) { msg('已选中，长按复制'); } };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(plain).then(done, fallback); else fallback();
+  };
+  refreshFace();
+})();
+</script>
     </div>
   </div>
   <div class="profile-info-row" style="border-bottom:none;">
     <div>
       <div class="profile-label">UNSW 邮箱</div>
-      <div class="profile-value">z5•••••@ad.unsw.edu.au</div>
+      <div class="profile-value">z5678040@ad.unsw.edu.au</div>
     </div>
   </div>
   <div style="font-size:12px;color:var(--muted);margin-top:16px;margin-bottom:6px;">临时备忘录</div>
