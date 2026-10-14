@@ -2631,6 +2631,13 @@ header > div:first-child{width:32px!important;height:32px!important;box-shadow:0
 .dash-queue-row{grid-template-columns:minmax(0,1fr) 58px!important;}
 .dash-queue-time{width:58px;text-align:right!important;display:flex!important;justify-content:flex-end;align-items:baseline;gap:2px;font-variant-numeric:tabular-nums;}
 .dash-queue-time span{display:inline!important;width:14px;text-align:left;margin:0!important;}
+/* timetable: no shake on day change — only crossfade of the day's events */
+#v2-tt-page .dash-week,#v2-tt-page .dash-class,#v2-tt-page .v2-tt-queue,#v2-tt-page .dash-queue-row,#v2-tt-page .r3-week,#v2-tt-page .r3-week-days{animation:none!important;}
+#v2-tt-page .dash-events.r3-xfade{animation:r3Xfade .28s ease both!important;}
+@keyframes r3Xfade{from{opacity:.25}to{opacity:1}}
+#v2-tt-page .r3-day-num{transition:background .25s ease,box-shadow .25s ease!important;}
+#v2-tt-page .r3-day:active .r3-day-num{transform:none!important;}
+@media (prefers-reduced-motion:reduce){#v2-tt-page .dash-events.r3-xfade{animation:none!important}}
 </style>
 </head>
 <body>
@@ -4417,7 +4424,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-14-polish4';
+  var APP_VERSION = '2026-10-14-tt-steady';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -8843,34 +8850,33 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var sx = 0, sy = 0, zone = null, live = null, horiz = null;
     function step(dir, isWeek){
       var i = DASH_WEEK_DAYS.indexOf(dashboardScheduleDay);
-      if (isWeek) { window.v2WeekOffset += dir; }
-      else {
+      {
         i += dir;
         if (i > 4) { i = 0; window.v2WeekOffset += 1; }
         if (i < 0) { i = 4; window.v2WeekOffset -= 1; }
       }
       v2SaveWeek();
       setDashboardScheduleDay(DASH_WEEK_DAYS[i]);
-      var t = host.querySelector(isWeek ? '.r3-week-days' : '.dash-events');
-      if (t) { t.classList.remove('r3-in-l','r3-in-r'); void t.offsetWidth; t.classList.add(dir > 0 ? 'r3-in-l' : 'r3-in-r'); }
+      var t = host.querySelector('.dash-events');
+      if (t) t.classList.add('r3-xfade');
     }
     host.addEventListener('touchstart', function(e){
       var z = e.target.closest && e.target.closest('.r3-week, .dash-week');
       if (!z || e.touches.length !== 1) { zone = null; return; }
       zone = z.classList.contains('r3-week') ? 'week' : 'day';
-      live = host.querySelector(zone === 'week' ? '.r3-week-days' : '.dash-events');
+      live = host.querySelector('.dash-events');
       sx = e.touches[0].clientX; sy = e.touches[0].clientY; horiz = null;
     }, { passive:true });
     host.addEventListener('touchmove', function(e){
       if (!zone || !live) return;
       var dx = e.touches[0].clientX - sx, dy = e.touches[0].clientY - sy;
       if (horiz === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) horiz = Math.abs(dx) > Math.abs(dy);
-      if (horiz) { e.preventDefault(); live.style.transition = 'none'; live.style.transform = 'translate3d('+(dx*.35)+'px,0,0)'; live.style.opacity = String(1 - Math.min(.5, Math.abs(dx)/400)); }
+      if (horiz) { e.preventDefault(); live.style.transition = 'none'; live.style.opacity = String(1 - Math.min(.35, Math.abs(dx)/500)); }
     }, { passive:false });
     host.addEventListener('touchend', function(e){
       if (!zone || !live) return;
       var dx = e.changedTouches[0].clientX - sx, wasH = horiz, z = zone;
-      live.style.transition = 'transform .3s cubic-bezier(.22,1,.36,1), opacity .3s'; live.style.transform = ''; live.style.opacity = '';
+      live.style.transition = 'opacity .25s ease'; live.style.opacity = '';
       zone = null; live = null;
       if (wasH && Math.abs(dx) > 50) step(dx < 0 ? 1 : -1, z === 'week');
     });
