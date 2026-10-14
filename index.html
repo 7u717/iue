@@ -2607,6 +2607,30 @@ header > div:first-child{width:32px!important;height:32px!important;box-shadow:0
   .iue-splash{animation:r3SplashOut .25s ease .3s forwards!important;}
   .iue-splash-mark,.iue-splash-logo span,.iue-splash-line{animation:none!important;opacity:1!important;transform:none!important;}
 }
+/* polish4 */
+.r3-week-month{position:relative;}
+.r3-today{position:absolute;right:0;top:50%;transform:translateY(-50%);background:none;border:0;padding:4px 2px;font-size:12px;font-weight:500;letter-spacing:0;color:var(--r-t3);cursor:pointer;animation:r3Fade .3s ease both;}
+.r3-today:active{color:var(--r-t1);}
+@keyframes r3Fade{from{opacity:0}to{opacity:1}}
+.r3-pop{animation:r3Pop .45s var(--r-spring) both!important;}
+@keyframes r3Pop{0%{transform:scale(.6)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+.r3-spark{position:fixed;width:3px;height:3px;margin:-1.5px 0 0 -1.5px;border-radius:50%;background:#a1a1a6;pointer-events:none;z-index:900;animation:r3Spark .55s cubic-bezier(.22,1,.36,1) forwards;}
+@keyframes r3Spark{from{opacity:1;transform:translate3d(0,0,0)}to{opacity:0;transform:translate3d(var(--dx),var(--dy),0)}}
+.r3-fade-ok{animation:r3Fade .4s ease both;}
+@media (prefers-reduced-motion:reduce){.r3-pop,.r3-fade-ok,.r3-today{animation:none!important}}
+/* profile buttons -> pills */
+#profile-panel .sync-btn{height:40px!important;min-height:0!important;padding:0 18px!important;border-radius:999px!important;border:0!important;background:var(--r-s3)!important;color:var(--r-t1)!important;font-size:14px!important;font-weight:600!important;box-shadow:none!important;flex:0 0 auto;transition:transform .2s var(--r-ease),opacity .2s!important;}
+#profile-panel .sync-btn.primary{background:var(--r-t1)!important;color:#000!important;}
+#profile-panel .sync-btn.acc-ghost{background:transparent!important;box-shadow:inset 0 0 0 .5px rgba(255,255,255,.18)!important;}
+#profile-panel .sync-btn:active{transform:scale(.95);opacity:.85;}
+#profile-panel .sync-input{height:40px!important;border-radius:999px!important;border:0!important;background:var(--r-s2)!important;box-shadow:inset 0 0 0 .5px var(--r-line)!important;padding:0 16px!important;color:var(--r-t1)!important;}
+/* PHYS1160 quiz/APOD: plain rows */
+.phys-gate-panel{background:none!important;box-shadow:none!important;border:0!important;border-top:.5px solid var(--r-hair)!important;border-radius:0!important;padding:18px 0!important;margin:0!important;}
+.phys-gate-panel:active{transform:none!important;}
+/* 最近日程 fixed time column */
+.dash-queue-row{grid-template-columns:minmax(0,1fr) 58px!important;}
+.dash-queue-time{width:58px;text-align:right!important;display:flex!important;justify-content:flex-end;align-items:baseline;gap:2px;font-variant-numeric:tabular-nums;}
+.dash-queue-time span{display:inline!important;width:14px;text-align:left;margin:0!important;}
 </style>
 </head>
 <body>
@@ -4393,7 +4417,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-14-splash';
+  var APP_VERSION = '2026-10-14-polish4';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -8726,7 +8750,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     wsBase.setDate(wsBase.getDate() + (wdN === 0 ? 1 : (wdN === 6 ? 2 : 1 - wdN)));
     wsBase.setDate(wsBase.getDate() + 7 * (window.v2WeekOffset || 0));
     var stripLabels = ['一','二','三','四','五'];
-    v2WeekStripHtml = '<div class="r3-week"><div class="r3-week-month">'+(wsBase.getMonth()+1)+'月</div><div class="r3-week-days">'
+    var wdNow = now.getDay(), todayDayKey = (wdNow >= 1 && wdNow <= 5) ? DASH_WEEK_DAYS[wdNow-1] : null;
+    var awayFromToday = (window.v2WeekOffset || 0) !== 0 || (todayDayKey && dashboardScheduleDay !== todayDayKey);
+    v2WeekStripHtml = '<div class="r3-week"><div class="r3-week-month">'+(wsBase.getMonth()+1)+'月'+(awayFromToday ? '<button class="r3-today" onclick="v2BackToToday()">回到今天</button>' : '')+'</div><div class="r3-week-days">'
       + DASH_WEEK_DAYS.map(function(day, i) {
         var d = new Date(wsBase); d.setDate(wsBase.getDate() + i);
         var isToday = dashDateStamp(d) === dashDateStamp(now);
@@ -8805,7 +8831,13 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
   window.addEventListener('resize', function(){ var a=document.querySelector('.course-section.active'); if (a && a.id==='sec-timetable') renderTimetablePage(); });
   // timetable swipe: grid swipes day (crosses week edges), week strip swipes week
-  window.v2WeekOffset = 0;
+  window.v2WeekOffset = (function(){ try { var o = JSON.parse(localStorage.getItem('iue.ttWeek.v1') || 'null'); return (o && o.d === dashDateStamp()) ? (o.off|0) : 0; } catch(e) { return 0; } })();
+  function v2SaveWeek(){ try { localStorage.setItem('iue.ttWeek.v1', JSON.stringify({ d: dashDateStamp(), off: window.v2WeekOffset })); } catch(e) {} }
+  function v2BackToToday(){
+    window.v2WeekOffset = 0; v2SaveWeek();
+    var wd = new Date().getDay();
+    setDashboardScheduleDay(wd >= 1 && wd <= 5 ? DASH_WEEK_DAYS[wd-1] : 'MON');
+  }
   (function(){
     var host = document.getElementById('v2-tt-page'); if (!host) return;
     var sx = 0, sy = 0, zone = null, live = null, horiz = null;
@@ -8817,6 +8849,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         if (i > 4) { i = 0; window.v2WeekOffset += 1; }
         if (i < 0) { i = 4; window.v2WeekOffset -= 1; }
       }
+      v2SaveWeek();
       setDashboardScheduleDay(DASH_WEEK_DAYS[i]);
       var t = host.querySelector(isWeek ? '.r3-week-days' : '.dash-events');
       if (t) { t.classList.remove('r3-in-l','r3-in-r'); void t.offsetWidth; t.classList.add(dir > 0 ? 'r3-in-l' : 'r3-in-r'); }
@@ -8968,7 +9001,6 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         +'</div>'
         +v2AlertsMarkup(now, data, mobiusDone)
         +'<div id="v2-course-strip"></div>'
-        +v2WeeklyMarkup(now, data, mobiusDone)
         ;
     } else {
       commandEl.innerHTML =
@@ -9556,5 +9588,40 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
 
 <script>(function(){var s=document.querySelector(".iue-splash");if(s)setTimeout(function(){s.remove();},1700);})();</script>
+<script>
+(function(){
+  var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function keyOf(el){
+    var t = el.closest('.cx-tog, .gt-row[data-id], .px-step, .dash-focus-row');
+    if (!t) return null;
+    if (t.classList.contains('cx-tog')) return { sel: '.cx-tog[aria-label="'+t.getAttribute('aria-label')+'"]', on: '.on' };
+    if (t.classList.contains('gt-row')) return { sel: '.gt-row[data-id="'+t.dataset.id+'"]', on: ' .gt-check.done', row: true };
+    return null;
+  }
+  function burst(target){
+    if (RM) return;
+    var r = target.getBoundingClientRect(), cx = r.left + r.width/2, cy = r.top + r.height/2;
+    for (var i = 0; i < 6; i++) {
+      var d = document.createElement('i'), a = i/6*Math.PI*2 + .3;
+      d.className = 'r3-spark';
+      d.style.left = cx + 'px'; d.style.top = cy + 'px';
+      d.style.setProperty('--dx', (Math.cos(a)*18).toFixed(1)+'px'); d.style.setProperty('--dy', (Math.sin(a)*18).toFixed(1)+'px');
+      document.body.appendChild(d);
+      setTimeout(function(n){ return function(){ n.remove(); }; }(d), 600);
+    }
+  }
+  document.addEventListener('click', function(e){
+    var k = keyOf(e.target); if (!k) return;
+    var wasOn = !!document.querySelector(k.sel + k.on);
+    setTimeout(function(){
+      var el = document.querySelector(k.sel); if (!el) return;
+      var on = k.row ? el.querySelector('.gt-check.done') : (el.matches(k.on) ? el : null);
+      if (!on || wasOn) return;
+      on.classList.add('r3-pop'); burst(on);
+      if (k.row) { var st = el.querySelector('.gt-status, .gt-need-text'); if (st) st.classList.add('r3-fade-ok'); }
+    }, 30);
+  }, true);
+})();
+</script>
 </body>
 </html>
