@@ -2678,6 +2678,47 @@ header > div:first-child{width:32px!important;height:32px!important;box-shadow:0
 .dash-class.multi > div{min-width:0;}
 .dash-class.multi .dash-class-sub{line-height:15px!important;}
 #sec-timetable{touch-action:pan-y;}
+/* ===== MyPlan unified ===== */
+#sec-myplan .plan-hero{margin-top:6px!important;}
+#sec-myplan .plan-kicker{margin-bottom:6px!important;}
+#sec-myplan .topic-card{background:var(--r-s1)!important;box-shadow:inset 0 0 0 .5px var(--r-hair)!important;border-radius:var(--r-r)!important;margin:0 0 12px!important;}
+#sec-myplan .topic-header{padding:18px 18px!important;}
+#sec-myplan .topic-title{font-size:16px!important;font-weight:600!important;letter-spacing:-.01em;}
+#sec-myplan .topic-body{padding:0 18px 14px!important;}
+#sec-myplan .plan-uoc-pill,#sec-myplan .plan-prereq-pill,#sec-myplan .plan-term-tag,#sec-myplan .plan-term-target{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;color:var(--r-t3)!important;font-size:12px!important;font-weight:500!important;letter-spacing:0!important;text-transform:none!important;border-radius:0!important;min-width:0!important;height:auto!important;}
+#sec-myplan .plan-term-target{color:var(--r-t2)!important;font-variant-numeric:tabular-nums;}
+#sec-myplan .plan-term-target + .plan-term-tag::before{content:"·";margin:0 5px 0 1px;color:var(--r-t4);}
+#sec-myplan .plan-term-card{background:none!important;box-shadow:none!important;border:0!important;border-top:.5px solid var(--r-hair)!important;border-radius:0!important;padding:16px 0 6px!important;margin:0!important;}
+#sec-myplan .plan-term-card:first-child{border-top:0!important;padding-top:4px!important;}
+#sec-myplan .plan-term-head{display:flex!important;align-items:baseline!important;justify-content:space-between!important;margin-bottom:4px!important;}
+#sec-myplan .plan-term-name{font-size:15px!important;font-weight:600!important;color:var(--r-t1)!important;}
+#sec-myplan .plan-term-uoc{font-size:12px!important;color:var(--r-t3)!important;font-weight:500!important;background:none!important;border:0!important;padding:0!important;font-variant-numeric:tabular-nums;}
+#sec-myplan .plan-term-alert,#sec-myplan .plan-term-alerts{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;color:var(--r-t3)!important;font-size:12px!important;line-height:1.5!important;}
+#sec-myplan .plan-term-courses{display:flex!important;flex-direction:column!important;gap:0!important;margin-top:8px!important;}
+#sec-myplan .plan-term-course{display:grid!important;grid-template-columns:86px minmax(0,1fr) auto!important;align-items:center!important;gap:10px!important;background:none!important;border:0!important;box-shadow:none!important;border-radius:10px!important;padding:10px 0!important;margin:0!important;transition:transform .2s var(--r-ease),opacity .2s!important;}
+#sec-myplan .plan-term-course[onclick]:active{transform:scale(.985);opacity:.7;}
+#sec-myplan .plan-term-code{font-size:13px!important;font-weight:600!important;color:var(--r-t1)!important;letter-spacing:.01em;}
+#sec-myplan .plan-term-title{font-size:13px!important;color:var(--r-t2)!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#sec-myplan .plan-term-course.empty .plan-term-code{color:var(--r-t4)!important;}
+#sec-myplan .plan-term-reason{font-size:11.5px!important;color:var(--r-t3)!important;}
+#sec-myplan .plan-course{display:grid!important;grid-template-columns:86px minmax(0,1fr) auto!important;align-items:center!important;gap:10px!important;padding:12px 0!important;margin:0!important;}
+#sec-myplan .plan-course:first-child{border-top:0!important;}
+#sec-myplan .plan-course-code{font-size:13px!important;font-weight:600!important;}
+#sec-myplan .plan-course-name{font-size:13px!important;color:var(--r-t2)!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#sec-myplan .plan-course-meta{font-size:12px!important;}
+#sec-myplan .topic-dot{display:none!important;}
+#sec-myplan .group-label{margin:26px 0 12px!important;}
+/* ===== link menu pills ===== */
+.header-link-menu{display:flex!important;flex-direction:column;gap:2px;transform-origin:top center!important;transition:opacity .22s var(--r-ease),transform .28s var(--r-ease)!important;}
+.header-link-wrap:not(.open) .header-link-menu{transform:translateY(-6px) scale(.96)!important;}
+.header-link-menu a{display:flex!important;align-items:center;justify-content:space-between;gap:16px;height:46px;padding:0 14px 0 16px!important;border-radius:12px!important;text-decoration:none!important;transition:background .18s ease,transform .18s var(--r-ease)!important;}
+.header-link-menu a::after{content:"";width:14px;height:14px;flex:0 0 14px;background:currentColor;opacity:.4;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M9 7h8v8'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M9 7h8v8'/%3E%3C/svg%3E") center/contain no-repeat;transition:opacity .18s,transform .25s var(--r-ease);}
+.header-link-menu a + a{box-shadow:0 -.5px 0 rgba(255,255,255,.07);}
+.header-link-menu a:hover{background:rgba(255,255,255,.05)!important;}
+.header-link-menu a:active{background:rgba(255,255,255,.1)!important;transform:scale(.97);}
+.header-link-menu a:active::after{opacity:.9;transform:translate(1px,-1px);}
+.header-link-wrap.open .header-link-button{background:var(--r-s3)!important;color:var(--r-t1)!important;}
+@media (prefers-reduced-motion:reduce){.header-link-menu,.header-link-menu a{transition:none!important}}
 </style>
 </head>
 <body>
@@ -4464,7 +4505,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-14-test-replace';
+  var APP_VERSION = '2026-10-14-myplan-links';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
