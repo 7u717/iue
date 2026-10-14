@@ -4464,7 +4464,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-14-tt-overlap';
+  var APP_VERSION = '2026-10-14-grid-tests';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -8743,7 +8743,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     visibleDeadlines().map(function(d){
       return Object.assign({}, d, { diff: new Date(d.date) - now });
     }).filter(function(d) {
-      return d.diff > 0 && d.diff <= 14*24*3600*1000 && !dashIsDeadlineDone(d, data, mobiusDone);
+      var nm = String(d.name || '').replace(/<[^>]+>/g, '') + ' ' + String(d.tag || '');
+      var isTestOrExam = !!d.examTable || /\b(test|tests|exam|exams|midterm)\b/i.test(nm) || /考试|测验/.test(nm);
+      return isTestOrExam && d.diff > 0 && d.diff <= 14*24*3600*1000 && !dashIsDeadlineDone(d, data, mobiusDone);
     }).forEach(function(d) {
       var dt = new Date(d.date);
       var day = DASH_WEEK_DAYS[(dt.getDay() + 6) % 7];
