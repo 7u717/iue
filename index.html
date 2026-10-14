@@ -2588,6 +2588,101 @@ header > div:first-child{width:32px!important;height:32px!important;box-shadow:0
 </style>
 </head>
 <body>
+<style id="iue-lock-css">
+.iue-lock{position:fixed;inset:0;z-index:600;background:#000;display:flex;align-items:center;justify-content:center;transition:opacity .45s cubic-bezier(.22,1,.36,1);}
+.iue-lock.gone{opacity:0;pointer-events:none;}
+.iue-lock-in{display:flex;flex-direction:column;align-items:center;width:260px;text-align:center;}
+.iue-lock-logo{font-size:28px;font-weight:600;letter-spacing:-.03em;color:#f5f5f7;margin-bottom:6px;}
+.iue-lock-sub{font-size:12px;color:#6e6e73;letter-spacing:.06em;margin-bottom:34px;min-height:16px;}
+.iue-lock-face{width:64px;height:64px;border-radius:50%;border:0;background:#1c1c1e;color:#f5f5f7;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .2s cubic-bezier(.22,1,.36,1);}
+.iue-lock-face:active{transform:scale(.92);}
+.iue-lock-face svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.iue-lock-link{margin-top:22px;background:none;border:0;color:#a1a1a6;font-size:13px;cursor:pointer;}
+.iue-lock-form{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;}
+.iue-lock-input{width:200px;height:44px;border-radius:999px;border:0;background:#141415;box-shadow:inset 0 0 0 .5px rgba(255,255,255,.11);color:#f5f5f7;text-align:center;font-size:17px;letter-spacing:.3em;outline:0;-webkit-user-select:text;user-select:text;}
+.iue-lock-input:focus{box-shadow:inset 0 0 0 1px #6e6e73;}
+.iue-lock-btn{height:40px;min-width:120px;padding:0 18px;border-radius:999px;border:0;background:#f5f5f7;color:#000;font-size:15px;font-weight:600;cursor:pointer;}
+.iue-lock-btn.ghost{background:#1c1c1e;color:#f5f5f7;}
+.iue-lock-btn:active{transform:scale(.95);}
+.iue-lock-shake{animation:iueLockShake .4s;}
+@keyframes iueLockShake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+[hidden]{display:none!important;}
+</style>
+<div class="iue-lock" id="iue-lock">
+  <div class="iue-lock-in">
+    <div class="iue-lock-logo">iue</div>
+    <div class="iue-lock-sub" id="iue-lock-sub">已锁定</div>
+    <div id="iue-lock-face-view" hidden>
+      <button class="iue-lock-face" type="button" onclick="iueLockFace()" aria-label="Face ID"><svg viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M9 9.5v1M15 9.5v1M12 9.5v3.5h-1M9.5 16c1.5 1 3.5 1 5 0"/></svg></button>
+      <button class="iue-lock-link" type="button" onclick="iueLockShowPw()">输入密码</button>
+    </div>
+    <form class="iue-lock-form" id="iue-lock-pw-view" onsubmit="iueLockPw(event)" hidden>
+      <input class="iue-lock-input" id="iue-lock-input" type="password" autocomplete="current-password" aria-label="密码">
+      <button class="iue-lock-btn" type="submit">解锁</button>
+    </form>
+    <div class="iue-lock-form" id="iue-lock-enroll-view" hidden>
+      <button class="iue-lock-btn" type="button" onclick="iueLockEnroll()">启用 Face ID</button>
+      <button class="iue-lock-link" type="button" onclick="iueLockOpen()" style="margin-top:4px;">以后再说</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var LOCK_SALT = '6a5559b19ec7c232fd7cc0d13e3e131a';
+  var LOCK_HASH = '4ac317b9cff0949f021a8011d15b16661aa4c6d7d04ac4d7035c8a3e23c7e94a';
+  var CRED_KEY = 'iue.faceid.credId.v1';
+  var lock = document.getElementById('iue-lock');
+  var rpId = /(^|\.)7u717\.github\.io$/.test(location.hostname) ? '7u717.github.io' : location.hostname;
+  function view(id){ ['iue-lock-face-view','iue-lock-pw-view','iue-lock-enroll-view'].forEach(function(v){ document.getElementById(v).hidden = v !== id; }); }
+  function sub(t){ document.getElementById('iue-lock-sub').textContent = t; }
+  function b64(buf){ return btoa(String.fromCharCode.apply(null, new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+  function unb64(s){ s = s.replace(/-/g,'+').replace(/_/g,'/'); while (s.length % 4) s += '='; var b = atob(s), a = new Uint8Array(b.length); for (var i=0;i<b.length;i++) a[i]=b.charCodeAt(i); return a; }
+  function rand(n){ var a = new Uint8Array(n); crypto.getRandomValues(a); return a; }
+  function credId(){ try { return localStorage.getItem(CRED_KEY); } catch(e) { return null; } }
+  function canPasskey(){ return !!(window.PublicKeyCredential && navigator.credentials && window.isSecureContext); }
+  window.iueLockOpen = function(){ try { sessionStorage.setItem('iue.unlocked', '1'); } catch(e) {} lock.classList.add('gone'); setTimeout(function(){ lock.hidden = true; }, 500); };
+  window.iueLockShowPw = function(){ view('iue-lock-pw-view'); sub('输入密码'); setTimeout(function(){ document.getElementById('iue-lock-input').focus(); }, 50); };
+  window.iueLockPw = function(ev){
+    ev.preventDefault();
+    var inp = document.getElementById('iue-lock-input'), v = inp.value;
+    if (!v || !crypto.subtle) return;
+    crypto.subtle.digest('SHA-256', new TextEncoder().encode(LOCK_SALT + v)).then(function(buf){
+      var hex = Array.prototype.map.call(new Uint8Array(buf), function(x){ return ('0'+x.toString(16)).slice(-2); }).join('');
+      if (hex !== LOCK_HASH) { inp.value = ''; var f = document.getElementById('iue-lock-pw-view'); f.classList.remove('iue-lock-shake'); void f.offsetWidth; f.classList.add('iue-lock-shake'); sub('密码不对'); return; }
+      inp.value = '';
+      if (!credId() && canPasskey()) {
+        PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(function(ok){
+          if (ok) { view('iue-lock-enroll-view'); sub('下次用 Face ID 解锁？'); } else window.iueLockOpen();
+        }).catch(function(){ window.iueLockOpen(); });
+      } else window.iueLockOpen();
+    });
+  };
+  window.iueLockEnroll = function(){
+    navigator.credentials.create({ publicKey: {
+      challenge: rand(32), rp: { id: rpId, name: 'iue' },
+      user: { id: rand(16), name: 'iue', displayName: 'iue' },
+      pubKeyCredParams: [{ type:'public-key', alg:-7 }, { type:'public-key', alg:-257 }],
+      authenticatorSelection: { authenticatorAttachment:'platform', userVerification:'required', residentKey:'preferred' },
+      timeout: 60000, attestation: 'none'
+    }}).then(function(cred){
+      try { localStorage.setItem(CRED_KEY, b64(cred.rawId)); } catch(e) {}
+      window.iueLockOpen();
+    }).catch(function(){ sub('没启用成功，可以下次再试'); setTimeout(window.iueLockOpen, 900); });
+  };
+  window.iueLockFace = function(){
+    var id = credId(); if (!id) { window.iueLockShowPw(); return; }
+    sub('Face ID');
+    navigator.credentials.get({ publicKey: {
+      challenge: rand(32), rpId: rpId, userVerification: 'required', timeout: 60000,
+      allowCredentials: [{ type:'public-key', id: unb64(id), transports:['internal'] }]
+    }}).then(function(a){ if (a) window.iueLockOpen(); }).catch(function(){ sub('轻点重试，或输入密码'); });
+  };
+  var unlocked = false; try { unlocked = sessionStorage.getItem('iue.unlocked') === '1'; } catch(e) {}
+  if (unlocked) { lock.hidden = true; return; }
+  if (credId() && canPasskey()) { view('iue-lock-face-view'); sub('用 Face ID 解锁'); setTimeout(window.iueLockFace, 350); }
+  else window.iueLockShowPw();
+})();
+</script>
 
 <div class="iue-splash" aria-hidden="true">
   <div class="iue-splash-mark">
@@ -4371,7 +4466,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-14-rebuild-live';
+  var APP_VERSION = '2026-10-14-faceid';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
