@@ -2940,6 +2940,44 @@ body.lk .lk-o3 span{font-size:12px;}
 .kp-h dt{font-size:11px;color:var(--r-t3);letter-spacing:.04em;padding-top:1px;white-space:nowrap;}
 .kp-h dd{margin:0;font-size:12.5px;line-height:1.5;color:var(--r-t2);}
 .kp-q-x p{margin-top:12px!important;}
+
+/* ===== fx4 ===== */
+/* 0. course switcher labels stay still */
+.course-section.active > .course-switcher > *{animation:none!important;}
+.course-switch,.course-switch.active{line-height:30px!important;font-weight:600!important;transform:translateZ(0)!important;}
+.course-switch:active{transform:translateZ(0)!important;opacity:.6;}
+/* 1. ripple */
+.fx4-rip-host{position:absolute;inset:0;overflow:hidden;border-radius:inherit;pointer-events:none;z-index:0;}
+.fx4-rip{position:absolute;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.12),rgba(255,255,255,.05) 60%,transparent);transform:scale(0);animation:fx4Rip .85s cubic-bezier(.22,1,.36,1) forwards;}
+@keyframes fx4Rip{60%{opacity:1}to{transform:scale(1);opacity:0}}
+/* 2. bottom nav press */
+.tab-bar.fx4-press .fx-ind{transform-origin:center;}
+/* 3. gyro sheen */
+.v2-hero.fx-gyro:not(.fx-lit),.course-tile.fx-gyro:not(.fx-lit),.hub-entry.fx-gyro:not(.fx-lit){background-image:radial-gradient(70% 70% at var(--fx-gx) var(--fx-gy),rgba(255,255,255,.055),transparent 70%)!important;}
+/* 4. urgency glow */
+.v2-hero.fx4-urg{animation:fx4Breath var(--fx4-dur,6s) ease-in-out infinite;}
+.v2-hero.fx4-urg::after{opacity:calc(.55 + var(--fx4-u,0) * .45);}
+@keyframes fx4Breath{0%,100%{box-shadow:0 0 calc(10px + var(--fx4-u,0) * 18px) rgba(255,255,255,calc(var(--fx4-u,0) * .05))}50%{box-shadow:0 0 calc(22px + var(--fx4-u,0) * 46px) rgba(255,255,255,calc(.02 + var(--fx4-u,0) * .14))}}
+/* 5. week page flip */
+.kp-body{position:relative;perspective:1100px;}
+.kp-in-r{animation:kpUnder .55s cubic-bezier(.22,1,.36,1) both!important;}
+.kp-in-l{animation:kpUnder .55s cubic-bezier(.22,1,.36,1) both!important;}
+@keyframes kpUnder{from{opacity:.35;transform:translateY(6px) scale(.965)}}
+.kp-ghost{position:absolute;inset:0;background:var(--r-s1);border-radius:14px;pointer-events:none;backface-visibility:hidden;box-shadow:0 18px 40px rgba(0,0,0,.5);z-index:2;}
+.kp-ghost.fwd{transform-origin:left center;animation:kpFlipF .6s cubic-bezier(.45,.05,.3,1) forwards;}
+.kp-ghost.back{transform-origin:right center;animation:kpFlipB .6s cubic-bezier(.45,.05,.3,1) forwards;}
+@keyframes kpFlipF{55%{opacity:1}to{transform:rotateY(-78deg) translateX(-8px);opacity:0;box-shadow:0 18px 40px rgba(0,0,0,0)}}
+@keyframes kpFlipB{55%{opacity:1}to{transform:rotateY(78deg) translateX(8px);opacity:0;box-shadow:0 18px 40px rgba(0,0,0,0)}}
+/* 6. long-press preview */
+.fx4-pv{position:fixed;left:50%;top:16%;z-index:852;width:min(280px,calc(100% - 64px));padding:22px 20px 20px;border-radius:24px;background:#1c1c1e;box-shadow:0 30px 80px rgba(0,0,0,.7),inset 0 0 0 .5px rgba(255,255,255,.12);text-align:center;transform:translate3d(-50%,8px,0) scale(.92);opacity:0;transition:transform .45s cubic-bezier(.32,1.3,.45,1),opacity .2s;pointer-events:none;}
+.fx4-pv.open{transform:translate3d(-50%,0,0) scale(1);opacity:1;}
+.fx4-pv-k{font-size:11px;color:var(--r-t3);letter-spacing:.06em;}
+.fx4-pv-n{display:flex;align-items:baseline;justify-content:center;gap:4px;margin:6px 0 4px;}
+.fx4-pv-n b{font-family:var(--r-num);font-size:54px;font-weight:200;color:var(--r-t1);letter-spacing:-.04em;line-height:1;}
+.fx4-pv-n span{font-size:13px;color:var(--r-t3);}
+.fx4-pv-t{font-size:15px;font-weight:600;color:var(--r-t1);line-height:1.35;}
+.fx4-pv-s{font-size:12px;color:var(--r-t3);margin-top:6px;}
+@media (prefers-reduced-motion:reduce){.fx4-pv,.fx4-rip,.v2-hero.fx4-urg,.kp-ghost{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -4734,7 +4772,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-15-links-c';
+  var APP_VERSION = '2026-10-16-preview-fx4';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -6706,7 +6744,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     host.querySelectorAll('.kp-weeks button').forEach(function(b){ b.classList.toggle('on', +b.dataset.w === w); });
     kpCap(host, true);
     var body = host.querySelector('.kp-body');
-    body.innerHTML = kpBody(COMP1511_KP[w - 1]);
+    var RMk = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!RMk) { var old = body.querySelector('.kp-ghost'); if (old) old.remove();
+      var g = document.createElement('div'); g.className = 'kp-ghost ' + (dir > 0 ? 'fwd' : 'back'); g.innerHTML = body.innerHTML;
+      body.innerHTML = kpBody(COMP1511_KP[w - 1]); body.appendChild(g); setTimeout(function(){ g.remove(); }, 650); }
+    else body.innerHTML = kpBody(COMP1511_KP[w - 1]);
     body.classList.remove('kp-in-l', 'kp-in-r'); void body.offsetWidth; body.classList.add(dir > 0 ? 'kp-in-r' : 'kp-in-l');
   }
   document.addEventListener('click', function(e){
@@ -10080,6 +10122,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var on = k.row ? el.querySelector('.gt-check.done') : (el.matches(k.on) ? el : null);
       if (!on || wasOn) return;
       on.classList.add('r3-pop'); burst(on);
+      if (window.fx4Ripple) fx4Ripple(k.row ? el : (on.closest('.cx-row') || on), on);
       if (k.row) { var st = el.querySelector('.gt-status, .gt-need-text'); if (st) st.classList.add('r3-fade-ok'); }
     }, 30);
   }, true);
@@ -10257,7 +10300,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return list.filter(function(d){ return strip(d.name) === name; })[0] || list.filter(function(d){ var n = strip(d.name); return n && (name.indexOf(n) === 0 || n.indexOf(name) === 0); })[0] || null;
   }
   function fmt(d){ var x = new Date(d.date); return strip(d.name) + ' · ' + (x.getMonth()+1) + '/' + x.getDate() + ' ' + String(x.getHours()).padStart(2,'0') + ':' + String(x.getMinutes()).padStart(2,'0'); }
-  function closeMenu(){ menu.classList.remove('open'); bd.classList.remove('open'); setTimeout(function(){ if (!menu.classList.contains('open')) { menu.hidden = bd.hidden = true; } }, 250); }
+  function closeMenu(){ if (window.fx4Pv) fx4Pv.hide(); menu.classList.remove('open'); bd.classList.remove('open'); setTimeout(function(){ if (!menu.classList.contains('open')) { menu.hidden = bd.hidden = true; } }, 250); }
   bd.addEventListener('click', closeMenu);
   function openMenu(d){
     var items = [];
@@ -10277,6 +10320,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     menu.querySelector('.vq-cancel').onclick = closeMenu;
     menu.hidden = bd.hidden = false;
     requestAnimationFrame(function(){ menu.classList.add('open'); bd.classList.add('open'); });
+    if (window.fx4Pv) fx4Pv.deadline(d);
   }
   var lpRow = null;
   document.addEventListener('touchstart', function(e){
@@ -10458,7 +10502,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     bar.addEventListener('touchstart', function(e){ drag = { x0: e.touches[0].clientX, moved: false }; }, { passive: true });
     bar.addEventListener('touchmove', function(e){
       if (!drag) return;
-      var x = e.touches[0].clientX; if (Math.abs(x - drag.x0) > 10) drag.moved = true; if (!drag.moved) return;
+      var x = e.touches[0].clientX; if (Math.abs(x - drag.x0) > 4) drag.moved = true; if (!drag.moved) return;
       e.preventDefault();
       var br = bar.getBoundingClientRect(), w = ind.offsetWidth;
       var lx = Math.max(5, Math.min(br.width - w - 5, x - br.left - w / 2));
@@ -10561,5 +10605,96 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 })();
 </script>
 <script>document.body.classList.add('lk');</script>
+<div class="fx4-pv" id="fx4-pv" hidden></div>
+<script>
+(function(){
+  var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* 1. tick ripple */
+  window.fx4Ripple = function(row, src){
+    if (RM || !row || !src) return;
+    var r = row.getBoundingClientRect(), s = src.getBoundingClientRect();
+    var x = s.left + s.width / 2 - r.left, y = s.top + s.height / 2 - r.top, R = Math.hypot(Math.max(x, r.width - x), Math.max(y, r.height - y));
+    var host = document.createElement('span'); host.className = 'fx4-rip-host';
+    var d = document.createElement('i'); d.className = 'fx4-rip';
+    d.style.left = (x - R) + 'px'; d.style.top = (y - R) + 'px'; d.style.width = d.style.height = (R * 2) + 'px';
+    host.appendChild(d);
+    if (getComputedStyle(row).position === 'static') row.style.position = 'relative';
+    row.appendChild(host); setTimeout(function(){ host.remove(); }, 900);
+  };
+
+  /* 4. deadline urgency glow */
+  function urgency(){
+    var hero = document.querySelector('.v2-hero'); if (!hero) return;
+    var list = (typeof visibleDeadlines === 'function') ? visibleDeadlines() : [], now = Date.now(), next = null;
+    list.forEach(function(d){ var t = new Date(d.date).getTime(); if (t > now && (!next || t < next)) next = t; });
+    if (!next) { hero.style.removeProperty('--fx4-u'); return; }
+    var h = Math.max(.25, (next - now) / 3600000), u = Math.max(0, Math.min(1, 1 - Math.log(h) / Math.log(24 * 14)));
+    hero.style.setProperty('--fx4-u', u.toFixed(3));
+    hero.style.setProperty('--fx4-dur', (6.5 - 4.7 * u).toFixed(2) + 's');
+    hero.classList.add('fx4-urg');
+  }
+  window.fx4Urgency = urgency;
+  if (typeof renderDashboard === 'function') { var _rd = renderDashboard; window.renderDashboard = renderDashboard = function(){ var r = _rd.apply(this, arguments); try { urgency(); } catch(e) {} return r; }; }
+  urgency(); setInterval(urgency, 60000);
+
+  /* 6. long-press preview */
+  var pv = document.getElementById('fx4-pv'), bd = document.getElementById('vq-backdrop');
+  function show(html){ pv.innerHTML = html; pv.hidden = false; requestAnimationFrame(function(){ pv.classList.add('open'); }); }
+  function hide(){ pv.classList.remove('open'); setTimeout(function(){ if (!pv.classList.contains('open')) pv.hidden = true; }, 260); }
+  function left(t){ var ms = new Date(t) - Date.now(); if (ms <= 0) return ['0', '已过']; var h = ms / 3600000; return h < 48 ? [String(Math.floor(h)), '小时'] : [String(Math.floor(h / 24)), '天']; }
+  window.fx4Pv = {
+    hide: hide,
+    deadline: function(d){
+      var x = new Date(d.date), l = left(d.date), c = '';
+      try { var cid = deadlineCourse(d), co = courseById(cid); c = co ? co.code : ''; } catch(e) {}
+      show('<div class="fx4-pv-k">' + escapeHtml(c) + '</div><div class="fx4-pv-n"><b>' + l[0] + '</b><span>' + l[1] + '</span></div>'
+        + '<div class="fx4-pv-t">' + escapeHtml(String(d.name).replace(/<[^>]+>/g, '')) + '</div>'
+        + '<div class="fx4-pv-s">' + (x.getMonth() + 1) + '月' + x.getDate() + '日 ' + String(x.getHours()).padStart(2, '0') + ':' + String(x.getMinutes()).padStart(2, '0') + (d.tag ? ' · ' + escapeHtml(d.tag) : '') + '</div>');
+    },
+    course: function(id){
+      var co = courseById(id); if (!co) return false; var tot = null, nx = null;
+      try { var c = gtCourseCalc(id, gtLoad()); tot = c.total; nx = c.nextItem; } catch(e) {}
+      show('<div class="fx4-pv-k">' + escapeHtml(co.name || '') + '</div><div class="fx4-pv-n"><b>' + (tot == null ? '—' : tot.toFixed(1)) + '</b><span>%</span></div>'
+        + '<div class="fx4-pv-t">' + escapeHtml(co.code) + '</div>' + (nx ? '<div class="fx4-pv-s">下一个 · ' + escapeHtml(nx.label || '') + '</div>' : ''));
+      return true;
+    }
+  };
+  var cl = null, clT = null, clX = 0, clY = 0, clSup = false;
+  function cid(el){ var m = /(?:showCourse|openCourse)\('([^']+)'\)/.exec(el.getAttribute('onclick') || ''); return m ? m[1] : null; }
+  document.addEventListener('touchstart', function(e){
+    var el = e.target.closest && e.target.closest('.course-tile, .v2-course-row'); if (!el || e.touches.length !== 1) return;
+    var id = cid(el); if (!id) return;
+    clX = e.touches[0].clientX; clY = e.touches[0].clientY; cl = el;
+    clT = setTimeout(function(){ clT = null; if (fx4Pv.course(id)) { clSup = true; bd.hidden = false; requestAnimationFrame(function(){ bd.classList.add('open'); }); if (typeof haptic === 'function') haptic(); else if (window.iueHaptic) iueHaptic(); } }, 450);
+  }, { passive: true });
+  document.addEventListener('touchmove', function(e){ if (clT && (Math.abs(e.touches[0].clientX - clX) > 8 || Math.abs(e.touches[0].clientY - clY) > 8)) { clearTimeout(clT); clT = null; } }, { passive: true });
+  function clEnd(){ if (clT) { clearTimeout(clT); clT = null; } if (clSup) { hide(); bd.classList.remove('open'); setTimeout(function(){ if (!bd.classList.contains('open')) bd.hidden = true; }, 260); } cl = null; }
+  document.addEventListener('touchend', clEnd); document.addEventListener('touchcancel', clEnd);
+  document.addEventListener('click', function(e){ if (clSup) { clSup = false; e.preventDefault(); e.stopPropagation(); } }, true);
+  document.addEventListener('contextmenu', function(e){ if (e.target.closest && e.target.closest('.course-tile, .v2-course-row')) e.preventDefault(); });
+
+  if (RM) return;
+  /* 3. gyro sheen */
+  var gx = 0, gy = 0, tx = 0, ty = 0, raf = null, asked = false, on = false;
+  function apply(){
+    raf = null; gx += (tx - gx) * .15; gy += (ty - gy) * .15;
+    document.querySelectorAll('.course-section.active .v2-hero, .course-section.active .course-tile, .course-section.active .hub-entry').forEach(function(el){
+      if (el.classList.contains('fx-lit')) return;
+      el.style.setProperty('--fx-gx', (50 + gx * 40).toFixed(1) + '%'); el.style.setProperty('--fx-gy', (30 + gy * 40).toFixed(1) + '%'); el.classList.add('fx-gyro');
+    });
+    if (Math.abs(tx - gx) > .002 || Math.abs(ty - gy) > .002) raf = requestAnimationFrame(apply);
+  }
+  function onOri(e){ if (e.gamma == null) return; on = true; tx = Math.max(-1, Math.min(1, e.gamma / 30)); ty = Math.max(-1, Math.min(1, (e.beta - 45) / 30)); if (!raf) raf = requestAnimationFrame(apply); }
+  function start(){ window.addEventListener('deviceorientation', onOri); }
+  if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
+    document.addEventListener('touchend', function ask(e){
+      if (asked || !(e.target.closest && e.target.closest('.v2-hero, .course-tile, .hub-entry'))) return; asked = true;
+      document.removeEventListener('touchend', ask);
+      DeviceOrientationEvent.requestPermission().then(function(r){ if (r === 'granted') start(); }).catch(function(){});
+    });
+  } else if (window.DeviceOrientationEvent) start();
+  window.fx4Gyro = onOri;
+})();
+</script>
 </body>
 </html>
