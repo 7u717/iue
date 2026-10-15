@@ -2821,7 +2821,45 @@ body.pg-dragging .course-section > div:first-child > *{animation:none!important;
 .tl-now{position:absolute;left:2px;top:0;width:7px;height:7px;margin-top:-1px;border-radius:50%;background:var(--r-t1);box-shadow:0 0 0 3px rgba(255,255,255,.08),0 0 10px rgba(255,255,255,.45);z-index:2;transition:transform 30s linear;}
 .adj3 .dash-class.tl-in::after{box-shadow:inset 0 0 0 1px var(--r-t3);background:#0b0b0b;}
 .adj3 .dash-class.tl-in::before{background:linear-gradient(to bottom,rgba(255,255,255,.45),rgba(255,255,255,.16));}
-@media (prefers-reduced-motion:reduce){.tl-now{transition:none!important}}</style>
+@media (prefers-reduced-motion:reduce){.tl-now{transition:none!important}}
+/* ===== COMP1511 知识点 ===== */
+.kp{display:flex;flex-direction:column;align-items:stretch;}
+.kp-weeks{position:relative;display:flex;align-self:center;padding:3px;border-radius:999px;background:var(--r-s2);box-shadow:inset 0 0 0 .5px var(--r-hair);margin-bottom:18px;}
+.kp-cap{position:absolute;left:0;top:3px;bottom:3px;border-radius:999px;background:var(--r-t1);transition:transform .42s cubic-bezier(.32,1.25,.4,1),width .42s cubic-bezier(.32,1.25,.4,1);}
+.kp-weeks button{position:relative;z-index:1;height:30px;min-width:38px;padding:0 9px;border:0;background:none;font:inherit;font-size:12px;font-weight:600;color:var(--r-t3);font-variant-numeric:tabular-nums;transition:color .3s;-webkit-tap-highlight-color:transparent;}
+.kp-weeks button.dim{opacity:.45;}
+.kp-weeks button.on{color:#000;opacity:1;}
+.kp-body{touch-action:pan-y;}
+.kp-in-r{animation:kpInR .38s cubic-bezier(.22,1,.36,1) both;}
+.kp-in-l{animation:kpInL .38s cubic-bezier(.22,1,.36,1) both;}
+@keyframes kpInR{from{opacity:0;transform:translateX(18px)}}
+@keyframes kpInL{from{opacity:0;transform:translateX(-18px)}}
+.kp-note{text-align:center;font-size:11px;color:var(--r-t3);letter-spacing:.06em;margin:-6px 0 10px;}
+.kp-row{padding:11px 2px;font-size:14px;line-height:1.55;color:var(--r-t1);border-bottom:.5px solid var(--r-hair);}
+.kp-row:last-child{border-bottom:0;}
+.kp-mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.88em;color:var(--r-t2);}
+.kp-q-head{display:flex;flex-direction:column;align-items:center;gap:2px;margin:22px 0 10px;}
+.kp-q-head span{font-size:12px;font-weight:600;color:var(--r-t2);letter-spacing:.06em;}
+.kp-q-head small{font-size:10.5px;color:var(--r-t3);}
+.kp-qs{display:grid;gap:8px;}
+.kp-q{border-radius:14px;background:var(--r-s2);padding:13px 15px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .3s;}
+.kp-q-t{font-size:14px;line-height:1.5;color:var(--r-t1);transition:color .3s;}
+.kp-q.done .kp-q-t{color:var(--r-t3);}
+.kp-q-x{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.22,1,.36,1);}
+.kp-q-x > div{overflow:hidden;}
+.kp-q.open .kp-q-x{grid-template-rows:1fr;}
+.kp-q-x p{margin:10px 0 10px;font-size:12px;line-height:1.5;color:var(--r-t3);}
+.kp-tick{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 9px;border:0;border-radius:999px;background:none;box-shadow:inset 0 0 0 .5px var(--r-line);font:inherit;font-size:12px;color:var(--r-t2);-webkit-tap-highlight-color:transparent;}
+.kp-tick i{width:12px;height:12px;border-radius:50%;box-shadow:inset 0 0 0 1px var(--r-t3);transition:background .25s,box-shadow .25s;}
+.kp-q.done .kp-tick{color:var(--r-t1);}
+.kp-q.done .kp-tick i{background:var(--r-t1);box-shadow:none;}
+.kp-empty{display:flex;flex-direction:column;align-items:center;gap:4px;padding:34px 0 30px;}
+.kp-empty b{font-size:15px;font-weight:500;color:var(--r-t2);}
+.kp-empty span{font-size:11.5px;color:var(--r-t3);}
+@media (prefers-reduced-motion:reduce){.kp *,.kp{animation:none!important;transition:none!important}}
+.kp-weeks button,.kp-tick{background:transparent!important;box-shadow:none;}
+.kp-tick{box-shadow:inset 0 0 0 .5px var(--r-line)!important;}
+</style>
 </head>
 <body>
 
@@ -3059,7 +3097,7 @@ body.pg-dragging .course-section > div:first-child > *{animation:none!important;
     <a class="course-jump-button" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/lab/01/questions" onclick="openExternal(this.href);return false;"><div><strong>Open Lab 01</strong><span>官方题目 · setup · exercises · autotest · give</span></div><i>↗</i></a>
   </div>
   <div class="topic-group">
-    <div class="group-label">Beginner Learning Map</div>
+    <div class="group-label">知识点</div>
     <div class="topic-card" style="padding:16px;" id="comp1511-study-map"></div>
   </div>
 </div>
@@ -4607,7 +4645,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-15-empty-day';
+  var APP_VERSION = '2026-10-15-comp-kp';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5874,7 +5912,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function shouldIgnoreSwipeTarget(target) {
-    return !!(target && target.closest && target.closest('.tab-bar, .course-switcher, .course-rail, .course-filter-bar, .test-type-grid, .dash-day, .dash-week, .r3-week, .dash-class, .dash-course, .dash-queue-row, .dash-action, a, button, input, textarea, select, details, summary'));
+    return !!(target && target.closest && target.closest('.kp-body, .kp-weeks, .tab-bar, .course-switcher, .course-rail, .course-filter-bar, .test-type-grid, .dash-day, .dash-week, .r3-week, .dash-class, .dash-course, .dash-queue-row, .dash-action, a, button, input, textarea, select, details, summary'));
   }
 
   function setSwipeVisual(x) {
@@ -6438,26 +6476,21 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function compCheckKey() { return 'iue.comp1511.weekChecks.v1'; }
 
   var COMP1511_LAB_WEEKS = [2,3,4,5,6,7,8,9,10];
-  var COMP1511_WEEK_PACKAGES = [
-    { week:1, title:'Lab 01 · 从零开始', status:'released', teacher:'官网 Week 01 已放 lectures、tutorial activities、problem set 和 check off。老师要你先会用 CSE/VLab 环境，再完成 setup、bad_pun、bird、bunny、about_me 这些入门练习；Problem Set 1 不计分，但要练会提交，截止 Week 2 Monday 18:00。', teach:'这周先别怕 C。你真正要学的是一条固定流程：打开 terminal，知道自己在哪个文件夹，写 .c 文件，用 dcc 编译，用 ./运行，看懂第一个 error，再用 autotest 检查，最后用 give 提交。', steps:'准备：打开 COMP1511 官网、VLab、VS Code/terminal。课上：跟着 lecture 看什么是 program、printf、main、compile。要会：pwd/ls/cd/mkdir/cp，dcc file.c -o file，./file，1511 autotest，give。怎么做：每道题都按“读题→建文件→写一点→编译→运行→autotest→give”。', tasks:[
-      { name:'Setup · VLab + terminal', goal:'装好/打开 VLab，登录 zID，打开 terminal，并把 1511 的基础环境设置好。', commands:['1511 setup','1511 colors'], done:'重新打开 terminal 后能正常输入命令。' },
-      { name:'Terminal basics · lab01 folder', goal:'练会 pwd、ls、cd、mkdir、cp，然后创建并进入本周文件夹。', commands:['pwd','ls','mkdir lab01','cd lab01','cp old.c new.c'], done:'你在 lab01 文件夹里，知道怎么确认当前位置。' },
-      { name:'Exercise 1 · bad_pun', goal:'创建 bad_pun.c，保存一个最小 C 程序，编译、运行、autotest，再 give 提交。', commands:['code bad_pun.c','dcc bad_pun.c -o bad_pun','./bad_pun','1511 autotest bad_pun','give cs1511 lab01_bad_pun bad_pun.c'], done:'bad_pun 能运行，give 接受提交。' },
-      { name:'Exercise 2 · bird', goal:'把 bad_pun.c 复制成 bird.c，修改 printf 输出官方要求的 ASCII bird，然后编译、运行、检查、提交。', commands:['cp bad_pun.c bird.c','code bird.c','dcc bird.c -o bird','./bird','1511 autotest bird','give cs1511 lab01_bird bird.c'], done:'bird 输出和官方页面一致，autotest/give 通过。' },
-      { name:'Exercise 3 · bunny', goal:'复制官方给的 bunny.c，先读错误，再一次只修一个小问题，直到它能编译运行。', commands:['cp ~cs1511/public_html/26T3/tlb/01/bunny.c .','cat bunny.c','dcc bunny.c -o bunny','code bunny.c','1511 autotest bunny','give cs1511 lab01_bunny bunny.c'], done:'bunny 编译成功，输出正确，give 接受提交。' },
-      { name:'Exercise 4 · about_me', goal:'复制 about_me.c，修掉语法错误，然后把输出内容改成你自己的回答。', commands:['cp ~cs1511/public_html/26T3/tlb/01/about_me.c .','dcc about_me.c -o about_me','code about_me.c','./about_me','1511 autotest about_me','give cs1511 lab01_about_me about_me.c'], done:'about_me 能运行，个人回答已填好，give 接受提交。' },
-      { name:'Check-off + communication', goal:'在 lab 里完成 tutor check-off；如果不能到场，联系课程邮箱。再回复 tutor 邮件，并在课程 forum 介绍帖下留言。', commands:['check-off in lab','reply tutor email','forum intro comment'], done:'check-off、邮件、forum 三件事都完成。' }
-    ] },
-    { week:2, title:'输入、变量、表达式', status:'official-shell', teacher:'官网已有 Week 02 lecture 入口；具体 lab/problem set 等老师发布后再按页面补。', teach:'把程序想成一个小机器：输入进来，存进变量，经过表达式计算，再输出结果。新手重点不是背语法，而是分清 int、double、char 和 scanf/printf 的格式。', steps:'准备：复习 Week 1 的编译/提交流程。课上：盯住变量类型、赋值、算术表达式、格式化输入输出。要会：读题找输入/输出样例，把样例手算一遍，再写 C。怎么做：每写完一个 scanf/printf 就编译运行一次。' },
-    { week:3, title:'if / else 与判断', status:'official-shell', teacher:'官网已有 Week 03 lecture 入口；lab 细节待发布。', teach:'这一周核心是让程序“分路走”。你要练的是条件表达式、比较运算、逻辑 AND/OR/NOT，以及 if / else if / else 的顺序。', steps:'准备：先做 5 个生活判断例子，比如 pass/fail、odd/even。课上：看清每个 branch 什么时候执行。要会：把英文条件翻译成 C 条件。怎么做：先画判断树，再写代码；每个 branch 都用一个测试样例跑到。' },
-    { week:4, title:'while / for 循环', status:'official-shell', teacher:'官网已有 Week 04 lecture 入口；这一周页面目前显示 lecture 资料入口，后续任务以官网为准。', teach:'循环就是重复做事。新手最容易错在“什么时候开始、什么时候停、每次怎么变”。', steps:'准备：复习变量更新。课上：重点看 while、for、counter、sum、sentinel input。要会：写出循环不变量：当前做到第几个、累计了什么。怎么做：先用纸列前三轮，再写代码；卡住时打印 counter 和 sum。' },
-    { week:5, title:'函数与拆问题', status:'official-shell', teacher:'官网已有 Week 05 lecture 入口；具体 exercises 待发布。', teach:'函数不是为了高级，是为了把大题拆成小题。你要会写函数签名、参数、return，并知道什么时候该拆。', steps:'准备：把之前一题重写成 helper function。课上：关注 function prototype、return type、参数传递。要会：把“计算/判断/打印”拆开。怎么做：main 只留流程，每个小函数只做一件事。' },
-    { week:6, title:'Flex week / 整理前半段', status:'pending', teacher:'官网 Week 06 当前未显示具体内容。这里先作为缓冲周：补 Week 1-5 未完成的 lab/problem sets。', teach:'如果你前面有任何一周没完全会，这周不要硬冲新东西。把环境、if、loop、function 补牢比赶进度重要。', steps:'准备：列出所有 autotest 没过的题。课上/自学：重做错题，不看答案先写伪代码。要会：能独立从空文件写到 give。怎么做：每天 30-45 分钟，只修一个薄弱点。' },
-    { week:7, title:'数组与批量数据', status:'official-shell', teacher:'官网已有 Week 07 lecture 入口；具体 lab 以发布页面为准。', teach:'数组就是一排格子。你要学会 index 从 0 开始、数组长度、循环遍历，以及不要越界。', steps:'准备：复习 for loop。课上：盯住 array declaration、read many numbers、max/min/sum。要会：用 loop 访问 arr[i]。怎么做：先写固定长度，再改成读入长度；每次访问 index 前想清楚范围。' },
-    { week:8, title:'字符串与字符处理', status:'official-shell', teacher:'官网已有 Week 08 lecture 入口；lab 细节待发布。', teach:'C 的 string 本质是 char array，最后有 null terminator。新手重点是别把字符、字符串、数组长度混在一起。', steps:'准备：复习 char 和 array。课上：看 strlen、字符串遍历、字符判断。要会：逐字符处理输入。怎么做：先打印每个字符和它的位置，再做题目要求的转换/统计。' },
-    { week:9, title:'struct / 更复杂的数据', status:'official-shell', teacher:'官网已有 Week 09 lecture 入口；具体题目待发布。', teach:'struct 是把相关数据捆在一起。你可以把它想成一张小资料卡，比如 student 有 name、zid、mark。', steps:'准备：复习数组和函数。课上：关注 struct 定义、访问字段、struct array。要会：把现实对象翻译成字段。怎么做：先设计数据结构，再写输入/输出，再写处理函数。' },
-    { week:10, title:'复习、debug、提交稳定性', status:'official-shell', teacher:'官网已有 Week 10 lecture 入口；Assignments 区当前显示 no assignments released yet。', teach:'最后阶段重点是稳定：读懂题、拆步骤、跑测试、修 bug。不是写得花，而是能交出能过的版本。', steps:'准备：整理所有 give/autotest 记录。课上：复盘常见错误：类型、边界、循环停止、数组越界、输出格式。要会：看到错误信息知道先查哪。怎么做：保留一个 debug checklist，提交前按 checklist 过一遍。' }
+  var COMP1511_KP = [
+    { w:1, t:['Linux 命令行；用 VLab 登录 CSE 账号', '第一个 C 程序：`#include <stdio.h>`、`int main(void)`、`printf`', '`dcc` 编译，`./程序名` 运行，`1511 submit` 提交', '转义字符 `\\n`'],
+      q:['编译和运行分别在做什么？', '`\\n` 有什么用？', 'broken program 错在哪里？'] },
+    { w:2, t:['变量和类型 `int` / `double` / `char`，`#define` 常量', '运算符与优先级：算术、比较、逻辑', '`scanf` / `printf` 格式符 `%d` `%lf` `%c` `%.1lf`', '`if` / `else if` / `else`', '字符就是 ASCII 数字，可以直接加减'],
+      q:['`scanf` 为什么要 `&`？', '整数除法和小数除法有什么区别？', '闰年判断为什么是那个顺序？', '字符怎么转大小写、怎么移位？'] },
+    { w:3, t:['`while` 循环三种写法：计数、哨兵、条件，会手动推演', '嵌套循环打印图案 / 网格', '`while (scanf(...) == 1)` 读到输入结束', '`struct` 和 `enum`'],
+      q:['循环什么时候停？', '嵌套循环：外层管行、内层管列？', '怎么用 `.` 访问字段？', '`scanf` 的返回值有什么用？'] },
+    { w:4, t:['数组下标从 `0` 到 `N-1`，不能越界', '结构体数组 `points[i].x`', '函数：参数和返回值', '`1511 style` 风格检查', '`getchar` 和 `EOF`（devowel，推测）'],
+      q:['下标为什么到 `N-1` 停？', '参数和返回值怎么传？', '`cs_calculator` 怎么根据第一个字符决定读几个数？'] },
+    { w:5, note:'Check-in 周', t:['二维数组 `grid[ROWS][COLS]`，嵌套循环遍历', '数组传进函数，函数里改会影响原数组', '读到 `Ctrl-D`（`EOF`）', "字符串以 `'\\0'` 结尾，`fgets` 读入；`stringcmp`、`palindrome`、`alternating_case`"],
+      q:['行和列各对应哪个下标？', '字符串怎么知道在哪结束？', '数组为什么能在函数里被修改？', '回文怎么判断？'] },
+    { w:6, flex:true },
+    { w:7, unreleased:true }
   ];
+
 
   function compLoad() {
     try { return JSON.parse(localStorage.getItem(compCheckKey()) || '{}') || {}; } catch(e) { return {}; }
@@ -6531,39 +6564,62 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     host.innerHTML = comp1511LabPlanMarkup();
   }
 
+  var KP_TICK = 'iue.comp1511.kpTicks.v1', kpWeek = null;
+  function kpTicks(){ try { return JSON.parse(localStorage.getItem(KP_TICK) || '{}') || {}; } catch(e) { return {}; } }
+  function kpCode(t){ return escapeHtml(t).split('`').map(function(x, i){ return i % 2 ? '<span class="kp-mono">' + x + '</span>' : x; }).join(''); }
+  function kpBody(item){
+    if (item.flex) return '<div class="kp-empty"><b>Flexibility week</b><span>这周没有新内容</span></div>';
+    if (item.unreleased) return '<div class="kp-empty"><b>未发布</b><span>官网放出后再补</span></div>';
+    var tk = kpTicks();
+    return (item.note ? '<div class="kp-note">' + escapeHtml(item.note) + '</div>' : '')
+      + '<div class="kp-topics">' + item.t.map(function(t){ return '<div class="kp-row">' + kpCode(t) + '</div>'; }).join('') + '</div>'
+      + '<div class="kp-q-head"><span>Check-off 自测</span><small>问题为推测</small></div>'
+      + '<div class="kp-qs">' + item.q.map(function(q, i){ var k = 'W' + item.w + '-' + i, on = !!tk[k];
+        return '<div class="kp-q' + (on ? ' done' : '') + '" data-k="' + k + '"><div class="kp-q-t">' + kpCode(q) + '</div>'
+          + '<div class="kp-q-x"><div><p>用自己的话讲一遍。讲给同学听也能听懂，就算会了。</p>'
+          + '<button type="button" class="kp-tick" aria-pressed="' + on + '"><i></i>讲顺了</button></div></div></div>'; }).join('') + '</div>';
+  }
   function renderComp1511StudyMap() {
     var host = document.getElementById('comp1511-study-map');
     if (!host) return;
-    var openWeek = 1;
-    try { openWeek = +(localStorage.getItem('iue.comp1511.openWeek.v1') || 1); } catch(e) {}
-    host.innerHTML = '<div class="engg-week-summary">按每周包学：先看中文拆解，再照老师页面做题。这里不会硬塞一大段，点开一周只看一周。</div>'
-      + '<div class="comp-week-packages">'
-      + COMP1511_WEEK_PACKAGES.map(function(item){
-        var open = item.week === openWeek;
-        return '<div class="comp-week-package '+(open ? 'open' : '')+'">'
-          + '<div class="topic-header" onclick="compOpenWeekPackage('+item.week+')">'
-          + '<div><div class="topic-title">Week '+item.week+' · '+escapeHtml(item.title.replace(/^Lab \\d+ ·\\s*/,''))+'</div>'
-          + '<div class="topic-sub">'+(item.status === 'released' ? '已按官方 Lab 01 整理' : '待官方页面发布后补全')+'</div></div>'
-          + '<div class="topic-arrow">'+(open ? '−' : '+')+'</div></div>'
-          + (open ? '<div class="comp-week-body">'
-            + '<div class="comp-week-section"><strong>老师要求</strong><p>'+escapeHtml(item.teacher)+'</p></div>'
-            + '<div class="comp-week-section"><strong>中文讲解</strong><p>'+escapeHtml(item.teach)+'</p></div>'
-            + '<div class="comp-week-section"><strong>怎么做</strong><p>'+escapeHtml(item.steps)+'</p></div>'
-            + (item.tasks ? '<div class="comp-week-section"><strong>Problem set 任务</strong><div class="comp-task-list">'+item.tasks.map(function(task){
-              return '<div class="comp-task-card"><strong>'+escapeHtml(task.name)+'</strong><p>'+escapeHtml(task.goal)+'</p>'
-                + '<div class="comp-command-row">'+(task.commands || []).map(function(cmd){ return '<code>'+escapeHtml(cmd)+'</code>'; }).join('')+'</div>'
-                + '<div class="comp-task-done">完成标准：'+escapeHtml(task.done)+'</div></div>';
-            }).join('')+'</div></div>' : '')
-            + '</div>' : '')
-          + '</div>';
-      }).join('')
-      + '</div>';
+    if (kpWeek == null) { var cw = compTermWeek(new Date()); kpWeek = Math.max(1, Math.min(7, cw)); }
+    var item = COMP1511_KP[kpWeek - 1];
+    host.innerHTML = '<div class="kp"><div class="kp-weeks" role="tablist"><span class="kp-cap"></span>'
+      + COMP1511_KP.map(function(it){ return '<button type="button" role="tab" class="' + (it.w === kpWeek ? 'on' : '') + (it.unreleased ? ' dim' : '') + '" data-w="' + it.w + '">W' + it.w + (it.unreleased ? '+' : '') + '</button>'; }).join('')
+      + '</div><div class="kp-body">' + kpBody(item) + '</div></div>';
+    kpCap(host, false);
+    if (window.ResizeObserver) { var wk = host.querySelector('.kp-weeks'); new ResizeObserver(function(){ kpCap(host, false); }).observe(wk); }
   }
-
-  function compOpenWeekPackage(week) {
-    try { localStorage.setItem('iue.comp1511.openWeek.v1', String(week)); } catch(e) {}
-    renderComp1511StudyMap();
+  function kpCap(host, anim){
+    var on = host.querySelector('.kp-weeks .on'), cap = host.querySelector('.kp-cap'); if (!on || !cap) return;
+    var place = function(){ cap.style.transition = anim ? '' : 'none'; cap.style.width = on.offsetWidth + 'px'; cap.style.transform = 'translateX(' + on.offsetLeft + 'px)'; };
+    if (on.offsetWidth) place(); else requestAnimationFrame(function(){ if (on.offsetWidth) place(); });
   }
+  function kpGo(w, dir){
+    var host = document.getElementById('comp1511-study-map'); if (!host || w < 1 || w > 7 || w === kpWeek) return;
+    kpWeek = w;
+    host.querySelectorAll('.kp-weeks button').forEach(function(b){ b.classList.toggle('on', +b.dataset.w === w); });
+    kpCap(host, true);
+    var body = host.querySelector('.kp-body');
+    body.innerHTML = kpBody(COMP1511_KP[w - 1]);
+    body.classList.remove('kp-in-l', 'kp-in-r'); void body.offsetWidth; body.classList.add(dir > 0 ? 'kp-in-r' : 'kp-in-l');
+  }
+  document.addEventListener('click', function(e){
+    var t = e.target; if (!t.closest || !t.closest('#comp1511-study-map')) return;
+    var wb = t.closest('.kp-weeks button'); if (wb) { kpGo(+wb.dataset.w, +wb.dataset.w - kpWeek); return; }
+    var tick = t.closest('.kp-tick');
+    if (tick) { var q = tick.closest('.kp-q'), tk = kpTicks(), k = q.dataset.k; if (tk[k]) delete tk[k]; else tk[k] = 1;
+      try { localStorage.setItem(KP_TICK, JSON.stringify(tk)); } catch(x) {}
+      q.classList.toggle('done', !!tk[k]); tick.setAttribute('aria-pressed', !!tk[k]); if (window.iueHaptic) iueHaptic(); return; }
+    var qc = t.closest('.kp-q'); if (qc) qc.classList.toggle('open');
+  });
+  (function(){
+    var sx = null, sy = 0, lock = null;
+    document.addEventListener('touchstart', function(e){ var b = e.target.closest && e.target.closest('#comp1511-study-map .kp-body'); sx = b && e.touches.length === 1 ? e.touches[0].clientX : null; sy = sx == null ? 0 : e.touches[0].clientY; lock = null; }, { passive: true });
+    document.addEventListener('touchmove', function(e){ if (sx == null || lock) return; var dx = e.touches[0].clientX - sx, dy = e.touches[0].clientY - sy; if (Math.abs(dx) > 10 || Math.abs(dy) > 10) lock = Math.abs(dx) > Math.abs(dy) * 1.2 ? 'x' : 'y'; }, { passive: true });
+    document.addEventListener('touchend', function(e){ if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; if (lock === 'x' && Math.abs(dx) > 50) kpGo(kpWeek + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1); sx = null; }, { passive: true });
+  })();
+  function compOpenWeekPackage(week) { kpGo(week, week - (kpWeek || 1)); }
 
   function compToggleStage(week, key) {
     var values = compLoad();
