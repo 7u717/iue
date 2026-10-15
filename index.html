@@ -2808,10 +2808,7 @@ body.pg-dragging .course-section > div:first-child > *{animation:none!important;
 @keyframes fx3Cell{from{opacity:0;transform:scaleY(.3)}}
 @keyframes fx3Swap{from{opacity:0;transform:translateY(4px)}}
 @media (prefers-reduced-motion:reduce){.fx3-target *{animation:none!important;transition:none!important}}
-/* ===== preview adj ===== */
-.adj2 .dash-class.adj-jn{border-bottom-left-radius:0!important;border-bottom-right-radius:0!important;}
-.adj2 .dash-class.adj-jp{border-top-left-radius:0!important;border-top-right-radius:0!important;}
-.adj2 .dash-class.adj-jp::before{content:"";position:absolute;left:12px;right:12px;top:0;height:.5px;background:rgba(255,255,255,.14);}
+/* ===== timeline ===== */
 .adj3 .dash-class:not(.deadline){background:transparent!important;border-radius:0!important;padding-left:20px!important;overflow:visible!important;}
 .adj3 .dash-class:not(.deadline)::before{content:"";position:absolute;left:5px;top:8px;bottom:-8px;width:1px;background:rgba(255,255,255,.16);}
 .adj3 .dash-class:not(.deadline):not(.adj-jn)::before{bottom:6px;}
@@ -2820,7 +2817,11 @@ body.pg-dragging .course-section > div:first-child > *{animation:none!important;
 .adj3 .dash-class.dash-next svg{color:var(--r-t1)!important;}
 .adj3 .dash-class.dash-next .dash-class-sub{color:var(--r-t3)!important;}
 .adj3 .dash-class.dash-next::after{background:var(--r-t1);box-shadow:none;}
-</style>
+
+.tl-now{position:absolute;left:2px;top:0;width:7px;height:7px;margin-top:-1px;border-radius:50%;background:var(--r-t1);box-shadow:0 0 0 3px rgba(255,255,255,.08),0 0 10px rgba(255,255,255,.45);z-index:2;transition:transform 30s linear;}
+.adj3 .dash-class.tl-in::after{box-shadow:inset 0 0 0 1px var(--r-t3);background:#0b0b0b;}
+.adj3 .dash-class.tl-in::before{background:linear-gradient(to bottom,rgba(255,255,255,.45),rgba(255,255,255,.16));}
+@media (prefers-reduced-motion:reduce){.tl-now{transition:none!important}}</style>
 </head>
 <body>
 
@@ -4606,7 +4607,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-15-preview-adj';
+  var APP_VERSION = '2026-10-15-timeline';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -10312,13 +10313,29 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </script>
 <script>
 (function(){
-  var m = /[?&]adj=([23])/.exec(location.search); if (!m) return;
-  var MODE = m[1];
+  var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   function mins(t){ var x = /(\d{1,2}):(\d{2})/.exec(t || ''); return x ? +x[1] * 60 + +x[2] : null; }
+  function rng(el){ var r = (el.dataset.range || '').split(/[–—-]/); return { s: mins(r[0]), e: mins(r[1]) }; }
+  function isToday(ev){
+    var d = new Date(), today = DASH_WEEK_DAYS[(d.getDay() + 6) % 7];
+    if (dashboardScheduleDay !== today) return false;
+    return !(ev.closest('#v2-tt-page') && (window.v2WeekOffset | 0) !== 0);
+  }
+  function live(ev){
+    var d = new Date(), n = d.getHours() * 60 + d.getMinutes() + d.getSeconds() / 60, on = isToday(ev);
+    ev.querySelectorAll('.dash-class:not(.deadline)').forEach(function(el){
+      var r = rng(el), dot = el.querySelector('.tl-now'), inC = on && r.s != null && r.e != null && n >= r.s && n < r.e;
+      el.classList.toggle('tl-in', inC);
+      if (!inC) { if (dot) dot.remove(); return; }
+      var h = parseFloat(el.style.height) || el.offsetHeight, y = 6 + (n - r.s) / (r.e - r.s) * (h - 6);
+      if (!dot) { dot = document.createElement('i'); dot.className = 'tl-now'; dot.style.transition = 'none'; dot.style.transform = 'translateY(' + y.toFixed(1) + 'px)'; el.appendChild(dot); void dot.offsetWidth; dot.style.transition = ''; }
+      else dot.style.transform = 'translateY(' + y.toFixed(1) + 'px)';
+    });
+  }
   function proc(ev){
-    ev.dataset.adj = MODE; ev.classList.add('adj' + MODE);
+    ev.dataset.adj = '3'; ev.classList.add('adj3');
     var items = [].slice.call(ev.querySelectorAll('.dash-class:not(.deadline)')).filter(function(el){ return el.style.width === ''; }).map(function(el){
-      var r = (el.dataset.range || '').split(/[–—-]/); return { el: el, s: mins(r[0]), e: mins(r[1]) };
+      var r = rng(el); return { el: el, s: r.s, e: r.e };
     }).filter(function(o){ return o.s != null && o.e != null; }).sort(function(a, b){ return a.s - b.s; });
     for (var i = 0; i < items.length; i++) {
       var prev = items[i - 1], next = items[i + 1], el = items[i].el;
@@ -10326,9 +10343,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       el.classList.toggle('adj-jp', !!jp); el.classList.toggle('adj-jn', !!jn);
       if (jn) { var nt = parseFloat(next.el.style.top); el.style.height = (nt - parseFloat(el.style.top)) + 'px'; }
     }
+    live(ev);
   }
   function scan(){ document.querySelectorAll('.dash-events:not([data-adj])').forEach(proc); }
   new MutationObserver(scan).observe(document.body, { childList: true, subtree: true }); scan();
+  setInterval(function(){ document.querySelectorAll('.dash-events[data-adj]').forEach(live); }, 30000);
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden) document.querySelectorAll('.dash-events[data-adj]').forEach(live); });
 })();
 </script>
 </body>
