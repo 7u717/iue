@@ -2807,7 +2807,20 @@ body.pg-dragging .course-section > div:first-child > *{animation:none!important;
 .fx3-target.open .fx3-cells{max-width:0;}
 @keyframes fx3Cell{from{opacity:0;transform:scaleY(.3)}}
 @keyframes fx3Swap{from{opacity:0;transform:translateY(4px)}}
-@media (prefers-reduced-motion:reduce){.fx3-target *{animation:none!important;transition:none!important}}</style>
+@media (prefers-reduced-motion:reduce){.fx3-target *{animation:none!important;transition:none!important}}
+/* ===== preview adj ===== */
+.adj2 .dash-class.adj-jn{border-bottom-left-radius:0!important;border-bottom-right-radius:0!important;}
+.adj2 .dash-class.adj-jp{border-top-left-radius:0!important;border-top-right-radius:0!important;}
+.adj2 .dash-class.adj-jp::before{content:"";position:absolute;left:12px;right:12px;top:0;height:.5px;background:rgba(255,255,255,.14);}
+.adj3 .dash-class:not(.deadline){background:transparent!important;border-radius:0!important;padding-left:20px!important;overflow:visible!important;}
+.adj3 .dash-class:not(.deadline)::before{content:"";position:absolute;left:5px;top:8px;bottom:-8px;width:1px;background:rgba(255,255,255,.16);}
+.adj3 .dash-class:not(.deadline):not(.adj-jn)::before{bottom:6px;}
+.adj3 .dash-class:not(.deadline)::after{content:"";position:absolute;left:2px;top:6px;width:7px;height:7px;border-radius:50%;background:#0b0b0b;box-shadow:inset 0 0 0 1px var(--r-t2);}
+.adj3 .dash-class.dash-next:not(.deadline){color:var(--r-t1)!important;}
+.adj3 .dash-class.dash-next svg{color:var(--r-t1)!important;}
+.adj3 .dash-class.dash-next .dash-class-sub{color:var(--r-t3)!important;}
+.adj3 .dash-class.dash-next::after{background:var(--r-t1);box-shadow:none;}
+</style>
 </head>
 <body>
 
@@ -4593,7 +4606,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-15-fx3-live';
+  var APP_VERSION = '2026-10-15-preview-adj';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -10295,6 +10308,27 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       e.preventDefault();
     });
   }
+})();
+</script>
+<script>
+(function(){
+  var m = /[?&]adj=([23])/.exec(location.search); if (!m) return;
+  var MODE = m[1];
+  function mins(t){ var x = /(\d{1,2}):(\d{2})/.exec(t || ''); return x ? +x[1] * 60 + +x[2] : null; }
+  function proc(ev){
+    ev.dataset.adj = MODE; ev.classList.add('adj' + MODE);
+    var items = [].slice.call(ev.querySelectorAll('.dash-class:not(.deadline)')).filter(function(el){ return el.style.width === ''; }).map(function(el){
+      var r = (el.dataset.range || '').split(/[–—-]/); return { el: el, s: mins(r[0]), e: mins(r[1]) };
+    }).filter(function(o){ return o.s != null && o.e != null; }).sort(function(a, b){ return a.s - b.s; });
+    for (var i = 0; i < items.length; i++) {
+      var prev = items[i - 1], next = items[i + 1], el = items[i].el;
+      var jp = prev && prev.e === items[i].s, jn = next && next.s === items[i].e;
+      el.classList.toggle('adj-jp', !!jp); el.classList.toggle('adj-jn', !!jn);
+      if (jn) { var nt = parseFloat(next.el.style.top); el.style.height = (nt - parseFloat(el.style.top)) + 'px'; }
+    }
+  }
+  function scan(){ document.querySelectorAll('.dash-events:not([data-adj])').forEach(proc); }
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true }); scan();
 })();
 </script>
 </body>
