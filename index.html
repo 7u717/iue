@@ -2984,11 +2984,6 @@ body.lk .lk-o3 span{font-size:12px;}
 .kp-body .kp-ghost{display:none;}
 .kp-page{will-change:transform;}
 .kp-out{position:absolute;left:0;right:0;top:0;pointer-events:none;}
-.kp-body.wk-b{transition:height .45s cubic-bezier(.22,1,.36,1);}
-.wk-b .kp-track{display:flex;gap:12px;align-items:flex-start;will-change:transform;}
-.wk-b .kp-page{flex:0 0 auto;transform-origin:center top;}
-.wk-b .kp-page.nb{pointer-events:none;}
-.wk-b .kp-page.empty{min-height:1px;}
 
 /* ===== quick-action menu v2 (under preview card) ===== */
 .vq-menu.qa2{padding:0;gap:0;border-radius:20px;background:rgba(36,36,38,.72);backdrop-filter:blur(40px) saturate(170%);-webkit-backdrop-filter:blur(40px) saturate(170%);box-shadow:0 24px 60px rgba(0,0,0,.55),inset 0 0 0 .5px rgba(255,255,255,.1);overflow:hidden;transform:translate3d(-50%,-8px,0) scale(.96);transform-origin:50% 0;}
@@ -4813,7 +4808,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-16-preview-wk';
+  var APP_VERSION = '2026-10-16-wk';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -6781,30 +6776,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var place = function(){ cap.style.transition = anim ? '' : 'none'; cap.style.width = on.offsetWidth + 'px'; cap.style.transform = 'translateX(' + on.offsetLeft + 'px)'; };
     if (on.offsetWidth) place(); else requestAnimationFrame(function(){ if (on.offsetWidth) place(); });
   }
-  var KPV = (function(){ var m = /[?&]wk=([abc])/i.exec(location.search); return m ? m[1].toLowerCase() : 'a'; })();
   var kpRM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   function kpPage(w, cls){ var it = COMP1511_KP[w - 1]; return '<div class="kp-page' + (cls ? ' ' + cls : '') + '" data-w="' + w + '">' + (it ? kpBody(it) : '') + '</div>'; }
   function kpFill(body, w){
-    body.classList.add('wk-' + KPV); body.style.height = '';
-    if (KPV === 'b') {
-      body.innerHTML = '<div class="kp-track">' + (w > 1 ? kpPage(w - 1, 'nb') : '<div class="kp-page nb empty"></div>') + kpPage(w, 'cur') + (w < 7 ? kpPage(w + 1, 'nb') : '<div class="kp-page nb empty"></div>') + '</div>';
-      requestAnimationFrame(function(){ kpTrack(body, 0, false); });
-      if (!body._ro && window.ResizeObserver) { body._ro = new ResizeObserver(function(){ var cw = body.clientWidth; if (cw === body._cw || body._drag) return; body._cw = cw; requestAnimationFrame(function(){ kpTrack(body, 0, false); }); }); body._ro.observe(body); }
-    } else body.innerHTML = kpPage(w, 'cur');
-  }
-  function kpTrack(body, dx, anim){
-    var tr = body.querySelector('.kp-track'); if (!tr || !body.clientWidth) return;
-    var W = body.clientWidth, pw = W * .8, gap = 12, base = -(pw + gap) + (W - pw) / 2;
-    var ease = 'cubic-bezier(.25,1.15,.4,1)';
-    tr.style.transition = anim ? 'transform .55s ' + ease : 'none';
-    tr.style.transform = 'translate3d(' + (base + dx).toFixed(1) + 'px,0,0)';
-    tr.querySelectorAll('.kp-page').forEach(function(pg, k){
-      pg.style.width = pw + 'px';
-      var off = Math.min(1, Math.abs((k - 1) * (pw + gap) + dx) / (pw + gap));
-      pg.style.transition = anim ? 'transform .55s ' + ease + ',opacity .4s' : 'none';
-      pg.style.transform = 'scale(' + (1 - .08 * off).toFixed(3) + ')'; pg.style.opacity = (1 - .62 * off).toFixed(3);
-    });
-    var cur = tr.querySelector('.kp-page.cur'); if (cur) body.style.height = cur.offsetHeight + 'px';
+    body.style.height = '';
+    body.innerHTML = kpPage(w, 'cur');
   }
   function kpCapLerp(host, frac){
     var cap = host.querySelector('.kp-cap'), on = host.querySelector('.kp-weeks .on'); if (!cap || !on) return;
@@ -6823,48 +6799,29 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     kpCap(host, true);
     if (kpRM) { kpFill(body, w); return; }
     var old = body.querySelector('.kp-page.cur'), W = body.clientWidth;
-    if (KPV === 'b') {
-      var tr = body.querySelector('.kp-track');
-      if (Math.abs(dir) === 1 && tr) {
-        var cx = (new DOMMatrix(getComputedStyle(tr).transform)).m41, pw = W * .8, base = -(pw + 12) + (W - pw) / 2;
-        kpTrack(body, cx - base, false); void tr.offsetWidth;
-        kpTrack(body, -dir * (pw + 12), true);
-        clearTimeout(body._t); body._t = setTimeout(function(){ kpFill(body, w); }, 560);
-      } else kpFill(body, w);
-      return;
-    }
     var oldX = old ? (new DOMMatrix(getComputedStyle(old).transform)).m41 : 0, oldO = old ? old.style.opacity : '';
     var gh = old ? old.cloneNode(true) : null; if (gh) { gh.classList.remove('cur'); gh.classList.add('kp-out'); }
     kpFill(body, w); var cur = body.querySelector('.kp-page.cur');
     if (gh) body.appendChild(gh);
-    if (KPV === 'a') {
-      if (gh) { gh.style.transform = 'translate3d(' + oldX + 'px,0,0)'; gh.style.opacity = oldO;
-        requestAnimationFrame(function(){ gh.style.transition = 'transform .5s cubic-bezier(.22,1,.36,1),opacity .35s ease'; gh.style.transform = 'translate3d(' + (-dir * 24) + 'px,0,0)'; gh.style.opacity = 0; }); }
-      cur.style.transition = 'none'; cur.style.transform = 'translate3d(' + (dir * 46) + 'px,0,0)'; cur.style.opacity = 0;
-      requestAnimationFrame(function(){ requestAnimationFrame(function(){ cur.style.transition = 'transform .6s cubic-bezier(.22,1,.36,1),opacity .45s ease .05s'; cur.style.transform = ''; cur.style.opacity = ''; }); });
-    } else {
-      if (gh) { gh.style.transform = 'translate3d(' + oldX + 'px,0,0)'; requestAnimationFrame(function(){ gh.style.transition = 'transform .3s cubic-bezier(.4,0,.6,1),opacity .3s'; gh.style.transform = 'translate3d(' + (-dir * W) + 'px,0,0)'; gh.style.opacity = .2; }); }
-      cur.style.transition = 'none'; cur.style.transform = 'translate3d(' + (dir * W) + 'px,0,0)';
-      requestAnimationFrame(function(){ requestAnimationFrame(function(){ cur.style.transition = 'transform .62s cubic-bezier(.3,1.32,.45,1)'; cur.style.transform = ''; }); });
-    }
+    if (gh) { gh.style.transform = 'translate3d(' + oldX + 'px,0,0)'; gh.style.opacity = oldO;
+      requestAnimationFrame(function(){ gh.style.transition = 'transform .5s cubic-bezier(.22,1,.36,1),opacity .35s ease'; gh.style.transform = 'translate3d(' + (-dir * 24) + 'px,0,0)'; gh.style.opacity = 0; }); }
+    cur.style.transition = 'none'; cur.style.transform = 'translate3d(' + (dir * 46) + 'px,0,0)'; cur.style.opacity = 0;
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ cur.style.transition = 'transform .6s cubic-bezier(.22,1,.36,1),opacity .45s ease .05s'; cur.style.transform = ''; cur.style.opacity = ''; }); });
     if (gh) setTimeout(function(){ gh.remove(); }, 650);
   }
   function kpSettle(body, host){
     kpCap(host, true);
-    if (KPV === 'b') { kpTrack(body, 0, true); return; }
     var cur = body.querySelector('.kp-page.cur'); if (!cur) return;
-    cur.style.transition = KPV === 'c' ? 'transform .55s cubic-bezier(.3,1.4,.45,1)' : 'transform .45s cubic-bezier(.22,1,.36,1),opacity .3s';
+    cur.style.transition = 'transform .45s cubic-bezier(.22,1,.36,1),opacity .3s';
     cur.style.transform = ''; cur.style.opacity = '';
   }
   function kpDrag(body, host, dx){
     var W = body.clientWidth, edge = (dx > 0 && kpWeek <= 1) || (dx < 0 && kpWeek >= 7);
     var ex = edge ? dx / (1 + Math.abs(dx) / 80) * .5 : dx;
     kpCapLerp(host, edge ? 0 : -dx / W);
-    if (KPV === 'b') { kpTrack(body, ex, false); return; }
     var cur = body.querySelector('.kp-page.cur'); if (!cur) return;
     cur.style.transition = 'none';
-    if (KPV === 'a') { cur.style.transform = 'translate3d(' + (ex * .3).toFixed(1) + 'px,0,0)'; cur.style.opacity = (1 - Math.min(.5, Math.abs(ex) / 500)).toFixed(3); }
-    else cur.style.transform = 'translate3d(' + ex.toFixed(1) + 'px,0,0)';
+    cur.style.transform = 'translate3d(' + (ex * .3).toFixed(1) + 'px,0,0)'; cur.style.opacity = (1 - Math.min(.5, Math.abs(ex) / 500)).toFixed(3);
   }
   window.kpTestDrag = function(dx){ var host = document.getElementById('comp1511-study-map'); kpDrag(host.querySelector('.kp-body'), host, dx); };
   document.addEventListener('click', function(e){
