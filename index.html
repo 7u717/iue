@@ -2766,6 +2766,11 @@ header > div:first-child{width:32px!important;height:32px!important;box-shadow:0
 ::view-transition-group(fx-card),::view-transition-group(fx-code){animation-duration:.45s;animation-timing-function:cubic-bezier(.22,1,.36,1);}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:.3s;}
 @media (prefers-reduced-motion:reduce){.v2-hero::after{animation:none!important}}
+.fx-ink{display:inline-block;letter-spacing:inherit;will-change:transform;font-feature-settings:normal!important;font-variant-numeric:normal!important;font-kerning:none;}
+.v2-hero-num,.v2-hero-unit{display:block!important;text-align:center!important;text-indent:0!important;}
+body.pg-settle .course-section,body.pg-settle .course-section *{animation:none!important;}
+body.pg-dragging .course-section > div:first-child > *{animation:none!important;}
+.course-section.pg-peer{pointer-events:none;}
 </style>
 </head>
 <body>
@@ -4552,7 +4557,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-15-fx';
+  var APP_VERSION = '2026-10-15-center-pager';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5895,38 +5900,92 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     e.stopPropagation();
   }, true);
 
+  // ---- finger-following course pager (momentum + spring settle) ----
+  var pg = null;
+  function pgSection(id){
+    if (!id) return null;
+    var el = document.getElementById('sec-' + id);
+    if (!el && typeof courseById === 'function' && courseById(id) && typeof ensureCourseSection === 'function') el = ensureCourseSection(id);
+    return el;
+  }
+  function pgPrep(el, rect){
+    if (!el) return;
+    el.classList.add('pg-peer');
+    el.style.cssText += ';display:block;position:fixed;top:'+rect.top+'px;left:'+rect.left+'px;width:'+rect.width+'px;height:'+rect.height+'px;z-index:1;transition:none;';
+    el.scrollTop = 0;
+  }
+  function pgClear(el){
+    if (!el) return;
+    el.classList.remove('pg-peer');
+    ['display','position','top','left','width','height','z-index','transition','transform','opacity'].forEach(function(p){ el.style.removeProperty(p); });
+  }
+  function pgRender(x){
+    pg.x = x;
+    if (pg.raf) return;
+    pg.raf = requestAnimationFrame(function(){
+      if (!pg) return; pg.raf = null;
+      pg.cur.style.transform = 'translate3d(' + pg.x.toFixed(1) + 'px,0,0)';
+      if (pg.prev) pg.prev.style.transform = 'translate3d(' + (pg.x - pg.w).toFixed(1) + 'px,0,0)';
+      if (pg.next) pg.next.style.transform = 'translate3d(' + (pg.x + pg.w).toFixed(1) + 'px,0,0)';
+    });
+  }
   document.addEventListener('touchstart', function(e) {
     COURSE_SWIPE_ORDER = swipeOrder();
-    if (!currentSwipeCourse() || shouldIgnoreSwipeTarget(e.target) || !e.touches || e.touches.length !== 1) return;
-    swipeStartCourse = currentSwipeCourse();
-    swipeActiveSection = document.querySelector('.course-section.active');
-    swipeHorizontal = false;
-    swipeStartX = e.touches[0].clientX;
-    swipeStartY = e.touches[0].clientY;
+    var c = currentSwipeCourse();
+    if (!c || c === 'myplan' || shouldIgnoreSwipeTarget(e.target) || !e.touches || e.touches.length !== 1) { pg = null; return; }
+    var i = COURSE_SWIPE_ORDER.indexOf(c); if (i < 0) { pg = null; return; }
+    var cur = document.querySelector('.course-section.active');
+    pg = { course: c, i: i, cur: cur, sx: e.touches[0].clientX, sy: e.touches[0].clientY, lock: null, x: 0, w: cur.getBoundingClientRect().width,
+           prevId: COURSE_SWIPE_ORDER[i-1] || null, nextId: COURSE_SWIPE_ORDER[i+1] || null, prev: null, next: null, samples: [] };
   }, { passive: true });
-
   document.addEventListener('touchmove', function(e) {
-    if (!swipeStartCourse || !swipeActiveSection || !e.touches || e.touches.length !== 1) return;
-    var dx = e.touches[0].clientX - swipeStartX;
-    var dy = e.touches[0].clientY - swipeStartY;
-    if (!swipeHorizontal && Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy) * .95) swipeHorizontal = true;
-    if (!swipeHorizontal) return;
+    if (!pg || !e.touches || e.touches.length !== 1) return;
+    var dx = e.touches[0].clientX - pg.sx, dy = e.touches[0].clientY - pg.sy;
+    if (pg.lock === null && (Math.abs(dx) > 7 || Math.abs(dy) > 7)) {
+      pg.lock = Math.abs(dx) > Math.abs(dy) * 1.1 ? 'x' : 'y';
+      if (pg.lock === 'x') {
+        var rect = pg.cur.getBoundingClientRect();
+        pg.prev = pgSection(pg.prevId); pg.next = pgSection(pg.nextId);
+        pgPrep(pg.prev, rect); pgPrep(pg.next, rect);
+        pg.cur.style.transition = 'none'; pg.cur.style.willChange = 'transform';
+        document.body.classList.add('pg-dragging');
+      }
+    }
+    if (pg.lock !== 'x') return;
     e.preventDefault();
-    var edge = (swipeStartCourse === COURSE_SWIPE_ORDER[0] && dx > 0) || (swipeStartCourse === COURSE_SWIPE_ORDER[COURSE_SWIPE_ORDER.length - 1] && dx < 0);
-    var resistance = edge ? 0.22 : 0.74;
-    var limited = Math.max(-142, Math.min(142, dx * resistance));
-    setSwipeVisual(limited);
+    var t = performance.now(); pg.samples.push([t, dx]); if (pg.samples.length > 6) pg.samples.shift();
+    var edge = (dx > 0 && !pg.prev) || (dx < 0 && !pg.next);
+    pgRender(edge ? dx / (1 + Math.abs(dx) / 90) * .55 : dx);
   }, { passive: false });
-
-  document.addEventListener('touchend', function(e) {
-    if (!swipeStartCourse || !e.changedTouches || e.changedTouches.length !== 1) return;
-    var dx = e.changedTouches[0].clientX - swipeStartX;
-    var dy = e.changedTouches[0].clientY - swipeStartY;
-    var shouldSwipe = Math.abs(dx) >= 28 && Math.abs(dx) > Math.abs(dy) * .95;
-    if (shouldSwipe) showSwipeCourse(dx < 0 ? 1 : -1);
-    else resetSwipeVisual();
-    swipeStartCourse = null;
-  }, { passive: true });
+  function pgEnd() {
+    if (!pg) return;
+    var g = pg; pg = null;
+    if (g.lock !== 'x') return;
+    if (g.raf) cancelAnimationFrame(g.raf);
+    var s = g.samples, v = 0;
+    if (s.length > 1) { var a = s[0], b = s[s.length-1]; v = (b[1] - a[1]) / Math.max(1, b[0] - a[0]); }
+    var dir = 0;
+    if ((g.x < -g.w * .3 || v < -.45) && g.next) dir = 1;
+    else if ((g.x > g.w * .3 || v > .45) && g.prev) dir = -1;
+    var target = dir === 1 ? -g.w : dir === -1 ? g.w : 0;
+    var dist = Math.abs(target - g.x), dur = Math.max(220, Math.min(420, dist / Math.max(.8, Math.abs(v)) ));
+    var ease = 'cubic-bezier(.2,.9,.25,1)';
+    [g.cur, g.prev, g.next].forEach(function(el){ if (el) el.style.transition = 'transform ' + dur + 'ms ' + ease; });
+    g.cur.style.transform = 'translate3d(' + target + 'px,0,0)';
+    if (g.prev) g.prev.style.transform = 'translate3d(' + (target - g.w) + 'px,0,0)';
+    if (g.next) g.next.style.transform = 'translate3d(' + (target + g.w) + 'px,0,0)';
+    suppressNextSwipeClick = Math.abs(g.x) > 10;
+    setTimeout(function(){
+      document.body.classList.add('pg-settle');
+      if (dir) showCourse(COURSE_SWIPE_ORDER[g.i + dir], { instantScroll: true, deferCourseRender: COURSE_SWIPE_ORDER[g.i + dir] === 'courses' });
+      [g.cur, g.prev, g.next].forEach(pgClear);
+      g.cur.style.removeProperty('will-change');
+      document.body.classList.remove('pg-dragging');
+      setTimeout(function(){ document.body.classList.remove('pg-settle'); suppressNextSwipeClick = false; }, 120);
+    }, dur + 10);
+  }
+  document.addEventListener('touchend', pgEnd, { passive: true });
+  document.addEventListener('touchcancel', pgEnd, { passive: true });
 
   document.addEventListener('mousedown', function(e) {
     COURSE_SWIPE_ORDER = swipeOrder();
@@ -9900,19 +9959,35 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   /* ---- optical centering of the overview countdown number ---- */
   var cv = document.createElement('canvas').getContext('2d');
-  function centerHero(){
-    var el = document.querySelector('.v2-hero-num'); if (!el || !cv) return;
-    el.style.transform = '';
-    var cs = getComputedStyle(el), txt = el.textContent;
-    cv.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
-    try { cv.letterSpacing = cs.letterSpacing; } catch(e) {}
-    var m = cv.measureText(txt), r = document.createRange(); r.selectNodeContents(el);
-    var adv = r.getBoundingClientRect().width;
-    var inkL = -m.actualBoundingBoxLeft, inkR = m.actualBoundingBoxRight;
-    if (!isFinite(inkL) || !isFinite(inkR) || !adv) return;
-    var dx = adv / 2 - (inkL + inkR) / 2;
-    if (Math.abs(dx) > .3) el.style.transform = 'translateX(' + dx.toFixed(1) + 'px)';
+  // ink-measured optical centering (device fonts; per-char positions from DOM, ink from canvas pixels)
+  function inkCenter(el){
+    if (!el || !cv) return;
+    var span = el.querySelector(':scope > .fx-ink');
+    if (!span) { span = document.createElement('span'); span.className = 'fx-ink'; while (el.firstChild) span.appendChild(el.firstChild); el.appendChild(span); }
+    span.style.transform = '';
+    var text = span.textContent; if (!text) return;
+    var cs = getComputedStyle(span), sr = span.getBoundingClientRect(), er = el.getBoundingClientRect();
+    var fs = parseFloat(cs.fontSize), scale = 2, pad = Math.ceil(fs * .6);
+    var W = Math.ceil(sr.width + pad * 2) * scale, H = Math.ceil(fs * 1.6) * scale;
+    var c = cv.canvas; c.width = W; c.height = H;
+    cv.setTransform(scale, 0, 0, scale, 0, 0); cv.clearRect(0, 0, W, H);
+    var fam = cs.fontFamily.split(',').map(function(f){ f = f.trim(); return (/\s/.test(f) && !/^["']/.test(f)) ? '"' + f + '"' : f; }).join(', ');
+    cv.font = (cs.fontStyle === 'normal' ? '' : cs.fontStyle + ' ') + cs.fontWeight + ' ' + cs.fontSize + ' ' + fam;
+    var fm = /([\d.]+)px/.exec(cv.font); if (!fm || Math.abs(parseFloat(fm[1]) - fs) > .5) return;
+    cv.textBaseline = 'alphabetic'; cv.fillStyle = '#fff';
+    var node = span.firstChild, r = document.createRange();
+    if (node && node.nodeType === 3) {
+      for (var i = 0; i < text.length; i++) { r.setStart(node, i); r.setEnd(node, i + 1); var cr = r.getBoundingClientRect(); cv.fillText(text[i], pad + (cr.left - sr.left), fs * 1.15); }
+    } else cv.fillText(text, pad, fs * 1.15);
+    var d = cv.getImageData(0, 0, W, H).data, minX = W, maxX = -1;
+    for (var x = 0; x < W; x++) { for (var y = 0; y < H; y++) { if (d[(y * W + x) * 4 + 3] > 40) { if (x < minX) minX = x; if (x > maxX) maxX = x; break; } } }
+    if (maxX < 0) return;
+    var inkMid = sr.left + ((minX + maxX + 1) / 2 / scale - pad);
+    var dx = (er.left + er.width / 2) - inkMid;
+    if (Math.abs(dx) > .25) span.style.transform = 'translateX(' + dx.toFixed(2) + 'px)';
   }
+  function centerHero(){ inkCenter(document.querySelector('.v2-hero-num')); inkCenter(document.querySelector('.v2-hero-unit')); }
+  window.iueCenterHero = centerHero;
   if (typeof renderDashboard === 'function') {
     var _rd = renderDashboard;
     window.renderDashboard = renderDashboard = function(){ var r = _rd.apply(this, arguments); centerHero(); return r; };
