@@ -2877,6 +2877,20 @@ body.pg-dragging .course-section > div:first-child > *{animation:none!important;
 .hub-entry:active,.hub-entry.hub-press{transform:scale(.97)!important;}
 .hub-entry:active .hub-ar,.hub-entry.hub-press .hub-ar{transform:translate(2px,-2px);color:var(--r-t1);}
 @media (prefers-reduced-motion:reduce){.hub-entry::after{animation:none}.hub-entry,.hub-ar{transition:none}}
+.kp-links{display:flex;justify-content:center;gap:22px;margin:16px 0 2px;}
+.kp-links.kp-top{margin:-4px 0 6px;}
+.kp-pdf{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--r-t3);text-decoration:none;letter-spacing:.03em;padding:6px 2px;-webkit-tap-highlight-color:transparent;transition:color .25s;}
+.kp-pdf svg{transition:transform .3s cubic-bezier(.22,1,.36,1);}
+.kp-pdf:active{color:var(--r-t1);}
+.kp-pdf:active svg{transform:translate(1.5px,-1.5px);}
+.kp-empty .kp-pdf{margin-top:12px;}
+.kp-ass{margin-top:26px;padding-top:22px;border-top:.5px solid var(--r-hair);}
+.kp-ass-h{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.kp-ass-h span{font-size:11px;color:var(--r-t3);letter-spacing:.08em;}
+.kp-ass-h b{font-size:17px;font-weight:600;color:var(--r-t1);letter-spacing:.01em;}
+.kp-ass-due{display:flex;flex-direction:column;align-items:center;gap:2px;margin:12px 0 8px;}
+.kp-ass-d{font-family:var(--r-num);font-size:22px;font-weight:300;color:var(--r-t1);letter-spacing:-.01em;font-variant-numeric:tabular-nums;}
+.kp-ass-due small{font-size:11px;color:var(--r-t3);}
 </style>
 </head>
 <body>
@@ -6584,11 +6598,23 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var KP_TICK = 'iue.comp1511.kpTicks.v1', kpWeek = null;
   function kpTicks(){ try { return JSON.parse(localStorage.getItem(KP_TICK) || '{}') || {}; } catch(e) { return {}; } }
   function kpCode(t){ return escapeHtml(t).split('`').map(function(x, i){ return i % 2 ? '<span class="kp-mono">' + x + '</span>' : x; }).join(''); }
+  function kpPdf(name, label){ return '<a class="kp-pdf" href="pdf/comp1511/' + name + '.pdf" onclick="openExternal(this.href);return false;">' + label + '<svg viewBox="0 0 24 24" width="11" height="11"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>'; }
+  function kpAss(){
+    return '<div class="kp-ass"><div class="kp-ass-h"><span>Assignment 1</span><b>CS Submarine</b></div>'
+      + '<div class="kp-ass-due"><span class="kp-ass-d">Mon 26 Oct · 18:00</span><small>占 20% · 个人完成</small></div>'
+      + '<div class="kp-topics">' + ['开潜艇在网格海域里收集所有宝藏，再从 Exit 离开，途中别把氧气用光',
+        '分两段：先用命令搭好关卡（Setup），再逐条命令玩（Gameplay），左右边界相连',
+        '可以多次 `give`，只算最后一次；不能合作，也不能用 AI 写代码',
+        '迟交每天最高分 −5%，超过 5 天不收'].map(function(t){ return '<div class="kp-row">' + kpCode(t) + '</div>'; }).join('') + '</div>'
+      + '<div class="kp-links">' + kpPdf('Ass1', '中文整理 PDF')
+      + '<a class="kp-pdf" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/assignments/ass1/index.html" onclick="openExternal(this.href);return false;">官方 spec<svg viewBox="0 0 24 24" width="11" height="11"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div></div>';
+  }
   function kpBody(item){
-    if (item.flex) return '<div class="kp-empty"><b>Flexibility week</b><span>这周没有新内容</span></div>';
-    if (item.unreleased) return '<div class="kp-empty"><b>未发布</b><span>官网放出后再补</span></div>';
+    if (item.flex) return '<div class="kp-empty"><b>Flexibility week</b><span>这周没有新内容</span>' + kpPdf('W5', '笔记在 W5 PDF') + '</div>';
+    if (item.unreleased) return '<div class="kp-empty"><b>未发布</b><span>官网放出后再补</span>' + kpPdf('W5', '笔记在 W5 PDF') + '</div>';
     var tk = kpTicks();
     return (item.note ? '<div class="kp-note">' + escapeHtml(item.note) + '</div>' : '')
+      + '<div class="kp-links kp-top">' + kpPdf('W' + item.w, '打开 PDF') + '</div>'
       + '<div class="kp-topics">' + item.t.map(function(t){ return '<div class="kp-row">' + kpCode(t) + '</div>'; }).join('') + '</div>'
       + '<div class="kp-q-head"><span>Check-off 自测</span><small>问题为推测</small></div>'
       + '<div class="kp-qs">' + item.q.map(function(q, i){ var k = 'W' + item.w + '-' + i, on = !!tk[k];
@@ -6603,7 +6629,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var item = COMP1511_KP[kpWeek - 1];
     host.innerHTML = '<div class="kp"><div class="kp-weeks" role="tablist"><span class="kp-cap"></span>'
       + COMP1511_KP.map(function(it){ return '<button type="button" role="tab" class="' + (it.w === kpWeek ? 'on' : '') + (it.unreleased ? ' dim' : '') + '" data-w="' + it.w + '">W' + it.w + (it.unreleased ? '+' : '') + '</button>'; }).join('')
-      + '</div><div class="kp-body">' + kpBody(item) + '</div></div>';
+      + '</div><div class="kp-body">' + kpBody(item) + '</div>' + kpAss() + '</div>';
     kpCap(host, false);
     if (window.ResizeObserver) { var wk = host.querySelector('.kp-weeks'); new ResizeObserver(function(){ kpCap(host, false); }).observe(wk); }
   }
