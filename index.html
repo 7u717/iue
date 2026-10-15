@@ -2719,6 +2719,27 @@ header > div:first-child{width:32px!important;height:32px!important;box-shadow:0
 .header-link-menu a:active::after{opacity:.9;transform:translate(1px,-1px);}
 .header-link-wrap.open .header-link-button{background:var(--r-s3)!important;color:var(--r-t1)!important;}
 @media (prefers-reduced-motion:reduce){.header-link-menu,.header-link-menu a{transition:none!important}}
+/* pull-to-sync line */
+.vp-line{position:fixed;left:50%;top:calc(var(--header-h,60px) - 2px);width:120px;margin-left:-60px;height:2px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden;z-index:120;opacity:0;transition:opacity .2s ease;pointer-events:none;}
+.vp-line.show{opacity:1;}
+.vp-line i{display:block;height:100%;background:var(--r-t2);transform:scaleX(0);transform-origin:center;transition:transform .3s var(--r-ease),background .2s;}
+.vp-line.armed i{background:var(--r-t1);}
+.vp-line.busy i{transform:scaleX(.35)!important;animation:vpBusy 1s ease-in-out infinite;background:var(--r-t1);}
+@keyframes vpBusy{0%{transform:translateX(-120%) scaleX(.35)}100%{transform:translateX(120%) scaleX(.35)}}
+/* long-press menu */
+.vq-press{transform:scale(.985)!important;transition:transform .45s var(--r-ease)!important;}
+.vq-backdrop{position:fixed;inset:0;z-index:850;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;transition:opacity .25s;}
+.vq-backdrop.open{opacity:1;}
+.vq-menu{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));width:min(360px,calc(100% - 32px));transform:translate3d(-50%,20px,0) scale(.98);opacity:0;z-index:851;display:flex;flex-direction:column;gap:2px;padding:8px;border-radius:22px;background:rgba(28,28,30,.94);backdrop-filter:blur(30px) saturate(160%);-webkit-backdrop-filter:blur(30px) saturate(160%);box-shadow:0 20px 50px rgba(0,0,0,.6),inset 0 0 0 .5px rgba(255,255,255,.1);transition:transform .3s var(--r-ease),opacity .25s;}
+.vq-menu.open{transform:translate3d(-50%,0,0) scale(1);opacity:1;}
+.vq-title{font-size:12px;color:var(--r-t3);text-align:center;padding:8px 12px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.vq-menu button{height:48px;border:0;border-radius:14px;background:transparent;color:var(--r-t1);font-size:16px;font-weight:500;transition:background .15s,transform .15s var(--r-ease);}
+.vq-menu button + button{box-shadow:0 -.5px 0 rgba(255,255,255,.07);}
+.vq-menu button:active{background:rgba(255,255,255,.08);transform:scale(.98);}
+.vq-menu .vq-cancel{color:var(--r-t3);margin-top:4px;}
+/* course header collapse */
+.course-header .course-code{transform-origin:center;will-change:transform,opacity;}
+.header-title{transition:opacity .15s linear;}
 </style>
 </head>
 <body>
@@ -4505,7 +4526,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-14-myplan-links';
+  var APP_VERSION = '2026-10-15-pull-press';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -9829,6 +9850,152 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   sh.addEventListener('touchmove', function(e){ if (y0 === null) return; dy = Math.max(0, e.touches[0].clientY - y0); sh.style.transform = 'translate3d(0,' + dy + 'px,0)'; }, { passive: true });
   sh.addEventListener('touchend', function(){ if (y0 === null) return; y0 = null; sh.style.transition = ''; if (dy > 90) gtSheetClose(); else sh.style.transform = ''; });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && sh.classList.contains('open')) gtSheetClose(); });
+})();
+</script>
+<div class="vq-backdrop" id="vq-backdrop" hidden></div>
+<div class="vq-menu" id="vq-menu" role="menu" hidden></div>
+<div class="vp-line" id="vp-line" aria-hidden="true"><i></i></div>
+<script>
+(function(){
+  var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function haptic(){ try { if (navigator.vibrate) navigator.vibrate(8); } catch(e) {} }
+  window.iueHaptic = haptic;
+  function activeSection(){ return document.querySelector('.course-section.active'); }
+  function strip(t){ return String(t || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(); }
+
+  /* ---- haptics: ticks + day change ---- */
+  document.addEventListener('click', function(e){
+    if (e.target.closest && e.target.closest('.cx-tog, .gt-row[data-id] .gt-check, .gt-row[data-id] .gt-info, .px-step, .px-seg-opt, .r3-day')) haptic();
+  }, true);
+  if (typeof setDashboardScheduleDay === 'function') {
+    var _sd = setDashboardScheduleDay;
+    window.setDashboardScheduleDay = setDashboardScheduleDay = function(day){ if (day !== dashboardScheduleDay) haptic(); return _sd.apply(this, arguments); };
+  }
+
+  /* ---- optical centering of the overview countdown number ---- */
+  var cv = document.createElement('canvas').getContext('2d');
+  function centerHero(){
+    var el = document.querySelector('.v2-hero-num'); if (!el || !cv) return;
+    el.style.transform = '';
+    var cs = getComputedStyle(el), txt = el.textContent;
+    cv.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+    try { cv.letterSpacing = cs.letterSpacing; } catch(e) {}
+    var m = cv.measureText(txt), r = document.createRange(); r.selectNodeContents(el);
+    var adv = r.getBoundingClientRect().width;
+    var inkL = -m.actualBoundingBoxLeft, inkR = m.actualBoundingBoxRight;
+    if (!isFinite(inkL) || !isFinite(inkR) || !adv) return;
+    var dx = adv / 2 - (inkL + inkR) / 2;
+    if (Math.abs(dx) > .3) el.style.transform = 'translateX(' + dx.toFixed(1) + 'px)';
+  }
+  if (typeof renderDashboard === 'function') {
+    var _rd = renderDashboard;
+    window.renderDashboard = renderDashboard = function(){ var r = _rd.apply(this, arguments); centerHero(); return r; };
+  }
+  centerHero(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(centerHero);
+  window.addEventListener('resize', centerHero);
+
+  /* ---- pull down to sync (existing safe pull path only) ---- */
+  var line = document.getElementById('vp-line'), fill = line.firstChild, py = null, px0 = 0, pull = 0, lock = null, busy = false;
+  document.addEventListener('touchstart', function(e){
+    var sec = activeSection();
+    if (busy || !sec || sec.scrollTop > 0 || e.touches.length !== 1 || (e.target.closest && e.target.closest('.gt1-sheet, .vq-menu, #profile-panel, input, textarea'))) { py = null; return; }
+    py = e.touches[0].clientY; px0 = e.touches[0].clientX; pull = 0; lock = null;
+  }, { passive: true });
+  document.addEventListener('touchmove', function(e){
+    if (py === null) return;
+    var dy = e.touches[0].clientY - py, dx = e.touches[0].clientX - px0;
+    if (lock === null && (Math.abs(dy) > 8 || Math.abs(dx) > 8)) lock = (dy > 0 && Math.abs(dy) > Math.abs(dx)) ? 'v' : 'x';
+    if (lock !== 'v') return;
+    var sec = activeSection(); if (sec && sec.scrollTop > 0) { py = null; return; }
+    pull = Math.max(0, Math.min(1, dy / 110));
+    line.classList.add('show'); fill.style.transition = 'none'; fill.style.transform = 'scaleX(' + pull + ')';
+    if (pull >= 1 && !line.classList.contains('armed')) { line.classList.add('armed'); haptic(); }
+    else if (pull < 1) line.classList.remove('armed');
+  }, { passive: true });
+  document.addEventListener('touchend', function(){
+    if (py === null) return; py = null;
+    if (lock !== 'v') return;
+    fill.style.transition = '';
+    if (pull < 1 || typeof cloudPullNow !== 'function') { fill.style.transform = 'scaleX(0)'; setTimeout(function(){ line.classList.remove('show', 'armed'); }, 250); return; }
+    busy = true; line.classList.remove('armed'); line.classList.add('busy');
+    var done = function(ok){
+      busy = false; line.classList.remove('busy');
+      fill.style.transform = 'scaleX(1)';
+      setTimeout(function(){ line.classList.remove('show'); fill.style.transform = 'scaleX(0)'; }, 300);
+      if (typeof showToast === 'function') showToast(ok ? '已同步' : '暂时连不上');
+      try { renderDashboard(); renderCountdown(); updateProgress && updateProgress(); } catch(e) {}
+    };
+    var pr = null; try { pr = cloudPullNow(true); } catch(e) {}
+    if (pr && pr.then) pr.then(function(){ done(true); }, function(){ done(false); }); else done(false);
+  });
+
+  /* ---- long-press quick menu on deadlines ---- */
+  var menu = document.getElementById('vq-menu'), bd = document.getElementById('vq-backdrop'), lpTimer = null, lpStart = null, suppress = false;
+  function findDeadline(row){
+    var t = row.querySelector('.dash-queue-title, .cd-name, .v2-alert-title'); if (!t) return null;
+    var name = strip(t.innerHTML);
+    var list = (typeof visibleDeadlines === 'function') ? visibleDeadlines() : [];
+    return list.filter(function(d){ return strip(d.name) === name; })[0] || list.filter(function(d){ var n = strip(d.name); return n && (name.indexOf(n) === 0 || n.indexOf(name) === 0); })[0] || null;
+  }
+  function fmt(d){ var x = new Date(d.date); return strip(d.name) + ' · ' + (x.getMonth()+1) + '/' + x.getDate() + ' ' + String(x.getHours()).padStart(2,'0') + ':' + String(x.getMinutes()).padStart(2,'0'); }
+  function closeMenu(){ menu.classList.remove('open'); bd.classList.remove('open'); setTimeout(function(){ if (!menu.classList.contains('open')) { menu.hidden = bd.hidden = true; } }, 250); }
+  bd.addEventListener('click', closeMenu);
+  function openMenu(d){
+    var items = [];
+    items.push(['打开 Moodle', function(){ openExternal(d.link || MOODLE_URL); }]);
+    if (d.gtId && typeof gtLoad === 'function') {
+      var isDone = !!((gtLoad()[d.gtId] || {}).done);
+      items.push([isDone ? '取消完成' : '标记完成', function(){
+        var data = gtLoad(); if (!data[d.gtId]) data[d.gtId] = {}; data[d.gtId].done = !data[d.gtId].done; gtSave(data);
+        try { var c = deadlineCourse(d); if (c) renderGT(c); } catch(e) {}
+        renderCountdown(); renderDashboard(); haptic();
+        if (typeof showToast === 'function') showToast(data[d.gtId].done ? '已完成' : '已取消');
+      }]);
+    }
+    items.push(['复制截止时间', function(){ var t = fmt(d); var ok = function(){ showToast && showToast('已复制'); }; if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, function(){ copyText ? copyText(t) : 0; }); else if (typeof copyText === 'function') copyText(t); }]);
+    menu.innerHTML = '<div class="vq-title">' + escapeHtml(strip(d.name)) + '</div>' + items.map(function(it, i){ return '<button type="button" data-i="'+i+'">' + it[0] + '</button>'; }).join('') + '<button type="button" class="vq-cancel">取消</button>';
+    menu.querySelectorAll('button[data-i]').forEach(function(b){ b.onclick = function(){ closeMenu(); items[+b.dataset.i][1](); }; });
+    menu.querySelector('.vq-cancel').onclick = closeMenu;
+    menu.hidden = bd.hidden = false;
+    requestAnimationFrame(function(){ menu.classList.add('open'); bd.classList.add('open'); });
+  }
+  var lpRow = null;
+  document.addEventListener('touchstart', function(e){
+    var row = e.target.closest && e.target.closest('.dash-queue-row, .cd-card, .v2-alert-row'); if (!row || e.touches.length !== 1) return;
+    lpStart = [e.touches[0].clientX, e.touches[0].clientY]; lpRow = row; row.classList.add('vq-press');
+    lpTimer = setTimeout(function(){
+      lpTimer = null; row.classList.remove('vq-press');
+      var d = findDeadline(row); if (!d) return;
+      suppress = true; haptic(); openMenu(d);
+    }, 480);
+  }, { passive: true });
+  function cancelLp(){ if (lpTimer) { clearTimeout(lpTimer); lpTimer = null; } if (lpRow) { lpRow.classList.remove('vq-press'); lpRow = null; } }
+  document.addEventListener('touchmove', function(e){ if (lpStart && (Math.abs(e.touches[0].clientX - lpStart[0]) > 8 || Math.abs(e.touches[0].clientY - lpStart[1]) > 8)) cancelLp(); }, { passive: true });
+  document.addEventListener('touchend', function(){ cancelLp(); lpStart = null; });
+  document.addEventListener('click', function(e){ if (suppress) { suppress = false; e.preventDefault(); e.stopPropagation(); } }, true);
+  document.addEventListener('contextmenu', function(e){ if (e.target.closest && e.target.closest('.dash-queue-row, .cd-card, .v2-alert-row')) e.preventDefault(); });
+
+  /* ---- course page large header collapses into top bar ---- */
+  function onScroll(sec){
+    var title = document.getElementById('header-title'); if (!title || !sec) return;
+    var head = sec.querySelector('.course-header');
+    var isCourse = !!head && typeof courseById === 'function' && courseById(sec.id.replace(/^sec-/, ''));
+    if (!isCourse) { title.style.opacity = ''; return; }
+    var y = sec.scrollTop, p = Math.max(0, Math.min(1, (y - 20) / 90));
+    var code = head.querySelector('.course-code'), name = head.querySelector('.course-name'), icon = head.querySelector('.course-icon');
+    if (!RM) {
+      if (code) { code.style.transform = 'scale(' + (1 - .25 * p).toFixed(3) + ')'; code.style.opacity = (1 - p).toFixed(3); }
+      if (name) name.style.opacity = (1 - Math.min(1, p * 1.6)).toFixed(3);
+      if (icon) icon.style.opacity = (1 - Math.min(1, p * 1.6)).toFixed(3);
+    }
+    title.style.opacity = (p < .7 ? 0 : (p - .7) / .3).toFixed(3);
+  }
+  document.addEventListener('scroll', function(e){ var s = e.target; if (s && s.classList && s.classList.contains('course-section')) onScroll(s); }, true);
+  if (typeof showCourse === 'function') {
+    var _sc = showCourse;
+    window.showCourse = showCourse = function(){ var r = _sc.apply(this, arguments); setTimeout(function(){ onScroll(activeSection()); }, 0); return r; };
+  }
+  onScroll(activeSection());
 })();
 </script>
 </body>
