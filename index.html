@@ -2935,6 +2935,27 @@ body.lk .header-link-menu{display:none!important;}
 .lk-c .lk-o3 span{font-size:12px;}
 
 @media (prefers-reduced-motion:reduce){.lk-o,.lk-blobs i,.header-link-button,.lk-c .lk-o span{transition:none!important}}
+
+/* ===== labs row redesign ===== */
+.gt-row.cx2-row{display:grid!important;grid-template-columns:24px minmax(0,1fr) auto!important;align-items:center!important;gap:14px!important;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .2s;}
+.gt-row.cx2-row:active{opacity:.6;}
+.cx2-glyph{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.cx2-glyph i{width:12px;height:1.5px;border-radius:1px;background:var(--r-t3);transition:width .45s cubic-bezier(.34,1.4,.64,1),background .3s;}
+.cx2-glyph i:nth-child(2){width:9px;}.cx2-glyph i:nth-child(3){width:6px;}
+.cx2-row.open .cx2-glyph i{width:12px;background:var(--r-t2);}
+.cx2-end{display:flex;align-items:center;gap:8px;}
+.cx2-chev{color:var(--r-t3);transition:transform .5s cubic-bezier(.34,1.4,.64,1);}
+.cx2-row.open .cx2-chev{transform:rotate(180deg);}
+.cx2-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s cubic-bezier(.22,1,.36,1);}
+.cx2-wrap.open{grid-template-rows:1fr;}
+.cx2-in{overflow:hidden;min-height:0;}
+.cx2-in > .comp-expand-panel{opacity:0;transform:translateY(-8px) scale(.985);transform-origin:top center;transition:opacity .25s ease,transform .45s cubic-bezier(.34,1.3,.64,1);}
+.cx2-wrap.open .cx2-in > .comp-expand-panel{opacity:1;transform:none;transition:opacity .4s .08s ease,transform .55s .04s cubic-bezier(.34,1.3,.64,1);}
+@media (prefers-reduced-motion:reduce){.cx2-wrap,.cx2-in > .comp-expand-panel,.cx2-chev,.cx2-glyph i{transition:none!important}}
+.kp-h{display:grid;grid-template-columns:auto 1fr;gap:7px 12px;margin:12px 0 0;padding-top:12px;border-top:.5px solid var(--r-hair);}
+.kp-h dt{font-size:11px;color:var(--r-t3);letter-spacing:.04em;padding-top:1px;white-space:nowrap;}
+.kp-h dd{margin:0;font-size:12.5px;line-height:1.5;color:var(--r-t2);}
+.kp-q-x p{margin-top:12px!important;}
 </style>
 </head>
 <body>
@@ -6561,6 +6582,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function compCheckKey() { return 'iue.comp1511.weekChecks.v1'; }
 
   var COMP1511_LAB_WEEKS = [2,3,4,5,6,7,8,9,10];
+  var COMP1511_KP_H = {"1": [["编译把 .c 源码翻译成可执行文件；运行才真正执行它", "`dcc`、`./程序名`、源代码 vs 可执行文件", "改了代码不重新编译，跑的还是旧版本"], ["换行；不加的话输出会和下一行或命令提示符挤在一起", "转义字符、`\\n`、`printf`", "以为 `printf` 会自动换行"], ["先读编译器报错的行号，再看是语法、拼写还是缺分号", "error vs warning、行号、`;`", "只改报错那一行，没看出错其实在上一行"]], "2": [["`scanf` 要知道变量在内存里的位置，才能把值写进去", "`&`、地址、`%d` / `%lf`", "`%lf` 写成 `%d`，或者读 `char` 时漏掉前面的空格"], ["两个 `int` 相除会丢掉小数部分；有一边是 `double` 才有小数", "整数除法、`double`、强制转换", "先算完整数除法再转 `double`，已经太晚"], ["先判断更特殊的情况（400），再判断一般的（100、4），顺序错结果就错", "`%` 取余、`if` / `else if` 的顺序", "条件写对了，但被前面的分支先截走"], ["字符就是 ASCII 数字：大小写差一个固定值，移位要绕回字母表", "`'a' - 'A'`、`% 26`、ASCII", "移位超过 z 不绕回，或者把非字母也移了"]], "3": [["条件第一次为假就停；手动推一遍变量每轮的值", "循环条件、计数器、哨兵值", "忘了在循环里更新变量，变成死循环"], ["外层每走一次，内层要完整跑一遍；常见是外层行、内层列", "嵌套循环、`row` / `col`", "内层计数器没在外层每轮重置"], ["`变量.字段` 读写结构体里的某一项", "`struct`、`.`、`enum` 取值", "把类型名当变量用，或者结构体没先声明"], ["`scanf` 返回成功读到的个数，可以用来判断输入是否结束", "`== 1`、`EOF`、`while (scanf(...) == 1)`", "只检查值不检查返回值，读到末尾还在循环"]], "4": [["长度为 N 的数组，合法下标是 `0` 到 `N-1`，`N` 已经越界", "下标、越界、`i < N`", "循环写成 `i <= N`"], ["参数把值复制进函数；返回值把一个结果带回来", "形参 / 实参、`return`、函数原型", "以为在函数里改普通变量会影响外面"], ["先读一个字符判断命令，再按命令决定接着读几个数", "`scanf(\" %c\")`、`if` 分支、输入格式", "`%c` 前没加空格，读到上一行留下的换行"]], "5": [["`grid[行][列]`：第一个下标是行，第二个是列", "`ROWS` / `COLS`、嵌套循环", "行列写反，或者两层循环用了同一个计数器"], ["字符串最后有一个 `'\\0'`，读到它就结束", "`'\\0'`、`fgets`、字符串长度", "数组没给 `'\\0'` 留位置；`fgets` 会把换行一起读进来"], ["传数组其实是把它的位置交给函数，所以函数里改的就是原数组", "数组参数、地址、和普通变量的区别", "以为数组和 `int` 一样会复制一份"], ["从两头往中间比较，有一对不同就不是回文", "两个下标、`'\\0'`、长度", "长度算错，或者没处理末尾的换行"]]};
   var COMP1511_KP = [
     { w:1, t:['Linux 命令行；用 VLab 登录 CSE 账号', '第一个 C 程序：`#include <stdio.h>`、`int main(void)`、`printf`', '`dcc` 编译，`./程序名` 运行，`1511 submit` 提交', '转义字符 `\\n`'],
       q:['编译和运行分别在做什么？', '`\\n` 有什么用？', 'broken program 错在哪里？'] },
@@ -6663,6 +6685,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       + '<div class="kp-links">' + kpPdf('Ass1', '中文整理 PDF')
       + '<a class="kp-pdf" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/assignments/ass1/index.html" onclick="openExternal(this.href);return false;">官方 spec<svg viewBox="0 0 24 24" width="11" height="11"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div></div>';
   }
+  function kpHint(w, i){ var h = (COMP1511_KP_H[w] || [])[i]; if (!h) return '';
+    return '<dl class="kp-h"><dt>要讲到</dt><dd>' + kpCode(h[0]) + '</dd><dt>关键词</dt><dd>' + kpCode(h[1]) + '</dd><dt>常漏</dt><dd>' + kpCode(h[2]) + '</dd></dl>'; }
   function kpBody(item){
     if (item.flex) return '<div class="kp-empty"><b>Flexibility week</b><span>这周没有新内容</span>' + kpPdf('W5', '笔记在 W5 PDF') + '</div>';
     if (item.unreleased) return '<div class="kp-empty"><b>未发布</b><span>官网放出后再补</span>' + kpPdf('W5', '笔记在 W5 PDF') + '</div>';
@@ -6670,10 +6694,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return (item.note ? '<div class="kp-note">' + escapeHtml(item.note) + '</div>' : '')
       + '<div class="kp-links kp-top">' + kpPdf('W' + item.w, '打开 PDF') + '</div>'
       + '<div class="kp-topics">' + item.t.map(function(t){ return '<div class="kp-row">' + kpCode(t) + '</div>'; }).join('') + '</div>'
-      + '<div class="kp-q-head"><span>Check-off 自测</span><small>问题为推测</small></div>'
+      + '<div class="kp-q-head"><span>Check-off 自测</span><small>问题和提示均为推测</small></div>'
       + '<div class="kp-qs">' + item.q.map(function(q, i){ var k = 'W' + item.w + '-' + i, on = !!tk[k];
         return '<div class="kp-q' + (on ? ' done' : '') + '" data-k="' + k + '"><div class="kp-q-t">' + kpCode(q) + '</div>'
-          + '<div class="kp-q-x"><div><p>用自己的话讲一遍。讲给同学听也能听懂，就算会了。</p>'
+          + '<div class="kp-q-x"><div>' + kpHint(item.w, i) + '<p>用自己的话讲一遍。讲给同学听也能听懂，就算会了。</p>'
           + '<button type="button" class="kp-tick" aria-pressed="' + on + '"><i></i>讲顺了</button></div></div></div>'; }).join('') + '</div>';
   }
   function renderComp1511StudyMap() {
@@ -7675,12 +7699,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       } else {
         if (course === 'comp1511' && it.id === 'c1511_labs') {
           var labsOpen = data.c1511_labs_open !== false;
-          html += '<div class="gt-row comp-expand-row '+(labsOpen ? 'open' : '')+'" onclick="gtToggleCompLabsExpand()">'
-            + '<div class="comp-expand-chevron">›</div>'
+          html += '<div class="gt-row comp-expand-row cx2-row '+(labsOpen ? 'open' : '')+'" onclick="gtToggleCompLabsExpand(this)" role="button" aria-expanded="'+labsOpen+'">'
+            + '<div class="cx2-glyph" aria-hidden="true"><i></i><i></i><i></i></div>'
             + '<div class="gt-info"><div class="gt-name" style="display:flex;align-items:center;">'+it.label+'</div><div class="gt-note">'+it.note+'</div></div>'
-            + '<div class="gt-weight" style="color:'+cfg.color+'">'+it.w+'%</div>'
+            + '<div class="cx2-end"><div class="gt-weight" style="color:'+cfg.color+'">'+it.w+'%</div><svg class="cx2-chev" viewBox="0 0 24 24" width="12" height="12"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'
             + '</div>';
-          if (labsOpen) html += '<div class="comp-expand-panel" onclick="event.stopPropagation()">'+comp1511LabPlanMarkup()+'</div>';
+          html += '<div class="cx2-wrap'+(labsOpen ? ' open' : '')+'"><div class="cx2-in"><div class="comp-expand-panel" onclick="event.stopPropagation()">'+comp1511LabPlanMarkup()+'</div></div></div>';
           continue;
         }
         var d = data[it.id]||{};
@@ -7709,11 +7733,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     el.innerHTML = html;
   }
 
-  function gtToggleCompLabsExpand() {
+  function gtToggleCompLabsExpand(row) {
     var data = gtLoad();
     data.c1511_labs_open = data.c1511_labs_open === false ? true : false;
     gtSave(data);
-    renderGT('comp1511');
+    var wrap = row && row.nextElementSibling;
+    if (!wrap || !wrap.classList.contains('cx2-wrap')) { renderGT('comp1511'); return; }
+    var open = data.c1511_labs_open;
+    row.classList.toggle('open', open); row.setAttribute('aria-expanded', open); wrap.classList.toggle('open', open);
+    if (window.iueHaptic) iueHaptic();
   }
 
   function gtToggle(el) {
