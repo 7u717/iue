@@ -2740,6 +2740,32 @@ header > div:first-child{width:32px!important;height:32px!important;box-shadow:0
 /* course header collapse */
 .course-header .course-code{transform-origin:center;will-change:transform,opacity;}
 .header-title{transition:opacity .15s linear;}
+/* ===== fx ===== */
+/* hero becomes a glowing card */
+@property --fx-a{syntax:'<angle>';inherits:false;initial-value:0deg;}
+.v2-hero{margin:4px 0 14px!important;border-radius:28px!important;padding:30px 0 30px!important;background:var(--r-s1)!important;isolation:isolate;will-change:transform;}
+.v2-hero::before{inset:0!important;border-radius:inherit;background:radial-gradient(70% 60% at 50% 0%,rgba(255,255,255,.06),transparent 72%)!important;}
+.v2-hero::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;z-index:2;
+  background:conic-gradient(from var(--fx-a),rgba(255,255,255,.05),rgba(255,255,255,.45) 12%,rgba(255,255,255,.05) 30%,rgba(255,255,255,.05) 55%,rgba(255,255,255,.28) 68%,rgba(255,255,255,.05) 85%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  filter:blur(.4px);animation:fxSpin 9s linear infinite;}
+@keyframes fxSpin{to{--fx-a:360deg}}
+/* sheen */
+.course-tile{position:relative;will-change:transform;}
+.v2-hero.fx-lit,.course-tile.fx-lit{background-image:radial-gradient(60% 60% at var(--fx-mx) var(--fx-my),rgba(255,255,255,.07),transparent 70%)!important;}
+/* nav indicator */
+.tab-bar.fx-nav{position:fixed;}
+.fx-ind{position:absolute;left:0;top:5px;height:46px;border-radius:999px;background:var(--r-t1);z-index:0;pointer-events:none;transition:opacity .2s;}
+.tab-bar.fx-nav .tab{position:relative;z-index:1;background:transparent!important;transition:color .3s var(--r-ease)!important;}
+.tab-bar.fx-nav .tab[class*="active"]:not(.r3x):not(.r3y){background:transparent!important;}
+/* spring sheets */
+.gt1-sheet{transition:transform .55s cubic-bezier(.32,1.25,.45,1)!important;}
+.gt1-sheet:not(.open){transition:transform .32s cubic-bezier(.4,0,.6,1)!important;}
+.vq-menu{transition:transform .5s cubic-bezier(.32,1.3,.45,1),opacity .2s!important;}
+/* view transitions */
+::view-transition-group(fx-card),::view-transition-group(fx-code){animation-duration:.45s;animation-timing-function:cubic-bezier(.22,1,.36,1);}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.3s;}
+@media (prefers-reduced-motion:reduce){.v2-hero::after{animation:none!important}}
 </style>
 </head>
 <body>
@@ -4526,7 +4552,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-15-pull-press';
+  var APP_VERSION = '2026-10-15-fx';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -9847,7 +9873,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   // drag to dismiss
   var sh = el('gt1-sheet'), y0 = null, dy = 0;
   sh.addEventListener('touchstart', function(e){ if (e.target.closest('input,button')) return; y0 = e.touches[0].clientY; dy = 0; sh.style.transition = 'none'; }, { passive: true });
-  sh.addEventListener('touchmove', function(e){ if (y0 === null) return; dy = Math.max(0, e.touches[0].clientY - y0); sh.style.transform = 'translate3d(0,' + dy + 'px,0)'; }, { passive: true });
+  sh.addEventListener('touchmove', function(e){ if (y0 === null) return; var raw = e.touches[0].clientY - y0; dy = raw >= 0 ? raw : -Math.sqrt(-raw) * 2.2; sh.style.transform = 'translate3d(0,' + dy.toFixed(1) + 'px,0)'; }, { passive: true });
   sh.addEventListener('touchend', function(){ if (y0 === null) return; y0 = null; sh.style.transition = ''; if (dy > 90) gtSheetClose(); else sh.style.transform = ''; });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && sh.classList.contains('open')) gtSheetClose(); });
 })();
@@ -9996,6 +10022,71 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     window.showCourse = showCourse = function(){ var r = _sc.apply(this, arguments); setTimeout(function(){ onScroll(activeSection()); }, 0); return r; };
   }
   onScroll(activeSection());
+})();
+</script>
+<script>
+(function(){
+  var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (RM) return;
+  /* 3D tilt + sheen */
+  var TILT = '.v2-hero, .course-tile';
+  var cur = null;
+  function setTilt(el, x, y){
+    var r = el.getBoundingClientRect(), nx = (x - r.left) / r.width - .5, ny = (y - r.top) / r.height - .5;
+    var max = el.classList.contains('v2-hero') ? 3 : 5;
+    el.style.transition = 'transform .12s ease-out';
+    el.style.transform = 'perspective(800px) rotateX(' + (-ny * max).toFixed(2) + 'deg) rotateY(' + (nx * max).toFixed(2) + 'deg)';
+    el.style.setProperty('--fx-mx', ((nx + .5) * 100).toFixed(1) + '%'); el.style.setProperty('--fx-my', ((ny + .5) * 100).toFixed(1) + '%');
+    el.classList.add('fx-lit');
+  }
+  function release(el){ el.style.transition = 'transform .6s cubic-bezier(.34,1.4,.64,1)'; el.style.transform = ''; el.classList.remove('fx-lit'); }
+  document.addEventListener('touchstart', function(e){ var el = e.target.closest && e.target.closest(TILT); if (!el || e.touches.length !== 1) return; cur = el; setTilt(el, e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+  document.addEventListener('touchmove', function(e){ if (cur) setTilt(cur, e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+  document.addEventListener('touchend', function(){ if (cur) { release(cur); cur = null; } });
+  document.addEventListener('touchcancel', function(){ if (cur) { release(cur); cur = null; } });
+
+  /* fluid capsule nav indicator */
+  var bar = document.querySelector('.tab-bar');
+  if (bar) {
+    var ind = document.createElement('div'); ind.className = 'fx-ind'; bar.insertBefore(ind, bar.firstChild); bar.classList.add('fx-nav');
+    var last = null;
+    function place(animate){
+      var t = bar.querySelector('.tab[class*="active"]'); if (!t) { ind.style.opacity = '0'; return; }
+      ind.style.opacity = '1';
+      var x = t.offsetLeft, w = t.offsetWidth;
+      if (animate && last && last.x !== x && ind.animate) {
+        var l = Math.min(last.x, x), mw = Math.max(last.x + last.w, x + w) - l;
+        ind.animate([
+          { transform: 'translateX(' + last.x + 'px)', width: last.w + 'px' },
+          { transform: 'translateX(' + l + 'px)', width: mw + 'px', offset: .45 },
+          { transform: 'translateX(' + x + 'px)', width: w + 'px' }
+        ], { duration: 420, easing: 'cubic-bezier(.22,1,.36,1)' });
+      }
+      ind.style.transform = 'translateX(' + x + 'px)'; ind.style.width = w + 'px';
+      last = { x: x, w: w };
+    }
+    new MutationObserver(function(){ place(true); }).observe(bar, { subtree: true, attributes: true, attributeFilter: ['class'] });
+    window.addEventListener('resize', function(){ place(false); });
+    setTimeout(function(){ place(false); }, 50);
+  }
+
+  /* shared-element expand: course tile -> course page */
+  if (document.startViewTransition && typeof openCourse === 'function') {
+    var _oc = openCourse;
+    window.openCourse = openCourse = function(id){
+      var args = arguments, tile = window.event && window.event.target && window.event.target.closest && window.event.target.closest('.course-tile');
+      if (!tile) return _oc.apply(this, args);
+      var tc = tile.querySelector('.course-tile-code');
+      tile.style.viewTransitionName = 'fx-card'; if (tc) tc.style.viewTransitionName = 'fx-code';
+      var vt = document.startViewTransition(function(){
+        tile.style.viewTransitionName = ''; if (tc) tc.style.viewTransitionName = '';
+        _oc.apply(null, args);
+        var sec = document.getElementById('sec-' + id), head = sec && sec.querySelector('.course-header'), code = head && head.querySelector('.course-code');
+        if (head) head.style.viewTransitionName = 'fx-card'; if (code) code.style.viewTransitionName = 'fx-code';
+      });
+      vt.finished.finally(function(){ var sec = document.getElementById('sec-' + id); if (sec) sec.querySelectorAll('.course-header, .course-code').forEach(function(n){ n.style.viewTransitionName = ''; }); });
+    };
+  }
 })();
 </script>
 </body>
