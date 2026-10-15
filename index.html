@@ -2798,7 +2798,7 @@ body.pg-dragging .course-section > div:first-child > *{animation:none!important;
 .fx3-cells{flex:1 1 auto;display:flex;gap:3px;max-width:140px;margin:0 auto;transition:opacity .3s,max-width .5s cubic-bezier(.22,1,.36,1);}
 .fx3-cells i{flex:1;height:8px;border-radius:2.5px;background:rgba(255,255,255,.07);overflow:hidden;}
 .fx3-cells b{display:block;height:100%;background:var(--r-t1);transform-origin:left;transition:transform .5s cubic-bezier(.22,1,.36,1),background .4s;}
-.fx3-target:not(.fx3-live) .fx3-cells i{animation:fx3Cell .35s calc(.25s + var(--i)*.07s) ease both;}
+.fx3-target.fx3-anim .fx3-cells i{animation:fx3Cell .35s calc(.25s + var(--i)*.07s) ease both;}
 .fx3-target.hard .fx3-cells b{background:var(--r-t3);}
 .fx3-r{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;line-height:1.25;color:var(--r-t1);font-variant-numeric:tabular-nums;transition:opacity .3s;}
 .fx3-r small{font-size:10px;color:var(--r-t3);}
@@ -2959,7 +2959,7 @@ body.lk .lk-o3 span{font-size:12px;}
 .v2-hero.fx4-urg::after{opacity:calc(.55 + var(--fx4-u,0) * .45);}
 @keyframes fx4Breath{0%,100%{box-shadow:0 0 calc(10px + var(--fx4-u,0) * 18px) rgba(255,255,255,calc(var(--fx4-u,0) * .05))}50%{box-shadow:0 0 calc(22px + var(--fx4-u,0) * 46px) rgba(255,255,255,calc(.02 + var(--fx4-u,0) * .14))}}
 /* 5. week page flip */
-.kp-body{position:relative;perspective:1100px;}
+.kp-body{position:relative;}
 .kp-in-r{animation:kpUnder .55s cubic-bezier(.22,1,.36,1) both!important;}
 .kp-in-l{animation:kpUnder .55s cubic-bezier(.22,1,.36,1) both!important;}
 @keyframes kpUnder{from{opacity:.35;transform:translateY(6px) scale(.965)}}
@@ -2978,6 +2978,42 @@ body.lk .lk-o3 span{font-size:12px;}
 .fx4-pv-t{font-size:15px;font-weight:600;color:var(--r-t1);line-height:1.35;}
 .fx4-pv-s{font-size:12px;color:var(--r-t3);margin-top:6px;}
 @media (prefers-reduced-motion:reduce){.fx4-pv,.fx4-rip,.v2-hero.fx4-urg,.kp-ghost{animation:none!important;transition:none!important}}
+
+/* ===== 知识点 week switch variants ===== */
+.kp-body{perspective:none;overflow:hidden;}
+.kp-body .kp-ghost{display:none;}
+.kp-page{will-change:transform;}
+.kp-out{position:absolute;left:0;right:0;top:0;pointer-events:none;}
+
+/* ===== quick-action menu v2 (under preview card) ===== */
+.vq-menu.qa2{padding:0;gap:0;border-radius:20px;background:rgba(36,36,38,.72);backdrop-filter:blur(40px) saturate(170%);-webkit-backdrop-filter:blur(40px) saturate(170%);box-shadow:0 24px 60px rgba(0,0,0,.55),inset 0 0 0 .5px rgba(255,255,255,.1);overflow:hidden;transform:translate3d(-50%,-8px,0) scale(.96);transform-origin:50% 0;}
+.vq-menu.qa2.open{transform:translate3d(-50%,0,0) scale(1);}
+.vq-menu.qa2 button{display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 18px;border-radius:0;font-size:15px;font-weight:400;color:var(--r-t1);box-shadow:none;transform:none;}
+.vq-menu.qa2 button + button{box-shadow:inset 0 .5px 0 rgba(255,255,255,.09);}
+.vq-menu.qa2 button svg{color:var(--r-t3);flex:none;}
+.vq-menu.qa2 button:active{background:rgba(255,255,255,.07);transform:none;}
+.vq-menu.qa2.open button{animation:qa2In .5s cubic-bezier(.32,1.3,.45,1) both;animation-delay:calc(60ms + var(--i) * 40ms);}
+@keyframes qa2In{from{opacity:0;transform:translate3d(0,-6px,0)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.vq-menu.qa2,.vq-menu.qa2 button{animation:none!important;transition:none!important}}
+
+/* ===== Assignment card v2 ===== */
+#comp1511-ass .kp-ass.a2{text-align:center;padding:14px 4px 6px;}
+.a2-k{font-size:11px;color:var(--r-t3);letter-spacing:.08em;}
+.a2-n{font-size:15px;font-weight:500;color:var(--r-t2);margin-top:3px;}
+.a2-d{font-family:var(--r-num);font-size:34px;font-weight:200;color:var(--r-t1);letter-spacing:-.02em;margin-top:22px;line-height:1.1;}
+.a2-d span{display:block;font-family:var(--r-font);font-size:13px;font-weight:400;color:var(--r-t2);letter-spacing:0;margin-top:6px;}
+.a2-m{font-size:11px;color:var(--r-t3);margin-top:4px;}
+.a2-t{display:inline-flex;align-items:center;gap:4px;margin-top:26px;padding:6px 10px;border:0;background:transparent!important;color:var(--r-t3);font-size:12px;}
+.a2-t svg{transition:transform .45s cubic-bezier(.32,1.3,.45,1);}
+.a2.open .a2-t svg{transform:rotate(180deg);}
+.a2-x{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.22,1,.36,1),opacity .35s;opacity:0;}
+.a2.open .a2-x{grid-template-rows:1fr;opacity:1;}
+.a2-x>div{overflow:hidden;}
+.a2-x ol{list-style:none;margin:0;padding:10px 6px 4px;display:flex;flex-direction:column;gap:12px;font-size:13px;line-height:1.55;color:var(--r-t2);}
+.a2-l{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:22px;}
+.a2-l a{display:inline-flex;align-items:center;gap:3px;font-size:12px;color:var(--r-t2);text-decoration:none;}
+.a2-l i{width:3px;height:3px;border-radius:50%;background:var(--r-t3);opacity:.6;}
+@media (prefers-reduced-motion:reduce){.a2-x,.a2-t svg{transition:none!important}}
 </style>
 </head>
 <body>
@@ -4772,7 +4808,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-16-fx4';
+  var APP_VERSION = '2026-10-16-wk';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -6697,14 +6733,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function kpCode(t){ return escapeHtml(t).split('`').map(function(x, i){ return i % 2 ? '<span class="kp-mono">' + x + '</span>' : x; }).join(''); }
   function kpPdf(name, label){ return '<a class="kp-pdf" href="pdf/comp1511/' + name + '.pdf" onclick="openExternal(this.href);return false;">' + label + '<svg viewBox="0 0 24 24" width="11" height="11"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>'; }
   function kpAss(){
-    return '<div class="kp-ass"><div class="kp-ass-h"><span>Assignment 1</span><b>CS Submarine</b></div>'
-      + '<div class="kp-ass-due"><span class="kp-ass-d">Mon 26 Oct · 18:00</span><small>占 20% · 个人完成</small></div>'
-      + '<div class="kp-topics">' + ['开潜艇在网格海域里收集所有宝藏，再从 Exit 离开，途中别把氧气用光',
-        '分两段：先用命令搭好关卡（Setup），再逐条命令玩（Gameplay），左右边界相连',
-        '可以多次 `give`，只算最后一次；不能合作，也不能用 AI 写代码',
-        '迟交每天最高分 −5%，超过 5 天不收'].map(function(t){ return '<div class="kp-row">' + kpCode(t) + '</div>'; }).join('') + '</div>'
-      + '<div class="kp-links">' + kpPdf('Ass1', '中文整理 PDF')
-      + '<a class="kp-pdf" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/assignments/ass1/index.html" onclick="openExternal(this.href);return false;">官方 spec<svg viewBox="0 0 24 24" width="11" height="11"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div></div>';
+    var ar = '<svg viewBox="0 0 24 24" width="10" height="10"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    return '<div class="kp-ass a2"><div class="a2-k">Assignment 1</div><div class="a2-n">CS Submarine</div>'
+      + '<div class="a2-d">10月26日<span>周一 18:00</span></div><div class="a2-m">占 20% · 个人完成</div>'
+      + '<button type="button" class="a2-t" aria-expanded="false" onclick="var c=this.parentNode;c.classList.toggle(\'open\');this.setAttribute(\'aria-expanded\',c.classList.contains(\'open\'))">要点<svg viewBox="0 0 24 24" width="12" height="12"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'
+      + '<div class="a2-x"><div><ol>' + ['开潜艇收集所有宝藏，从 Exit 离开，别把氧气用光',
+        '先用命令搭关卡（Setup），再逐条命令玩（Gameplay）',
+        '可多次 `give`，只算最后一次；迟交每天 −5%，超 5 天不收'].map(function(t){ return '<li>' + kpCode(t) + '</li>'; }).join('') + '</ol></div></div>'
+      + '<div class="a2-l"><a href="pdf/comp1511/Ass1.pdf" onclick="openExternal(this.href);return false;">中文整理' + ar + '</a><i></i>'
+      + '<a href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/assignments/ass1/index.html" onclick="openExternal(this.href);return false;">官方 spec' + ar + '</a></div></div>';
   }
   function kpHint(w, i){ var h = (COMP1511_KP_H[w] || [])[i]; if (!h) return '';
     return '<dl class="kp-h"><dt>要讲到</dt><dd>' + kpCode(h[0]) + '</dd><dt>关键词</dt><dd>' + kpCode(h[1]) + '</dd><dt>常漏</dt><dd>' + kpCode(h[2]) + '</dd></dl>'; }
@@ -6728,7 +6765,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var item = COMP1511_KP[kpWeek - 1];
     host.innerHTML = '<div class="kp"><div class="kp-weeks" role="tablist"><span class="kp-cap"></span>'
       + COMP1511_KP.map(function(it){ return '<button type="button" role="tab" class="' + (it.w === kpWeek ? 'on' : '') + (it.unreleased ? ' dim' : '') + '" data-w="' + it.w + '">W' + it.w + (it.unreleased ? '+' : '') + '</button>'; }).join('')
-      + '</div><div class="kp-body">' + kpBody(item) + '</div></div>';
+      + '</div><div class="kp-body"></div></div>';
+    kpFill(host.querySelector('.kp-body'), kpWeek);
     var ah = document.getElementById('comp1511-ass'); if (ah) ah.innerHTML = kpAss();
     kpCap(host, false);
     if (window.ResizeObserver) { var wk = host.querySelector('.kp-weeks'); new ResizeObserver(function(){ kpCap(host, false); }).observe(wk); }
@@ -6738,19 +6776,54 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var place = function(){ cap.style.transition = anim ? '' : 'none'; cap.style.width = on.offsetWidth + 'px'; cap.style.transform = 'translateX(' + on.offsetLeft + 'px)'; };
     if (on.offsetWidth) place(); else requestAnimationFrame(function(){ if (on.offsetWidth) place(); });
   }
+  var kpRM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function kpPage(w, cls){ var it = COMP1511_KP[w - 1]; return '<div class="kp-page' + (cls ? ' ' + cls : '') + '" data-w="' + w + '">' + (it ? kpBody(it) : '') + '</div>'; }
+  function kpFill(body, w){
+    body.style.height = '';
+    body.innerHTML = kpPage(w, 'cur');
+  }
+  function kpCapLerp(host, frac){
+    var cap = host.querySelector('.kp-cap'), on = host.querySelector('.kp-weeks .on'); if (!cap || !on) return;
+    var nb = frac > 0 ? on.nextElementSibling : on.previousElementSibling, f = Math.min(1, Math.abs(frac));
+    if (!nb || nb.tagName !== 'BUTTON') { nb = on; f = 0; }
+    cap.style.transition = 'none';
+    cap.style.width = (on.offsetWidth + (nb.offsetWidth - on.offsetWidth) * f) + 'px';
+    cap.style.transform = 'translateX(' + (on.offsetLeft + (nb.offsetLeft - on.offsetLeft) * f).toFixed(1) + 'px)';
+  }
   function kpGo(w, dir){
-    var host = document.getElementById('comp1511-study-map'); if (!host || w < 1 || w > 7 || w === kpWeek) return;
+    var host = document.getElementById('comp1511-study-map'); if (!host) return;
+    var body = host.querySelector('.kp-body');
+    if (w < 1 || w > 7 || w === kpWeek) { kpSettle(body, host); return; }
     kpWeek = w;
     host.querySelectorAll('.kp-weeks button').forEach(function(b){ b.classList.toggle('on', +b.dataset.w === w); });
     kpCap(host, true);
-    var body = host.querySelector('.kp-body');
-    var RMk = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!RMk) { var old = body.querySelector('.kp-ghost'); if (old) old.remove();
-      var g = document.createElement('div'); g.className = 'kp-ghost ' + (dir > 0 ? 'fwd' : 'back'); g.innerHTML = body.innerHTML;
-      body.innerHTML = kpBody(COMP1511_KP[w - 1]); body.appendChild(g); setTimeout(function(){ g.remove(); }, 650); }
-    else body.innerHTML = kpBody(COMP1511_KP[w - 1]);
-    body.classList.remove('kp-in-l', 'kp-in-r'); void body.offsetWidth; body.classList.add(dir > 0 ? 'kp-in-r' : 'kp-in-l');
+    if (kpRM) { kpFill(body, w); return; }
+    var old = body.querySelector('.kp-page.cur'), W = body.clientWidth;
+    var oldX = old ? (new DOMMatrix(getComputedStyle(old).transform)).m41 : 0, oldO = old ? old.style.opacity : '';
+    var gh = old ? old.cloneNode(true) : null; if (gh) { gh.classList.remove('cur'); gh.classList.add('kp-out'); }
+    kpFill(body, w); var cur = body.querySelector('.kp-page.cur');
+    if (gh) body.appendChild(gh);
+    if (gh) { gh.style.transform = 'translate3d(' + oldX + 'px,0,0)'; gh.style.opacity = oldO;
+      requestAnimationFrame(function(){ gh.style.transition = 'transform .5s cubic-bezier(.22,1,.36,1),opacity .35s ease'; gh.style.transform = 'translate3d(' + (-dir * 24) + 'px,0,0)'; gh.style.opacity = 0; }); }
+    cur.style.transition = 'none'; cur.style.transform = 'translate3d(' + (dir * 46) + 'px,0,0)'; cur.style.opacity = 0;
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ cur.style.transition = 'transform .6s cubic-bezier(.22,1,.36,1),opacity .45s ease .05s'; cur.style.transform = ''; cur.style.opacity = ''; }); });
+    if (gh) setTimeout(function(){ gh.remove(); }, 650);
   }
+  function kpSettle(body, host){
+    kpCap(host, true);
+    var cur = body.querySelector('.kp-page.cur'); if (!cur) return;
+    cur.style.transition = 'transform .45s cubic-bezier(.22,1,.36,1),opacity .3s';
+    cur.style.transform = ''; cur.style.opacity = '';
+  }
+  function kpDrag(body, host, dx){
+    var W = body.clientWidth, edge = (dx > 0 && kpWeek <= 1) || (dx < 0 && kpWeek >= 7);
+    var ex = edge ? dx / (1 + Math.abs(dx) / 80) * .5 : dx;
+    kpCapLerp(host, edge ? 0 : -dx / W);
+    var cur = body.querySelector('.kp-page.cur'); if (!cur) return;
+    cur.style.transition = 'none';
+    cur.style.transform = 'translate3d(' + (ex * .3).toFixed(1) + 'px,0,0)'; cur.style.opacity = (1 - Math.min(.5, Math.abs(ex) / 500)).toFixed(3);
+  }
+  window.kpTestDrag = function(dx){ var host = document.getElementById('comp1511-study-map'); kpDrag(host.querySelector('.kp-body'), host, dx); };
   document.addEventListener('click', function(e){
     var t = e.target; if (!t.closest || !t.closest('#comp1511-study-map')) return;
     var wb = t.closest('.kp-weeks button'); if (wb) { kpGo(+wb.dataset.w, +wb.dataset.w - kpWeek); return; }
@@ -6761,10 +6834,22 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var qc = t.closest('.kp-q'); if (qc) qc.classList.toggle('open');
   });
   (function(){
-    var sx = null, sy = 0, lock = null;
-    document.addEventListener('touchstart', function(e){ var b = e.target.closest && e.target.closest('#comp1511-study-map .kp-body'); sx = b && e.touches.length === 1 ? e.touches[0].clientX : null; sy = sx == null ? 0 : e.touches[0].clientY; lock = null; }, { passive: true });
-    document.addEventListener('touchmove', function(e){ if (sx == null || lock) return; var dx = e.touches[0].clientX - sx, dy = e.touches[0].clientY - sy; if (Math.abs(dx) > 10 || Math.abs(dy) > 10) lock = Math.abs(dx) > Math.abs(dy) * 1.2 ? 'x' : 'y'; }, { passive: true });
-    document.addEventListener('touchend', function(e){ if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; if (lock === 'x' && Math.abs(dx) > 50) kpGo(kpWeek + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1); sx = null; }, { passive: true });
+    var sx = null, sy = 0, lock = null, body = null, host = null, samples = [];
+    document.addEventListener('touchstart', function(e){ var b = e.target.closest && e.target.closest('#comp1511-study-map .kp-body'); body = b; host = b && document.getElementById('comp1511-study-map'); sx = b && e.touches.length === 1 ? e.touches[0].clientX : null; sy = sx == null ? 0 : e.touches[0].clientY; lock = null; samples = []; }, { passive: true });
+    document.addEventListener('touchmove', function(e){
+      if (sx == null) return; var dx = e.touches[0].clientX - sx, dy = e.touches[0].clientY - sy;
+      if (!lock && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) lock = Math.abs(dx) > Math.abs(dy) * 1.2 ? 'x' : 'y';
+      if (lock !== 'x') return; if (e.cancelable) e.preventDefault();
+      samples.push([performance.now(), dx]); if (samples.length > 5) samples.shift();
+      if (!kpRM) kpDrag(body, host, dx);
+    }, { passive: false });
+    document.addEventListener('touchend', function(e){
+      if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; sx = null;
+      if (lock !== 'x') return;
+      var v = 0; if (samples.length > 1) { var a = samples[0], z = samples[samples.length - 1]; v = (z[1] - a[1]) / Math.max(1, z[0] - a[0]); }
+      var W = body.clientWidth, go = Math.abs(dx) > W * .22 || Math.abs(v) > .4;
+      if (go) kpGo(kpWeek + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1); else kpSettle(body, host);
+    }, { passive: true });
   })();
   function compOpenWeekPackage(week) { kpGo(week, week - (kpWeek || 1)); }
 
@@ -10315,12 +10400,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       }]);
     }
     items.push(['复制截止时间', function(){ var t = fmt(d); var ok = function(){ showToast && showToast('已复制'); }; if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, function(){ copyText ? copyText(t) : 0; }); else if (typeof copyText === 'function') copyText(t); }]);
-    menu.innerHTML = '<div class="vq-title">' + escapeHtml(strip(d.name)) + '</div>' + items.map(function(it, i){ return '<button type="button" data-i="'+i+'">' + it[0] + '</button>'; }).join('') + '<button type="button" class="vq-cancel">取消</button>';
+    var IC = { '打开 Moodle': '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>', '标记完成': '<path d="M5 12.5l4.5 4.5L19 7.5"/>', '取消完成': '<path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/>', '复制截止时间': '<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/>' };
+    menu.classList.add('qa2');
+    menu.innerHTML = items.map(function(it, i){ return '<button type="button" data-i="'+i+'" style="--i:'+i+'"><span>' + it[0] + '</span><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + (IC[it[0]] || '') + '</svg></button>'; }).join('');
     menu.querySelectorAll('button[data-i]').forEach(function(b){ b.onclick = function(){ closeMenu(); items[+b.dataset.i][1](); }; });
-    menu.querySelector('.vq-cancel').onclick = closeMenu;
     menu.hidden = bd.hidden = false;
     requestAnimationFrame(function(){ menu.classList.add('open'); bd.classList.add('open'); });
     if (window.fx4Pv) fx4Pv.deadline(d);
+    var pvEl = document.getElementById('fx4-pv');
+    if (pvEl && !pvEl.hidden) { menu.style.top = (pvEl.offsetTop + pvEl.offsetHeight + 10) + 'px'; menu.style.bottom = 'auto'; menu.style.width = pvEl.offsetWidth + 'px'; }
   }
   var lpRow = null;
   document.addEventListener('touchstart', function(e){
@@ -10441,12 +10529,16 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return o;
   }
   function fill(i, remainW){ return Math.max(0, Math.min(1, remainW / 10 - i)).toFixed(3); }
+  var fx3Seen = {};
   window.gtNeedMarkup = gtNeedMarkup = function(course, total, doneW){
     var o = st(course, total, doneW), cells = '';
     for (var i = 0; i < 10; i++) cells += '<i style="--i:' + i + '"><b style="transform:scaleX(' + fill(i, o.remainW) + ')"></b></i>';
     var pick = '<span class="fx3-pick" data-c="' + course + '"><span class="fx3-cap"></span><button type="button" class="fx3-cur">Target ' + o.target + '+</button>'
       + GRADES.map(function(g){ return '<button type="button" class="fx3-o' + (g[1] === o.target ? ' on' : '') + '" data-v="' + g[1] + '">' + g[0] + ' <em>' + g[1] + '</em></button>'; }).join('') + '</span>';
-    return '<div class="fx3-target ' + o.k + '" id="gt-need-' + course + '"><span class="gt-need-text" hidden></span>' + pick
+    var act = document.querySelector('.course-section.active'), anim = !fx3Seen[course] && act && act.id === 'sec-' + course;
+    fx3Seen[course] = 1;
+    if (anim) setTimeout(function(){ var n = document.getElementById('gt-need-' + course); if (n) n.classList.remove('fx3-anim'); }, 1400);
+    return '<div class="fx3-target ' + o.k + (anim ? ' fx3-anim' : '') + '" id="gt-need-' + course + '"><span class="gt-need-text" hidden></span>' + pick
       + '<span class="fx3-cells">' + cells + '</span><span class="fx3-r"><span class="r1">' + o.r1 + '</span><small>' + o.r2 + '</small></span></div>';
   };
   window.fx3BatUpdate = function(course, total, doneW){
