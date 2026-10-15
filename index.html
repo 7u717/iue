@@ -4607,7 +4607,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-15-timeline';
+  var APP_VERSION = '2026-10-15-empty-day';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5977,6 +5977,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       pg.cur.style.transform = 'translate3d(' + pg.x.toFixed(1) + 'px,0,0)';
       if (pg.prev) pg.prev.style.transform = 'translate3d(' + (pg.x - pg.w).toFixed(1) + 'px,0,0)';
       if (pg.next) pg.next.style.transform = 'translate3d(' + (pg.x + pg.w).toFixed(1) + 'px,0,0)';
+      if (window.hdrFollow) hdrFollow(pg.x / pg.w, pg.prevId, pg.nextId);
     });
   }
   document.addEventListener('touchstart', function(e) {
@@ -6025,12 +6026,14 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (g.prev) g.prev.style.transform = 'translate3d(' + (target - g.w) + 'px,0,0)';
     if (g.next) g.next.style.transform = 'translate3d(' + (target + g.w) + 'px,0,0)';
     suppressNextSwipeClick = Math.abs(g.x) > 10;
+    if (window.hdrSettle) hdrSettle(dir, dur, ease);
     setTimeout(function(){
       document.body.classList.add('pg-settle');
       if (dir) showCourse(COURSE_SWIPE_ORDER[g.i + dir], { instantScroll: true, deferCourseRender: COURSE_SWIPE_ORDER[g.i + dir] === 'courses' });
       [g.cur, g.prev, g.next].forEach(pgClear);
       g.cur.style.removeProperty('will-change');
       document.body.classList.remove('pg-dragging');
+      if (window.hdrDone) hdrDone();
       setTimeout(function(){ document.body.classList.remove('pg-settle'); suppressNextSwipeClick = false; }, 120);
     }, dur + 10);
   }
@@ -9103,7 +9106,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         + (row.multi ? row.multi.map(function(n){ return '<div class="dash-class-sub">'+escapeHtml(n)+'</div>'; }).join('') : '<div class="dash-class-sub">'+escapeHtml(dashTimetableRange(row) + ' · ' + row.loc)+'</div>') + '</div>'
         + '</div>';
     }).join('');
-    if (!events) events = '<div class="dash-class-empty">这天没有固定课，可以留给复习、整理和补 Moodle。</div>';
+    if (!events) events = '';
     return '<div class="dash-week">'
       + '<div class="dash-days">'+dayButtons+'</div>'
       + '<div class="dash-lane"><div class="dash-times" style="height:'+laneHeight+'px;">'+labels.map(function(x){ return '<span style="top:'+x.top.toFixed(1)+'px;">'+x.text+'</span>'; }).join('')+'</div><div class="dash-events" style="--dash-hour-gap:'+hourGap.toFixed(2)+'px;">'+events+'</div></div>'
@@ -10349,6 +10352,47 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   new MutationObserver(scan).observe(document.body, { childList: true, subtree: true }); scan();
   setInterval(function(){ document.querySelectorAll('.dash-events[data-adj]').forEach(live); }, 30000);
   document.addEventListener('visibilitychange', function(){ if (!document.hidden) document.querySelectorAll('.dash-events[data-adj]').forEach(live); });
+})();
+</script>
+<script>
+(function(){
+  var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches, SH = 22;
+  var title = document.getElementById('header-title'); if (!title) return;
+  var ghost = null, st = null;
+  function label(id){ var c = courseById(id); return c ? c.code : ({dashboard:'总览',timetable:'课表',countdown:'倒计时',courses:'课程库',myplan:'MyPlan'}[id] || ''); }
+  function baseOp(id){
+    if (!courseById(id)) return 1;
+    var sec = document.getElementById('sec-' + id); if (!sec || !sec.querySelector('.course-header')) return 1;
+    var p = Math.max(0, Math.min(1, (sec.scrollTop - 20) / 90)); return p < .7 ? 0 : (p - .7) / .3;
+  }
+  function tf(x){ return 'translateX(-50%) translateX(' + x.toFixed(1) + 'px)'; }
+  window.hdrFollow = function(p, prevId, nextId){
+    if (!st) { var o = title.style.opacity; st = { op: o === '' ? 1 : +o }; }
+    var nid = p < 0 ? nextId : prevId, sx = RM ? 0 : SH;
+    title.style.transition = 'none';
+    if (!ghost) { ghost = document.createElement('div'); ghost.className = 'header-title hdr-ghost'; ghost.setAttribute('aria-hidden', 'true'); title.parentNode.insertBefore(ghost, title.nextSibling); }
+    ghost.style.transition = 'none';
+    var a = Math.min(1, Math.abs(p) * 1.25);
+    if (!nid) { ghost.style.opacity = 0; title.style.transform = tf(p * sx * .5); title.style.opacity = st.op; st.nid = null; return; }
+    if (st.nid !== nid) { ghost.textContent = label(nid); st.nid = nid; st.nop = baseOp(nid); }
+    title.style.transform = tf(p * sx); title.style.opacity = (st.op * (1 - a)).toFixed(3);
+    ghost.style.transform = tf((p < 0 ? p + 1 : p - 1) * sx); ghost.style.opacity = (st.nop * a).toFixed(3);
+  };
+  window.hdrSettle = function(dir, dur, ease){
+    if (!st || !ghost) return; var tr = 'transform ' + dur + 'ms ' + ease + ',opacity ' + dur + 'ms ' + ease;
+    title.style.transition = ghost.style.transition = tr;
+    var sx = RM ? 0 : SH;
+    if (dir && st.nid) { title.style.transform = tf(-dir * sx); title.style.opacity = 0; ghost.style.transform = tf(0); ghost.style.opacity = st.nop; st.fin = st.nop; }
+    else { title.style.transform = tf(0); title.style.opacity = st.op; ghost.style.opacity = 0; ghost.style.transform = tf(0); st.fin = null; }
+  };
+  window.hdrDone = function(){
+    if (!st) return;
+    title.style.transition = 'none'; title.style.transform = '';
+    if (st.fin != null) title.style.opacity = st.fin;
+    else title.style.opacity = st.op === 1 ? '' : st.op;
+    if (ghost) { ghost.remove(); ghost = null; }
+    st = null; void title.offsetWidth; title.style.transition = '';
+  };
 })();
 </script>
 </body>
