@@ -2782,19 +2782,32 @@ body.pg-dragging .course-section > div:first-child > *{animation:none!important;
 @media (prefers-reduced-motion:reduce){.fx2-need *{animation:none!important;transition:none!important}}
 .v2-gt-total{animation:fx3Breath 4s ease-in-out infinite;}
 @keyframes fx3Breath{0%,100%{text-shadow:0 0 0 rgba(255,255,255,0)}50%{text-shadow:0 0 18px rgba(255,255,255,.28),0 0 2px rgba(255,255,255,.2)}}
-.fx3-target{display:flex;align-items:center;gap:12px;margin-top:14px;font-size:12px;color:var(--r-t3);}
-.fx3-l{flex:0 0 auto;color:var(--r-t1);font-weight:600;letter-spacing:.02em;}
-.fx3-bat{position:relative;flex:1 1 auto;max-width:150px;margin:0 auto;padding:2px;border-radius:5px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28);}
-.fx3-bat::after{content:"";position:absolute;right:-4px;top:50%;width:2px;height:6px;margin-top:-3px;border-radius:0 2px 2px 0;background:rgba(255,255,255,.28);}
-.fx3-cells{display:flex;gap:2px;}
-.fx3-cells i{flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.06);overflow:hidden;}
-.fx3-cells b{display:block;height:100%;background:var(--r-t1);transform-origin:left;}
+@media (prefers-reduced-motion:reduce){.v2-gt-total,.fx3-cells i{animation:none!important}}
+.fx3-target{display:flex;align-items:center;gap:12px;margin-top:14px;font-size:12px;color:var(--r-t3);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.fx3-pick{position:relative;flex:0 0 auto;display:inline-flex;align-items:center;border-radius:999px;transition:background .4s ease,box-shadow .4s ease;}
+.fx3-pick.open{background:var(--r-s2);box-shadow:inset 0 0 0 .5px var(--r-hair);}
+.fx3-cap{position:absolute;left:0;top:2px;bottom:2px;border-radius:999px;background:var(--r-t1);opacity:0;transition:transform .42s cubic-bezier(.32,1.25,.4,1),width .42s cubic-bezier(.32,1.25,.4,1),opacity .25s;}
+.fx3-pick.open .fx3-cap{opacity:1;}
+.fx3-pick button{position:relative;z-index:1;height:28px;border:0;background:none;padding:0;font:inherit;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;color:var(--r-t1);-webkit-tap-highlight-color:transparent;transition:max-width .5s cubic-bezier(.22,1,.36,1),padding .5s cubic-bezier(.22,1,.36,1),opacity .3s,color .3s;}
+.fx3-cur{max-width:120px;letter-spacing:.02em;}
+.fx3-o{max-width:0;opacity:0;color:var(--r-t3)!important;}
+.fx3-o em{font-style:normal;font-weight:400;font-size:10px;opacity:.7;}
+.fx3-pick.open .fx3-cur{max-width:0;opacity:0;}
+.fx3-pick.open .fx3-o{max-width:70px;opacity:1;padding:0 11px;}
+.fx3-pick.open .fx3-o.on{color:#000!important;}
+.fx3-cells{flex:1 1 auto;display:flex;gap:3px;max-width:140px;margin:0 auto;transition:opacity .3s,max-width .5s cubic-bezier(.22,1,.36,1);}
+.fx3-cells i{flex:1;height:8px;border-radius:2.5px;background:rgba(255,255,255,.07);overflow:hidden;}
+.fx3-cells b{display:block;height:100%;background:var(--r-t1);transform-origin:left;transition:transform .5s cubic-bezier(.22,1,.36,1),background .4s;}
 .fx3-target:not(.fx3-live) .fx3-cells i{animation:fx3Cell .35s calc(.25s + var(--i)*.07s) ease both;}
 .fx3-target.hard .fx3-cells b{background:var(--r-t3);}
-@keyframes fx3Cell{from{opacity:0;transform:scaleY(.3)}}
-.fx3-r{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;line-height:1.25;color:var(--r-t1);font-variant-numeric:tabular-nums;}
+.fx3-r{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;line-height:1.25;color:var(--r-t1);font-variant-numeric:tabular-nums;transition:opacity .3s;}
 .fx3-r small{font-size:10px;color:var(--r-t3);}
-@media (prefers-reduced-motion:reduce){.v2-gt-total,.fx3-cells i{animation:none!important}}</style>
+.fx3-r.swap{animation:fx3Swap .45s cubic-bezier(.22,1,.36,1);}
+.fx3-target.open .fx3-cells,.fx3-target.open .fx3-r{opacity:0;pointer-events:none;}
+.fx3-target.open .fx3-cells{max-width:0;}
+@keyframes fx3Cell{from{opacity:0;transform:scaleY(.3)}}
+@keyframes fx3Swap{from{opacity:0;transform:translateY(4px)}}
+@media (prefers-reduced-motion:reduce){.fx3-target *{animation:none!important;transition:none!important}}</style>
 </head>
 <body>
 
@@ -10190,27 +10203,58 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 <script>
 (function(){
   var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  /* ---- battery-cell Target row ---- */
-  function bat(course, total, doneW){
-    var target = gtTargetNumber(course), remainW = Math.max(0, 100 - doneW), need = remainW > 0 ? (target - total) / remainW * 100 : 0;
-    var r1, r2 = '', k = '';
-    if (total >= target) { r1 = '已达到'; k = ' ok'; }
-    else if (remainW <= 0) { r1 = '差 ' + (target - total).toFixed(1) + ' 分'; }
-    else { r1 = '剩余 ' + Math.round(remainW) + '%'; r2 = '平均需 ' + (need > 100 ? '>100' : Math.ceil(Math.max(0, need))) + '%'; if (need > 100) k = ' hard'; }
-    var cells = '';
-    for (var i = 0; i < 10; i++) { var f = Math.max(0, Math.min(1, remainW / 10 - i)); cells += '<i style="--i:' + i + '"><b style="transform:scaleX(' + f.toFixed(3) + ')"></b></i>'; }
-    return { k: k, html: '<span class="fx3-l">Target ' + target + '+</span><span class="fx3-bat"><span class="fx3-cells">' + cells + '</span></span>'
-      + '<span class="fx3-r"><span>' + r1 + '</span>' + (r2 ? '<small>' + r2 + '</small>' : '') + '</span>' };
+  /* ---- target cells + picker ---- */
+  var TKEY = 'iue.gradeTarget.v1', GRADES = [['HD',85],['DN',75],['CR',65],['PS',50]];
+  function tLoad(){ try { return JSON.parse(localStorage.getItem(TKEY) || '{}') || {}; } catch(e) { return {}; } }
+  if (typeof gtTargetNumber === 'function') { var _tn = gtTargetNumber; window.gtTargetNumber = gtTargetNumber = function(c){ var t = tLoad()[c]; return t ? +t : _tn(c); }; }
+  function st(course, total, doneW){
+    var target = gtTargetNumber(course), remainW = Math.max(0, 100 - doneW), need = remainW > 0 ? (target - total) / remainW * 100 : 0, o = { target: target, remainW: remainW, k: '', r2: '' };
+    if (total >= target) { o.r1 = '已达到'; o.k = 'ok'; }
+    else if (remainW <= 0) o.r1 = '差 ' + (target - total).toFixed(1) + ' 分';
+    else { o.r1 = '剩余 ' + Math.round(remainW) + '%'; o.r2 = '平均需 ' + (need > 100 ? '>100' : Math.ceil(Math.max(0, need))) + '%'; if (need > 100) o.k = 'hard'; }
+    return o;
   }
+  function fill(i, remainW){ return Math.max(0, Math.min(1, remainW / 10 - i)).toFixed(3); }
   window.gtNeedMarkup = gtNeedMarkup = function(course, total, doneW){
-    var b = bat(course, total, doneW);
-    return '<div class="fx3-target' + b.k + '" id="gt-need-' + course + '"><span class="gt-need-text" hidden></span>' + b.html + '</div>';
+    var o = st(course, total, doneW), cells = '';
+    for (var i = 0; i < 10; i++) cells += '<i style="--i:' + i + '"><b style="transform:scaleX(' + fill(i, o.remainW) + ')"></b></i>';
+    var pick = '<span class="fx3-pick" data-c="' + course + '"><span class="fx3-cap"></span><button type="button" class="fx3-cur">Target ' + o.target + '+</button>'
+      + GRADES.map(function(g){ return '<button type="button" class="fx3-o' + (g[1] === o.target ? ' on' : '') + '" data-v="' + g[1] + '">' + g[0] + ' <em>' + g[1] + '</em></button>'; }).join('') + '</span>';
+    return '<div class="fx3-target ' + o.k + '" id="gt-need-' + course + '"><span class="gt-need-text" hidden></span>' + pick
+      + '<span class="fx3-cells">' + cells + '</span><span class="fx3-r"><span class="r1">' + o.r1 + '</span><small>' + o.r2 + '</small></span></div>';
   };
   window.fx3BatUpdate = function(course, total, doneW){
     var row = document.getElementById('gt-need-' + course); if (!row) return;
-    var b = bat(course, total, doneW); row.className = 'fx3-target fx3-live' + b.k;
-    row.innerHTML = '<span class="gt-need-text" hidden></span>' + b.html;
+    var o = st(course, total, doneW), wasOpen = row.classList.contains('open');
+    row.className = 'fx3-target fx3-live ' + o.k + (wasOpen ? ' open' : '');
+    row.querySelectorAll('.fx3-cells b').forEach(function(b, i){ b.style.transform = 'scaleX(' + fill(i, o.remainW) + ')'; });
+    var r1 = row.querySelector('.r1'), sm = row.querySelector('.fx3-r small');
+    if (r1.textContent !== o.r1 || sm.textContent !== o.r2) { var r = row.querySelector('.fx3-r'); r.classList.remove('swap'); void r.offsetWidth; r.classList.add('swap'); r1.textContent = o.r1; sm.textContent = o.r2; }
+    row.querySelector('.fx3-cur').textContent = 'Target ' + o.target + '+';
   };
+  document.querySelectorAll('[id^="gt-need-"]:not(.fx3-target)').forEach(function(n){ try { renderGT(n.id.slice(8)); } catch(x) {} });
+  function cap(pk){ var on = pk.classList.contains('open') ? pk.querySelector('.fx3-o.on') : pk.querySelector('.fx3-cur'), c = pk.querySelector('.fx3-cap');
+    if (on && on.offsetWidth) { c.style.width = on.offsetWidth + 'px'; c.style.transform = 'translateX(' + on.offsetLeft + 'px)'; } }
+  function follow(pk){ var t0 = performance.now(); (function f(n){ cap(pk); if (n - t0 < 600) requestAnimationFrame(f); })(t0); }
+  function setOpen(pk, v){ pk.classList.toggle('open', v); pk.closest('.fx3-target').classList.toggle('open', v); follow(pk); }
+  document.addEventListener('click', function(e){
+    var pk = e.target.closest && e.target.closest('.fx3-pick');
+    document.querySelectorAll('.fx3-pick.open').forEach(function(p){ if (p !== pk) setOpen(p, false); });
+    var row = !pk && e.target.closest && e.target.closest('.fx3-target');
+    if (row) { e.stopPropagation(); setOpen(row.querySelector('.fx3-pick'), true); return; }
+    if (!pk) return; e.stopPropagation();
+    if (!pk.classList.contains('open')) { setOpen(pk, true); return; }
+    var b = e.target.closest('.fx3-o'); if (!b) { setOpen(pk, false); return; }
+    var course = pk.dataset.c;
+    if (!b.classList.contains('on')) {
+      var on = pk.querySelector('.fx3-o.on'); if (on) on.classList.remove('on'); b.classList.add('on'); cap(pk);
+      var t = tLoad(); t[course] = +b.dataset.v; try { localStorage.setItem(TKEY, JSON.stringify(t)); } catch(x) {}
+      if (window.iueHaptic) iueHaptic();
+      try { gtUpdateHeader(course); } catch(x) {}
+      try { renderDashboard(); } catch(x) {}
+    }
+    setTimeout(function(){ setOpen(pk, false); }, RM ? 0 : 240);
+  }, true);
   if (RM) return;
   var filled = false;
   function afterDash(){
