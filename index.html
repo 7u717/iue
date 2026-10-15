@@ -2895,11 +2895,10 @@ body.pg-dragging .course-section > div:first-child > *{animation:none!important;
 /* ===== Assignment standalone ===== */
 #comp1511-ass .kp-ass{margin-top:0;padding-top:4px;border-top:0;}
 
-/* ===== link orbs (preview) ===== */
+/* ===== link orbs ===== */
 body.lk .header-link-menu{display:none!important;}
 .lk-orbs{position:absolute;left:50%;top:50%;width:0;height:0;z-index:60;pointer-events:none;}
 .header-link-wrap.open .lk-orbs{pointer-events:auto;}
-.lk-blobs{display:none;}
 .lk-o{position:absolute;left:-23px;top:-23px;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none!important;color:var(--r-t1);background:rgba(44,44,46,.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 10px 26px rgba(0,0,0,.55),inset 0 0 0 .5px rgba(255,255,255,.14);opacity:0;transform:translate(0,0) scale(.3);-webkit-tap-highlight-color:transparent;
   transition:transform .55s cubic-bezier(.34,1.56,.64,1),opacity .25s ease;}
 .lk-o span{font-size:9.5px;font-weight:600;letter-spacing:.02em;white-space:nowrap;}
@@ -2911,30 +2910,15 @@ body.lk .header-link-menu{display:none!important;}
 .header-link-button{position:relative;z-index:61;transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
 .header-link-wrap.open .header-link-button{transform:rotate(-45deg) scale(.92);}
 
-/* A: liquid drop down */
-.lk-a .lk-o1{--x:0px;--y:58px}.lk-a .lk-o2{--x:0px;--y:114px}.lk-a .lk-o3{--x:0px;--y:170px}
-.lk-a .lk-o{background:transparent;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;transition:transform .7s cubic-bezier(.3,1.35,.5,1),opacity .2s ease;}
-.lk-a .lk-blobs{display:block;position:absolute;left:0;top:0;filter:url(#lk-goo);}
-.lk-a .lk-blobs i{position:absolute;left:-23px;top:-23px;width:46px;height:46px;border-radius:50%;background:#3a3a3c;transform:translate(0,0) scale(.4);transition:transform .7s cubic-bezier(.3,1.35,.5,1);}
-.lk-a .lk-blobs .lk-b0{transform:scale(.62);opacity:0;transition:opacity .2s,transform .4s;}
-.lk-a .header-link-wrap.open .lk-b0{opacity:1;}
-.lk-a .header-link-wrap.open .lk-b1{transform:translate(0,58px) scale(1);}
-.lk-a .header-link-wrap.open .lk-b2{transform:translate(0,114px) scale(1);transition-delay:.06s;}
-.lk-a .header-link-wrap.open .lk-b3{transform:translate(0,170px) scale(1);transition-delay:.12s;}
-.lk-a .header-link-wrap.open .lk-o2{transition-delay:.06s}.lk-a .header-link-wrap.open .lk-o3{transition-delay:.12s}
-
-/* B: arc fan */
-.lk-b .lk-o1{--x:-80px;--y:32px}.lk-b .lk-o2{--x:-54px;--y:80px}.lk-b .lk-o3{--x:2px;--y:98px}
-
 /* C: springy stack with side labels */
-.lk-c .lk-o{width:38px;height:38px;left:-19px;top:-19px;overflow:visible;}
-.lk-c .lk-o1{--x:0px;--y:52px}.lk-c .lk-o2{--x:0px;--y:98px}.lk-c .lk-o3{--x:0px;--y:144px}
-.lk-c .lk-o span{position:absolute;right:48px;font-size:12px;font-weight:500;color:var(--r-t2);letter-spacing:.02em;opacity:0;transform:translateX(6px);transition:opacity .3s .15s,transform .4s .15s cubic-bezier(.22,1,.36,1);}
-.lk-c .lk-o::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--r-t1);}
-.lk-c .header-link-wrap.open .lk-o span{opacity:1;transform:none;}
-.lk-c .lk-o3 span{font-size:12px;}
+body.lk .lk-o{width:38px;height:38px;left:-19px;top:-19px;overflow:visible;}
+body.lk .lk-o1{--x:0px;--y:52px}body.lk .lk-o2{--x:0px;--y:98px}body.lk .lk-o3{--x:0px;--y:144px}
+body.lk .lk-o span{position:absolute;right:48px;font-size:12px;font-weight:500;color:var(--r-t2);letter-spacing:.02em;opacity:0;transform:translateX(6px);transition:opacity .3s .15s,transform .4s .15s cubic-bezier(.22,1,.36,1);}
+body.lk .lk-o::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--r-t1);}
+body.lk .header-link-wrap.open .lk-o span{opacity:1;transform:none;}
+body.lk .lk-o3 span{font-size:12px;}
 
-@media (prefers-reduced-motion:reduce){.lk-o,.lk-blobs i,.header-link-button,.lk-c .lk-o span{transition:none!important}}
+@media (prefers-reduced-motion:reduce){.lk-o,.header-link-button,body.lk .lk-o span{transition:none!important}}
 
 /* ===== labs row redesign ===== */
 .gt-row.cx2-row{display:grid!important;grid-template-columns:24px minmax(0,1fr) auto!important;align-items:center!important;gap:14px!important;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .2s;}
@@ -2978,7 +2962,6 @@ body.lk .header-link-menu{display:none!important;}
         <a href="https://my.unsw.edu.au" onclick="openExternal(this.href);return false;">myUNSW</a>
       </div>
       <div class="lk-orbs" aria-hidden="false">
-        <div class="lk-blobs"><i class="lk-b0"></i><i class="lk-b1"></i><i class="lk-b2"></i><i class="lk-b3"></i></div>
         <a class="lk-o lk-o1" href="https://moodle.telt.unsw.edu.au/course" onclick="openExternal(this.href);return false;"><span>Moodle</span></a>
         <a class="lk-o lk-o2" href="https://my.unsw.edu.au" onclick="openExternal(this.href);return false;"><span>myUNSW</span></a>
         <a class="lk-o lk-o3" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/" onclick="openExternal(this.href);return false;"><span>Hub</span></a>
@@ -4751,7 +4734,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-15-preview-links';
+  var APP_VERSION = '2026-10-15-links-c';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -10577,9 +10560,6 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   };
 })();
 </script>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="lk-goo"><feGaussianBlur in="SourceGraphic" stdDeviation="7" result="b"/><feColorMatrix in="b" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"/></filter></svg>
-<script>
-(function(){ var m = /[?&]links=([abc])/i.exec(location.search); document.body.classList.add('lk', 'lk-' + (m ? m[1].toLowerCase() : 'a')); })();
-</script>
+<script>document.body.classList.add('lk');</script>
 </body>
 </html>
