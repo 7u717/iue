@@ -2863,6 +2863,20 @@ body.pg-dragging .course-section > div:first-child > *{animation:none!important;
 .cx-row{grid-template-columns:40px repeat(4,1fr) 40px!important;}
 .cx-mk{text-align:center!important;padding-right:0!important;}
 .comp-expand-panel:has(> .cx-shell){margin-left:0!important;}
+
+/* ===== COMP1511 hub entry ===== */
+.hub-entry{position:relative;isolation:isolate;display:flex;align-items:center;justify-content:center;gap:10px;height:62px;margin:10px 0 2px;border-radius:20px;background:var(--r-s1);color:var(--r-t1);text-decoration:none;overflow:hidden;will-change:transform;-webkit-tap-highlight-color:transparent;transition:transform .5s cubic-bezier(.34,1.4,.64,1);}
+.hub-entry::before{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;background:radial-gradient(80% 120% at 50% 0%,rgba(255,255,255,.07),transparent 70%);}
+.hub-entry::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
+  background:conic-gradient(from var(--fx-a),rgba(255,255,255,.06),rgba(255,255,255,.42) 12%,rgba(255,255,255,.06) 30%,rgba(255,255,255,.06) 55%,rgba(255,255,255,.24) 68%,rgba(255,255,255,.06) 85%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:fxSpin 9s linear infinite;}
+.hub-entry.fx-lit{background-image:radial-gradient(60% 90% at var(--fx-mx) var(--fx-my),rgba(255,255,255,.09),transparent 70%);}
+.hub-t{font-size:15px;font-weight:500;letter-spacing:.06em;color:var(--r-t2);}
+.hub-t b{font-weight:600;color:var(--r-t1);}
+.hub-ar{color:var(--r-t3);transition:transform .35s cubic-bezier(.22,1,.36,1),color .3s;}
+.hub-entry:active,.hub-entry.hub-press{transform:scale(.97)!important;}
+.hub-entry:active .hub-ar,.hub-entry.hub-press .hub-ar{transform:translate(2px,-2px);color:var(--r-t1);}
+@media (prefers-reduced-motion:reduce){.hub-entry::after{animation:none}.hub-entry,.hub-ar{transition:none}}
 </style>
 </head>
 <body>
@@ -3097,8 +3111,7 @@ body.pg-dragging .course-section > div:first-child > *{animation:none!important;
   <div class="topic-group">
     <div class="group-label">成绩追踪</div>
     <div class="topic-card" style="padding:16px;" id="gt-comp1511"></div>
-    <a class="course-jump-button" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/" onclick="openExternal(this.href);return false;"><div><strong>Open COMP1511 Hub</strong><span>官网每周内容 · lectures · labs · resources</span></div><i>↗</i></a>
-    <a class="course-jump-button" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/lab/01/questions" onclick="openExternal(this.href);return false;"><div><strong>Open Lab 01</strong><span>官方题目 · setup · exercises · autotest · give</span></div><i>↗</i></a>
+    <a class="hub-entry" href="https://cgi.cse.unsw.edu.au/~cs1511/26T3/" onclick="openExternal(this.href);return false;" aria-label="COMP1511 Hub"><span class="hub-t">COMP1511 <b>Hub</b></span><svg class="hub-ar" viewBox="0 0 24 24" width="16" height="16"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
   </div>
   <div class="topic-group">
     <div class="group-label">知识点</div>
@@ -4649,7 +4662,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-15-lab-grid';
+  var APP_VERSION = '2026-10-15-preview-hub';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -10217,7 +10230,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (RM) return;
   /* 3D tilt + sheen */
-  var TILT = '.v2-hero, .course-tile';
+  var TILT = '.v2-hero, .course-tile, .hub-entry';
   var cur = null;
   function setTilt(el, x, y){
     var r = el.getBoundingClientRect(), nx = (x - r.left) / r.width - .5, ny = (y - r.top) / r.height - .5;
