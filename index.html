@@ -4754,12 +4754,13 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   //   comp: merged into localStorage 'iue.comp1511.weekChecks.v1' (week -> whole stage object)
   // To update: edit values below, bump APP_VERSION, push.
   var IUE_BAKED_PROGRESS = {
-    updatedAt: '2026-10-13',
+    updatedAt: '2026-10-16',
     gt: {
       p1131_labs: { count:2, done:false },          // PHYS1131 labs completed: 2/6
       p1160_q1: { missed:true },                     // PHYS1160 Quiz 1 missed (0)
       p1160_q2: { s:'9.9', m:'10' },                 // PHYS1160 Quiz 2 9.9/10
-      p1160_q3: { missed:true }                      // PHYS1160 Quiz 3 missed (0)
+      p1160_q3: { missed:true },                     // PHYS1160 Quiz 3 missed (0)
+      p1160_q4: { done:true }                        // PHYS1160 Quiz 4 completed, score not yet recorded (confirmed 16 Oct)
     },
     comp: {
       w2: { checkoff:true, core:true, submit:true }, // COMP1511 Lab02 2/2
@@ -4796,7 +4797,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-16-fill';
+  var APP_VERSION = '2026-10-16-quiz4';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -7683,11 +7684,13 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var m = (q.m !== undefined && q.m !== '' && +q.m > 0) ? +q.m : 10;
       return { status:'done', pct:Math.max(0, Math.min(1, +q.s / m)) };
     }
+    if (q.done) return { status:'submitted', pct:null };
     return { status:'upcoming', pct:null };
   }
   function gtQuizLabel(i, st) {
     if (st.status === 'done') return Math.round(st.pct*100)+'% · 已完成';
     if (st.status === 'missed') return '错过 · 0';
+    if (st.status === 'submitted') return '已完成 · 待记分';
     var due = P1160_QUIZ_DUE[i];
     return (due && new Date(due) < new Date()) ? '已截止 · 待记分' : '未到期';
   }
@@ -7706,6 +7709,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function gtQuizChipSub(i, q, st) {
     if (st.status === 'done') return (Math.round(st.pct*1000)/100).toString().replace(/\.0+$/,'');
     if (st.status === 'missed') return '0 · miss';
+    if (st.status === 'submitted') return '已完成';
     var due = P1160_QUIZ_DUE[i];
     if (due && new Date(due) < new Date()) return '待记分';
     return (P1160_QUIZ_DUE_LABEL[i] || '').replace(/ 00:59$/,'') || 'TBC';
@@ -7718,6 +7722,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (!next && st.status === 'upcoming' && (!due || new Date(due) > new Date())) next = i;
       var val, dot;
       if (st.status === 'done') { val = String(Math.round(st.pct*100)/10); dot = 'background:'+color+';border-color:'+color+';'; }
+      else if (st.status === 'submitted') { val = '✓'; dot = 'background:'+color+';border-color:'+color+';'; }
       else if (st.status === 'missed') { val = '0'; dot = 'background:rgba(255,255,255,.14);border-color:transparent;'; }
       else { val = '·'; dot = 'background:transparent;border-color:rgba(255,255,255,.28);'; }
       cells += '<div style="display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;'+(st.status==='missed'?'opacity:.45;':'')+'">'
