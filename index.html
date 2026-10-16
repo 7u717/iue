@@ -2798,14 +2798,14 @@ body.pg-dragging .course-section > div:first-child > *{animation:none!important;
 .fx3-cells{flex:1 1 auto;display:flex;gap:3px;max-width:140px;margin:0 auto;transition:opacity .3s,max-width .5s cubic-bezier(.22,1,.36,1);}
 .fx3-cells i{flex:1;height:8px;border-radius:2.5px;background:rgba(255,255,255,.07);overflow:hidden;}
 .fx3-cells b{display:block;height:100%;background:var(--r-t1);transform-origin:left;transition:transform .5s cubic-bezier(.22,1,.36,1),background .4s;}
-.fx3-target.fx3-anim .fx3-cells i{animation:fx3Cell .35s calc(.25s + var(--i)*.07s) ease both;}
+.fx3-target.fx3-empty .fx3-cells b{transform:scaleX(0)!important;transition:none!important;}
+.fx3-target.fx3-play .fx3-cells b{transition:transform .7s cubic-bezier(.22,1,.36,1) calc(.12s + var(--i)*.055s),background .4s;}
 .fx3-target.hard .fx3-cells b{background:var(--r-t3);}
 .fx3-r{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;line-height:1.25;color:var(--r-t1);font-variant-numeric:tabular-nums;transition:opacity .3s;}
 .fx3-r small{font-size:10px;color:var(--r-t3);}
 .fx3-r.swap{animation:fx3Swap .45s cubic-bezier(.22,1,.36,1);}
 .fx3-target.open .fx3-cells,.fx3-target.open .fx3-r{opacity:0;pointer-events:none;}
 .fx3-target.open .fx3-cells{max-width:0;}
-@keyframes fx3Cell{from{opacity:0;transform:scaleY(.3)}}
 @keyframes fx3Swap{from{opacity:0;transform:translateY(4px)}}
 @media (prefers-reduced-motion:reduce){.fx3-target *{animation:none!important;transition:none!important}}
 /* ===== timeline ===== */
@@ -4796,7 +4796,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-16-swipe';
+  var APP_VERSION = '2026-10-16-preview-fill';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -6160,10 +6160,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     el.classList.add('pg-peer');
     el.style.cssText += ';display:block;position:fixed;top:'+rect.top+'px;left:'+rect.left+'px;width:'+rect.width+'px;height:'+rect.height+'px;z-index:1;transition:none;';
     el.scrollTop = 0;
+    if (window.fx3Play) fx3Play(el);
   }
   function pgClear(el){
     if (!el) return;
     el.classList.remove('pg-peer');
+    if (!el.classList.contains('active') && window.fx3Hide) fx3Hide(el);
     ['display','position','top','left','width','height','z-index','transition','transform','opacity'].forEach(function(p){ el.style.removeProperty(p); });
   }
   function pgRender(x){
@@ -10544,16 +10546,12 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return o;
   }
   function fill(i, remainW){ return Math.max(0, Math.min(1, remainW / 10 - i)).toFixed(3); }
-  var fx3Seen = {};
   window.gtNeedMarkup = gtNeedMarkup = function(course, total, doneW){
     var o = st(course, total, doneW), cells = '';
     for (var i = 0; i < 10; i++) cells += '<i style="--i:' + i + '"><b style="transform:scaleX(' + fill(i, o.remainW) + ')"></b></i>';
     var pick = '<span class="fx3-pick" data-c="' + course + '"><span class="fx3-cap"></span><button type="button" class="fx3-cur">Target ' + o.target + '+</button>'
       + GRADES.map(function(g){ return '<button type="button" class="fx3-o' + (g[1] === o.target ? ' on' : '') + '" data-v="' + g[1] + '">' + g[0] + ' <em>' + g[1] + '</em></button>'; }).join('') + '</span>';
-    var act = document.querySelector('.course-section.active'), anim = !fx3Seen[course] && act && act.id === 'sec-' + course;
-    fx3Seen[course] = 1;
-    if (anim) setTimeout(function(){ var n = document.getElementById('gt-need-' + course); if (n) n.classList.remove('fx3-anim'); }, 1400);
-    return '<div class="fx3-target ' + o.k + (anim ? ' fx3-anim' : '') + '" id="gt-need-' + course + '"><span class="gt-need-text" hidden></span>' + pick
+    return '<div class="fx3-target ' + o.k + '" id="gt-need-' + course + '"><span class="gt-need-text" hidden></span>' + pick
       + '<span class="fx3-cells">' + cells + '</span><span class="fx3-r"><span class="r1">' + o.r1 + '</span><small>' + o.r2 + '</small></span></div>';
   };
   window.fx3BatUpdate = function(course, total, doneW){
@@ -10565,6 +10563,24 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (r1.textContent !== o.r1 || sm.textContent !== o.r2) { var r = row.querySelector('.fx3-r'); r.classList.remove('swap'); void r.offsetWidth; r.classList.add('swap'); r1.textContent = o.r1; sm.textContent = o.r2; }
     row.querySelector('.fx3-cur').textContent = 'Target ' + o.target + '+';
   };
+  /* fill cells from 0 each time a course page comes into view */
+  window.fx3Play = function(sec){
+    if (!sec || sec._fx3on) return; sec._fx3on = true;
+    if (RM) return;
+    var ts = sec.querySelectorAll('.fx3-target'); if (!ts.length) return;
+    ts.forEach(function(t){ t.classList.add('fx3-empty', 'fx3-play'); });
+    void sec.offsetWidth;
+    requestAnimationFrame(function(){ ts.forEach(function(t){ t.classList.remove('fx3-empty'); }); });
+    clearTimeout(sec._fx3T); sec._fx3T = setTimeout(function(){ ts.forEach(function(t){ t.classList.remove('fx3-play'); }); }, 1600);
+  };
+  window.fx3Hide = function(sec){ if (sec) sec._fx3on = false; };
+  var _scF = showCourse;
+  window.showCourse = showCourse = function(){
+    var r = _scF.apply(this, arguments);
+    document.querySelectorAll('.course-section').forEach(function(sec){ if (sec.classList.contains('active')) fx3Play(sec); else if (!sec.classList.contains('pg-peer')) sec._fx3on = false; });
+    return r;
+  };
+  (function(){ var a = document.querySelector('.course-section.active'); if (a) fx3Play(a); })();
   document.querySelectorAll('[id^="gt-need-"]:not(.fx3-target)').forEach(function(n){ try { renderGT(n.id.slice(8)); } catch(x) {} });
   function cap(pk){ var on = pk.classList.contains('open') ? pk.querySelector('.fx3-o.on') : pk.querySelector('.fx3-cur'), c = pk.querySelector('.fx3-cap');
     if (on && on.offsetWidth) { c.style.width = on.offsetWidth + 'px'; c.style.transform = 'translateX(' + on.offsetLeft + 'px)'; } }
