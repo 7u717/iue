@@ -3003,6 +3003,8 @@ body.lk .lk-o3 span{font-size:12px;}
 @media (prefers-reduced-motion:reduce){.a2-x,.a2-t svg{transition:none!important}}
 
 .cs-instant>*{transition:none!important;}
+
+.gt-sub-mark{display:inline-flex;align-items:center;justify-content:center;height:22px;color:var(--r-t3);}
 </style>
 </head>
 <body>
@@ -4760,7 +4762,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       p1160_q1: { missed:true },                     // PHYS1160 Quiz 1 missed (0)
       p1160_q2: { s:'9.9', m:'10' },                 // PHYS1160 Quiz 2 9.9/10
       p1160_q3: { missed:true },                     // PHYS1160 Quiz 3 missed (0)
-      p1160_q4: { done:true },                       // PHYS1160 Quiz 4 completed, score not yet recorded (confirmed 16 Oct)
+      p1160_q4: { s:'9.9', m:'10' },                 // PHYS1160 Quiz 4 9.9/10
       p1160_apod_plan: { done:true }                 // PHYS1160 APOD Plan submitted, no score yet (confirmed 16 Oct)
     },
     comp: {
@@ -4798,7 +4800,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-16-apod';
+  var APP_VERSION = '2026-10-16-q4score';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -7691,7 +7693,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function gtQuizLabel(i, st) {
     if (st.status === 'done') return Math.round(st.pct*100)+'% · 已完成';
     if (st.status === 'missed') return '错过 · 0';
-    if (st.status === 'submitted') return '已完成 · 待记分';
+    if (st.status === 'submitted') return '✓';
     var due = P1160_QUIZ_DUE[i];
     return (due && new Date(due) < new Date()) ? '已截止 · 待记分' : '未到期';
   }
@@ -7710,7 +7712,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function gtQuizChipSub(i, q, st) {
     if (st.status === 'done') return (Math.round(st.pct*1000)/100).toString().replace(/\.0+$/,'');
     if (st.status === 'missed') return '0 · miss';
-    if (st.status === 'submitted') return '已完成';
+    if (st.status === 'submitted') return '✓';
     var due = P1160_QUIZ_DUE[i];
     if (due && new Date(due) < new Date()) return '待记分';
     return (P1160_QUIZ_DUE_LABEL[i] || '').replace(/ 00:59$/,'') || 'TBC';
@@ -7770,7 +7772,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var st = hasScore ? (+d.s / +d.m * it.w).toFixed(1)+' / '+it.w+'%' : (done ? '已交 · 待出分' : (it.date && new Date(it.date) < new Date() ? '已截止' : '未交'));
       return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;">'
         + '<div style="font-size:12px;font-weight:780;color:var(--text);">'+it.label.replace('APOD ','')+' <span style="font-family:var(--v2-font);color:'+color+';">'+it.w+'%</span></div>'
-        + '<div class="phys-gate-status '+(done?'pass':'')+'">'+st+'</div>'
+        + (done && !hasScore ? '<span class="gt-sub-mark" role="img" aria-label="已交"><svg viewBox="0 0 24 24" width="14" height="14"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' : '<div class="phys-gate-status '+(done?'pass':'')+'">'+st+'</div>')
         + '<div class="phys-gate-note" style="margin:0;">'+gtCnDate(it.date)+'</div>'
         + '</div>';
     }).join('');
