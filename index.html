@@ -3006,46 +3006,6 @@ body.lk .lk-o3 span{font-size:12px;}
 
 .gt-sub-mark{display:inline-flex;align-items:center;justify-content:center;height:22px;color:var(--r-t3);}
 
-/* ===== hourglass sand (last 24h) ===== */
-.sand{grid-column:1/-1;display:block;position:relative;height:4px;margin:2px 0 -2px;border-radius:2px;background:rgba(255,255,255,.05);overflow:hidden;}
-.hero-sand{width:min(220px,70%);margin:14px auto 2px;}
-.sand i{position:absolute;left:0;top:0;bottom:0;width:calc(var(--s,1) * 100%);border-radius:inherit;transition:width 1.2s cubic-bezier(.22,1,.36,1);
-  background-color:rgba(255,255,255,.13);
-  background-image:radial-gradient(circle,rgba(255,255,255,.55) 0 .5px,transparent .8px),radial-gradient(circle,rgba(255,255,255,.4) 0 .45px,transparent .75px),radial-gradient(circle,rgba(255,255,255,.3) 0 .6px,transparent .9px);
-  background-size:7px 3px,5px 4px,11px 5px;background-position:0 0,2px 1px,5px 2px;
-  -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 8px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 8px),transparent);
-  animation:sandFlow 3.2s linear infinite;}
-@keyframes sandFlow{to{background-position:7px 3px,12px 9px,16px 7px;}}
-@media (prefers-reduced-motion:reduce){.sand i{animation:none!important;transition:none!important}}
-
-
-/* ===== next-deadline card variants (?dl=) ===== */
-.v2-hero.dl .hero-sand{display:none!important;}
-.v2-hero > .dl-cv{position:absolute!important;pointer-events:none;z-index:0;}
-.v2-hero.dl-b{overflow:hidden;}
-.v2-hero.dl-b > .dl-cv{border-radius:inherit;}
-.v2-hero.dl-c .v2-hero-num{margin:34px 0 30px!important;}
-.v2-hero.dl-d .v2-hero-actions{margin-top:46px!important;}
-/* no-number variants e-h */
-.v2-hero.dl-nn .v2-kicker,.v2-hero.dl-nn .v2-hero-num,.v2-hero.dl-nn .v2-hero-unit,.v2-hero.dl-nn .v2-hero-meta{display:none!important;}
-.v2-hero.dl-nn{padding-top:34px!important;}
-.v2-hero > .dl-stage{position:relative;margin:0 auto;}
-.dl-stage > .dl-cv{position:absolute!important;left:0;top:0;}
-.v2-hero.dl-nn .v2-hero-title{font-size:19px!important;font-weight:500!important;margin:0 32px 0!important;}
-.dl-time{font-size:12px;color:var(--r-t3);letter-spacing:.04em;margin-top:8px;font-variant-numeric:tabular-nums;white-space:pre;}
-.v2-hero.dl-e .dl-stage{width:92px;height:150px;margin:6px auto 26px;}
-.v2-hero.dl-f{overflow:hidden;padding-top:0!important;}
-.v2-hero.dl-f .dl-stage{height:118px;}
-.v2-hero.dl-f .v2-hero-actions{margin-top:120px!important;}
-.v2-hero.dl-g .dl-stage{width:232px;height:232px;margin:-6px auto -6px;}
-.dl-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 34px;}
-.v2-hero.dl-g .v2-hero-title{margin:0!important;font-size:17px!important;}
-.v2-hero.dl-h{padding-top:44px!important;}
-.v2-hero.dl-h .dl-stage{width:min(264px,80%);height:30px;margin:30px auto 0;}
-.v2-hero.dl-nn .v2-hero-actions{margin-top:30px!important;}
-.v2-hero.dl-f .v2-hero-actions{margin-top:120px!important;}
-.v2-hero.dl-f > .dl-cv{clip-path:inset(0 round 28px);}
-
 /* ===== next-deadline card designs (?dl=1-4) ===== */
 .v2-hero.dl{padding:30px 0 28px!important;}
 .dl-h{display:flex;flex-direction:column;align-items:center;gap:7px;padding:0 30px;transition:opacity .25s ease,transform .35s cubic-bezier(.22,1,.36,1);}
