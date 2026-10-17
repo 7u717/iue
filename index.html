@@ -3032,6 +3032,25 @@ body.lk .lk-o3 span{font-size:12px;}
 .dl-grab.dl-press i,.dl-lift .dl-grab i{background:rgba(255,255,255,.4);width:40px;}
 @keyframes dlNudge{0%,70%,100%{transform:translateY(0)}80%{transform:translateY(-3px)}}
 @media (prefers-reduced-motion:reduce){.dl1-arc,.dl1,.v2-hero.dl,.dl-xp{transition:none!important}.dl1-svg .dl1-dot,.dl-grab svg{animation:none!important;opacity:1}}
+
+/* ===== course progress: three arcs ===== */
+#v2-course-strip.cp{padding-bottom:20px!important;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.cp-it{cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none;transition:transform .45s cubic-bezier(.32,1.3,.45,1),opacity .3s;}
+.cp-it.cp-press{transform:scale(.96);}
+.cp-it.cp-out{opacity:0;transition:opacity .15s;}
+.cp-it small{font-size:.62em;font-weight:400;color:var(--r-t3);margin-left:1px;}
+.cp1{display:flex;justify-content:space-around;padding:4px 0 0;}
+.cp1-i{display:flex;flex-direction:column;align-items:center;gap:10px;width:30%;}
+.cp1-g{position:relative;width:80px;height:80px;}
+.cp1-g svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
+.cp1-g circle{fill:none;}
+.cp1-tr{stroke:rgba(255,255,255,.07);stroke-width:1;}
+.cp1-tk{stroke:rgba(255,255,255,.28);stroke-width:1;stroke-linecap:round;}
+.cp1-arc{stroke:rgba(255,255,255,.62);stroke-width:1.2;stroke-linecap:round;}
+.cp1-g .cp1-dot{fill:var(--r-t1);}
+.cp1-s{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:400;color:var(--r-t1);font-variant-numeric:tabular-nums;letter-spacing:-.01em;}
+.cp1-c{font-size:10.5px;font-weight:500;letter-spacing:.08em;color:var(--r-t3);}
+@media (prefers-reduced-motion:reduce){.cp-it{transition:none!important}}
 </style>
 </head>
 <body>
@@ -9682,6 +9701,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var strip = document.getElementById('v2-course-strip');
     if (gradeEl.parentNode) gradeEl.parentNode.style.display = (strip && gradeEl.innerHTML) ? 'none' : '';
     if (strip && gradeEl.innerHTML) strip.innerHTML = '<div class="v2-section-title">课程进度</div>' + gradeEl.innerHTML;
+    if (strip && gradeEl.innerHTML && window.cpRender) { try { cpRender(strip); } catch(e) {} }
 
     renderTimetablePage();
   }
@@ -10826,6 +10846,75 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     gb.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openAll(); } });
   };
   setInterval(function(){ if (hero && hero.isConnected && list[0]) { var t = hero.querySelector('.dl-t'); if (t) t.innerHTML = tm(list[0]); } }, 30000);
+})();
+</script>
+<script>
+(function(){
+  /* course progress: three arcs */
+  var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches, SIG = '', T0 = null, EASE = 'cubic-bezier(.22,1,.36,1)';
+  function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); }
+  function cl(v){ return Math.max(0, Math.min(100, +v || 0)); }
+  function rows(){
+    var data = gtLoad();
+    return activeCourseIds.filter(function(c){ return !!gtConfig(c); }).slice(0, 3).map(function(c){
+      var s = gtCourseCalc(c, data), has = s.doneW > 0 || s.total > 0;
+      return { id: c, code: gtCourseCode(c) || dashCourseName(c), p: has ? cl(s.total) : 0, t: cl(gtTargetNumber(c)),
+        sc: s.type === 'competency' ? String(s.displayScore) : (has ? String(Math.round(s.total)) : '--') };
+    });
+  }
+  function hap(){ if (window.iueHaptic) try { iueHaptic(); } catch(e) {} }
+  function expand(el, then){
+    if (RM) { then(); return; }
+    var r = el.getBoundingClientRect(), W = innerWidth, H = innerHeight, x = document.createElement('div'); x.className = 'dl-xp';
+    x.style.clipPath = 'inset(' + r.top + 'px ' + (W - r.right) + 'px ' + (H - r.bottom) + 'px ' + r.left + 'px round 40px)';
+    document.body.appendChild(x); void x.offsetWidth; el.classList.add('cp-out');
+    x.style.clipPath = 'inset(0px 0px 0px 0px round 0px)';
+    setTimeout(function(){ then(); requestAnimationFrame(function(){ x.classList.add('fade'); el.classList.remove('cp-out'); }); setTimeout(function(){ x.remove(); }, 420); }, 380);
+  }
+  function pct(sc){ return /^\d+$/.test(sc) ? esc(sc) + '<small>%</small>' : esc(sc); }
+  var C = 2 * Math.PI * 34;
+  function markup(R){
+    return '<div class="cp1">' + R.map(function(o){
+      var a = -Math.PI / 2 + o.p / 100 * 2 * Math.PI, ta = -Math.PI / 2 + o.t / 100 * 2 * Math.PI;
+      return '<div class="cp-it cp1-i" data-c="' + o.id + '" role="button" tabindex="0" aria-label="' + esc(o.code) + '">'
+        + '<div class="cp1-g"><svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="34" class="cp1-tr"/>'
+        + '<line class="cp1-tk" x1="' + (40 + 30.5 * Math.cos(ta)).toFixed(2) + '" y1="' + (40 + 30.5 * Math.sin(ta)).toFixed(2) + '" x2="' + (40 + 37.5 * Math.cos(ta)).toFixed(2) + '" y2="' + (40 + 37.5 * Math.sin(ta)).toFixed(2) + '"/>'
+        + '<circle cx="40" cy="40" r="34" class="cp1-arc" transform="rotate(-90 40 40)" style="stroke-dasharray:' + C.toFixed(2) + ';stroke-dashoffset:' + (C * (1 - o.p / 100)).toFixed(2) + '"/>'
+        + '<circle class="cp1-dot" r="1.9" cx="' + (40 + 34 * Math.cos(a)).toFixed(2) + '" cy="' + (40 + 34 * Math.sin(a)).toFixed(2) + '"/></svg>'
+        + '<div class="cp1-s">' + pct(o.sc) + '</div></div><div class="cp1-c">' + esc(o.code) + '</div></div>';
+    }).join('') + '</div>';
+  }
+  var WAIT = [];
+  function now(){ return document.timeline && document.timeline.currentTime != null ? document.timeline.currentTime : null; }
+  function intro(box){
+    if (RM || !Element.prototype.animate || !document.timeline) return;
+    if (T0 != null && now() != null && now() - T0 >= 2400) return;
+    box.querySelectorAll('.cp1-i').forEach(function(it, i){
+      var arc = it.querySelector('.cp1-arc'), dot = it.querySelector('.cp1-dot'), d = i * 90;
+      [arc.animate([{ strokeDashoffset: C.toFixed(2) }, { strokeDashoffset: arc.style.strokeDashoffset }], { duration: 1400, delay: d, easing: EASE, fill: 'backwards' }),
+       dot.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: d + 1050, easing: 'ease', fill: 'backwards' })].forEach(function(an){
+        if (T0 != null) an.startTime = T0; else { an.pause(); an.currentTime = 0; WAIT.push(an); }
+      });
+    });
+  }
+  function bind(box){
+    box.querySelectorAll('.cp-it').forEach(function(el){
+      var go = function(){ hap(); var c = el.dataset.c; expand(el, function(){ showCourse(c); }); };
+      el.addEventListener('click', go);
+      el.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+      el.addEventListener('pointerdown', function(){ el.classList.add('cp-press'); });
+      ['pointerup','pointercancel','pointerleave'].forEach(function(t){ el.addEventListener(t, function(){ el.classList.remove('cp-press'); }); });
+    });
+  }
+  window.cpRender = function(strip){
+    if (!strip || !strip.firstChild) return;
+    var R = rows(); if (!R.length) return;
+    var sig = JSON.stringify(R);
+    strip.innerHTML = '<div class="v2-section-title">课程进度</div>' + markup(R); strip.classList.add('cp');
+    if (sig !== SIG) { T0 = null; WAIT = []; requestAnimationFrame(function(){ T0 = now(); WAIT.forEach(function(an){ an.startTime = T0; }); WAIT = []; }); }
+    SIG = sig; intro(strip); bind(strip);
+  };
+  if (typeof renderDashboard === 'function') try { renderDashboard(); } catch(e) {}
 })();
 </script>
 <script>
