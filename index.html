@@ -3051,6 +3051,23 @@ body.lk .lk-o3 span{font-size:12px;}
 .cp1-s{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:400;color:var(--r-t1);font-variant-numeric:tabular-nums;letter-spacing:-.01em;}
 .cp1-c{font-size:10.5px;font-weight:500;letter-spacing:.08em;color:var(--r-t3);}
 @media (prefers-reduced-motion:reduce){.cp-it{transition:none!important}}
+
+/* ===== next class: hairline timeline ===== */
+#v2-next-class{background:var(--r-s1);box-shadow:inset 0 0 0 .5px var(--r-hair);border-radius:var(--r-r);padding:20px 18px 22px;margin:0 0 14px;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;transition:transform .45s cubic-bezier(.32,1.3,.45,1);}
+#v2-next-class.nc-press{transform:scale(.975);}
+#v2-next-class.nc-out > *{opacity:0;transition:opacity .15s;}
+.nc-in{cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none;padding:2px 8px 0;}
+.nc-m{text-align:center;font-size:11.5px;letter-spacing:.04em;color:var(--r-t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nc-m .nc-s{display:inline-block;width:3px;height:3px;border-radius:50%;background:var(--r-t3);opacity:.6;margin:0 8px;vertical-align:middle;}
+.nc-tl{position:relative;height:.5px;margin:22px 4px 0;background:rgba(255,255,255,.14);transform-origin:left;}
+.nc-k{position:absolute;top:-3.5px;width:1px;height:7.5px;background:rgba(255,255,255,.32);}
+.nc-k.a{left:0;}
+.nc-k.b{right:0;}
+.nc-f{position:absolute;left:0;right:0;top:-.25px;height:1px;background:rgba(255,255,255,.55);transform-origin:left;transition:transform 15s linear;}
+.nc-d{position:absolute;top:0;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--r-t1);box-shadow:0 0 0 3px rgba(255,255,255,.08),0 0 10px rgba(255,255,255,.45);transition:left 15s linear;}
+.nc-ts{display:flex;justify-content:space-between;margin:10px 0 0;font-size:10px;letter-spacing:.04em;color:var(--r-t3);font-variant-numeric:tabular-nums;}
+.nc-w{text-align:center;margin-top:12px;font-size:10.5px;letter-spacing:.06em;color:var(--r-t3);font-variant-numeric:tabular-nums;}
+@media (prefers-reduced-motion:reduce){#v2-next-class,.nc-f,.nc-d{transition:none!important}}
 </style>
 </head>
 <body>
@@ -9702,6 +9719,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (gradeEl.parentNode) gradeEl.parentNode.style.display = (strip && gradeEl.innerHTML) ? 'none' : '';
     if (strip && gradeEl.innerHTML) strip.innerHTML = '<div class="v2-section-title">课程进度</div>' + gradeEl.innerHTML;
     if (strip && gradeEl.innerHTML && window.cpRender) { try { cpRender(strip); } catch(e) {} }
+    if (window.ncRender) { try { ncRender(commandEl, document.getElementById('v2-course-strip')); } catch(e) {} }
 
     renderTimetablePage();
   }
@@ -10914,6 +10932,122 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (sig !== SIG) { T0 = null; WAIT = []; requestAnimationFrame(function(){ T0 = now(); WAIT.forEach(function(an){ an.startTime = T0; }); WAIT = []; }); }
     SIG = sig; intro(strip); bind(strip);
   };
+  if (typeof renderDashboard === 'function') try { renderDashboard(); } catch(e) {}
+})();
+</script>
+<script>
+(function(){
+  /* next / current class: hairline timeline */
+  var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches, box = null, cur = null, SIG = '', T0 = null, WAIT = [];
+  function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); }
+  function strip(t){ return String(t || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(); }
+  function hm(m){ return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); }
+  function day0(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function at(d, m){ var x = day0(d); x.setMinutes(m); return x; }
+  function code(c, fb){ return (typeof gtCourseCode === 'function' && gtCourseCode(c)) || fb || dashCourseName(c); }
+  function tests(now){
+    var data = gtLoad(), md = dashMobiusDoneMap(data);
+    return visibleDeadlines().filter(function(d){
+      var nm = strip(d.name) + ' ' + String(d.tag || '');
+      if (!(d.examTable || /\b(test|tests|exam|exams|midterm)\b/i.test(nm) || /考试|测验/.test(nm))) return false;
+      var s = new Date(d.date), e = new Date(+s + (d.durationMin || (d.examTable ? 90 : 30)) * 6e4);
+      return e > now && !dashIsDeadlineDone(d, data, md);
+    }).map(function(d){
+      var s = new Date(d.date), c = deadlineCourse(d), cc = code(c), nm = strip(d.name);
+      return { s: s, e: new Date(+s + (d.durationMin || (d.examTable ? 90 : 30)) * 6e4), course: c, code: cc,
+        kind: nm.replace(new RegExp('^' + cc + '\\s*', 'i'), '') || nm, loc: d.loc || '', test: true };
+    });
+  }
+  function find(now){
+    var T = tests(now);
+    for (var k = 0; k < 15; k++){
+      var d = day0(now); d.setDate(d.getDate() + k);
+      var key = DASH_WEEK_DAYS[(d.getDay() + 6) % 7], dk = dashDateStamp(d);
+      var dayTests = T.filter(function(t){ return dashDateStamp(t.s) === dk; });
+      var items = (DASH_WEEK_DAYS.indexOf(key) > -1 && d.getDay() >= 1 && d.getDay() <= 5 ? T3_WEEKLY_TIMETABLE : []).filter(function(r){ return r.day === key && dashTimetableMinutes(r.time) != null; }).map(function(r){
+        var sm = dashTimetableMinutes(r.time);
+        return { s: at(d, sm), e: at(d, sm + (r.durationMin || 60)), course: dashCourseFromTimetable(r), code: strip(r.title) || code(r.course), kind: r.kind || '', loc: r.loc || '' };
+      }).filter(function(c){
+        return !dayTests.some(function(t){ return t.course === c.course && t.s < c.e && c.s < t.e; });
+      }).concat(dayTests).filter(function(x){ return x.e > now; }).sort(function(a, b){ return a.s - b.s; });
+      if (items.length) return items[0];
+    }
+    return null;
+  }
+  function frac(c, now){ return Math.max(0, Math.min(1, (now - c.s) / (c.e - c.s))); }
+  function when(c, now){
+    var dd = Math.round((day0(c.s) - day0(now)) / 864e5), t = hm(c.s.getHours() * 60 + c.s.getMinutes());
+    return (dd === 0 ? '今天' : dd === 1 ? '明天' : '周' + '日一二三四五六'.charAt(c.s.getDay())) + ' ' + t;
+  }
+  function markup(c, now){
+    var live = now >= c.s, f = frac(c, now), meta = [c.code, c.kind, c.loc].filter(Boolean).map(esc).join('<span class="nc-s"></span>');
+    return '<div class="v2-section-title">' + (live ? '现在' : '下一节') + '</div>'
+      + '<div class="nc-in" role="button" tabindex="0" aria-label="课表">'
+      + '<div class="nc-m">' + meta + '</div>'
+      + '<div class="nc-tl' + (live ? ' live' : '') + '"><i class="nc-k a"></i><i class="nc-k b"></i>'
+      + (live ? '<i class="nc-f" style="transform:scaleX(' + f.toFixed(4) + ')"></i><i class="nc-d" style="left:' + (f * 100).toFixed(3) + '%"></i>' : '') + '</div>'
+      + (live ? '<div class="nc-ts"><span>' + hm(c.s.getHours() * 60 + c.s.getMinutes()) + '</span><span>' + hm(c.e.getHours() * 60 + c.e.getMinutes()) + '</span></div>'
+              : '<div class="nc-w">' + esc(when(c, now)) + '</div>')
+      + '</div>';
+  }
+  function now(){ return document.timeline && document.timeline.currentTime != null ? document.timeline.currentTime : null; }
+  function intro(el){
+    if (RM || !Element.prototype.animate || !document.timeline) return;
+    if (T0 != null && now() != null && now() - T0 >= 1600) return;
+    var tl = el.querySelector('.nc-tl'), ks = el.querySelectorAll('.nc-k'), d = el.querySelector('.nc-d'), f = el.querySelector('.nc-f'), list = [];
+    list.push(tl.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 1100, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' }));
+    ks.forEach(function(k){ list.push(k.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, delay: 700, fill: 'backwards' })); });
+    if (f) list.push(f.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: 800, fill: 'backwards' }));
+    if (d) list.push(d.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: 900, fill: 'backwards' }));
+    list.forEach(function(an){ if (T0 != null) an.startTime = T0; else { an.pause(); an.currentTime = 0; WAIT.push(an); } });
+  }
+  function hap(){ if (window.iueHaptic) try { iueHaptic(); } catch(e) {} }
+  function expand(el, then){
+    if (RM) { then(); return; }
+    var r = el.getBoundingClientRect(), W = innerWidth, H = innerHeight, x = document.createElement('div'); x.className = 'dl-xp';
+    x.style.clipPath = 'inset(' + r.top + 'px ' + (W - r.right) + 'px ' + (H - r.bottom) + 'px ' + r.left + 'px round 20px)';
+    document.body.appendChild(x); void x.offsetWidth; el.classList.add('nc-out');
+    x.style.clipPath = 'inset(0px 0px 0px 0px round 0px)';
+    setTimeout(function(){ then(); requestAnimationFrame(function(){ x.classList.add('fade'); el.classList.remove('nc-out'); }); setTimeout(function(){ x.remove(); }, 420); }, 380);
+  }
+  function open(){
+    if (!cur) return; hap();
+    var n = new Date(), b = day0(n), wd = b.getDay();
+    b.setDate(b.getDate() + (wd === 0 ? 1 : (wd === 6 ? 2 : 1 - wd)));
+    var m = day0(cur.s); m.setDate(m.getDate() - ((m.getDay() + 6) % 7));
+    var off = Math.round((m - b) / (7 * 864e5)), key = DASH_WEEK_DAYS[(cur.s.getDay() + 6) % 7];
+    expand(box, function(){
+      window.v2WeekOffset = off; if (typeof v2SaveWeek === 'function') v2SaveWeek();
+      setDashboardScheduleDay(key); showCourse('timetable');
+    });
+  }
+  function bind(el){
+    var inn = el.querySelector('.nc-in');
+    inn.addEventListener('click', open);
+    inn.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+    inn.addEventListener('pointerdown', function(){ el.classList.add('nc-press'); });
+    ['pointerup','pointercancel','pointerleave'].forEach(function(t){ inn.addEventListener(t, function(){ el.classList.remove('nc-press'); }); });
+  }
+  window.ncRender = function(host, after){
+    if (!host) return;
+    var n = new Date(), c = find(n), old = host.querySelector('#v2-next-class'); if (old) old.remove();
+    cur = c; if (!c) { box = null; return; }
+    var el = document.createElement('div'); el.id = 'v2-next-class'; el.className = 'nc';
+    el.innerHTML = markup(c, n);
+    if (after && after.parentNode === host) host.insertBefore(el, after.nextSibling); else host.appendChild(el);
+    box = el;
+    var sig = +c.s + c.code + c.kind + (n >= c.s ? 'L' : 'U');
+    if (sig !== SIG) { T0 = null; WAIT = []; requestAnimationFrame(function(){ T0 = now(); WAIT.forEach(function(an){ an.startTime = T0; }); WAIT = []; }); }
+    SIG = sig; intro(el); bind(el);
+  };
+  setInterval(function(){
+    if (!box || !box.isConnected || !cur) return;
+    var n = new Date(), live = box.querySelector('.nc-tl.live');
+    if ((n >= cur.s) !== !!live || n >= cur.e) { ncRender(box.parentNode, box.previousElementSibling); return; }
+    if (!live) return;
+    var f = frac(cur, n), fe = box.querySelector('.nc-f'), d = box.querySelector('.nc-d');
+    if (fe) fe.style.transform = 'scaleX(' + f.toFixed(4) + ')'; if (d) d.style.left = (f * 100).toFixed(3) + '%';
+  }, 15000);
   if (typeof renderDashboard === 'function') try { renderDashboard(); } catch(e) {}
 })();
 </script>
