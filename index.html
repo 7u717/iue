@@ -3070,6 +3070,62 @@ body.lk .lk-o3 span{font-size:12px;}
 .nc2-n.live{top:0;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--r-t1);box-shadow:0 0 0 3px rgba(255,255,255,.08),0 0 10px rgba(255,255,255,.45);}
 .nc2-h{position:relative;height:12px;margin:9px 4px 0;}
 .nc2-h span{position:absolute;transform:translateX(-50%);font-size:9.5px;letter-spacing:.04em;color:var(--r-t4);font-variant-numeric:tabular-nums;}
+
+/* ===== course header + grade concepts ?gt= (preview) ===== */
+.gtx .group-label.gtx-hide{display:none!important;}
+.gtx .gtx-slot + .topic-group .topic-card[id^="gt-"]{margin-top:0!important;}
+.gtx .v2-gt-head .v2-kicker,.gtx .px-summary .v2-kicker{display:none!important;}
+.gtx .v2-gt-total small{font-size:.42em;font-weight:300;letter-spacing:0;color:var(--r-t3);margin-left:2px;}
+.gtx .gtx-bar{position:relative;height:1px;background:rgba(255,255,255,.1);border-radius:1px;}
+.gtx .gtx-bar i,.gtx .gtx-bar .gtx-p{position:absolute;left:0;top:-.5px;height:2px;border-radius:1px;transition:width .5s cubic-bezier(.22,1,.36,1);}
+.gtx .gtx-bar .gtx-w{background:rgba(255,255,255,.2);}
+.gtx .gtx-bar .gtx-p{background:var(--r-t1)!important;}
+.gtx .gtx-blk .fx3-target{margin-top:18px;}
+.gtx .px-summary{padding:0!important;}
+/* 1 · open column */
+.gtx-1 .course-header{padding:26px 0 4px!important;}
+.gtx-1 .course-header .course-icon{margin-bottom:12px!important;opacity:.6;transform:scale(.8);}
+.gtx-1 .course-code{font-size:24px!important;font-weight:600!important;letter-spacing:-.02em!important;}
+.gtx-1 .course-name{font-size:13px!important;color:var(--r-t3)!important;margin-top:4px!important;}
+.gtx-1 .gtx-slot{padding:26px 6px 26px;}
+.gtx-1 .v2-gt-head{padding:0 0 22px!important;}
+.gtx-1 .v2-gt-total{font-size:58px!important;font-weight:200!important;}
+.gtx-1 .v2-gt-pending{display:none!important;}
+.gtx-1 .px-summary-num{font-size:58px!important;}
+/* 2 · ring */
+.gtx-2 .course-header{padding:24px 0 2px!important;}
+.gtx-2 .course-header .course-icon{display:none!important;}
+.gtx-2 .course-code{font-size:22px!important;font-weight:600!important;letter-spacing:-.015em!important;}
+.gtx-2 .course-name{font-size:12.5px!important;color:var(--r-t3)!important;margin-top:4px!important;}
+.gtx-2 .gtx-slot{padding:22px 6px 26px;}
+.gtx-2 .gtx-rh{position:relative;width:176px;height:176px;margin:0 auto;display:flex;align-items:center;justify-content:center;}
+.gtx-2 .gtx-ring{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
+.gtx-2 .gtx-ring circle{fill:none;}
+.gtx-2 .gtx-ring .tr{stroke:rgba(255,255,255,.07);stroke-width:1;}
+.gtx-2 .gtx-ring .w{stroke:rgba(255,255,255,.16);stroke-width:1;}
+.gtx-2 .gtx-ring .p{stroke:rgba(255,255,255,.7);stroke-width:1.4;stroke-linecap:round;}
+.gtx-2 .gtx-ring .tk{stroke:rgba(255,255,255,.35);stroke-width:1;stroke-linecap:round;}
+.gtx-2 .gtx-ring .d{fill:var(--r-t1);}
+.gtx-2 .v2-gt-head{padding:0!important;position:relative;}
+.gtx-2 .v2-gt-total{font-size:40px!important;font-weight:200!important;letter-spacing:-.035em!important;}
+.gtx-2 .v2-gt-pending{font-size:10.5px!important;margin-top:6px!important;}
+.gtx-2 .gtx-bar{display:none!important;}
+.gtx-2 .gtx-blk .fx3-target{margin-top:22px;}
+.gtx-2 .px-summary-num{font-size:40px!important;position:relative;}
+.gtx-2 .gtx-px .px-summary-sub{margin-top:10px!important;}
+/* 3 · title card */
+.gtx-3 .gtx-slot{background:var(--r-s1);box-shadow:inset 0 0 0 .5px var(--r-hair);border-radius:22px;padding:26px 18px 20px;margin:12px 0 10px;}
+.gtx-3 .course-header{padding:0 0 22px!important;}
+.gtx-3 .course-header .course-icon{margin-bottom:10px!important;opacity:.55;transform:scale(.72);}
+.gtx-3 .course-code{font-size:28px!important;font-weight:600!important;letter-spacing:-.025em!important;}
+.gtx-3 .course-name{font-size:12.5px!important;color:var(--r-t3)!important;margin-top:3px!important;}
+.gtx-3 .v2-gt-head{padding:0 0 16px!important;}
+.gtx-3 .v2-gt-total{font-size:44px!important;font-weight:200!important;}
+.gtx-3 .v2-gt-pending{font-size:11px!important;margin-top:4px!important;}
+.gtx-3 .gtx-bar{display:none!important;}
+.gtx-3 .gtx-blk .fx3-target{margin-top:4px;}
+.gtx-3 .px-summary-num{font-size:44px!important;}
+.gtx .topic-card > .px-block:first-child{border-top:0!important;}
 </style>
 </head>
 <body>
@@ -10805,6 +10861,61 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (ghost) { ghost.remove(); ghost = null; }
     st = null; void title.offsetWidth; title.style.transition = '';
   };
+})();
+</script>
+<script>
+(function(){
+  /* course header + grade block concepts ?gt=1|2|3 (preview) */
+  var M = /[?&]gt=([1-3])/.exec(location.search), V = M ? +M[1] : 0; if (!V) return;
+  document.documentElement.classList.add('gtx', 'gtx-' + V);
+  function ring(p, w, t){
+    var R = 58, C = 2 * Math.PI * R, ta = -Math.PI / 2 + t / 100 * 2 * Math.PI, a = -Math.PI / 2 + p / 100 * 2 * Math.PI;
+    return '<svg class="gtx-ring" viewBox="0 0 140 140" aria-hidden="true"><circle cx="70" cy="70" r="' + R + '" class="tr"/>'
+      + (w > 0 ? '<circle cx="70" cy="70" r="' + R + '" class="w" transform="rotate(-90 70 70)" style="stroke-dasharray:' + (C * w / 100).toFixed(2) + ' ' + C.toFixed(2) + '"/>' : '')
+      + (p > 0 ? '<circle cx="70" cy="70" r="' + R + '" class="p" transform="rotate(-90 70 70)" style="stroke-dasharray:' + (C * p / 100).toFixed(2) + ' ' + C.toFixed(2) + '"/>' : '')
+      + (t ? '<line class="tk" x1="' + (70 + 54 * Math.cos(ta)).toFixed(2) + '" y1="' + (70 + 54 * Math.sin(ta)).toFixed(2) + '" x2="' + (70 + 62 * Math.cos(ta)).toFixed(2) + '" y2="' + (70 + 62 * Math.sin(ta)).toFixed(2) + '"/>' : '')
+      + (p > 0 ? '<circle class="d" r="2.2" cx="' + (70 + R * Math.cos(a)).toFixed(2) + '" cy="' + (70 + R * Math.sin(a)).toFixed(2) + '"/>' : '') + '</svg>';
+  }
+  function cl(v){ return Math.max(0, Math.min(100, +v || 0)); }
+  function sync(course){
+    var sec = document.getElementById('sec-' + course), slot = sec && sec.querySelector('.gtx-slot'); if (!slot) return;
+    var calc = gtCourseCalc(course, gtLoad()); if (!calc || !calc.cfg) return;
+    var tot = document.getElementById('gt-total-' + course);
+    if (tot && !tot.querySelector('small')) { var m = /^([\d.]+)%$/.exec(tot.textContent.trim()); if (m) tot.innerHTML = m[1] + '<small>%</small>'; }
+    var p, w, t;
+    if (calc.type === 'threshold') { p = calc.passed / 3 * 100; w = 0; t = 0; }
+    else { p = cl(calc.total); w = cl(calc.doneW); t = cl(gtTargetNumber(course)); }
+    var bar = slot.querySelector('.gtx-bar');
+    if (bar) { var wl = bar.querySelector('.gtx-w'); if (!wl) { wl = document.createElement('i'); wl.className = 'gtx-w'; bar.insertBefore(wl, bar.firstChild); } wl.style.width = w + '%'; }
+    if (V === 2) { var h = slot.querySelector('.gtx-rh'); if (h) { var old = h.querySelector('.gtx-ring'); if (old) old.remove(); h.insertAdjacentHTML('afterbegin', ring(p, w, t)); } }
+  }
+  function apply(course){
+    var el = document.getElementById('gt-' + course); if (!el) return;
+    var sec = el.closest('.course-section'); if (!sec) return;
+    var hd = sec.querySelector('.course-header'), grp = el.closest('.topic-group');
+    var slot = sec.querySelector('.gtx-slot');
+    if (!slot) { slot = document.createElement('div'); slot.className = 'gtx-slot'; (grp || el).parentNode.insertBefore(slot, grp || el); }
+    if (V === 3 && hd && hd.parentNode !== slot) slot.insertBefore(hd, slot.firstChild);
+    var lab = grp && grp.querySelector('.group-label'); if (lab) lab.classList.add('gtx-hide');
+    var head = el.querySelector('.v2-gt-head'), blk = head && head.parentNode !== el ? head.parentNode : null, px = el.querySelector('.px-summary');
+    [].slice.call(slot.children).forEach(function(c){ if (c !== hd) c.remove(); });
+    if (blk) {
+      blk.className = 'gtx-blk'; blk.removeAttribute('style');
+      var bar = blk.querySelector('[id^="gt-fill-"]'); if (bar && bar.parentNode) { bar.parentNode.className = 'gtx-bar'; bar.parentNode.removeAttribute('style'); bar.className = 'gtx-p'; }
+      if (V === 2) { var rh = document.createElement('div'); rh.className = 'gtx-rh'; head.parentNode.insertBefore(rh, head); rh.appendChild(head); }
+      slot.appendChild(blk);
+    } else if (px) {
+      var wrap = document.createElement('div'); wrap.className = 'gtx-blk gtx-px';
+      if (V === 2) { var rh2 = document.createElement('div'); rh2.className = 'gtx-rh'; var num = px.querySelector('.px-summary-num'); if (num) { px.insertBefore(rh2, num); rh2.appendChild(num); } }
+      wrap.appendChild(px); slot.appendChild(wrap);
+    }
+    sync(course);
+  }
+  var _r = renderGT;
+  window.renderGT = renderGT = function(course){ var r = _r.apply(this, arguments); try { apply(course); } catch(e) {} return r; };
+  var _u = gtUpdateHeader;
+  window.gtUpdateHeader = gtUpdateHeader = function(course){ var r = _u.apply(this, arguments); try { sync(course); } catch(e) {} return r; };
+  document.querySelectorAll('.topic-card[id^="gt-"]').forEach(function(n){ try { renderGT(n.id.slice(3)); } catch(x) {} });
 })();
 </script>
 <script>document.body.classList.add('lk');</script>
