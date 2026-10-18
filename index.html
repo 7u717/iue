@@ -2131,43 +2131,7 @@
   .px-summary-num,.cx-summary-num{font-size:64px;font-weight:200;line-height:1;letter-spacing:-.04em;color:#fff;margin-top:8px;font-variant-numeric:tabular-nums;}
   .px-summary-num span,.cx-summary-num span{font-size:24px;color:rgba(255,255,255,.35);letter-spacing:0;margin-left:2px;}
   .px-summary-sub,.cx-summary-sub{font-size:12px;color:var(--muted);margin-top:10px;letter-spacing:.04em;}
-  .px-gates{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:22px;}
-  .px-gate{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 4px 12px;border-radius:14px;background:var(--fill-1);}
-  .px-gate i{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;}
-  .px-gate.pass i{background:#fff;border-color:#fff;}
-  .px-gate.warn i{border-color:var(--warn);}
-  .px-gate i svg,.cx-tog svg{width:12px;height:12px;fill:none;stroke:#000;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
-  .px-gate b{font-size:12px;font-weight:600;color:#fff;letter-spacing:.02em;}
-  .px-gate span{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;}
-  .px-block{padding:20px 0;border-bottom:1px solid var(--hair);}
-  .px-block:last-child{border-bottom:0;padding-bottom:4px;}
-  .px-block-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;}
-  .px-block-title{font-size:15px;font-weight:600;color:#fff;letter-spacing:-.01em;}
-  .px-block-note{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.4;}
-  .px-state{font-variant-numeric:tabular-nums;white-space:nowrap;color:rgba(255,255,255,.4);font-size:13px;line-height:1;padding-top:2px;}
-  .px-state b{font-size:22px;font-weight:300;color:#fff;}
-  .px-state.pass b{color:var(--ok);}
-  .px-state.warn b{color:var(--warn);}
-  /* lab stepper: one continuous capsule */
-  .px-steps{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:4px;border-radius:14px;background:var(--fill-1);box-shadow:inset 0 0 0 1px var(--hair);}
-  .px-step{position:relative;height:40px;border:0;border-radius:10px;background:transparent;color:rgba(255,255,255,.4);font:500 14px var(--v2-font);font-variant-numeric:tabular-nums;cursor:pointer;transition:background-color .25s var(--v2-ease),color .25s,transform .18s var(--v2-ease)!important;}
-  .px-step.on{background:#fff;color:#000;}
-  .px-step.goal:not(.on)::after{content:"";position:absolute;left:50%;bottom:6px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:rgba(255,255,255,.35);}
-  .px-step:active{transform:scale(.92)!important;opacity:1!important;}
-  .px-steps-legend{display:flex;justify-content:space-between;margin-top:10px;font-size:11px;color:rgba(255,255,255,.35);padding:0 4px;}
-  /* segmented control */
-  .px-field{display:grid;grid-template-columns:40px 1fr;align-items:center;gap:12px;margin-top:10px;}
-  .px-field-label{font-size:11px;color:var(--muted);letter-spacing:.04em;}
-  .px-seg{position:relative;display:grid;gap:4px;padding:4px;border-radius:12px;background:var(--fill-1);box-shadow:inset 0 0 0 1px var(--hair);}
-  .px-seg-5{grid-template-columns:repeat(5,1fr);}
-  .px-seg-3{grid-template-columns:repeat(3,1fr);}
-  .px-seg-opt{height:34px;border:0;border-radius:9px;background:transparent;color:rgba(255,255,255,.55);font:500 13px var(--v2-font);font-variant-numeric:tabular-nums;cursor:pointer;transition:background-color .25s var(--v2-ease),color .25s,transform .18s var(--v2-ease)!important;}
-  .px-seg-opt.on{background:#fff;color:#000;font-weight:600;}
-  .px-seg-opt.on.low{background:var(--warn);}
-  .px-seg-opt.locked{opacity:.3;cursor:default;}
-  .px-seg-opt:active{transform:scale(.94)!important;opacity:1!important;}
-  .px-seg-mark{display:none;}
-  .px-foot{margin-top:12px;font-size:11px;color:rgba(255,255,255,.38);text-align:center;}
+  .cx-tog svg{width:12px;height:12px;fill:none;stroke:#000;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
   /* COMP1511 check-off matrix */
   .cx-shell{padding:4px 0 0;}
   .cx-summary{text-align:center;padding:12px 0 20px;}
@@ -2282,7 +2246,7 @@
   .course-section.active{animation:v2In .5s var(--v2-ease) both!important;}
   @keyframes v2In{from{opacity:0;transform:translate3d(0,8px,0)}to{opacity:1;transform:none}}
   .course-section.course-enter-forward,.course-section.course-enter-back{animation-duration:.32s!important;}
-  .v2-btn:active,.px-seg-opt:active,.px-step:active{transform:scale(.95)!important;}
+  .v2-btn:active{transform:scale(.95)!important;}
   .v2-hero-actions .v2-btn{min-width:120px;}
   .v2-course-row:active,.v2-alert-row:active,.dash-queue-row:active{transform:scale(.985)!important;opacity:1!important;background:rgba(255,255,255,.04);}
   @media (prefers-reduced-motion:reduce){.tab-bar .tab .nav-icon{animation:none!important}}
@@ -2492,17 +2456,6 @@ header > div:first-child{width:32px!important;height:32px!important;box-shadow:0
 /* PHYS1131 */
 .px-summary{text-align:center!important;background:none!important;border:0!important;box-shadow:none!important;padding:10px 0 20px!important;}
 .px-summary-num{font-family:var(--r-num)!important;font-size:76px!important;font-weight:200!important;letter-spacing:-.05em!important;color:var(--r-t1)!important;line-height:1!important;}
-.px-summary-sub{color:var(--r-t3)!important;font-size:12px!important;}
-.px-gates{gap:8px!important;}
-.px-gate{background:var(--r-s2)!important;border:0!important;box-shadow:none!important;border-radius:16px!important;}
-.px-block{background:none!important;border:0!important;border-top:.5px solid var(--r-hair)!important;border-radius:0!important;box-shadow:none!important;padding:18px 0!important;margin:0!important;}
-.px-block-title{font-size:15px!important;font-weight:600!important;color:var(--r-t1)!important;}
-.px-block-note,.px-field-label,.px-foot,.px-steps-legend{color:var(--r-t3)!important;font-size:12px!important;}
-.px-seg{background:var(--r-s2)!important;border:0!important;border-radius:12px!important;padding:3px!important;box-shadow:none!important;}
-.px-seg-opt{border:0!important;background:transparent!important;color:var(--r-t3)!important;border-radius:9px!important;font-weight:600!important;box-shadow:none!important;transition:background .25s var(--r-ease),color .25s!important;}
-.px-seg-opt.active,.px-seg-opt.on{background:var(--r-t1)!important;color:#000!important;}
-.px-step{border:0!important;background:var(--r-s2)!important;color:var(--r-t3)!important;border-radius:10px!important;box-shadow:none!important;transition:background .25s var(--r-ease),color .25s,transform .2s!important;}
-.px-step.on,.px-step.active,.px-step.done{background:var(--r-t1)!important;color:#000!important;}
 
 /* COMP1511 */
 .comp-week-section,.comp-task-card,.comp-expand-row{background:none!important;border:0!important;box-shadow:none!important;}
@@ -3096,63 +3049,37 @@ body.lk .lk-o3 span{font-size:12px;}
 .gtx .gtx-bar{display:none!important;}
 .gtx .gtx-blk .fx3-target{margin-top:22px;}
 .gtx .px-summary-num{font-size:40px!important;position:relative;}
-.gtx .gtx-px .px-summary-sub{margin-top:10px!important;}
-.gtx .topic-card > .px-block:first-child{border-top:0!important;}
-/* ===== PHYS1131 hurdles ?ph= (preview) ===== */
-.ph .gtx-ring path,.ph .gtx-ring circle{fill:none;}
-.ph .gtx-ring path.tr{stroke:rgba(255,255,255,.09);stroke-width:1.4;stroke-linecap:round;}
-.ph .gtx-ring .ph-a{stroke:rgba(255,255,255,.42);stroke-width:1.6;stroke-linecap:round;transition:stroke .3s;}
-.ph .gtx-ring .ph-a.ok{stroke:var(--r-t1);}
-.ph #sec-phys1131 .px-summary-num{font-size:34px!important;font-weight:200!important;letter-spacing:-.03em!important;}
-.ph #sec-phys1131 .px-summary-num span{font-size:.42em!important;color:var(--r-t3)!important;margin-left:2px;}
-.ph #gt-phys1131 b,.ph #gt-phys1131 em{font-style:normal;}
-.ph #gt-phys1131 button{-webkit-tap-highlight-color:transparent;font-family:inherit;cursor:pointer;}
-.ph #gt-phys1131 small{font-size:.72em;color:var(--r-t3);margin-left:1px;}
-.ph .ph-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.ph .ph-h b{font-size:15px;font-weight:600;color:var(--r-t1);letter-spacing:-.01em;}
-.ph .ph-h b em{font-size:11.5px;font-weight:400;color:var(--r-t3);margin-left:8px;letter-spacing:.02em;}
-.ph .ph-s{font-size:15px;font-weight:300;color:var(--r-t2);font-variant-numeric:tabular-nums;font-family:var(--r-num);}
-.ph .ph-s i{display:flex;width:20px;height:20px;border-radius:50%;background:var(--r-t1);align-items:center;justify-content:center;}
-.ph .ph-s svg{width:11px;height:11px;fill:none;stroke:#000;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
-.ph .ph-ls,.ph .ph-sc,.ph .ph-at{display:grid;gap:6px;}
-.ph .ph-ls{grid-template-columns:repeat(6,1fr);}
-.ph .ph-sc{grid-template-columns:repeat(5,1fr);}
-.ph .ph-at{grid-template-columns:repeat(3,1fr);margin-top:8px;}
-.ph .ph-l,.ph .ph-o{position:relative;height:36px;border:0;border-radius:10px;background:var(--r-s2);color:var(--r-t3);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;transition:background-color .25s cubic-bezier(.22,1,.36,1),color .25s,transform .18s cubic-bezier(.22,1,.36,1);}
-.ph .ph-l.on,.ph .ph-o.on{background:var(--r-t1);color:#000;font-weight:600;}
-.ph .ph-l:active,.ph .ph-o:active,.ph .ph-t:active,.ph .ph-cy:active{transform:scale(.92);}
-.ph .ph-l.g:not(.on)::after{content:"";position:absolute;left:50%;bottom:5px;width:3px;height:3px;margin-left:-1.5px;border-radius:50%;background:var(--r-t3);}
-.ph .ph-o.th::before{content:"";position:absolute;left:-3.5px;top:10px;bottom:10px;width:1px;background:rgba(255,255,255,.14);}
-.ph .ph-t{height:30px;border:0;border-radius:9px;background:transparent;color:var(--r-t3);font-size:12px;font-weight:500;transition:color .25s,background-color .25s;}
-.ph .ph-t.on{color:var(--r-t1);background:rgba(255,255,255,.06);}
-.ph .ph-t.lk{opacity:.35;cursor:default;}
-/* 1 · quiet column: one card, spacing only */
-.ph-1 #gt-phys1131{padding:22px 18px 14px!important;}
-.ph-1 .ph-g + .ph-g{margin-top:30px;}
-.ph-1 .ph-g:last-child{padding-bottom:8px;}
-/* 2 · inline rows */
-.ph-2 #gt-phys1131{padding:10px 16px!important;}
-.ph-2 .ph-r{display:grid;grid-template-columns:62px 1fr;align-items:center;gap:12px;padding:14px 0;}
-.ph-2 .ph-k{display:flex;flex-direction:column;align-items:flex-start;gap:5px;}
-.ph-2 .ph-k b{font-size:14px;font-weight:600;color:var(--r-t1);}
-.ph-2 .ph-k em{font-size:12px;color:var(--r-t3);font-variant-numeric:tabular-nums;font-family:var(--r-num);}
-.ph-2 .ph-cy{padding:0;border:0;background:none;color:var(--r-t3);font-size:11.5px;height:20px;}
-.ph-2 .ph-cy:disabled{opacity:.6;cursor:default;}
-.ph-2 .ph-c{gap:5px;}
-.ph-2 .ph-l,.ph-2 .ph-o{height:32px;border-radius:50%;width:32px;justify-self:center;background:transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);font-size:12px;}
-.ph-2 .ph-l span{opacity:0;}
-.ph-2 .ph-l{border-radius:50%;}
-.ph-2 .ph-l,.ph-2 .ph-l.on{background:transparent;box-shadow:none;}
-.ph-2 .ph-l::before{content:"";position:absolute;inset:5px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);transition:background-color .25s cubic-bezier(.22,1,.36,1);}
-.ph-2 .ph-l.on::before{background:var(--r-t1);box-shadow:none;}
-.ph-2 .ph-l.g:not(.on)::after{bottom:auto;top:50%;margin-top:-1.5px;}
-.ph-2 .ph-o.on{box-shadow:none;}
-.ph-2 .ph-o.th::before{left:-4px;}
-/* 3 · separate soft cards */
-.ph-3 #gt-phys1131{background:none!important;box-shadow:none!important;padding:0!important;overflow:visible;}
-.ph-3 .ph-cd{background:var(--r-s1);box-shadow:inset 0 0 0 .5px var(--r-hair);border-radius:20px;padding:18px 16px 14px;margin-bottom:10px;}
-.ph-3 .ph-l,.ph-3 .ph-o{background:transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);}
-.ph-3 .ph-l.on,.ph-3 .ph-o.on{box-shadow:none;}
+/* ===== PHYS1131 hurdles: rings + cards ===== */
+#sec-phys1131 .gtx-ring path,#sec-phys1131 .gtx-ring circle{fill:none;}
+#sec-phys1131 .gtx-ring path.tr{stroke:rgba(255,255,255,.09);stroke-width:1.4;stroke-linecap:round;}
+#sec-phys1131 .gtx-ring .ph-a{stroke:rgba(255,255,255,.42);stroke-width:1.6;stroke-linecap:round;transition:stroke .3s;}
+#sec-phys1131 .gtx-ring .ph-a.ok{stroke:var(--r-t1);}
+#sec-phys1131 .px-summary-num{font-size:34px!important;font-weight:200!important;letter-spacing:-.03em!important;}
+#sec-phys1131 .px-summary-num span{font-size:.42em!important;color:var(--r-t3)!important;margin-left:2px;}
+#gt-phys1131 b,#gt-phys1131 em{font-style:normal;}
+#gt-phys1131 button{-webkit-tap-highlight-color:transparent;font-family:inherit;cursor:pointer;}
+#gt-phys1131 small{font-size:.72em;color:var(--r-t3);margin-left:1px;}
+.ph-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.ph-h b{font-size:15px;font-weight:600;color:var(--r-t1);letter-spacing:-.01em;}
+.ph-h b em{font-size:11.5px;font-weight:400;color:var(--r-t3);margin-left:8px;letter-spacing:.02em;}
+.ph-s{font-size:15px;font-weight:300;color:var(--r-t2);font-variant-numeric:tabular-nums;font-family:var(--r-num);}
+.ph-s i{display:flex;width:20px;height:20px;border-radius:50%;background:var(--r-t1);align-items:center;justify-content:center;}
+.ph-s svg{width:11px;height:11px;fill:none;stroke:#000;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.ph-ls,.ph-sc,.ph-at{display:grid;gap:6px;}
+.ph-ls{grid-template-columns:repeat(6,1fr);}
+.ph-sc{grid-template-columns:repeat(5,1fr);}
+.ph-at{grid-template-columns:repeat(3,1fr);margin-top:8px;}
+.ph-l,.ph-o{position:relative;height:36px;border:0;border-radius:10px;background:transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);color:var(--r-t3);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;transition:background-color .25s cubic-bezier(.22,1,.36,1),color .25s,transform .18s cubic-bezier(.22,1,.36,1);}
+.ph-l.on,.ph-o.on{background:var(--r-t1);color:#000;font-weight:600;}
+.ph-l:active,.ph-o:active,.ph-t:active{transform:scale(.92);}
+.ph-l.g:not(.on)::after{content:"";position:absolute;left:50%;bottom:5px;width:3px;height:3px;margin-left:-1.5px;border-radius:50%;background:var(--r-t3);}
+.ph-o.th::before{content:"";position:absolute;left:-3.5px;top:10px;bottom:10px;width:1px;background:rgba(255,255,255,.14);}
+.ph-t{height:30px;border:0;border-radius:9px;background:transparent;color:var(--r-t3);font-size:12px;font-weight:500;transition:color .25s,background-color .25s;}
+.ph-t.on{color:var(--r-t1);background:rgba(255,255,255,.06);}
+.ph-t.lk{opacity:.35;cursor:default;}
+#gt-phys1131{background:none!important;box-shadow:none!important;padding:0!important;overflow:visible;}
+.ph-cd{background:var(--r-s1);box-shadow:inset 0 0 0 .5px var(--r-hair);border-radius:20px;padding:18px 16px 14px;margin-bottom:10px;}
+.ph-l.on,.ph-o.on{box-shadow:none;}
 </style>
 </head>
 <body>
@@ -7704,71 +7631,32 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return { cfg:gtConfig(course), type:'threshold', total:progress, doneW:progress, remaining:Math.max(0, 3 - recorded), nextItem:nextItem, passed:passed, recorded:recorded, labs:labs, labPass:labPass, t1Score:t1Score, t2Score:t2Score, t1Known:t1Known, t2Known:t2Known, t1Pass:t1Pass, t2Pass:t2Pass };
   }
 
-  function gtPhys1131TestText(score, known, attempt) {
-    if (!known) return '未记录';
-    if (score >= 2) return '通过';
-    return '需重考';
-  }
-
   var PX_CHECK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.3 12.5 4.9"/></svg>';
 
-  function gtPhys1131Row(id, label, note, score, known, pass, attempt, color) {
-    var state = known ? (pass ? 'pass' : 'warn') : '';
-    return '<div class="px-block">'
-      + '<div class="px-block-head"><div><div class="px-block-title">'+label+'</div><div class="px-block-note">'+note+'</div></div>'
-      + '<div class="px-state '+state+'">'+(known ? '<b>'+score+'</b><span>/4</span>' : '<span>—</span>')+'</div></div>'
-      + '<div class="px-field"><div class="px-field-label">得分</div>'
-      + '<div class="px-seg px-seg-5" role="radiogroup">'
-      + [0,1,2,3,4].map(function(n){
-        var on = known && score === n;
-        return '<button class="px-seg-opt '+(on ? 'on ' : '')+(n < 2 ? 'low' : '')+'" role="radio" aria-checked="'+on+'" onclick="gtPhysSetScore(\''+id+'\','+n+')">'+n+'</button>';
-      }).join('')
-      + '<i class="px-seg-mark" style="left:40%"></i></div></div>'
-      + '<div class="px-field"><div class="px-field-label">尝试</div>'
-      + '<div class="px-seg px-seg-3" role="radiogroup">'
-      + [1,2,3].map(function(n){
-        var locked = n > 1 && !known;
-        var on = attempt === n;
-        return '<button class="px-seg-opt '+(on ? 'on ' : '')+(locked ? 'locked' : '')+'" role="radio" aria-checked="'+on+'"'+(locked ? ' disabled' : '')+' onclick="gtPhysSetAttempt(\''+id+'\','+n+')">'+(n === 1 ? '首考' : '重考 '+(n-1))+'</button>';
-      }).join('')
-      + '</div></div>'
-      + '<div class="px-foot">'+(known ? (pass ? '≥ 2/4，满分通过' : '低于 2/4，记得报名重考') : '考完点一下分数即可')+'</div>'
-      + '</div>';
-  }
-
   function gtRenderThreshold(course, cfg, data) {
-    var calc = gtThresholdCalc(course, data);
-    var color = cfg.color || courseColor(course);
-    var t1 = data.p1131_t1 || {};
-    var t2 = data.p1131_t2 || {};
-    var gates = [
-      { label:'Labs', pass:calc.labPass, known:false, value:calc.labs+'/6' },
-      { label:'Test 1', pass:calc.t1Pass, known:calc.t1Known, value:calc.t1Known ? calc.t1Score+'/4' : '—' },
-      { label:'Test 2', pass:calc.t2Pass, known:calc.t2Known, value:calc.t2Known ? calc.t2Score+'/4' : '—' }
-    ];
-    var html = '<div class="px-summary">'
-      + '<div class="v2-kicker">Hurdles</div>'
-      + '<div class="px-summary-num">'+calc.passed+'<span>/3</span></div>'
-      + '<div class="px-summary-sub">'+(calc.passed === 3 ? '全部达标' : (calc.nextItem ? '下一关 · '+calc.nextItem.label : ''))+'</div>'
-      + '<div class="px-gates">'
-      + gates.map(function(g){
-        return '<div class="px-gate '+(g.pass ? 'pass' : (g.known ? 'warn' : ''))+'"><i>'+(g.pass ? PX_CHECK : '')+'</i><b>'+g.label+'</b><span>'+g.value+'</span></div>';
-      }).join('')
-      + '</div></div>';
-    var labs = calc.labs;
-    html += '<div class="px-block">'
-      + '<div class="px-block-head"><div><div class="px-block-title">Labs</div><div class="px-block-note">完成 5 / 6 次即满分，少于 5 次为 0</div></div>'
-      + '<div class="px-state '+(calc.labPass ? 'pass' : '')+'"><b>'+labs+'</b><span>/6</span></div></div>'
-      + '<div class="px-steps" role="group" aria-label="Labs completed">'
-      + [1,2,3,4,5,6].map(function(n){
-        return '<button class="px-step '+(labs >= n ? 'on ' : '')+(n === 5 ? 'goal' : '')+'" aria-pressed="'+(labs >= n)+'" aria-label="Lab '+n+'" onclick="gtPhysSetLabCount('+n+')"><span>'+n+'</span></button>';
-      }).join('')
-      + '</div>'
-      + '<div class="px-steps-legend"><span>点到已完成的最后一次</span><span>满分线 5</span></div>'
-      + '</div>';
-    html += gtPhys1131Row('p1131_t1', 'Test 1', 'Week 7 首考 · Week 11/12 重考 · 40 分钟', calc.t1Score, calc.t1Known, calc.t1Pass, parseInt(t1.attempt || 1, 10), color);
-    html += gtPhys1131Row('p1131_t2', 'Test 2', 'Week 10 首考 · Week 11/12 重考 · 40 分钟', calc.t2Score, calc.t2Known, calc.t2Pass, parseInt(t2.attempt || 1, 10), color);
-    return html;
+    var c = gtThresholdCalc(course, data), t1 = data.p1131_t1 || {}, t2 = data.p1131_t2 || {};
+    function st(ok, txt){ return '<span class="ph-s' + (ok ? ' ok' : '') + '">' + (ok ? '<i>' + PX_CHECK + '</i>' : txt) + '</span>'; }
+    function labs(n){
+      return [1,2,3,4,5,6].map(function(k){
+        return '<button class="ph-l' + (n >= k ? ' on' : '') + (k === 5 ? ' g' : '') + '" aria-pressed="' + (n >= k) + '" aria-label="Lab ' + k + '" onclick="gtPhysSetLabCount(' + k + ')"><span>' + k + '</span></button>'; }).join('');
+    }
+    function seg(id, score, known){
+      return [0,1,2,3,4].map(function(n){ var on = known && score === n;
+        return '<button class="ph-o' + (on ? ' on' : '') + (n === 2 ? ' th' : '') + '" role="radio" aria-checked="' + on + '" aria-label="' + n + '/4" onclick="gtPhysSetScore(\'' + id + '\',' + n + ')">' + n + '</button>'; }).join('');
+    }
+    function att(id, a, known){
+      return [1,2,3].map(function(n){ var lk = n > 1 && !known, on = a === n;
+        return '<button class="ph-t' + (on ? ' on' : '') + (lk ? ' lk' : '') + '" role="radio" aria-checked="' + on + '"' + (lk ? ' disabled' : '') + ' onclick="gtPhysSetAttempt(\'' + id + '\',' + n + ')">' + (n === 1 ? '首考' : '重考 ' + (n - 1)) + '</button>'; }).join('');
+    }
+    var h = '<div class="px-summary"><div class="px-summary-num">' + c.passed + '<span>/3</span></div></div>';
+    h += '<div class="ph-cd"><div class="ph-h"><b>Labs</b>' + st(c.labPass, c.labs + '<small>/6</small>') + '</div><div class="ph-ls">' + labs(c.labs) + '</div></div>';
+    [['p1131_t1', 'Test 1', 'W7', c.t1Score, c.t1Known, c.t1Pass, parseInt(t1.attempt || 1, 10)],
+     ['p1131_t2', 'Test 2', 'W10', c.t2Score, c.t2Known, c.t2Pass, parseInt(t2.attempt || 1, 10)]].forEach(function(t){
+      h += '<div class="ph-cd"><div class="ph-h"><b>' + t[1] + '<em>' + t[2] + '</em></b>' + st(t[5], t[4] ? t[3] + '<small>/4</small>' : '—') + '</div>'
+        + '<div class="ph-sc" role="radiogroup">' + seg(t[0], t[3], t[4]) + '</div>'
+        + '<div class="ph-at" role="radiogroup">' + att(t[0], t[6], t[4]) + '</div></div>';
+    });
+    return h;
   }
 
   function gtPhysSetLabCount(count) {
@@ -10361,7 +10249,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 (function(){
   var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   function keyOf(el){
-    var t = el.closest('.cx-tog, .gt-row[data-id], .px-step, .dash-focus-row');
+    var t = el.closest('.cx-tog, .gt-row[data-id], .dash-focus-row');
     if (!t) return null;
     if (t.classList.contains('cx-tog')) return { sel: '.cx-tog[aria-label="'+t.getAttribute('aria-label')+'"]', on: '.on' };
     if (t.classList.contains('gt-row')) return { sel: '.gt-row[data-id="'+t.dataset.id+'"]', on: ' .gt-check.done', row: true };
@@ -10476,7 +10364,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 
   /* ---- haptics: ticks + day change ---- */
   document.addEventListener('click', function(e){
-    if (e.target.closest && e.target.closest('.cx-tog, .gt-row[data-id] .gt-check, .gt-row[data-id] .gt-info, .px-step, .px-seg-opt, .r3-day')) haptic();
+    if (e.target.closest && e.target.closest('.cx-tog, .gt-row[data-id] .gt-check, .gt-row[data-id] .gt-info, .ph-l, .ph-o, .ph-t:not(:disabled), .r3-day')) haptic();
   }, true);
   if (typeof setDashboardScheduleDay === 'function') {
     var _sd = setDashboardScheduleDay;
@@ -10902,6 +10790,15 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       + (t ? '<line class="tk" x1="' + (70 + 54 * Math.cos(ta)).toFixed(2) + '" y1="' + (70 + 54 * Math.sin(ta)).toFixed(2) + '" x2="' + (70 + 62 * Math.cos(ta)).toFixed(2) + '" y2="' + (70 + 62 * Math.sin(ta)).toFixed(2) + '"/>' : '')
       + (p > 0 ? '<circle class="d" r="2.2" cx="' + (70 + R * Math.cos(a)).toFixed(2) + '" cy="' + (70 + R * Math.sin(a)).toFixed(2) + '"/>' : '') + '</svg>';
   }
+  function rings(c){
+    var f = [Math.min(1, c.labs / 5), c.t1Known ? c.t1Score / 4 : 0, c.t2Known ? c.t2Score / 4 : 0], ok = [c.labPass, c.t1Pass, c.t2Pass], T = -Math.PI / 2;
+    function pt(r, a){ return (70 + r * Math.cos(a)).toFixed(2) + ' ' + (70 + r * Math.sin(a)).toFixed(2); }
+    return '<svg class="gtx-ring ph-ring" viewBox="0 0 140 140" aria-hidden="true">' + [58, 52, 46].map(function(r, i){
+      var k = 'ph-a' + (ok[i] ? ' ok' : ''), a1 = T + f[i] * 2 * Math.PI;
+      return '<circle cx="70" cy="70" r="' + r + '" class="tr"/>' + (f[i] >= 1 ? '<circle cx="70" cy="70" r="' + r + '" class="' + k + '"/>'
+        : f[i] > 0 ? '<path class="' + k + '" d="M' + pt(r, T) + ' A' + r + ' ' + r + ' 0 ' + (a1 - T > Math.PI ? 1 : 0) + ' 1 ' + pt(r, a1) + '"/>' : '');
+    }).join('') + '</svg>';
+  }
   function cl(v){ return Math.max(0, Math.min(100, +v || 0)); }
   function sync(course){
     var sec = document.getElementById('sec-' + course), slot = sec && sec.querySelector('.gtx-slot'); if (!slot) return;
@@ -10911,7 +10808,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var p, w, t;
     if (calc.type === 'threshold') { p = calc.passed / 3 * 100; w = 0; t = 0; }
     else { p = cl(calc.total); w = cl(calc.doneW); t = cl(gtTargetNumber(course)); }
-    { var h = slot.querySelector('.gtx-rh'); if (h) { var old = h.querySelector('.gtx-ring'); if (old) old.remove(); h.insertAdjacentHTML('afterbegin', ring(p, w, t)); } }
+    { var h = slot.querySelector('.gtx-rh'); if (h) { var old = h.querySelector('.gtx-ring'); if (old) old.remove(); h.insertAdjacentHTML('afterbegin', calc.type === 'threshold' ? rings(calc) : ring(p, w, t)); } }
   }
   function apply(course){
     var el = document.getElementById('gt-' + course); if (!el) return;
@@ -10939,82 +10836,6 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var _u = gtUpdateHeader;
   window.gtUpdateHeader = gtUpdateHeader = function(course){ var r = _u.apply(this, arguments); try { sync(course); } catch(e) {} return r; };
   document.querySelectorAll('.topic-card[id^="gt-"]').forEach(function(n){ try { renderGT(n.id.slice(3)); } catch(x) {} });
-})();
-</script>
-<script>
-(function(){
-  /* PHYS1131 hurdles concepts ?ph=1|2|3 (preview) */
-  var M = /[?&]ph=([1-3])/.exec(location.search), V = M ? +M[1] : 0; if (!V || typeof gtRenderThreshold !== 'function') return;
-  document.documentElement.classList.add('ph', 'ph-' + V);
-  var CK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4 6.6 11.3 12.5 4.9"/></svg>';
-  function frac(c){ return [Math.min(1, c.labs / 5), c.t1Known ? c.t1Score / 4 : 0, c.t2Known ? c.t2Score / 4 : 0]; }
-  function pass(c){ return [c.labPass, c.t1Pass, c.t2Pass]; }
-  function pt(r, a){ return (70 + r * Math.cos(a)).toFixed(2) + ' ' + (70 + r * Math.sin(a)).toFixed(2); }
-  function arc(r, a0, a1){ return 'M' + pt(r, a0) + ' A' + r + ' ' + r + ' 0 ' + (a1 - a0 > Math.PI ? 1 : 0) + ' 1 ' + pt(r, a1); }
-  function ring(c){
-    var f = frac(c), ps = pass(c), s = '<svg class="gtx-ring ph-ring" viewBox="0 0 140 140" aria-hidden="true">', T = -Math.PI / 2;
-    if (V === 3) {
-      [58, 52, 46].forEach(function(r, i){
-        s += '<circle cx="70" cy="70" r="' + r + '" class="tr"/>';
-        if (f[i] > 0) s += f[i] >= 1 ? '<circle cx="70" cy="70" r="' + r + '" class="ph-a' + (ps[i] ? ' ok' : '') + '"/>' : '<path class="ph-a' + (ps[i] ? ' ok' : '') + '" d="' + arc(r, T, T + f[i] * 2 * Math.PI) + '"/>';
-      });
-    } else {
-      var G = V === 1 ? 0.16 : 0.05, W = 2 * Math.PI / 3;
-      for (var i = 0; i < 3; i++) {
-        var a0 = T + i * W + G / 2, a1 = T + (i + 1) * W - G / 2;
-        s += '<path class="tr" d="' + arc(58, a0, a1) + '"/>';
-        var v = V === 1 ? f[i] : (ps[i] ? 1 : 0);
-        if (v > 0) s += '<path class="ph-a' + (ps[i] ? ' ok' : '') + '" d="' + arc(58, a0, a0 + v * (a1 - a0)) + '"/>';
-      }
-    }
-    return s + '</svg>';
-  }
-  function draw(){
-    var sec = document.getElementById('sec-phys1131'), h = sec && sec.querySelector('.gtx-slot .gtx-rh'); if (!h) return;
-    var c = gtThresholdCalc('phys1131', gtLoad()), old = h.querySelector('.gtx-ring'); if (old) old.remove();
-    h.insertAdjacentHTML('afterbegin', ring(c));
-  }
-  function seg(id, score, known){
-    return [0,1,2,3,4].map(function(n){ var on = known && score === n;
-      return '<button class="ph-o' + (on ? ' on' : '') + (n === 2 ? ' th' : '') + '" role="radio" aria-checked="' + on + '" aria-label="' + n + '/4" onclick="gtPhysSetScore(\'' + id + '\',' + n + ')">' + n + '</button>'; }).join('');
-  }
-  function att(id, a, known){
-    return [1,2,3].map(function(n){ var lk = n > 1 && !known, on = a === n;
-      return '<button class="ph-t' + (on ? ' on' : '') + (lk ? ' lk' : '') + '" role="radio" aria-checked="' + on + '"' + (lk ? ' disabled' : '') + ' onclick="gtPhysSetAttempt(\'' + id + '\',' + n + ')">' + (n === 1 ? '首考' : '重考 ' + (n - 1)) + '</button>'; }).join('');
-  }
-  function labs(n){
-    return [1,2,3,4,5,6].map(function(k){
-      return '<button class="ph-l' + (n >= k ? ' on' : '') + (k === 5 ? ' g' : '') + '" aria-pressed="' + (n >= k) + '" aria-label="Lab ' + k + '" onclick="gtPhysSetLabCount(' + k + ')"><span>' + k + '</span></button>'; }).join('');
-  }
-  function st(ok, txt){ return '<span class="ph-s' + (ok ? ' ok' : '') + '">' + (ok ? '<i>' + CK + '</i>' : txt) + '</span>'; }
-  window.gtRenderThreshold = gtRenderThreshold = function(course, cfg, data){
-    var c = gtThresholdCalc(course, data), t1 = data.p1131_t1 || {}, t2 = data.p1131_t2 || {};
-    var A1 = parseInt(t1.attempt || 1, 10), A2 = parseInt(t2.attempt || 1, 10);
-    var h = '<div class="px-summary"><div class="px-summary-num">' + c.passed + '<span>/3</span></div></div>';
-    var T = [['p1131_t1', 'Test 1', 'W7', c.t1Score, c.t1Known, c.t1Pass, A1], ['p1131_t2', 'Test 2', 'W10', c.t2Score, c.t2Known, c.t2Pass, A2]];
-    function sc(t){ return t[4] ? t[3] + '<small>/4</small>' : '—'; }
-    if (V === 2) {
-      h += '<div class="ph-list">'
-        + '<div class="ph-r"><div class="ph-k"><b>Labs</b><em>' + c.labs + '<small>/6</small></em></div><div class="ph-c ph-ls">' + labs(c.labs) + '</div></div>'
-        + T.map(function(t){ var nx = t[4] ? (t[6] % 3) + 1 : 1;
-          return '<div class="ph-r"><div class="ph-k"><b>' + t[1] + '</b><button class="ph-cy" onclick="gtPhysSetAttempt(\'' + t[0] + '\',' + nx + ')"' + (t[4] ? '' : ' disabled') + '>' + (t[6] === 1 ? '首考' : '重考 ' + (t[6] - 1)) + '</button></div><div class="ph-c ph-sc" role="radiogroup">' + seg(t[0], t[3], t[4]) + '</div></div>'; }).join('')
-        + '</div>';
-      return h;
-    }
-    var wrap = V === 3 ? 'ph-cd' : 'ph-g';
-    h += '<div class="' + wrap + '"><div class="ph-h"><b>Labs</b>' + st(c.labPass, c.labs + '<small>/6</small>') + '</div><div class="ph-ls">' + labs(c.labs) + '</div></div>';
-    T.forEach(function(t){
-      h += '<div class="' + wrap + '"><div class="ph-h"><b>' + t[1] + '<em>' + t[2] + '</em></b>' + st(t[5], sc(t)) + '</div>'
-        + '<div class="ph-sc" role="radiogroup">' + seg(t[0], t[3], t[4]) + '</div>'
-        + '<div class="ph-at" role="radiogroup">' + att(t[0], t[6], t[4]) + '</div></div>';
-    });
-    return h;
-  };
-  var _r = renderGT;
-  window.renderGT = renderGT = function(course){ var r = _r.apply(this, arguments); if (course === 'phys1131') try { draw(); } catch(e) {} return r; };
-  var _u = gtUpdateHeader;
-  window.gtUpdateHeader = gtUpdateHeader = function(course){ var r = _u.apply(this, arguments); if (course === 'phys1131') try { draw(); } catch(e) {} return r; };
-  try { renderGT('phys1131'); } catch(e) {}
 })();
 </script>
 <script>document.body.classList.add('lk');</script>
