@@ -3126,6 +3126,26 @@ body.lk .lk-o3 span{font-size:12px;}
 .gtx-3 .gtx-blk .fx3-target{margin-top:4px;}
 .gtx-3 .px-summary-num{font-size:44px!important;}
 .gtx .topic-card > .px-block:first-child{border-top:0!important;}
+/* 1 · score numeral variants ?gt=1&num= (preview) */
+.gtn .v2-gt-total{font-family:-apple-system,"SF Pro Display","SF Pro Text",system-ui,sans-serif!important;font-variant-numeric:tabular-nums;}
+.gtn-1 .v2-gt-total{font-size:50px!important;font-weight:100!important;letter-spacing:-.045em!important;color:rgba(255,255,255,.92)!important;}
+.gtn-1 .v2-gt-total small{font-size:.3em;font-weight:200;margin-left:4px;}
+.gtn-2 .v2-gt-total{font-size:44px!important;font-weight:200!important;letter-spacing:-.035em!important;}
+.gtn-2 .gn-d{font-size:.5em;color:var(--r-t2);letter-spacing:-.01em;}
+.gtn-2 .gn-u{font-size:.26em;font-weight:400;color:var(--r-t3);letter-spacing:0;margin-left:3px;vertical-align:baseline;position:relative;top:-1.8em;line-height:0;}
+.gtn-3 .v2-gt-total{font-size:38px!important;font-weight:200!important;letter-spacing:-.03em!important;}
+.gtn-3 .gn-of{font-size:.36em;font-weight:300;color:var(--r-t3);letter-spacing:.01em;margin-left:7px;}
+.gtn-4 .v2-gt-head{position:relative;height:34px;padding:0 0 10px!important;}
+.gtn-4 .v2-gt-total{position:absolute;bottom:10px;left:var(--x,0%);transform:translateX(calc(var(--f,0) * -100%));font-size:24px!important;font-weight:300!important;letter-spacing:-.02em!important;line-height:1!important;white-space:nowrap;transition:left .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1);}
+.gtn-4 .v2-gt-total small{font-size:.5em;}
+.gtn-4 .gtx-slot{padding-top:40px;}
+.gtn-4 .gtx-bar::after{content:"";position:absolute;left:var(--x,0%);top:-4px;width:1px;height:9px;background:var(--r-t1);transform:translateX(-.5px);}
+.gtn-5 .v2-gt-total{display:inline-flex!important;flex-direction:column;align-items:center;font-size:34px!important;font-weight:200!important;letter-spacing:-.03em!important;line-height:1!important;}
+.gtn-5 .gn-l{display:block;width:40px;height:1px;background:rgba(255,255,255,.28);margin:9px 0 8px;}
+.gtn-5 .gn-b{font-size:.4em;font-weight:300;color:var(--r-t3);letter-spacing:0;}
+.gtn-6 .v2-gt-total{font-size:30px!important;font-weight:300!important;letter-spacing:.04em!important;}
+.gtn-6 .v2-gt-total small{font-size:.36em;font-weight:500;letter-spacing:.14em;color:var(--r-t3);margin-left:5px;vertical-align:.55em;}
+.gtn-6 .gtx-slot{padding-top:30px;}
 </style>
 </head>
 <body>
@@ -10868,6 +10888,16 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   /* course header + grade block concepts ?gt=1|2|3 (preview) */
   var M = /[?&]gt=([1-3])/.exec(location.search), V = M ? +M[1] : 0; if (!V) return;
   document.documentElement.classList.add('gtx', 'gtx-' + V);
+  var NM = V === 1 && /[?&]num=([1-6])/.exec(location.search), N = NM ? +NM[1] : 0;
+  if (N) document.documentElement.classList.add('gtn', 'gtn-' + N);
+  function fx(v){ var r = Math.round(v * 10) / 10; return r % 1 ? r.toFixed(1) : String(r); }
+  function numHTML(c){
+    var t = c.total.toFixed(1), i = t.split('.')[0], d = t.split('.')[1];
+    if (N === 2) return '<span class="gn-i">' + i + '</span><span class="gn-d">.' + d + '</span><sup class="gn-u">%</sup>';
+    if (N === 3) return t + '<span class="gn-of">/ 100</span>';
+    if (N === 5) return '<span class="gn-t">' + t + '</span><i class="gn-l"></i><span class="gn-b">' + fx(c.doneW) + '</span>';
+    return t + '<small>%</small>';
+  }
   function ring(p, w, t){
     var R = 58, C = 2 * Math.PI * R, ta = -Math.PI / 2 + t / 100 * 2 * Math.PI, a = -Math.PI / 2 + p / 100 * 2 * Math.PI;
     return '<svg class="gtx-ring" viewBox="0 0 140 140" aria-hidden="true"><circle cx="70" cy="70" r="' + R + '" class="tr"/>'
@@ -10881,11 +10911,13 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var sec = document.getElementById('sec-' + course), slot = sec && sec.querySelector('.gtx-slot'); if (!slot) return;
     var calc = gtCourseCalc(course, gtLoad()); if (!calc || !calc.cfg) return;
     var tot = document.getElementById('gt-total-' + course);
-    if (tot && !tot.querySelector('small')) { var m = /^([\d.]+)%$/.exec(tot.textContent.trim()); if (m) tot.innerHTML = m[1] + '<small>%</small>'; }
+    if (tot && N && calc.type !== 'threshold') { var hh = numHTML(calc); if (tot.innerHTML !== hh) tot.innerHTML = hh; }
+    else if (tot && !tot.querySelector('small')) { var m = /^([\d.]+)%$/.exec(tot.textContent.trim()); if (m) tot.innerHTML = m[1] + '<small>%</small>'; }
     var p, w, t;
     if (calc.type === 'threshold') { p = calc.passed / 3 * 100; w = 0; t = 0; }
     else { p = cl(calc.total); w = cl(calc.doneW); t = cl(gtTargetNumber(course)); }
     var bar = slot.querySelector('.gtx-bar');
+    if (N === 4) { var hd4 = slot.querySelector('.v2-gt-head'); if (hd4) { hd4.style.setProperty('--x', p + '%'); hd4.style.setProperty('--f', (p / 100).toFixed(3)); } if (bar) bar.style.setProperty('--x', p + '%'); }
     if (bar) { var wl = bar.querySelector('.gtx-w'); if (!wl) { wl = document.createElement('i'); wl.className = 'gtx-w'; bar.insertBefore(wl, bar.firstChild); } wl.style.width = w + '%'; }
     if (V === 2) { var h = slot.querySelector('.gtx-rh'); if (h) { var old = h.querySelector('.gtx-ring'); if (old) old.remove(); h.insertAdjacentHTML('afterbegin', ring(p, w, t)); } }
   }
