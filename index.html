@@ -4865,7 +4865,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-18-nc2';
+  var APP_VERSION = '2026-10-18-flex';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -4910,6 +4910,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   if (COUNTDOWN_TERMS.indexOf(currentCountdownTerm) === -1) currentCountdownTerm = '2026 T2';
   var currentCountdownView = localStorage.getItem('iue.countdownView.v1') || 'upcoming';
   if (['upcoming','history'].indexOf(currentCountdownView) === -1) currentCountdownView = 'upcoming';
+  // dates with no classes: Labour Day (W4 Mon), flexibility week (W6)
+  var T3_NO_CLASS = [['2026-10-05','2026-10-05'], ['2026-10-19','2026-10-25']];
+  function noClassDate(key){ return T3_NO_CLASS.some(function(r){ return key >= r[0] && key <= r[1]; }); }
   var T3_WEEKLY_TIMETABLE = [
     { day:'MON', time:'11:00', durationMin:120, course:'comp1511', title:'COMP1511', kind:'Lecture', kindClass:'lec', loc:'Online' },
     { day:'TUE', time:'14:00', durationMin:120, course:'phys1131', title:'PHYS1131', kind:'Lecture', kindClass:'lec', loc:'PhysicsTh' },
@@ -9364,6 +9367,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       base.setDate(base.getDate() + (wdB === 0 ? 1 : (wdB === 6 ? 2 : 1 - wdB)) + 7 * (window.v2WeekOffset || 0) + DASH_WEEK_DAYS.indexOf(dashboardScheduleDay));
       var shownKey = dashDateStamp(base);
       rows = rows.filter(function(r){ return !r.isDeadline || r.dateKey === shownKey; });
+      if (noClassDate(shownKey)) rows = rows.filter(function(r){ return r.isDeadline; });
       // a test/exam replaces the same course's overlapping class on that date
       var tests = rows.filter(function(r){ return r.isDeadline; });
       rows = rows.filter(function(r){
@@ -9434,7 +9438,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       + DASH_WEEK_DAYS.map(function(day, i) {
         var d = new Date(wsBase); d.setDate(wsBase.getDate() + i);
         var isToday = dashDateStamp(d) === dashDateStamp(now);
-        var hasClass = T3_WEEKLY_TIMETABLE.some(function(r){ return r.day === day; });
+        var hasClass = !noClassDate(dashDateStamp(d)) && T3_WEEKLY_TIMETABLE.some(function(r){ return r.day === day; });
         return '<button class="r3-day'+(isToday ? ' today' : '')+(day === dashboardScheduleDay ? ' sel' : '')+'" onclick="setDashboardScheduleDay(\''+day+'\')" aria-label="'+day+'">'
           + '<span class="r3-day-wd">'+stripLabels[i]+'</span><span class="r3-day-num">'+d.getDate()+'</span><i class="r3-day-dot'+(hasClass ? '' : ' none')+'"></i></button>';
       }).join('') + '</div></div>';
@@ -10946,6 +10950,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function hm(m){ return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); }
   function day0(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
   function at(d, m){ var x = day0(d); x.setMinutes(m); return x; }
+  function mon(d){ var x = day0(d); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; }
   function code(c, fb){ return (typeof gtCourseCode === 'function' && gtCourseCode(c)) || fb || dashCourseName(c); }
   function tests(now){
     var data = gtLoad(), md = dashMobiusDoneMap(data);
@@ -10963,7 +10968,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function dayItems(d, T){
     var key = DASH_WEEK_DAYS[(d.getDay() + 6) % 7], dk = dashDateStamp(d);
     var dayTests = T.filter(function(t){ return dashDateStamp(t.s) === dk; });
-    return (DASH_WEEK_DAYS.indexOf(key) > -1 && d.getDay() >= 1 && d.getDay() <= 5 ? T3_WEEKLY_TIMETABLE : []).filter(function(r){ return r.day === key && dashTimetableMinutes(r.time) != null; }).map(function(r){
+    return (DASH_WEEK_DAYS.indexOf(key) > -1 && d.getDay() >= 1 && d.getDay() <= 5 && !noClassDate(dk) ? T3_WEEKLY_TIMETABLE : []).filter(function(r){ return r.day === key && dashTimetableMinutes(r.time) != null; }).map(function(r){
       var sm = dashTimetableMinutes(r.time);
       return { s: at(d, sm), e: at(d, sm + (r.durationMin || 60)), course: dashCourseFromTimetable(r), code: strip(r.title) || code(r.course), kind: r.kind || '', loc: r.loc || '' };
     }).filter(function(c){
@@ -10982,7 +10987,8 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   function frac(c, now){ return Math.max(0, Math.min(1, (now - c.s) / (c.e - c.s))); }
   function when(c, now){
     var dd = Math.round((day0(c.s) - day0(now)) / 864e5), t = hm(c.s.getHours() * 60 + c.s.getMinutes());
-    return (dd === 0 ? '今天' : dd === 1 ? '明天' : '周' + '日一二三四五六'.charAt(c.s.getDay())) + ' ' + t;
+    var wk = Math.round((mon(c.s) - mon(now)) / (7 * 864e5)), wd = '日一二三四五六'.charAt(c.s.getDay());
+    return (dd === 0 ? '今天' : dd === 1 ? '明天' : wk === 0 ? '周' + wd : wk === 1 ? '下周' + wd : (c.s.getMonth() + 1) + '月' + c.s.getDate() + '日') + ' ' + t;
   }
   function now(){ return document.timeline && document.timeline.currentTime != null ? document.timeline.currentTime : null; }
   function mm(dt){ return dt.getHours() * 60 + dt.getMinutes(); }
