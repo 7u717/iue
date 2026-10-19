@@ -437,258 +437,6 @@
     }
     .subtopic::before { content: "·"; color: var(--dim); flex-shrink: 0; margin-top: 1px; }
 
-    .plan-hero {
-      position:relative;overflow:hidden;
-      background:
-        radial-gradient(circle at 18% 0%, rgba(147,197,253,.18), transparent 34%),
-        linear-gradient(145deg, rgba(255,255,255,.105), rgba(255,255,255,.028) 58%, rgba(0,0,0,.14));
-      border: 1px solid rgba(255,255,255,.105);
-      border-radius: 22px;
-      padding: 18px;
-      margin-bottom: 18px;
-      box-shadow: 0 18px 44px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.075);
-      transform:translateZ(0);
-    }
-    .plan-hero::after {
-      content:"";position:absolute;left:18px;right:18px;bottom:0;height:1px;
-      background:linear-gradient(90deg,transparent,rgba(147,197,253,.34),transparent);
-    }
-    .plan-kicker {
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: #BFDBFE;
-      margin-bottom: 8px;
-    }
-    .plan-title {
-      font-family: var(--v2-font);
-      font-size: 24px;
-      font-weight: 800;
-      line-height: 1.08;
-      letter-spacing: 0;
-      color: var(--text);
-      margin-bottom: 12px;
-    }
-    .plan-note {
-      font-size: 12px;
-      line-height: 1.55;
-      color: var(--muted);
-    }
-    .plan-stats {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 7px;
-      margin-top: 16px;
-    }
-    .plan-stat {
-      background: rgba(0,0,0,.20);
-      border: 1px solid rgba(255,255,255,.075);
-      border-radius: 15px;
-      padding: 10px 9px;
-      min-width: 0;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
-    }
-    .plan-stat-num {
-      font-family: var(--v2-font);
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--text);
-      line-height: 1;
-      margin-bottom: 5px;
-    }
-    .plan-stat-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--muted);
-      line-height: 1.25;
-    }
-    .plan-total-bar,
-    .plan-mini-bar {
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.07);
-      overflow: hidden;
-      margin-top: 13px;
-    }
-    .plan-total-fill,
-    .plan-mini-fill {
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, #F8FAFC, #BFDBFE 48%, #93C5FD);
-      box-shadow:0 0 18px rgba(147,197,253,.28);
-    }
-    .plan-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 0;
-      border-top: 1px solid rgba(255,255,255,.06);
-    }
-    .plan-row:first-child { border-top: 0; }
-    .plan-row-main { flex: 1; min-width: 0; }
-    .plan-row-title {
-      font-size: 13px;
-      font-weight: 750;
-      color: var(--text);
-      line-height: 1.3;
-    }
-    .plan-row-sub {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-    .plan-row-uoc {
-      font-family: var(--v2-font);
-      font-size: 15px;
-      font-weight: 800;
-      color: #93C5FD;
-      white-space: nowrap;
-    }
-    .plan-uoc-pill {
-      font-family: var(--v2-font);
-      font-size: 12px;
-      font-weight: 800;
-      color: #BFDBFE;
-      background: rgba(147,197,253,.10);
-      border: 1px solid rgba(191,219,254,.18);
-      border-radius: 999px;
-      padding: 5px 9px;
-      white-space: nowrap;
-    }
-    .plan-course-list {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 8px;
-      margin-top: 12px;
-    }
-    .plan-choice-list {
-      display: grid;
-      gap: 6px;
-      margin: 10px 0 2px;
-    }
-    .plan-course {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 10px;
-      border: 1px solid rgba(255,255,255,.065);
-      border-radius: 12px;
-      background: rgba(255,255,255,.025);
-    }
-    .plan-course.choice {
-      border-color: rgba(147,197,253,.16);
-      background: rgba(147,197,253,.045);
-    }
-    .plan-course.empty {
-      border-style: dashed;
-      background: rgba(255,255,255,.016);
-    }
-    .plan-course-code {
-      min-width: 72px;
-      font-family: var(--v2-font);
-      font-size: 13px;
-      font-weight: 800;
-      color: #BFDBFE;
-      line-height: 1.3;
-    }
-    .plan-course-main {
-      flex: 1;
-      min-width: 0;
-    }
-    .plan-course-name {
-      font-size: 12px;
-      font-weight: 650;
-      color: var(--text);
-      line-height: 1.35;
-    }
-    .plan-course-meta {
-      font-size: 10px;
-      color: var(--muted);
-      margin-top: 3px;
-    }
-    .plan-choice-label {
-      display: block;
-      color: #93C5FD;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0;
-      line-height: 1.35;
-      text-transform: uppercase;
-    }
-    .plan-term-list {
-      display: grid;
-      gap: 12px;
-    }
-    .plan-term-card {
-      border: 1px solid rgba(255,255,255,.075);
-      border-radius: 16px;
-      background: rgba(255,255,255,.025);
-      padding: 12px;
-    }
-    .plan-term-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    .plan-term-name {
-      font-size: 14px;
-      font-weight: 850;
-      color: var(--text);
-      line-height: 1.2;
-    }
-    .plan-term-reason {
-      font-size: 11px;
-      color: var(--muted);
-      line-height: 1.35;
-      margin-top: 3px;
-    }
-    .plan-term-uoc {
-      font-family: var(--v2-font);
-      font-size: 13px;
-      font-weight: 850;
-      color: #BFDBFE;
-      white-space: nowrap;
-    }
-    .plan-term-courses {
-      display: grid;
-      gap: 7px;
-    }
-    .plan-term-course {
-      display: grid;
-      grid-template-columns: 72px 1fr auto;
-      gap: 8px;
-      align-items: center;
-      padding: 8px 9px;
-      border: 1px solid rgba(255,255,255,.055);
-      border-radius: 12px;
-      background: rgba(0,0,0,.16);
-    }
-    .plan-term-course.empty {
-      border-style: dashed;
-      background: rgba(255,255,255,.016);
-    }
-    .plan-term-alerts {
-      display: grid;
-      gap: 6px;
-      margin-top: 10px;
-    }
-    .plan-term-alert {
-      border: 1px solid rgba(147,197,253,.12);
-      border-radius: 11px;
-      background: rgba(147,197,253,.045);
-      padding: 8px 9px;
-      font-size: 11px;
-      line-height: 1.45;
-      color: var(--muted);
-    }
-    .plan-term-alert.warn {
-      border-color: rgba(209,215,226,.18);
-      background: rgba(209,215,226,.055);
-      color: #C8D1DE;
-    }
     .plan-prereq-chain {
       display: flex;
       flex-wrap: wrap;
@@ -703,42 +451,6 @@
       padding: 4px 8px;
       font-size: 10px;
       font-weight: 750;
-      white-space: nowrap;
-    }
-    .plan-term-code {
-      font-family: var(--v2-font);
-      font-size: 12px;
-      font-weight: 850;
-      color: #CFE3FF;
-      line-height: 1.2;
-    }
-    .plan-term-title {
-      font-size: 12px;
-      font-weight: 650;
-      color: var(--text);
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .plan-term-tag {
-      font-size: 10px;
-      font-weight: 800;
-      color: var(--muted);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 999px;
-      padding: 3px 6px;
-      white-space: nowrap;
-    }
-    .plan-term-target {
-      font-family: var(--v2-font);
-      font-size: 10px;
-      font-weight: 850;
-      color: #DCEBFF;
-      border: 1px solid rgba(147,197,253,.2);
-      border-radius: 999px;
-      padding: 3px 6px;
-      background: rgba(147,197,253,.075);
       white-space: nowrap;
     }
     .course-preview-panel {
@@ -2064,7 +1776,7 @@
   .lang-primary{background:#fff!important;color:#000!important;border-radius:999px!important;box-shadow:none!important;font-weight:600!important;letter-spacing:.02em;}
   .lang-progress-fill{background:#fff!important;}
   .lang-word-card,.lang-study-head,.lang-home > *{box-shadow:none!important;}
-  .plan-uoc-pill,.dash-pill{background:transparent!important;border:1px solid var(--line)!important;}
+  .dash-pill{background:transparent!important;border:1px solid var(--line)!important;}
   .cd-days{font-size:32px!important;}
   .comp-lab-score strong{margin-right:8px;}
     .v2-tt-page{max-width:520px;margin:0 auto;padding:10px 4px 20px;display:flex;flex-direction:column;gap:14px;animation:dashWeekIn .28s ease both;}
@@ -3080,6 +2792,50 @@ body.lk .lk-o3 span{font-size:12px;}
 #gt-phys1131{background:none!important;box-shadow:none!important;padding:0!important;overflow:visible;}
 .ph-cd{background:var(--r-s1);box-shadow:inset 0 0 0 .5px var(--r-hair);border-radius:20px;padding:18px 16px 14px;margin-bottom:10px;}
 .ph-l.on,.ph-o.on{box-shadow:none;}
+/* ===== MyPlan: collapsed rows + UOC arc ===== */
+.px-x{display:grid;grid-template-rows:0fr;transition:grid-template-rows .42s cubic-bezier(.32,1.2,.45,1);}
+.px-xi{overflow:hidden;min-height:0;}
+.open > .px-x{grid-template-rows:1fr;}
+.px-chev{color:var(--r-t4);flex:none;transition:transform .35s cubic-bezier(.32,1.2,.45,1);}
+.open > .px-rh .px-chev{transform:rotate(180deg);}
+.px-arc{flex:none;overflow:visible;}
+.px-arc circle{fill:none;}
+.px-arc .t{stroke:rgba(255,255,255,.09);}
+.px-arc .n{stroke:rgba(255,255,255,.32);}
+.px-arc .d{stroke:var(--r-t1);stroke-linecap:round;}
+@media (prefers-reduced-motion:reduce){.px-x,.px-chev{transition:none!important}}
+.mpx-root{padding:6px 0 24px;}
+.mpx-root button{font-family:inherit;}
+.px-hero{text-align:center;padding:22px 8px 26px;}
+.px-ht{font-size:17px;font-weight:600;color:var(--r-t1);letter-spacing:-.015em;}
+.px-hb{position:relative;height:2px;background:rgba(255,255,255,.08);border-radius:2px;margin:20px auto 12px;width:72%;}
+.px-hb i{position:absolute;top:0;bottom:0;border-radius:2px;}
+.px-hb .d{left:0;background:var(--r-t1);}
+.px-hb .n{background:rgba(255,255,255,.3);}
+.px-hn{font-family:var(--r-num);font-size:15px;font-weight:300;color:var(--r-t2);font-variant-numeric:tabular-nums;}
+.px-hn small,.px-u small{font-size:.75em;color:var(--r-t3);}
+.px-card{background:var(--r-s1);box-shadow:inset 0 0 0 .5px var(--r-hair);border-radius:20px;padding:4px 16px;margin-bottom:12px;}
+.px-row{padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.px-row + .px-row{box-shadow:inset 0 .5px 0 var(--r-hair);}
+.px-rh{display:flex;align-items:center;gap:12px;min-height:52px;}
+.px-rh b{font-size:14px;font-weight:600;color:var(--r-t1);white-space:nowrap;}
+.px-rh span{flex:1;min-width:0;font-size:12px;color:var(--r-t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right;font-variant-numeric:tabular-nums;}
+.px-rh b + .px-u{text-align:right;}
+.px-trow.past .px-rh b{color:var(--r-t3);}
+.px-trow.cur .px-rh b::after{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--r-t1);margin-left:7px;vertical-align:2px;}
+.px-u{font-family:var(--r-num);font-size:13px!important;color:var(--r-t2)!important;flex:1;}
+.px-cr{display:grid;grid-template-columns:10px 76px minmax(0,1fr) auto;align-items:center;gap:8px;padding:9px 0;font-size:12.5px;}
+.px-cr:first-child{padding-top:2px;}
+.px-cr:last-child{padding-bottom:14px;}
+.px-cr b{font-weight:500;color:var(--r-t1);font-size:12.5px;}
+.px-cr span{color:var(--r-t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.px-cr em{font-style:normal;color:var(--r-t4);font-size:11px;font-variant-numeric:tabular-nums;}
+.px-cr.empty{grid-template-columns:76px minmax(0,1fr) auto;padding-left:18px;}
+.px-cr.empty b{color:var(--r-t4);}
+.px-cr[onclick]:active{opacity:.6;}
+.px-m{width:6px;height:6px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);}
+.px-m.done{background:var(--r-t1);box-shadow:none;}
+.px-m.now{box-shadow:inset 0 0 0 1px var(--r-t2);}
 </style>
 </head>
 <body>
@@ -3168,103 +2924,7 @@ body.lk .lk-o3 span{font-size:12px;}
 
 <!-- ===== MY PLAN ===== -->
 <div class="course-section" id="sec-myplan">
-  <div style="padding-top:4px;">
-    <div class="plan-hero">
-      <div class="plan-kicker">MyPlan</div>
-      <div class="plan-title">Aerospace Engineering (Honours)</div>
-      <div class="plan-stats">
-        <div class="plan-stat">
-          <div class="plan-stat-num" id="plan-owned-uoc">0</div>
-          <div class="plan-stat-label">Owned UOC</div>
-        </div>
-        <div class="plan-stat">
-          <div class="plan-stat-num">192</div>
-          <div class="plan-stat-label">Total UOC</div>
-        </div>
-        <div class="plan-stat">
-          <div class="plan-stat-num" id="plan-remain-uoc">192</div>
-          <div class="plan-stat-label">Remain UOC</div>
-        </div>
-      </div>
-      <div class="plan-total-bar"><div class="plan-total-fill" id="plan-total-fill" style="width:0%;"></div></div>
-    </div>
-
-    <div class="topic-group">
-      <div class="group-label">Recovery Plan</div>
-
-      <div class="topic-card open" id="plan-by-term">
-        <div class="topic-header" onclick="toggleTopic('plan-by-term')">
-          <div class="topic-left">
-            <div class="topic-dot" style="background:#93C5FD;"></div>
-            <div class="topic-title">By Term</div>
-          </div>
-          <div class="plan-uoc-pill">2026-2029</div>
-          <div class="topic-chevron">▼</div>
-        </div>
-        <div class="topic-body">
-          <div class="plan-term-list" id="plan-term-list"></div>
-        </div>
-      </div>
-
-      <div class="group-label">Program Structure</div>
-
-      <div class="topic-card open" id="plan-disciplinary">
-        <div class="topic-header" onclick="toggleTopic('plan-disciplinary')">
-          <div class="topic-left">
-          <div class="topic-title">Disciplinary Component</div>
-          </div>
-          <div class="plan-uoc-pill">168 UOC</div>
-          <div class="topic-chevron">▼</div>
-        </div>
-        <div class="topic-body">
-          <div id="plan-disciplinary-list"></div>
-        </div>
-      </div>
-
-      <div class="topic-card" id="plan-free-electives">
-        <div class="topic-header" onclick="toggleTopic('plan-free-electives')">
-          <div class="topic-left">
-            <div class="topic-dot" style="background:#93C5FD;"></div>
-            <div class="topic-title">Free Electives</div>
-          </div>
-          <div class="plan-uoc-pill">12 UOC</div>
-          <div class="topic-chevron">▼</div>
-        </div>
-        <div class="topic-body">
-          <div class="plan-course-list">
-            <div class="plan-course choice">
-              <div class="plan-course-code">PHYS1160</div>
-              <div class="plan-course-main">
-                <div class="plan-course-name">Introduction to Astronomy</div>
-                <div class="plan-course-meta">6 UOC · selected free elective</div>
-              </div>
-            </div>
-            <div class="plan-course empty">
-              <div class="plan-course-code">OPEN</div>
-              <div class="plan-course-main">
-                <div class="plan-course-name">Free Elective</div>
-                <div class="plan-course-meta">6 UOC · 等你后面再选</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="topic-card" id="plan-gen-ed">
-        <div class="topic-header" onclick="toggleTopic('plan-gen-ed')">
-          <div class="topic-left">
-            <div class="topic-dot" style="background:#67E8F9;"></div>
-            <div class="topic-title">General Education</div>
-          </div>
-          <div class="plan-uoc-pill">12 UOC</div>
-          <div class="topic-chevron">▼</div>
-        </div>
-        <div class="topic-body">
-          <div class="subtopic">等你告诉我 Gen Ed 选课，我会放进这里并计入 UOC。</div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="mpx-root" id="mp-root"></div>
 </div>
 
 <!-- ===== TIMETABLE ===== -->
@@ -4875,7 +4535,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-19-ph';
+  var APP_VERSION = '2026-10-19-myplan';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5386,28 +5046,6 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return (meta.assessments || []).reduce(function(sum, item) { return sum + parseWeight(item.weight); }, 0);
   }
 
-  function termWarnings(term) {
-    var codes = term.courses.filter(function(item){ return typeof item === 'string'; });
-    var finals = codes.map(function(code){ return { code:code, weight:courseFinalWeight(code) }; }).filter(function(item){ return item.weight >= 45; });
-    var boosters = codes.filter(function(code){ return courseSmart(code).booster; });
-    var alerts = [];
-    if (finals.length >= 2) {
-      alerts.push({ kind:'warn', text:'考试压力偏高：' + finals.map(function(item){ return item.code + ' final ' + item.weight + '%'; }).join(' / ') });
-    } else if (finals.length === 1 && finals[0].weight >= 55) {
-      alerts.push({ kind:'warn', text:'注意 ' + finals[0].code + ' 期末占 ' + finals[0].weight + '%，平时分要尽量拿满。' });
-    }
-    if (codes.indexOf('ELEC1111') > -1 && codes.indexOf('MMAN1130') > -1) {
-      alerts.push({ kind:'warn', text:'ELEC1111 和 MMAN1130 同 term 会比较压，当前已尽量拆开。' });
-    }
-    if (boosters.length) {
-      alerts.push({ kind:'ok', text:'拉分窗口：' + boosters.join(' / ') + ' 可以承担 WAM buffer。' });
-    }
-    if (!alerts.length && codes.length >= 3) {
-      alerts.push({ kind:'ok', text:'这个 term 结构比较均衡，保持每周推进就行。' });
-    }
-    return alerts;
-  }
-
   function prerequisiteMarkup(code) {
     var smart = courseSmart(code);
     var parts = [];
@@ -5417,83 +5055,51 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return parts.length ? '<div class="plan-prereq-chain">'+parts.join('')+'</div>' : '';
   }
 
-  function renderMyPlanTermCourse(item) {
-    if (typeof item === 'object' && item.slot) {
-      return '<div class="plan-term-course empty">'
-        + '<div class="plan-term-code">OPEN</div>'
-        + '<div class="plan-term-title">'+item.slot+'</div>'
-        + '<div class="plan-term-tag">empty</div>'
-        + '<div class="plan-term-reason" style="grid-column:2 / 4;margin-top:-2px;">'+item.detail+'</div>'
-        + '</div>';
-    }
-    var course = courseByCode(item) || { code:item, name:'Course details pending', tags:['Planned'], uoc:6 };
-    var tag = (course.tags && course.tags[0]) || 'Planned';
-    var meta = courseMeta(course.code);
-    return '<div class="plan-term-course" '+(course.id ? 'onclick="openCourse(\''+course.id+'\')"' : '')+'>'
-      + '<div class="plan-term-code">'+course.code+'</div>'
-      + '<div class="plan-term-title">'+course.name+'</div>'
-      + '<div style="display:flex;align-items:center;gap:5px;justify-content:flex-end;flex-wrap:wrap;">'
-      + (meta.target ? '<div class="plan-term-target">'+meta.target+'</div>' : '')
-      + '<div class="plan-term-tag">'+tag+'</div>'
-      + '</div>'
-      + '</div>';
+  /* MyPlan: terms + requirement groups (collapsed rows, thin UOC arc) */
+  var MP_CUR_TERM = '2026 T3';
+  var MP_CHEV = '<svg class="px-chev" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  function mpEsc(t) { return escapeHtml(String(t == null ? '' : t)); }
+  function mpArc(size, done, now, sw) {
+    var r = size / 2 - sw, C = 2 * Math.PI * r, c = size / 2;
+    function seg(f, cls, off) { return f > 0 ? '<circle cx="' + c + '" cy="' + c + '" r="' + r + '" class="' + cls + '" transform="rotate(-90 ' + c + ' ' + c + ')" style="stroke-dasharray:' + (C * f).toFixed(2) + ' ' + C.toFixed(2) + ';stroke-dashoffset:' + (-C * off).toFixed(2) + '"/>' : ''; }
+    return '<svg class="px-arc" width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" aria-hidden="true" style="stroke-width:' + sw + '"><circle cx="' + c + '" cy="' + c + '" r="' + r + '" class="t"/>' + seg(now, 'n', done) + seg(done, 'd', 0) + '</svg>';
   }
-
-  function renderMyPlanTerms() {
-    var termEl = document.getElementById('plan-term-list');
-    if (!termEl) return;
-    termEl.innerHTML = MYPLAN_TERMS.map(function(term) {
-      var alerts = termWarnings(term).map(function(alert) {
-        return '<div class="plan-term-alert '+(alert.kind === 'warn' ? 'warn' : '')+'">'+alert.text+'</div>';
-      }).join('');
-      return '<div class="plan-term-card">'
-        + '<div class="plan-term-head">'
-        + '<div><div class="plan-term-name">'+term.term+'</div><div class="plan-term-reason">'+term.reason+'</div></div>'
-        + '<div class="plan-term-uoc">'+term.uoc+' UOC</div>'
-        + '</div>'
-        + '<div class="plan-term-courses">'+term.courses.map(renderMyPlanTermCourse).join('')+'</div>'
-        + (alerts ? '<div class="plan-term-alerts">'+alerts+'</div>' : '')
-        + '</div>';
-    }).join('');
+  function mpWrap(inner) { return '<div class="px-x"><div class="px-xi">' + inner + '</div></div>'; }
+  window.pxToggle = function(el) { var o = el.classList.toggle('open'); el.setAttribute('aria-expanded', o); if (window.iueHaptic) try { iueHaptic(); } catch(e) {} };
+  function mpInfo(code) { var c = courseByCode(code) || {}; var t = c.tags || []; return { c: c, st: t.indexOf('Done') > -1 ? 'done' : (t.indexOf('Current') > -1 || t.indexOf('Completed') > -1) ? 'now' : '' }; }
+  function mpTermOf(code) { for (var i = 0; i < MYPLAN_TERMS.length; i++) if (MYPLAN_TERMS[i].courses.indexOf(code) > -1) return MYPLAN_TERMS[i].term; return ''; }
+  function mpGroups() {
+    var g = MYPLAN_REQUIREMENTS.map(function(x){ return { title: x.title, uoc: x.uoc, courses: x.courses }; });
+    g.push({ title: 'Free Electives', uoc: 12, courses: [{ code: 'PHYS1160', name: 'Introduction to Astronomy', uoc: 6, selected: true }, { open: 'Free Elective', uoc: 6 }] });
+    g.push({ title: 'General Education', uoc: 12, courses: [] });
+    g.forEach(function(x){ x.done = 0; x.now = 0; x.courses.forEach(function(c){ if (c.open) return; var s = mpInfo(c.code).st; if (s === 'done') x.done += c.uoc; else if (s === 'now') x.now += c.uoc; }); x.fd = Math.min(1, x.done / x.uoc); x.fn = Math.min(1 - x.fd, x.now / x.uoc); });
+    return g;
   }
-
+  function mpCourseRow(c) {
+    if (c.open) return '<div class="px-cr empty"><b>—</b><span>' + mpEsc(c.open) + '</span><em>' + c.uoc + '</em></div>';
+    var it = mpInfo(c.code), id = it.c.id, t = mpTermOf(c.code);
+    return '<div class="px-cr ' + it.st + '"' + (id ? ' onclick="event.stopPropagation();openCourse(\'' + id + '\')"' : '') + '><i class="px-m ' + it.st + '"></i><b>' + mpEsc(c.code) + '</b><span>' + mpEsc(c.name) + '</span><em>' + mpEsc(t ? t.replace(/^20/, '') : c.uoc) + '</em></div>';
+  }
   function renderMyPlan() {
-    var owned = MYPLAN_OWNED_UOC;
-    var remain = Math.max(0, MYPLAN_TOTAL_UOC - owned);
-    var ownedEl = document.getElementById('plan-owned-uoc');
-    var remainEl = document.getElementById('plan-remain-uoc');
-    var fillEl = document.getElementById('plan-total-fill');
-    var listEl = document.getElementById('plan-disciplinary-list');
-    if (ownedEl) ownedEl.textContent = owned;
-    if (remainEl) remainEl.textContent = remain;
-    if (fillEl) fillEl.style.width = Math.min(100, owned / MYPLAN_TOTAL_UOC * 100) + '%';
-    renderMyPlanTerms();
-    if (!listEl) return;
-    listEl.innerHTML = MYPLAN_REQUIREMENTS.map(function(group) {
-      var notes = (group.notes || []).map(function(note) {
-        return '<span class="plan-choice-label">'+note+'</span>';
-      }).join('');
-      if (notes) notes = '<div class="plan-choice-list">'+notes+'</div>';
-      var courses = group.courses.map(function(course) {
-        var meta = courseMeta(course.code);
-        return '<div class="plan-course '+(course.choice || course.selected ? 'choice' : '')+'">'
-          + '<div class="plan-course-code">'+course.code+'</div>'
-          + '<div class="plan-course-main">'
-          + '<div class="plan-course-name">'+course.name+'</div>'
-          + '<div class="plan-course-meta">'+course.uoc+' UOC'+(meta.target ? ' · target '+meta.target : '')+(course.selected ? ' · selected' : course.choice ? ' · '+course.choice : '')+'</div>'
-          + '</div>'
-          + '</div>';
-      }).join('');
-      return '<div class="plan-row">'
-        + '<div class="plan-row-main">'
-        + '<div class="plan-row-title">'+group.title+'</div>'
-        + '<div class="plan-row-sub">'+(group.courses.length)+' required courses</div>'
-        + '</div>'
-        + '<div class="plan-row-uoc">'+group.uoc+'</div>'
-        + '</div>'
-        + (notes ? '<div>'+notes+'</div>' : '')
-        + '<div class="plan-course-list">'+courses+'</div>';
-    }).join('');
+    var root = document.getElementById('mp-root');
+    if (!root) return;
+    var gs = mpGroups(), TOTAL = MYPLAN_TOTAL_UOC, OWN = MYPLAN_OWNED_UOC, nowAll = 0;
+    gs.forEach(function(x){ nowAll += x.now; });
+    var fd = OWN / TOTAL * 100, fn = nowAll / TOTAL * 100;
+    var h = '<div class="px-hero"><div class="px-ht">Aerospace Engineering (Honours)</div>'
+      + '<div class="px-hb"><i class="n" style="left:' + fd.toFixed(2) + '%;width:' + fn.toFixed(2) + '%"></i><i class="d" style="width:' + fd.toFixed(2) + '%"></i></div>'
+      + '<div class="px-hn">' + OWN + '<small> / ' + TOTAL + ' UOC</small></div></div>';
+    h += '<div class="px-card">' + MYPLAN_TERMS.map(function(t){
+      var past = t.term < MP_CUR_TERM, cur = t.term === MP_CUR_TERM;
+      var codes = t.courses.map(function(c){ return typeof c === 'string' ? c : '—'; });
+      var list = t.courses.map(function(c){ return typeof c === 'string' ? mpCourseRow({ code: c, name: (courseByCode(c) || {}).name || '', uoc: 6 }) : mpCourseRow({ open: c.slot, uoc: '' }); }).join('');
+      return '<div class="px-row px-trow' + (past ? ' past' : '') + (cur ? ' cur' : '') + '" onclick="pxToggle(this)" role="button" aria-expanded="false"><div class="px-rh"><b>' + mpEsc(t.term) + '</b><span>' + mpEsc(codes.join(' · ')) + '</span>' + MP_CHEV + '</div>' + mpWrap(list) + '</div>';
+    }).join('') + '</div>';
+    h += '<div class="px-card">' + gs.map(function(x){
+      var list = x.courses.length ? x.courses.map(mpCourseRow).join('') : '<div class="px-cr empty"><b>—</b><span></span><em></em></div>';
+      return '<div class="px-row" onclick="pxToggle(this)" role="button" aria-expanded="false"><div class="px-rh">' + mpArc(24, x.fd, x.fn, 1.6) + '<b>' + mpEsc(x.title) + '</b><span class="px-u">' + x.done + '<small>/' + x.uoc + '</small></span>' + MP_CHEV + '</div>' + mpWrap(list) + '</div>';
+    }).join('') + '</div>';
+    root.innerHTML = h;
   }
 
   function courseById(id) {
