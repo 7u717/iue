@@ -2821,8 +2821,6 @@ body.lk .lk-o3 span{font-size:12px;}
 .px-rh b{font-size:14px;font-weight:600;color:var(--r-t1);white-space:nowrap;}
 .px-rh span{flex:1;min-width:0;font-size:12px;color:var(--r-t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right;font-variant-numeric:tabular-nums;}
 .px-rh b + .px-u{text-align:right;}
-.px-trow.past .px-rh b{color:var(--r-t3);}
-.px-trow.cur .px-rh b::after{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--r-t1);margin-left:7px;vertical-align:2px;}
 .px-u{font-family:var(--r-num);font-size:13px!important;color:var(--r-t2)!important;flex:1;}
 .px-cr{display:grid;grid-template-columns:10px 76px minmax(0,1fr) auto;align-items:center;gap:8px;padding:9px 0;font-size:12.5px;}
 .px-cr:first-child{padding-top:2px;}
@@ -2836,6 +2834,25 @@ body.lk .lk-o3 span{font-size:12px;}
 .px-m{width:6px;height:6px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);}
 .px-m.done{background:var(--r-t1);box-shadow:none;}
 .px-m.now{box-shadow:inset 0 0 0 1px var(--r-t2);}
+/* ===== MyPlan years: term dots + term cells ===== */
+.py .px-rh b{font-family:var(--r-num);font-weight:500;font-size:15px;letter-spacing:-.01em;}
+.py-y.past .px-rh b{color:var(--r-t3);}
+.py-th{font-family:var(--r-num);font-size:11px;font-weight:500;color:var(--r-t3);letter-spacing:.04em;}
+.py-hint{flex:1;display:flex;justify-content:flex-end;gap:6px;}
+.py-hint i{width:6px;height:6px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);}
+.py-hint i.past{background:var(--r-t1);box-shadow:none;}
+.py-hint i.cur{box-shadow:inset 0 0 0 1.2px var(--r-t1);animation:pyBreath 2.8s ease-in-out infinite;}
+@keyframes pyBreath{0%,100%{box-shadow:inset 0 0 0 1.2px var(--r-t1),0 0 0 0 rgba(255,255,255,0);}50%{box-shadow:inset 0 0 0 1.2px var(--r-t1),0 0 6px 1px rgba(255,255,255,.28);}}
+.py-cells{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 0 14px;}
+.py-c{border-radius:12px;background:rgba(255,255,255,.03);padding:8px 10px 10px;display:flex;flex-direction:column;gap:5px;min-height:84px;}
+.py-c.cur{background:rgba(255,255,255,.065);}
+.py-c .py-th{padding:0 0 2px;}
+.py-c.cur .py-th{color:var(--r-t1);}
+.py-c em{font-style:normal;font-family:var(--r-num);font-size:12px;font-weight:500;color:var(--r-t1);letter-spacing:.01em;cursor:pointer;}
+.py-c.past em{color:var(--r-t3);}
+.py-c em.empty{color:var(--r-t4);cursor:default;}
+.py-c em[onclick]:active{opacity:.55;}
+@media (prefers-reduced-motion:reduce){.py-hint i.cur{animation:none!important}}
 </style>
 </head>
 <body>
@@ -4535,7 +4552,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-19-myplan';
+  var APP_VERSION = '2026-10-21-planyear';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -5080,6 +5097,24 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var it = mpInfo(c.code), id = it.c.id, t = mpTermOf(c.code);
     return '<div class="px-cr ' + it.st + '"' + (id ? ' onclick="event.stopPropagation();openCourse(\'' + id + '\')"' : '') + '><i class="px-m ' + it.st + '"></i><b>' + mpEsc(c.code) + '</b><span>' + mpEsc(c.name) + '</span><em>' + mpEsc(t ? t.replace(/^20/, '') : c.uoc) + '</em></div>';
   }
+  /* MyPlan terms card: year rows with term dots, expanding to term cells */
+  function pyYears() {
+    var ys = [];
+    MYPLAN_TERMS.forEach(function(t){ var y = t.term.slice(0, 4); var o = ys.filter(function(x){ return x.y === y; })[0]; if (!o) { o = { y: y, terms: [] }; ys.push(o); } o.terms.push(t); });
+    ys.forEach(function(o){ o.cur = o.terms.some(function(t){ return t.term === MP_CUR_TERM; }); o.past = o.terms.every(function(t){ return t.term < MP_CUR_TERM; }); });
+    return ys;
+  }
+  function pyState(t) { return t.term < MP_CUR_TERM ? 'past' : t.term === MP_CUR_TERM ? 'cur' : ''; }
+  function pyCard() {
+    return '<div class="px-card py">' + pyYears().map(function(o){
+      var hint = '<span class="py-hint">' + o.terms.map(function(t){ return '<i class="' + pyState(t) + '"></i>'; }).join('') + '</span>';
+      var cells = '<div class="py-cells">' + o.terms.map(function(t){
+        return '<div class="py-c ' + pyState(t) + '"><div class="py-th">' + mpEsc(t.term.slice(5)) + '</div>' + t.courses.map(function(c){
+          if (typeof c !== 'string') return '<em class="empty">—</em>';
+          var id = (courseByCode(c) || {}).id; return '<em' + (id ? ' onclick="event.stopPropagation();openCourse(\'' + id + '\')"' : '') + '>' + mpEsc(c) + '</em>'; }).join('') + '</div>'; }).join('') + '</div>';
+      return '<div class="px-row py-y' + (o.past ? ' past' : '') + (o.cur ? ' cur' : '') + '" onclick="pxToggle(this)" role="button" aria-expanded="false"><div class="px-rh"><b>' + o.y + '</b>' + hint + MP_CHEV + '</div>' + mpWrap(cells) + '</div>';
+    }).join('') + '</div>';
+  }
   function renderMyPlan() {
     var root = document.getElementById('mp-root');
     if (!root) return;
@@ -5089,12 +5124,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var h = '<div class="px-hero"><div class="px-ht">Aerospace Engineering (Honours)</div>'
       + '<div class="px-hb"><i class="n" style="left:' + fd.toFixed(2) + '%;width:' + fn.toFixed(2) + '%"></i><i class="d" style="width:' + fd.toFixed(2) + '%"></i></div>'
       + '<div class="px-hn">' + OWN + '<small> / ' + TOTAL + ' UOC</small></div></div>';
-    h += '<div class="px-card">' + MYPLAN_TERMS.map(function(t){
-      var past = t.term < MP_CUR_TERM, cur = t.term === MP_CUR_TERM;
-      var codes = t.courses.map(function(c){ return typeof c === 'string' ? c : '—'; });
-      var list = t.courses.map(function(c){ return typeof c === 'string' ? mpCourseRow({ code: c, name: (courseByCode(c) || {}).name || '', uoc: 6 }) : mpCourseRow({ open: c.slot, uoc: '' }); }).join('');
-      return '<div class="px-row px-trow' + (past ? ' past' : '') + (cur ? ' cur' : '') + '" onclick="pxToggle(this)" role="button" aria-expanded="false"><div class="px-rh"><b>' + mpEsc(t.term) + '</b><span>' + mpEsc(codes.join(' · ')) + '</span>' + MP_CHEV + '</div>' + mpWrap(list) + '</div>';
-    }).join('') + '</div>';
+    h += pyCard();
     h += '<div class="px-card">' + gs.map(function(x){
       var list = x.courses.length ? x.courses.map(mpCourseRow).join('') : '<div class="px-cr empty"><b>—</b><span></span><em></em></div>';
       return '<div class="px-row" onclick="pxToggle(this)" role="button" aria-expanded="false"><div class="px-rh">' + mpArc(24, x.fd, x.fn, 1.6) + '<b>' + mpEsc(x.title) + '</b><span class="px-u">' + x.done + '<small>/' + x.uoc + '</small></span>' + MP_CHEV + '</div>' + mpWrap(list) + '</div>';
