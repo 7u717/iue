@@ -2853,6 +2853,43 @@ body.lk .lk-o3 span{font-size:12px;}
 .py-c em.empty{color:var(--r-t4);cursor:default;}
 .py-c em[onclick]:active{opacity:.55;}
 @media (prefers-reduced-motion:reduce){.py-hint i.cur{animation:none!important}}
+/* ===== dashboard empty state ===== */
+.v2-empty{display:flex;align-items:center;justify-content:center;gap:8px;padding:18px 0 26px;color:var(--r-t3);font-size:13px;font-weight:400;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .2s;}
+.v2-empty svg{color:var(--r-t4);flex:none;}
+.v2-empty:active{opacity:.6;}
+/* ===== floating dashboard: no card base under deadline ring, 课程进度, next class ===== */
+#dash-command .v2-hero.dl{background:none!important;background-image:none!important;box-shadow:none!important;border-color:transparent!important;animation:none!important;}
+#dash-command .v2-hero.dl::before,#dash-command .v2-hero.dl::after{display:none!important;}
+#dash-command #v2-course-strip{background:none!important;box-shadow:none!important;}
+.tlx #v2-next-class,.tlx #tl-solo{background:none!important;box-shadow:none!important;border-radius:0!important;padding:14px 22px 10px!important;margin:0 0 14px;}
+/* ===== next class + term: lens ===== */
+.tlx-w{position:relative;margin:0 34px;padding:36px 0 10px;}
+.tlx-ln{position:relative;height:1px;}
+.tlx-tr{position:absolute;left:0;right:0;top:0;height:.5px;background:rgba(255,255,255,.14);}
+.tlx-fill{position:absolute;left:0;top:-.25px;height:1px;background:rgba(255,255,255,.5);border-radius:1px;}
+.tlx-t{position:absolute;top:-2.5px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--r-t1);box-shadow:0 0 0 3px rgba(255,255,255,.08);}
+.tlx-c{position:absolute;top:-3px;width:1.5px;height:7px;margin-left:-.75px;border-radius:1px;background:rgba(255,255,255,.75);transition:background .25s;}
+.tlx-e{position:absolute;top:-6px;font-family:var(--r-num);font-size:9.5px;letter-spacing:.04em;color:var(--r-t4);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.tlx-e.s{right:calc(100% + 10px);}
+.tlx-e.e{left:calc(100% + 10px);}
+.tlx-lens{position:absolute;top:0;left:clamp(0px,calc(var(--x) * 100% - 48px),calc(100% - 96px));width:96px;height:14px;display:flex;align-items:center;}
+.tlx-day{position:relative;display:block;width:100%;height:.5px;background:rgba(255,255,255,.18);}
+.tlx-day i{position:absolute;top:-1px;height:2px;border-radius:1px;background:rgba(255,255,255,.3);}
+.tlx-day i.past{background:rgba(255,255,255,.12);}
+.tlx-day i.on{background:var(--r-t1);}
+.tlx-cone{position:absolute;top:15px;left:clamp(0px,calc(var(--x) * 100% - 48px),calc(100% - 96px));width:96px;height:20px;overflow:visible;}
+.tlx-cone path{fill:none;stroke:rgba(255,255,255,.12);stroke-width:.6;vector-effect:non-scaling-stroke;}
+.tlx-tap{cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tlx-tap.open .tlx-c{background:var(--r-t1);}
+.tlx-pop{position:absolute;top:calc(100% - 6px);left:calc(var(--x) * 100%);display:flex;flex-direction:column;align-items:center;transform:translateX(-50%);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:3;}
+.tlx-pop i{display:block;width:.5px;height:0;background:rgba(255,255,255,.35);transition:height .35s cubic-bezier(.32,1.2,.45,1);}
+.tlx-pop span{display:block;margin-top:5px;padding:2px 6px;font-family:var(--r-num),"PingFang SC";font-size:11px;letter-spacing:.03em;color:var(--r-t2);white-space:nowrap;font-variant-numeric:tabular-nums;transform:translate(var(--sh,0),3px);transition:transform .35s cubic-bezier(.32,1.2,.45,1);}
+.tlx-pop span b{font-weight:400;margin:0 6px;color:var(--r-t4);}
+.tlx-pop.on{opacity:1;pointer-events:auto;}
+.tlx-pop.on i{height:12px;}
+.tlx-pop.on span{transform:translate(var(--sh,0),0);}
+.tlx-pop.on:active span{color:var(--r-t1);}
+@media (prefers-reduced-motion:reduce){.tlx-pop,.tlx-pop i,.tlx-pop span{transition:none!important}}
 </style>
 </head>
 <body>
@@ -4552,7 +4589,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-21-planyear';
+  var APP_VERSION = '2026-10-22-lens';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -9295,10 +9332,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (window.dlRender) { try { dlRender(commandEl.querySelector('.v2-hero'), upcoming); } catch(e) {} }
     } else {
       commandEl.innerHTML =
-        '<div class="dash-command-main">'
-        +'<div><div class="dash-command-label">Now</div><div class="dash-command-title">目前没有未完成的倒计时</div></div>'
-        +'<div class="dash-command-count" onclick="showCountdownHistory()" style="cursor:pointer;"><div class="dash-command-num">✓</div><div class="dash-command-unit">All clear</div></div>'
-        +'</div>'
+        '<div class="v2-empty" onclick="showCountdownHistory()" role="button"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1"/></svg><span>没有待办</span></div>'
+        +v2AlertsMarkup(now, data, mobiusDone)
+        +'<div id="v2-course-strip"></div>'
         ;
     }
 
@@ -10714,7 +10750,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   window.ncRender = function(host, after){
     if (!host) return;
     var n = new Date(), o = find(n), c = o && o.c, old = host.querySelector('#v2-next-class'); if (old) old.remove();
-    cur = c; if (!c) { box = null; return; }
+    cur = c; window.ncCur = o; if (!c) { box = null; return; }
     var el = document.createElement('div'); el.id = 'v2-next-class'; el.className = 'nc';
     el.innerHTML = markup(o, n); el.dataset.live = n >= c.s ? '1' : ''; el.dataset.day = dashDateStamp(n);
     if (after && after.parentNode === host) host.insertBefore(el, after.nextSibling); else host.appendChild(el);
@@ -10820,6 +10856,61 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     });
   } else if (window.DeviceOrientationEvent) start();
   window.fx4Gyro = onOri;
+})();
+</script>
+<script>
+(function(){
+  /* next class + term: one term line (UNSW 2026 T3: Week 1 Mon 14 Sep – exams end 10 Dec) with a lens into the next class's day; tap reveals the class */
+  if (!window.ncRender) return;
+  document.documentElement.classList.add('tlx');
+  var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var S = new Date(2026, 8, 14), E = new Date(2026, 11, 10);
+  function d0(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function dn(d){ return Math.round((d0(d) - S) / 864e5); }
+  var TOTAL = dn(E) + 1;
+  function pos(d){ return Math.max(0, Math.min(1, (dn(d) + (d.getHours() * 60 + d.getMinutes()) / 1440) / TOTAL)); }
+  function esc(x){ return escapeHtml(String(x)); }
+  function hm(d){ return d.getHours() + ':' + ('0' + d.getMinutes()).slice(-2); }
+  function when(c, n){
+    if (n >= c.s) return hm(c.s) + '–' + hm(c.e);
+    var dd = Math.round((d0(c.s) - d0(n)) / 864e5), wd = '日一二三四五六'.charAt(c.s.getDay());
+    var mon = function(x){ var y = d0(x); y.setDate(y.getDate() - ((y.getDay() + 6) % 7)); return y; }, wk = Math.round((mon(c.s) - mon(n)) / 6048e5);
+    return (dd === 0 ? '今天' : dd === 1 ? '明天' : wk === 0 ? '周' + wd : wk === 1 ? '下周' + wd : (c.s.getMonth() + 1) + '.' + c.s.getDate()) + ' ' + hm(c.s);
+  }
+  function daySegs(o, n){
+    var lo = 1440, hi = 0, M = function(d){ return d.getHours() * 60 + d.getMinutes(); };
+    o.day.forEach(function(x){ lo = Math.min(lo, M(x.s)); hi = Math.max(hi, M(x.e)); });
+    lo = Math.min(lo, 480); hi = Math.max(hi, 1200); var W = hi - lo;
+    return o.day.map(function(x){ return '<i class="' + (x === o.c ? 'on' : x.e <= n ? 'past' : '') + '" style="left:' + ((M(x.s) - lo) / W * 100).toFixed(2) + '%;width:' + Math.max(1.5, (M(x.e) - M(x.s)) / W * 100).toFixed(2) + '%"></i>'; }).join('');
+  }
+  function build(o, n){
+    var i = dn(n); if (i < 0 || i >= TOTAL) return '';
+    var fT = pos(n), c = o && o.c, fC = c ? pos(c.s) : null, P = function(f){ return (f * 100).toFixed(3) + '%'; };
+    var lens = c ? '<span class="tlx-lens" style="--x:' + fC.toFixed(4) + '"><span class="tlx-day">' + daySegs(o, n) + '</span></span><svg class="tlx-cone" viewBox="0 0 100 20" preserveAspectRatio="none" aria-hidden="true" style="--x:' + fC.toFixed(4) + '"><path d="M0 0 L50 20 L100 0"/></svg>' : '';
+    var pop = c ? '<span class="tlx-pop" role="button" aria-label="打开课表" style="--x:' + fC.toFixed(4) + '"><i></i><span>' + esc(c.code) + (c.kind ? '<b>·</b>' + esc(c.kind) : '') + '<b>·</b>' + esc(when(c, n)) + '</span></span>' : '';
+    return '<div class="tlx-w tlx-tap">' + lens + '<div class="tlx-ln"><span class="tlx-tr"></span><span class="tlx-fill" style="width:' + P(fT) + '"></span>' + (c ? '<i class="tlx-c" style="left:' + P(fC) + '"></i>' : '') + '<i class="tlx-t" style="left:' + P(fT) + '"></i><span class="tlx-e s">9.14</span><span class="tlx-e e">12.10</span></div>' + pop + '</div>';
+  }
+  function deco(host){
+    var n = new Date(), o = window.ncCur, box = host.querySelector('#v2-next-class'), solo = host.querySelector('#tl-solo'); if (solo) solo.remove();
+    var h = build(box ? o : null, n); if (!h) return;
+    if (!box) { var st = host.querySelector('#v2-course-strip'); box = document.createElement('div'); box.id = 'tl-solo'; box.className = 'nc tl-solo'; box.innerHTML = '<div class="nc-in"></div>'; if (st && st.parentNode === host) host.insertBefore(box, st.nextSibling); else host.appendChild(box); }
+    var inn = box.querySelector('.nc-in'); inn.setAttribute('aria-label', '课表，学期第 ' + (dn(n) + 1) + ' / ' + TOTAL + ' 天，9.14–12.10');
+    inn.innerHTML = '<div class="tlx">' + h + '</div>';
+    if (!RM && Element.prototype.animate) inn.firstChild.animate([{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'none' }], { duration: 700, easing: 'cubic-bezier(.22,1,.36,1)' });
+    var w = inn.querySelector('.tlx-tap');
+    if (w) w.addEventListener('click', function(e){
+      if (e.target.closest('.tlx-pop.on')) { w.classList.remove('open'); return; }
+      e.stopPropagation(); var p = w.querySelector('.tlx-pop'); if (!p) return;
+      var on = w.classList.toggle('open');
+      if (on) { var sp = p.querySelector('span'), bx = w.closest('.nc').getBoundingClientRect(); sp.style.setProperty('--sh', '0px'); var r = sp.getBoundingClientRect(), d = 0; if (r.left < bx.left + 8) d = bx.left + 8 - r.left; else if (r.right > bx.right - 8) d = bx.right - 8 - r.right; sp.style.setProperty('--sh', d.toFixed(1) + 'px'); }
+      p.classList.toggle('on', on);
+      if (window.iueHaptic) try { iueHaptic(); } catch(x) {}
+    });
+  }
+  document.addEventListener('click', function(e){ var w = document.querySelector('.tlx-tap.open'); if (w && !w.contains(e.target)) { w.classList.remove('open'); w.querySelector('.tlx-pop').classList.remove('on'); } }, true);
+  var _nc = window.ncRender;
+  window.ncRender = function(host){ var r = _nc.apply(this, arguments); try { if (host) deco(host); } catch(x) { console.error(x); } return r; };
+  try { renderDashboard(); } catch(x) {}
 })();
 </script>
 </body>
