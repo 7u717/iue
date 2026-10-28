@@ -4592,7 +4592,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-29-moodle';
+  var APP_VERSION = '2026-10-29-moodle2';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -4705,11 +4705,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       targetNote: 'Free Elective 放在前面最好拿高分，目标 85+ 用来拉整体 WAM。',
       source: 'Institution reference screenshot; older UNSW PHYS1160 outline differs, exact 2026 T3 Moodle may update details',
       assessments: [
-        { name:'Weekly Quizzes', weight:'10%', note:'8 quizzes × 10 marks · sum/80×10 · no drop-lowest (Moodle gradebook, PHYS1160 T3 2026)' },
-        { name:'Short Report', weight:'25%', note:'Individual short written report' },
-        { name:'APOD Plan', weight:'5%', note:'Individual written plan · Turnitin DOCX · due Fri 16 Oct 2026 23:59 · marks 28 Oct (PHYS1160 Assessment Info Doc, T3 2026)' },
+        { name:'Weekly Quizzes', weight:'10%', note:'8 quizzes × 10 marks · 1.25% each · sum/80×10 · no drop-lowest (Moodle gradebook, PHYS1160 T3 2026)' },
+        { name:'Short Report', weight:'25%', note:'Individual short written report · Week 4 (PHYS1160 Assessment Info Doc, T3 2026)' },
+        { name:'APOD Plan', weight:'5%', note:'Individual written plan · Week 5 · Turnitin DOCX · due Fri 16 Oct 2026 23:59 · marks 28 Oct (PHYS1160 Assessment Info Doc, T3 2026)' },
         { name:'APOD Final', weight:'35%', note:'Individual written report, max 3000 words · due Fri 13 Nov 2026 23:59 · marks 27 Nov (PHYS1160 Assessment Info Doc, T3 2026)' },
-        { name:'Experiment', weight:'25%', note:'Individual experiment task · Preliminary Results 5% due Fri 30 Oct 2026 23:59 + Final Video 20% due Fri 20 Nov 2026 23:55 (Moodle, PHYS1160 T3 2026)' }
+        { name:'Experiment', weight:'25%', note:'Individual experiment task · Preliminary Results 5% due Fri 30 Oct 2026 23:59 + Final Video 20% due Fri 20 Nov 2026 23:59 (PHYS1160 Assessment Info Doc + Moodle, T3 2026)' }
       ],
       apodImages: [
         { date:'2025-04-14', url:'https://apod.nasa.gov/apod/ap250414.html' },
@@ -4723,11 +4723,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       targetNote:'Core physics 前置课提前到 2026 T3；现在按 Labs + Test 通过规则追踪。',
       source:'PHYS1131 2026 T3 assessment table supplied by user; Moodle remains final authority',
       assessments:[
-        { name:'Labs', weight:'Pass rule', note:'6 labs total; pass 5 for full credit, fewer than 5 gives 0.' },
-        { name:'Test 1', weight:'4 questions', note:'First attempt Week 7; 2/4 or above gives full credit, below 2 goes to retake.' },
-        { name:'Test 2', weight:'4 questions', note:'First attempt Week 10; 2/4 or above gives full credit, below 2 goes to retake.' }
+        { name:'Labs', weight:'Pass rule', note:'Hurdle: 6 labs total, at least 5 must pass; a lab only counts if its Pre-lab is passed (50%).' },
+        { name:'Test 1', weight:'4 questions', note:'Hurdle (50%). Week 7, Thu 29 Oct 17:00–18:00, 40 min, one attempt; 2/4 or above passes, below 2 goes to the Week 11 supplementary.' },
+        { name:'Test 2', weight:'4 questions', note:'Hurdle (50%). Week 10, Thu 19 Nov 17:00, OMB 112/114, 40 min, covers Weeks 5 and 7–9; 2/4 or above passes, below 2 goes to the Week 11 supplementary.' }
       ],
-      rules:['Test 1 retakes are during Week 11 and Week 12.', 'Test 2 retakes are during Week 11 and Week 12.', 'Each test is 40 minutes after the start of the attempt.']
+      rules:['Test 1, Test 2 and Labs are each hurdles needing 50%; no weights on Moodle.', 'Supplementary attempts for Tests are in Week 11.', 'Each test is 40 minutes after the start of the attempt.']
     },
     ELEC1111: {
       target:'78+',
@@ -6699,7 +6699,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     { name: 'ENGG1300 Test 2',               date: '2026-07-18T10:00:00+10:00', tag: '30%', color: 'var(--engg-color)', gtId: 'eg_t2',  loc: 'F10 June Griffith M10', nav: 'https://maps.apple.com/?q=UNSW+F10+June+Griffith+Building+Kensington', examTable:true, durationMin:120 },
     { name: 'MATH1231 Lab Test 2',            date: '2026-07-27T15:00:00+10:00', tag: '15%', color: 'var(--math-color)', gtId: 'mg_lt2', loc: 'H13 Lawrence East M020', nav: 'https://maps.apple.com/?q=UNSW+H13+Lawrence+East+Building+Kensington', examTable:true, durationMin:60 },
     { name: 'PHYS1131 Test 1',                date: '2026-10-29T18:00:00+11:00', opens: '2026-10-29T17:00:00+11:00', term:'2026 T3', tag: 'Test', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_t1', loc:'OMB 114', nav:'https://maps.apple.com/?q=Old+Main+Building+UNSW+Kensington', examTable:true, durationMin:40 },
-    { name: 'PHYS1131 Test 2',                date: '2026-11-19T17:00:00+11:00', term:'2026 T3', tag: 'Test', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_t2', loc:'OMB 114', nav:'https://maps.apple.com/?q=Old+Main+Building+UNSW+Kensington', examTable:true, durationMin:40 },
+    { name: 'PHYS1131 Test 2',                date: '2026-11-19T17:00:00+11:00', term:'2026 T3', tag: 'Test', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_t2', loc:'OMB 112/114', nav:'https://maps.apple.com/?q=Old+Main+Building+UNSW+Kensington', examTable:true, durationMin:40 },
     { name: 'PHYS1160 APOD Plan',             date: '2026-10-16T23:59:00+11:00', term:'2026 T3', tag: '5%',  color: 'var(--phys-color)', course:'phys1160', gtId:'p1160_apod_plan' },
     { name: 'PHYS1160 APOD Final',            date: '2026-11-13T23:59:00+11:00', term:'2026 T3', tag: '35%', color: 'var(--phys-color)', course:'phys1160', gtId:'p1160_apod_final' },
     { name: 'PHYS1160 Quiz 4',                date: '2026-10-17T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:4 },
@@ -6714,7 +6714,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     { name: 'PHYS1131 Week 8 Pre-lab', date: '2026-11-11T23:59:00+11:00', term:'2026 T3', tag: 'Pre-lab', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_prelab_w8' },
     { name: 'PHYS1160 Quiz 7',                date: '2026-11-14T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:7 },
     { name: 'PHYS1131 Week 9 Pre-lab', date: '2026-11-18T23:59:00+11:00', term:'2026 T3', tag: 'Pre-lab', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_prelab_w9' },
-    { name: 'PHYS1160 Final Video', date: '2026-11-20T23:55:00+11:00', term:'2026 T3', tag: '20%', color: 'var(--phys-color)', course:'phys1160', gtId:'p1160_exp_video' },
+    { name: 'PHYS1160 Final Video', date: '2026-11-20T23:59:00+11:00', term:'2026 T3', tag: '20%', color: 'var(--phys-color)', course:'phys1160', gtId:'p1160_exp_video' },
     { name: 'PHYS1160 Quiz 8',                date: '2026-11-21T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:8 },
     { name: 'MMAN1130 MANUF2 工艺单',         date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf2' },
     { name: 'MMAN1130 MANUF3 CAM',            date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf3' },
@@ -6961,9 +6961,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       color: 'var(--phys-color)',
       type: 'threshold',
       items: [
-        { id:'p1131_labs', label:'Labs', note:'6 labs · pass 5/6 for full credit; fewer than 5 = 0', w:1 },
-        { id:'p1131_t1', label:'Test 1', note:'Week 7 first attempt · 4 questions · score >=2/4 = full; below 2 = retake in Week 11/12', w:1 },
-        { id:'p1131_t2', label:'Test 2', note:'Week 10 first attempt · 4 questions · score >=2/4 = full; below 2 = retake in Week 11/12', w:1 }
+        { id:'p1131_labs', label:'Labs', note:'Hurdle · 6 labs · pass ≥5/6 · each lab needs its Pre-lab passed (≥50%) to count', w:1 },
+        { id:'p1131_t1', label:'Test 1', note:'Hurdle 50% · Week 7 · Thu 29/10 17:00–18:00 · 40 min · one attempt · 4 questions · >=2/4 pass; below 2 = supplementary in Week 11', w:1 },
+        { id:'p1131_t2', label:'Test 2', note:'Hurdle 50% · Week 10 · Thu 19/11 17:00 · OMB 112/114 · 40 min · covers Weeks 5, 7–9 · 4 questions · >=2/4 pass; below 2 = supplementary in Week 11', w:1 }
       ]
     },
     comp1511: {
@@ -6983,12 +6983,13 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     phys1160: {
       color: 'var(--phys-color)',
       items: [
-        { id:'p1160_quiz', label:'Weekly Quizzes', note:'10% · 8 次 × 10 分 · 总分/80×10 · 不去最低', w:10, quizSet:true },
+        { id:'p1160_quiz', label:'Weekly Quizzes', note:'10% · 8 次 × 10 分 · 每次 1.25% · 总分/80×10 · 不去最低', w:10, quizSet:true },
         // grade items may set an optional default max (满分), e.g. max:20 — values to be supplied later
-        { id:'p1160_report', label:'Short Report', note:'25% · Date pending', w:25 },
-        { id:'p1160_apod_plan', label:'APOD Plan', note:'5% · 个人书面 · Turnitin DOCX · 截止 16/10/2026 23:59 · 28/10 出分', w:5, date:'2026-10-16T23:59:00+11:00', apod:true },
-        { id:'p1160_apod_final', label:'APOD Final', note:'35% · 个人书面 · ≤3000 词 · 截止 13/11/2026 23:59 · 27/11 出分', w:35, date:'2026-11-13T23:59:00+11:00', apod:true },
-        { id:'p1160_exp', label:'Experiment', note:'25% · Preliminary Results 5% 截止 30/10/2026 23:59 + Final Video 20% 截止 20/11/2026 23:55', w:25 }
+        { id:'p1160_report', label:'Short Report', note:'25% · Week 4', w:25 },
+        { id:'p1160_apod_plan', label:'APOD Plan', note:'5% · APOD 40% 之一 · Week 5 · 个人书面 · Turnitin DOCX · 截止 16/10/2026 23:59 · 28/10 出分', w:5, date:'2026-10-16T23:59:00+11:00', apod:true },
+        { id:'p1160_apod_final', label:'APOD Final', note:'35% · APOD 40% 之一 · 个人书面 · ≤3000 词 · 截止 13/11/2026 23:59 · 27/11 出分', w:35, date:'2026-11-13T23:59:00+11:00', apod:true },
+        { id:'p1160_exp_prelim', label:'Experiment Preliminary Results', note:'5% · Experiment 25% 之一 · 截止 30/10/2026 23:59', w:5, date:'2026-10-30T23:59:00+11:00' },
+        { id:'p1160_exp_video', label:'Experiment Final Video', note:'20% · Experiment 25% 之一 · 截止 20/11/2026 23:59', w:20, date:'2026-11-20T23:59:00+11:00' }
       ]
     }
   };
