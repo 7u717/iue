@@ -4545,7 +4545,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   //   comp: merged into localStorage 'iue.comp1511.weekChecks.v1' (week -> whole stage object)
   // To update: edit values below, bump APP_VERSION, push.
   var IUE_BAKED_PROGRESS = {
-    updatedAt: '2026-10-26',
+    updatedAt: '2026-10-29',
     gt: {
       p1131_labs: { count:2, done:false },          // PHYS1131 labs completed: 2/6
       p1160_q1: { missed:true },                     // PHYS1160 Quiz 1 missed (0)
@@ -4553,7 +4553,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       p1160_q3: { missed:true },                     // PHYS1160 Quiz 3 missed (0)
       p1160_q4: { s:'9.9', m:'10' },                 // PHYS1160 Quiz 4 9.9/10
       p1160_apod_plan: { done:true },                // PHYS1160 APOD Plan submitted, no score yet (confirmed 16 Oct)
-      c1511_a1: { done:true }                        // COMP1511 Assignment 1 submitted 26 Oct 04:09, awaiting grade
+      c1511_a1: { done:true },                       // COMP1511 Assignment 1 submitted 26 Oct 04:09, awaiting grade
+      p1131_prelab_w4: { done:true },                // PHYS1131 Week 4 Pre-lab done (Moodle, 29 Oct)
+      p1131_prelab_w5: { done:true }                 // PHYS1131 Week 5 Pre-lab done, 6.25/10 pass (Moodle, 29 Oct)
     },
     comp: {
       w2: { checkoff:true, core:true, submit:true }, // COMP1511 Lab02 2/2
@@ -4590,7 +4592,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-29-p1160prelim';
+  var APP_VERSION = '2026-10-29-moodle';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -4707,7 +4709,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         { name:'Short Report', weight:'25%', note:'Individual short written report' },
         { name:'APOD Plan', weight:'5%', note:'Individual written plan · Turnitin DOCX · due Fri 16 Oct 2026 23:59 · marks 28 Oct (PHYS1160 Assessment Info Doc, T3 2026)' },
         { name:'APOD Final', weight:'35%', note:'Individual written report, max 3000 words · due Fri 13 Nov 2026 23:59 · marks 27 Nov (PHYS1160 Assessment Info Doc, T3 2026)' },
-        { name:'Experiment', weight:'25%', note:'Individual experiment task' }
+        { name:'Experiment', weight:'25%', note:'Individual experiment task · Preliminary Results 5% due Fri 30 Oct 2026 23:59 + Final Video 20% due Fri 20 Nov 2026 23:55 (Moodle, PHYS1160 T3 2026)' }
       ],
       apodImages: [
         { date:'2025-04-14', url:'https://apod.nasa.gov/apod/ap250414.html' },
@@ -5554,7 +5556,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         if (!d.examTable) return false;
         return new Date(d.date) - now > 0;
       }).sort(function(a,b){ return new Date(a.date) - new Date(b.date); }).map(function(d){
-        var dt = new Date(d.date);
+        var dt = new Date(d.opens || d.date);
         var end = d.durationMin ? new Date(dt.getTime() + d.durationMin*60000) : null;
         var days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
         var time = String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0');
@@ -6696,18 +6698,23 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     { name: 'MMAN1130 MANUF1 图纸',           date: '2026-07-17T23:55:00+10:00', tag: '15%', color: 'var(--mman-color)', gtId: 'mm_mf1' },
     { name: 'ENGG1300 Test 2',               date: '2026-07-18T10:00:00+10:00', tag: '30%', color: 'var(--engg-color)', gtId: 'eg_t2',  loc: 'F10 June Griffith M10', nav: 'https://maps.apple.com/?q=UNSW+F10+June+Griffith+Building+Kensington', examTable:true, durationMin:120 },
     { name: 'MATH1231 Lab Test 2',            date: '2026-07-27T15:00:00+10:00', tag: '15%', color: 'var(--math-color)', gtId: 'mg_lt2', loc: 'H13 Lawrence East M020', nav: 'https://maps.apple.com/?q=UNSW+H13+Lawrence+East+Building+Kensington', examTable:true, durationMin:60 },
-    { name: 'PHYS1131 Test 1',                date: '2026-10-29T17:00:00+11:00', term:'2026 T3', tag: 'Test', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_t1', loc:'OMB 114', nav:'https://maps.apple.com/?q=Old+Main+Building+UNSW+Kensington', examTable:true, durationMin:40 },
+    { name: 'PHYS1131 Test 1',                date: '2026-10-29T18:00:00+11:00', opens: '2026-10-29T17:00:00+11:00', term:'2026 T3', tag: 'Test', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_t1', loc:'OMB 114', nav:'https://maps.apple.com/?q=Old+Main+Building+UNSW+Kensington', examTable:true, durationMin:40 },
     { name: 'PHYS1131 Test 2',                date: '2026-11-19T17:00:00+11:00', term:'2026 T3', tag: 'Test', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_t2', loc:'OMB 114', nav:'https://maps.apple.com/?q=Old+Main+Building+UNSW+Kensington', examTable:true, durationMin:40 },
     { name: 'PHYS1160 APOD Plan',             date: '2026-10-16T23:59:00+11:00', term:'2026 T3', tag: '5%',  color: 'var(--phys-color)', course:'phys1160', gtId:'p1160_apod_plan' },
     { name: 'PHYS1160 APOD Final',            date: '2026-11-13T23:59:00+11:00', term:'2026 T3', tag: '35%', color: 'var(--phys-color)', course:'phys1160', gtId:'p1160_apod_final' },
     { name: 'PHYS1160 Quiz 4',                date: '2026-10-17T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:4 },
     { name: 'COMP1511 Lab 04',                date: '2026-10-13T18:00:00+11:00', term:'2026 T3', tag: 'Lab', color: 'var(--engg-color)', course:'comp1511', compWeek:4 },
+    { name: 'PHYS1131 Week 4 Pre-lab', date: '2026-10-14T23:59:00+11:00', term:'2026 T3', tag: 'Pre-lab', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_prelab_w4' },
+    { name: 'PHYS1131 Week 5 Pre-lab', date: '2026-10-21T23:59:00+11:00', term:'2026 T3', tag: 'Pre-lab', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_prelab_w5' },
     { name: 'COMP1511 Lab 05',                date: '2026-10-26T18:00:00+11:00', term:'2026 T3', tag: 'Lab · Wk5 check-off', color: 'var(--engg-color)', course:'comp1511', compWeek:5 },
     { name: 'COMP1511 Assignment 1 · CS Submarine', date: '2026-10-26T18:00:00+11:00', term:'2026 T3', tag: '20% · late −5%/day', color: 'var(--engg-color)', course:'comp1511', gtId:'c1511_a1' },
-    { name: 'PHYS1160 Experiment Preliminary Results', date: '2026-10-30T23:59:00+11:00', term:'2026 T3', tag: '5%', color: 'var(--phys-color)', course:'phys1160', gtId:'p1160_exp_prelim' }, // weight provisional, pending Moodle check
+    { name: 'PHYS1160 Experiment Preliminary Results', date: '2026-10-30T23:59:00+11:00', term:'2026 T3', tag: '5%', color: 'var(--phys-color)', course:'phys1160', gtId:'p1160_exp_prelim' },
     { name: 'PHYS1160 Quiz 5',                date: '2026-10-31T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:5 },
     { name: 'PHYS1160 Quiz 6',                date: '2026-11-07T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:6 },
+    { name: 'PHYS1131 Week 8 Pre-lab', date: '2026-11-11T23:59:00+11:00', term:'2026 T3', tag: 'Pre-lab', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_prelab_w8' },
     { name: 'PHYS1160 Quiz 7',                date: '2026-11-14T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:7 },
+    { name: 'PHYS1131 Week 9 Pre-lab', date: '2026-11-18T23:59:00+11:00', term:'2026 T3', tag: 'Pre-lab', color: 'var(--phys-color)', course:'phys1131', gtId:'p1131_prelab_w9' },
+    { name: 'PHYS1160 Final Video', date: '2026-11-20T23:55:00+11:00', term:'2026 T3', tag: '20%', color: 'var(--phys-color)', course:'phys1160', gtId:'p1160_exp_video' },
     { name: 'PHYS1160 Quiz 8',                date: '2026-11-21T00:59:00+11:00', term:'2026 T3', tag: 'Quiz', color: 'var(--phys-color)', course:'phys1160', quizNo:8 },
     { name: 'MMAN1130 MANUF2 工艺单',         date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf2' },
     { name: 'MMAN1130 MANUF3 CAM',            date: '2026-08-01T23:55:00+10:00', tag: '10%', color: 'var(--mman-color)', gtId: 'mm_mf3' },
@@ -6981,7 +6988,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
         { id:'p1160_report', label:'Short Report', note:'25% · Date pending', w:25 },
         { id:'p1160_apod_plan', label:'APOD Plan', note:'5% · 个人书面 · Turnitin DOCX · 截止 16/10/2026 23:59 · 28/10 出分', w:5, date:'2026-10-16T23:59:00+11:00', apod:true },
         { id:'p1160_apod_final', label:'APOD Final', note:'35% · 个人书面 · ≤3000 词 · 截止 13/11/2026 23:59 · 27/11 出分', w:35, date:'2026-11-13T23:59:00+11:00', apod:true },
-        { id:'p1160_exp', label:'Experiment', note:'25% · Date pending', w:25 }
+        { id:'p1160_exp', label:'Experiment', note:'25% · Preliminary Results 5% 截止 30/10/2026 23:59 + Final Video 20% 截止 20/11/2026 23:55', w:25 }
       ]
     }
   };
@@ -8978,7 +8985,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var isTestOrExam = !!d.examTable || /\b(test|tests|exam|exams|midterm)\b/i.test(nm) || /考试|测验/.test(nm);
       return isTestOrExam && d.diff > 0 && d.diff <= 14*24*3600*1000 && !dashIsDeadlineDone(d, data, mobiusDone);
     }).forEach(function(d) {
-      var dt = new Date(d.date);
+      var dt = new Date(d.opens || d.date);
       var day = DASH_WEEK_DAYS[(dt.getDay() + 6) % 7];
       if (!rowsByDay[day]) return;
       var course = deadlineCourse(d);
@@ -10662,10 +10669,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     return visibleDeadlines().filter(function(d){
       var nm = strip(d.name) + ' ' + String(d.tag || '');
       if (!(d.examTable || /\b(test|tests|exam|exams|midterm)\b/i.test(nm) || /考试|测验/.test(nm))) return false;
-      var s = new Date(d.date), e = new Date(+s + (d.durationMin || (d.examTable ? 90 : 30)) * 6e4);
+      var s = new Date(d.opens || d.date), e = new Date(+s + (d.durationMin || (d.examTable ? 90 : 30)) * 6e4);
       return e > now && !dashIsDeadlineDone(d, data, md);
     }).map(function(d){
-      var s = new Date(d.date), c = deadlineCourse(d), cc = code(c), nm = strip(d.name);
+      var s = new Date(d.opens || d.date), c = deadlineCourse(d), cc = code(c), nm = strip(d.name);
       return { s: s, e: new Date(+s + (d.durationMin || (d.examTable ? 90 : 30)) * 6e4), course: c, code: cc,
         kind: nm.replace(new RegExp('^' + cc + '\\s*', 'i'), '') || nm, loc: d.loc || '', test: true };
     });
