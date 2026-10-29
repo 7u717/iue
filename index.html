@@ -4545,9 +4545,11 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   //   comp: merged into localStorage 'iue.comp1511.weekChecks.v1' (week -> whole stage object)
   // To update: edit values below, bump APP_VERSION, push.
   var IUE_BAKED_PROGRESS = {
-    updatedAt: '2026-10-29',
+    updatedAt: '2026-10-30',
     gt: {
       p1131_labs: { count:2, done:false },          // PHYS1131 labs completed: 2/6
+      p1131_t1: { score:2, attempt:1, done:true },   // PHYS1131 Test 1 passed 5.42/10 (pass 5); app uses 0-4 scale, 2 = pass (Moodle, 30 Oct)
+      p1160_report: { done:true, s:'84', m:'100' },  // PHYS1160 Short Report 84/100 = 21/25 (Moodle, 30 Oct)
       p1160_q1: { missed:true },                     // PHYS1160 Quiz 1 missed (0)
       p1160_q2: { s:'9.9', m:'10' },                 // PHYS1160 Quiz 2 9.9/10
       p1160_q3: { missed:true },                     // PHYS1160 Quiz 3 missed (0)
@@ -4592,7 +4594,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-10-29-moodle2';
+  var APP_VERSION = '2026-10-30-grades';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
