@@ -63,9 +63,14 @@ async function center(page, selector, index) {
   }, selector, index);
 }
 
+function sameJson(a, b) {
+  const keys = (obj) => Object.keys(obj).sort();
+  return JSON.stringify(a, keys(a)) === JSON.stringify(b, keys(b));
+}
+
 async function main() {
-  const blocked = [];
-  const requests = [];
+  const aborted = [];
+  const continued = [];
   const server = await serve(root);
   const { port } = server.address();
   const browser = await puppeteer.launch({
@@ -75,15 +80,45 @@ async function main() {
   });
   const page = await browser.newPage();
   await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+  await page.setRequestInterception(true);
   page.on('request', (req) => {
     const url = req.url();
-    requests.push(url);
-    if (forbidden.test(url)) blocked.push(url + ' ' + req.method());
+    let host = '';
+    try { host = new URL(url).hostname; } catch (e) {}
+    const local = host === '127.0.0.1' || host === 'localhost' || url.startsWith('data:') || url.startsWith('blob:');
+    if (local) {
+      continued.push(url);
+      req.continue().catch(() => {});
+    } else {
+      aborted.push(url + ' ' + req.method());
+      req.abort('blockedbyclient').catch(() => {});
+    }
   });
   page.on('console', (msg) => {
     if (msg.type() === 'error') console.log('PAGE', msg.text());
   });
-  const url = `http://127.0.0.1:${port}/index.html?iueFixture=schedule-preview`;
+  const origin = `http://127.0.0.1:${port}`;
+  await page.goto(origin + '/manifest.webmanifest', { waitUntil: 'domcontentloaded', timeout: 15000 });
+  const seeded = await page.evaluate(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+    localStorage.setItem('gt_v2', '{"__sentinel":"progress-KEEP"}');
+    localStorage.setItem('iue_cloud_client_id', 'sentinel-device');
+    localStorage.setItem('iue_cloud_sync_url_v2', 'sentinel-sync-id');
+    localStorage.setItem('iue.comp1511.weekChecks.v1', '{"__sentinel":true}');
+    localStorage.setItem('memo_7u', 'sentinel-memo');
+    sessionStorage.setItem('iue_sentinel_session', 'session-KEEP');
+    function dump(store) {
+      const out = {};
+      for (let i = 0; i < store.length; i++) {
+        const k = store.key(i);
+        out[k] = store.getItem(k);
+      }
+      return out;
+    }
+    return { local: dump(localStorage), session: dump(sessionStorage), cookie: document.cookie };
+  });
+  const url = origin + '/index.html?iueFixture=schedule-preview';
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
   await page.waitForSelector('.sq-fixture-banner', { timeout: 10000 });
   await page.waitForFunction(() => {
@@ -103,6 +138,18 @@ async function main() {
   const titles = await page.$$eval('.v2-tt-queue .dash-queue-title', (nodes) => nodes.map((n) => n.textContent));
   assert(titles.length === 3 && titles.every((t) => t.includes('【测试】')), 'fixture rows not labeled: ' + titles.join('|'));
   assert(await page.$eval('#header-title', (el) => el.textContent) === '课表', 'fixture did not stay on timetable');
+  const hostGate = await page.evaluate(() => ({
+    isolated: window.IUE_STORAGE_ISOLATED === true,
+    okLocal: window.iueFixtureHostOk('127.0.0.1') && window.iueFixtureHostOk('localhost') && window.iueFixtureHostOk('::1'),
+    blockedHost: !window.iueFixtureHostOk('7u717.github.io') && !window.iueFixtureHostOk('example.com') && !window.iueFixtureHostOk('')
+  }));
+  assert(hostGate.isolated && hostGate.okLocal && hostGate.blockedHost, 'fixture host gate failed ' + JSON.stringify(hostGate));
+  const memGt = await page.evaluate(() => localStorage.getItem('gt_v2'));
+  assert(memGt && memGt.includes('p1160_q5') && !memGt.includes('progress-KEEP'), 'fixture did not keep baked progress in memory only');
+  const booted = await page.evaluate(() => window.__iueRealStorageSnapshot());
+  assert(sameJson(seeded.local, booted.local), 'real localStorage changed during fixture boot ' + JSON.stringify(booted.local));
+  assert(sameJson(seeded.session, booted.session), 'real sessionStorage changed during fixture boot ' + JSON.stringify(booted.session));
+  assert(booted.cookie === seeded.cookie, 'cookie changed during fixture boot');
 
   const rowSel = '.v2-tt-queue .dash-queue-row';
   let box = await center(page, rowSel, 0);
@@ -157,6 +204,21 @@ async function main() {
   await sleep(350);
   assert(await page.$eval('body', (el) => el.getAttribute('data-sq-open')) == null, 'release did not dismiss');
   assert(await page.$eval(rowSel, (el) => el.getAttribute('data-tap')) === '1', 'release triggered the row action');
+
+  box = await center(page, rowSel, 0);
+  const tapBeforeEscape = await page.$eval(rowSel, (el) => el.getAttribute('data-tap'));
+  await page.mouse.move(box.x, box.y);
+  await page.mouse.down();
+  await waitPreview(page, 'pointer');
+  await page.keyboard.press('Escape');
+  await sleep(40);
+  assert(await page.$eval('body', (el) => el.getAttribute('data-sq-open')) == null, 'Escape did not dismiss the hold preview');
+  await page.mouse.up();
+  await sleep(200);
+  assert(await page.$eval(rowSel, (el) => el.getAttribute('data-tap')) === tapBeforeEscape, 'Escape then release navigated');
+  await page.mouse.click(box.x, box.y);
+  await sleep(200);
+  assert(await page.$eval(rowSel, (el) => el.getAttribute('data-tap')) === String(+tapBeforeEscape + 1), 'normal tap after Escape hold did not run');
 
   box = await center(page, rowSel, 1);
   await page.mouse.move(box.x, box.y);
@@ -225,6 +287,57 @@ async function main() {
   const afterTap = await page.$eval(rowSel + ':nth-child(3)', (el) => el.getAttribute('data-tap'));
   assert(String(+before + 1) === afterTap, 'keyboard short Enter did not run the original action ' + before + ' -> ' + afterTap);
 
+  box = await center(page, rowSel, 0);
+  const scrollBefore = await page.$eval('#sec-timetable', (el) => ({ top: el.scrollTop, room: el.scrollHeight - el.clientHeight }));
+  assert(scrollBefore.room > 40, 'timetable cannot scroll ' + JSON.stringify(scrollBefore));
+  const touch = await page.createCDPSession();
+  const point = (x, y, id) => ({ x, y, id, radiusX: 1, radiusY: 1, force: 1, rotationAngle: 0 });
+  await touch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [point(box.x, box.y, 0)] });
+  for (let i = 1; i <= 8; i++) {
+    await touch.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [point(box.x, box.y - i * 28, 0)] });
+    await sleep(16);
+  }
+  await sleep(520);
+  assert(await page.$eval('body', (el) => el.getAttribute('data-sq-open')) == null, 'touch scroll opened the preview');
+  const scrollAfter = await page.$eval('#sec-timetable', (el) => el.scrollTop);
+  assert(scrollAfter > scrollBefore.top + 20, 'touch move did not scroll, before ' + scrollBefore.top + ' after ' + scrollAfter);
+  await touch.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await sleep(150);
+
+  box = await center(page, rowSel, 1);
+  const tapBeforeCancel = await page.evaluate((sel) => document.querySelectorAll(sel)[1].getAttribute('data-tap'), rowSel);
+  await touch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [point(box.x, box.y, 0)] });
+  await waitPreview(page, 'pointer');
+  await touch.send('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] });
+  await sleep(200);
+  assert(await page.$eval('body', (el) => el.getAttribute('data-sq-open')) == null, 'touchcancel left the preview open');
+  assert(await page.evaluate((sel) => document.querySelectorAll(sel)[1].getAttribute('data-tap'), rowSel) === tapBeforeCancel, 'touchcancel navigated');
+  await page.mouse.click(box.x, box.y);
+  await sleep(200);
+  assert(await page.evaluate((sel) => document.querySelectorAll(sel)[1].getAttribute('data-tap'), rowSel) === String(+tapBeforeCancel + 1), 'tap after touchcancel did not run');
+
+  box = await center(page, rowSel, 0);
+  const tapBeforeMulti = await page.$eval(rowSel, (el) => el.getAttribute('data-tap'));
+  await touch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [point(box.x, box.y, 0)] });
+  await sleep(180);
+  await touch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [point(box.x, box.y, 0), point(box.x + 36, box.y + 24, 1)] });
+  await sleep(560);
+  assert(await page.$eval('body', (el) => el.getAttribute('data-sq-open')) == null, 'second finger still opened the preview');
+  await touch.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await sleep(200);
+  assert(await page.$eval(rowSel, (el) => el.getAttribute('data-tap')) === tapBeforeMulti, 'multitouch navigated');
+  await page.mouse.click(box.x, box.y);
+  await sleep(200);
+  assert(await page.$eval(rowSel, (el) => el.getAttribute('data-tap')) === String(+tapBeforeMulti + 1), 'tap after multitouch did not run');
+
+  await page.evaluate(() => {
+    const img = document.createElement('img');
+    img.src = 'https://example.com/iue-nonlocal-probe.png';
+    document.body.appendChild(img);
+  });
+  await sleep(300);
+  assert(aborted.some((entry) => entry.includes('example.com')), 'interception did not abort a nonlocal resource: ' + aborted.join('\n'));
+
   await page.evaluate(() => {
     document.querySelectorAll('.iue-toast').forEach((el) => el.remove());
     showCourse('dashboard');
@@ -243,11 +356,16 @@ async function main() {
   assert(!dash.fixtureOnDash, 'fixture banner leaked onto dashboard');
   await page.screenshot({ path: path.join(artifactDir, 'schedule_preview_dashboard_unchanged_390.png') });
 
+  const finished = await page.evaluate(() => window.__iueRealStorageSnapshot());
+  assert(sameJson(seeded.local, finished.local), 'real localStorage changed after interactions ' + JSON.stringify(finished.local));
+  assert(sameJson(seeded.session, finished.session), 'real sessionStorage changed after interactions ' + JSON.stringify(finished.session));
+  assert(finished.cookie === seeded.cookie, 'cookie changed after interactions');
   const pageBlocked = await page.evaluate(() => window.IUE_BLOCKED_URLS || []);
-  assert(blocked.length === 0, 'forbidden request: ' + blocked.join('\n'));
-  assert(pageBlocked.length === 0, 'page blocked a sync attempt: ' + pageBlocked.join('\n'));
-  assert(requests.every((u) => u.startsWith('http://127.0.0.1:' + port) || u.startsWith('data:')), 'non-local request ' + requests.filter((u) => !u.startsWith('http://127.0.0.1')).join('\n'));
-  await writeFile(path.join(artifactDir, 'schedule_preview_test_summary.json'), JSON.stringify({ ok: true, self, requests: requests.length, viewport: '390x844' }, null, 2));
+  assert(pageBlocked.length === 0, 'page issued a remote fetch: ' + pageBlocked.join('\n'));
+  assert(continued.every((u) => u.startsWith('http://127.0.0.1:' + port) || u.startsWith('http://localhost:' + port) || u.startsWith('data:') || u.startsWith('blob:')), 'continued a nonlocal request');
+  assert(!continued.some((u) => forbidden.test(u)), 'continued a forbidden host');
+  assert(!aborted.some((u) => u.startsWith('http://127.0.0.1:' + port)), 'aborted a local resource');
+  await writeFile(path.join(artifactDir, 'schedule_preview_test_summary.json'), JSON.stringify({ ok: true, self, continued: continued.length, aborted: aborted.length, viewport: '390x844', storage: 'unchanged' }, null, 2));
   console.log('schedule preview tests passed');
   console.log('self-check cases', self.cases.length);
   await browser.close();
