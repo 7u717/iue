@@ -8,11 +8,25 @@
       return host === 'localhost' || host === '127.0.0.1' || host === '::1';
     }
     window.iueFixtureHostOk = fixtureHostOk;
+    function abortFixtureStartup(reason) {
+      window.IUE_FIXTURE_ABORT = reason || 'storage-shadow';
+      window.IUE_ISOLATED_FIXTURE = '';
+      window.IUE_STORAGE_ISOLATED = false;
+      try {
+        Storage.prototype.setItem = function () { throw new Error('iue fixture aborted'); };
+        Storage.prototype.removeItem = function () { throw new Error('iue fixture aborted'); };
+        Storage.prototype.clear = function () { throw new Error('iue fixture aborted'); };
+      } catch (err) {}
+      try { window.stop(); } catch (err2) {}
+    }
     try {
       var q = new URLSearchParams(location.search);
       if (q.get('iueFixture') !== 'schedule-preview') return;
       if (!fixtureHostOk(location.hostname)) return;
-      window.IUE_ISOLATED_FIXTURE = 'schedule-preview';
+      if (q.get('iueFixtureShadow') === 'fail') {
+        abortFixtureStartup('storage-shadow');
+        return;
+      }
       window.IUE_STORAGE_ISOLATED = false;
       window.IUE_BLOCKED_URLS = [];
 
@@ -61,6 +75,7 @@
       shadow('sessionStorage', memSession);
       if (window.localStorage !== memLocal || window.sessionStorage !== memSession) throw new Error('storage shadow failed');
       window.IUE_STORAGE_ISOLATED = true;
+      window.IUE_ISOLATED_FIXTURE = 'schedule-preview';
 
       try {
         var cookieDesc = Object.getOwnPropertyDescriptor(Document.prototype, 'cookie');
@@ -118,7 +133,7 @@
         };
       }
     } catch (e) {
-      window.IUE_STORAGE_ISOLATED = false;
+      abortFixtureStartup('storage-shadow');
     }
   })();
   </script>
@@ -4687,6 +4702,9 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
 </div>
 
 <script>
+  if (window.IUE_FIXTURE_ABORT) {
+    throw new Error('iue fixture aborted: ' + window.IUE_FIXTURE_ABORT);
+  }
   // ===================== IUE BAKED PROGRESS (bot-maintained) =====================
   // Source of truth for the keys listed here. On every load (and after every cloud pull)
   // these values overwrite ONLY these keys inside localStorage; every other key is untouched.
@@ -4717,6 +4735,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     }
   };
   function applyBakedProgress() {
+    if (window.IUE_FIXTURE_ABORT) return;
     function merge(storageKey, patch) {
       if (!patch || !Object.keys(patch).length) return;
       var cur = {};
@@ -11218,21 +11237,33 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   pv.hidden = true;
   pv.innerHTML = '<div class="sq-head"><div class="sq-title" id="sq-title"></div><div class="sq-badge"></div></div><div class="sq-meta"></div><div class="sq-rows"></div><div class="sq-hint"></div>';
   document.body.appendChild(pv);
-  var hold = null, keyHold = null, mode = '', anchorRow = null, hideTimer = 0, blockReleaseId = null, swallowClickId = null;
+  var hold = null, keyHold = null, mode = '', anchorRow = null, hideTimer = 0;
+  var blockReleaseId = null, blockReleaseRow = null, swallowClickId = null, swallowClickRow = null, swallowGen = 0;
   var DOT = '<svg class="sq-ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';
   var CHEV = '<svg class="sq-ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 11 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   function rowFrom(node){ return node && node.closest ? node.closest('.v2-tt-queue .dash-queue-row') : null; }
   function readPayload(row){
     try { return JSON.parse(row.getAttribute('data-sq') || ''); } catch (e) { return null; }
   }
-  function blockRelease(pointerId){
+  function blockRelease(pointerId, row){
     if (pointerId == null) return;
     blockReleaseId = pointerId;
+    if (row) blockReleaseRow = row;
   }
-  function noteReleaseClick(pointerId){
-    if (pointerId == null) return;
+  function noteReleaseClick(pointerId, row){
     swallowClickId = pointerId;
+    swallowClickRow = row || blockReleaseRow || null;
     blockReleaseId = null;
+    var gen = ++swallowGen;
+    setTimeout(function(){
+      if (swallowGen !== gen) return;
+      swallowClickId = null;
+      swallowClickRow = null;
+      blockReleaseRow = null;
+    }, 0);
+  }
+  function pointerIdMissing(e){
+    return !e || e.pointerId == null;
   }
   function cancelHold(){
     if (!hold) return;
@@ -11343,9 +11374,14 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
   document.addEventListener('pointerdown', function(e){
     if (hold && e.pointerId !== hold.id) {
-      blockRelease(hold.id);
+      blockRelease(hold.id, hold.row);
       dismiss(false);
       return;
+    }
+    if (!hold && e.pointerId !== blockReleaseId) {
+      swallowClickId = null;
+      swallowClickRow = null;
+      swallowGen++;
     }
     if (e.button) return;
     var row = rowFrom(e.target);
@@ -11366,31 +11402,35 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   document.addEventListener('pointermove', function(e){
     if (!hold || e.pointerId !== hold.id) return;
     if (Math.abs(e.clientX - hold.x) < MOVE_PX && Math.abs(e.clientY - hold.y) < MOVE_PX) return;
-    if (hold.opened || mode === 'pointer') { blockRelease(hold.id); dismiss(false); }
+    if (hold.opened || mode === 'pointer') { blockRelease(hold.id, hold.row); dismiss(false); }
     else cancelHold();
   }, { passive: true });
   function endPointer(e, cancel){
     var id = e && e.pointerId;
     if (!hold || id !== hold.id) {
-      if (!cancel && blockReleaseId != null && id === blockReleaseId) noteReleaseClick(id);
-      if (cancel && id === blockReleaseId) blockReleaseId = null;
+      if (!cancel && blockReleaseId != null && id === blockReleaseId) noteReleaseClick(id, blockReleaseRow);
+      if (cancel && id === blockReleaseId) { blockReleaseId = null; blockReleaseRow = null; }
       return;
     }
     var opened = hold.opened || mode === 'pointer';
     var hid = hold.id;
+    var hrow = hold.row;
     if (opened) dismiss(false);
     else cancelHold();
     if (cancel) {
-      if (blockReleaseId === hid) blockReleaseId = null;
+      if (blockReleaseId === hid) { blockReleaseId = null; blockReleaseRow = null; }
       return;
     }
-    if (opened || blockReleaseId === hid) noteReleaseClick(hid);
+    if (opened || blockReleaseId === hid) noteReleaseClick(hid, hrow);
   }
   document.addEventListener('pointerup', function(e){ endPointer(e, false); }, { passive: true });
   document.addEventListener('pointercancel', function(e){ endPointer(e, true); }, { passive: true });
   document.addEventListener('touchcancel', function(){
     blockReleaseId = null;
+    blockReleaseRow = null;
     swallowClickId = null;
+    swallowClickRow = null;
+    swallowGen++;
     if (hold && (hold.opened || mode === 'pointer')) dismiss(false);
     else cancelHold();
   }, { passive: true });
@@ -11400,13 +11440,24 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (sec && (e.target === sec || (e.target.contains && e.target.contains(sec))) && Math.abs(sec.scrollTop - hold.scroll) > 2) cancelHold();
       return;
     }
-    if (mode === 'pointer') { if (hold) blockRelease(hold.id); dismiss(false); return; }
+    if (mode === 'pointer') { if (hold) blockRelease(hold.id, hold.row); dismiss(false); return; }
     if (mode === 'keyboard' && anchorRow && anchorRow.isConnected) place(anchorRow);
   }, true);
   window.addEventListener('resize', function(){ if ((mode === 'keyboard' || mode === 'pointer') && anchorRow && anchorRow.isConnected) place(anchorRow); });
-  window.addEventListener('blur', function(){ if (mode === 'pointer' || (hold && hold.opened)) { if (hold) blockRelease(hold.id); dismiss(false); } else cancelHold(); });
+  window.addEventListener('blur', function(){ if (mode === 'pointer' || (hold && hold.opened)) { if (hold) blockRelease(hold.id, hold.row); dismiss(false); } else cancelHold(); });
   document.addEventListener('click', function(e){
-    if (swallowClickId != null && e.pointerId === swallowClickId) { swallowClickId = null; blockReleaseId = null; e.preventDefault(); e.stopPropagation(); return; }
+    var samePointer = swallowClickId != null && e.pointerId != null && e.pointerId === swallowClickId;
+    var sameTarget = swallowClickRow && pointerIdMissing(e) && rowFrom(e.target) === swallowClickRow;
+    if (samePointer || sameTarget) {
+      swallowGen++;
+      swallowClickId = null;
+      swallowClickRow = null;
+      blockReleaseId = null;
+      blockReleaseRow = null;
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
     if (mode === 'keyboard' && pv.classList.contains('open') && !pv.contains(e.target)) dismiss(false);
   }, true);
   document.addEventListener('contextmenu', function(e){
@@ -11416,7 +11467,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   document.addEventListener('keydown', function(e){
     if (e.key === 'Escape' && (mode === 'keyboard' || mode === 'keyhold' || mode === 'pointer')) {
       e.preventDefault();
-      if (mode === 'pointer' || (hold && hold.opened)) blockRelease(hold && hold.id);
+      if (mode === 'pointer' || (hold && hold.opened)) blockRelease(hold && hold.id, hold && hold.row);
       dismiss(true);
       return;
     }

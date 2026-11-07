@@ -220,6 +220,52 @@ async function main() {
   await sleep(200);
   assert(await page.$eval(rowSel, (el) => el.getAttribute('data-tap')) === String(+tapBeforeEscape + 1), 'normal tap after Escape hold did not run');
 
+  async function bareDown(pid) {
+    await page.evaluate((sel, id) => {
+      const row = document.querySelector(sel);
+      const r = row.getBoundingClientRect();
+      row.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, pointerId: id, pointerType: 'mouse', button: 0, isPrimary: true, clientX: r.left + 12, clientY: r.top + 10 }));
+    }, rowSel, pid);
+  }
+  async function bareReleaseClick(pid) {
+    return page.evaluate((sel, id) => {
+      const row = document.querySelector(sel);
+      const r = row.getBoundingClientRect();
+      const x = r.left + 12, y = r.top + 10;
+      row.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true, pointerId: id, pointerType: 'mouse', button: 0, isPrimary: true, clientX: x, clientY: y }));
+      const click = new MouseEvent('click', { bubbles: true, cancelable: true, view: window, clientX: x, clientY: y });
+      row.dispatchEvent(click);
+      return { missing: click.pointerId == null, tap: row.getAttribute('data-tap') };
+    }, rowSel, pid);
+  }
+  const tapBeforeBare = await page.$eval(rowSel, (el) => el.getAttribute('data-tap'));
+  await bareDown(41);
+  await waitPreview(page, 'pointer');
+  const bare = await bareReleaseClick(41);
+  assert(bare.missing, 'synthetic click unexpectedly had pointerId');
+  await sleep(30);
+  assert(await page.$eval('body', (el) => el.getAttribute('data-sq-open')) == null, 'bare release left the preview open');
+  assert(await page.$eval(rowSel, (el) => el.getAttribute('data-tap')) === tapBeforeBare, 'MouseEvent without pointerId navigated after hold');
+  box = await center(page, rowSel, 0);
+  await page.mouse.click(box.x, box.y);
+  await sleep(200);
+  assert(await page.$eval(rowSel, (el) => el.getAttribute('data-tap')) === String(+tapBeforeBare + 1), 'tap after bare release was swallowed');
+
+  const tapBeforeBareEsc = await page.$eval(rowSel, (el) => el.getAttribute('data-tap'));
+  await bareDown(42);
+  await waitPreview(page, 'pointer');
+  await page.keyboard.press('Escape');
+  await sleep(40);
+  assert(await page.$eval('body', (el) => el.getAttribute('data-sq-open')) == null, 'Escape did not dismiss before bare release');
+  const bareEsc = await bareReleaseClick(42);
+  assert(bareEsc.missing, 'escape release click had pointerId');
+  await sleep(30);
+  assert(await page.$eval(rowSel, (el) => el.getAttribute('data-tap')) === tapBeforeBareEsc, 'MouseEvent without pointerId navigated after Escape');
+  box = await center(page, rowSel, 0);
+  await page.mouse.click(box.x, box.y);
+  await sleep(200);
+  assert(await page.$eval(rowSel, (el) => el.getAttribute('data-tap')) === String(+tapBeforeBareEsc + 1), 'tap after bare Escape release was swallowed');
+
   box = await center(page, rowSel, 1);
   await page.mouse.move(box.x, box.y);
   await page.mouse.down();
@@ -366,6 +412,55 @@ async function main() {
   assert(!continued.some((u) => forbidden.test(u)), 'continued a forbidden host');
   assert(!aborted.some((u) => u.startsWith('http://127.0.0.1:' + port)), 'aborted a local resource');
   await writeFile(path.join(artifactDir, 'schedule_preview_test_summary.json'), JSON.stringify({ ok: true, self, continued: continued.length, aborted: aborted.length, viewport: '390x844', storage: 'unchanged' }, null, 2));
+  const failPage = await browser.newPage();
+  await failPage.setRequestInterception(true);
+  failPage.on('request', (req) => {
+    const url = req.url();
+    let host = '';
+    try { host = new URL(url).hostname; } catch (e) {}
+    const local = host === '127.0.0.1' || host === 'localhost' || url.startsWith('data:') || url.startsWith('blob:');
+    if (local) req.continue().catch(() => {});
+    else req.abort('blockedbyclient').catch(() => {});
+  });
+  await failPage.goto(origin + '/manifest.webmanifest', { waitUntil: 'domcontentloaded', timeout: 15000 });
+  const failSeed = await failPage.evaluate(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+    localStorage.setItem('gt_v2', '{"__sentinel":"progress-KEEP"}');
+    localStorage.setItem('iue_cloud_client_id', 'sentinel-device');
+    localStorage.setItem('iue_cloud_sync_url_v2', 'sentinel-sync-id');
+    function dump(store) {
+      const out = {};
+      for (let i = 0; i < store.length; i++) out[store.key(i)] = store.getItem(store.key(i));
+      return out;
+    }
+    return { local: dump(localStorage), session: dump(sessionStorage) };
+  });
+  try {
+    await failPage.goto(origin + '/index.html?iueFixture=schedule-preview&iueFixtureShadow=fail', { waitUntil: 'domcontentloaded', timeout: 15000 });
+  } catch (e) {}
+  await failPage.waitForFunction(() => window.IUE_FIXTURE_ABORT === 'storage-shadow', { timeout: 5000 });
+  const failed = await failPage.evaluate(() => ({
+    abort: window.IUE_FIXTURE_ABORT,
+    fixture: window.IUE_ISOLATED_FIXTURE,
+    isolated: window.IUE_STORAGE_ISOLATED,
+    banner: !!document.querySelector('.sq-fixture-banner'),
+    real: window.__iueRealStorageSnapshot ? window.__iueRealStorageSnapshot() : null,
+    seen: localStorage.getItem('gt_v2')
+  }));
+  assert(failed.abort === 'storage-shadow', 'shadow failure did not abort ' + JSON.stringify(failed));
+  assert(!failed.fixture, 'aborted fixture still marked active');
+  assert(failed.isolated === false, 'aborted fixture reported storage isolated');
+  assert(!failed.banner, 'aborted fixture continued into the schedule UI');
+  assert(failed.seen === '{"__sentinel":"progress-KEEP"}', 'shadow failure wrote over real progress: ' + failed.seen);
+  const failNow = await failPage.evaluate(() => {
+    const out = {};
+    for (let i = 0; i < localStorage.length; i++) out[localStorage.key(i)] = localStorage.getItem(localStorage.key(i));
+    return out;
+  });
+  assert(sameJson(failSeed.local, failNow), 'real localStorage changed after shadow failure ' + JSON.stringify(failNow));
+  await failPage.close();
+
   console.log('schedule preview tests passed');
   console.log('self-check cases', self.cases.length);
   await browser.close();
