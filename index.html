@@ -1,6 +1,38 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
+  <script>
+  (function () {
+    try {
+      var q = new URLSearchParams(location.search);
+      if (q.get('iueFixture') !== 'schedule-preview') return;
+      window.IUE_ISOLATED_FIXTURE = 'schedule-preview';
+      window.IUE_BLOCKED_URLS = [];
+      var blocked = /restful-api\.dev|jsonblob\.com|iue-cloud-state\.json|versionCheck=|dictionaryapi\.dev|mymemory\.translated\.net/i;
+      var orig = window.fetch;
+      if (typeof orig === 'function') {
+        window.fetch = function (input) {
+          var url = typeof input === 'string' ? input : (input && input.url) || '';
+          if (blocked.test(String(url))) {
+            window.IUE_BLOCKED_URLS.push(String(url));
+            return Promise.reject(new Error('isolated fixture blocked network'));
+          }
+          return orig.apply(this, arguments);
+        };
+      }
+      if (window.XMLHttpRequest) {
+        var open = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function (method, url) {
+          if (blocked.test(String(url || ''))) {
+            window.IUE_BLOCKED_URLS.push(String(url));
+            throw new Error('isolated fixture blocked network');
+          }
+          return open.apply(this, arguments);
+        };
+      }
+    } catch (e) {}
+  })();
+  </script>
 
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
@@ -2631,6 +2663,34 @@ body.lk .lk-o3 span{font-size:12px;}
 .fx4-pv-s{font-size:12px;color:var(--r-t3);margin-top:6px;}
 @media (prefers-reduced-motion:reduce){.fx4-pv,.fx4-rip,.v2-hero.fx4-urg,.kp-ghost{animation:none!important;transition:none!important}}
 
+/* hold-to-preview for 最近日程 — card only, no full-screen filter */
+.v2-tt-queue .dash-queue-row{touch-action:pan-y;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.v2-tt-queue .dash-queue-row.sq-arm{transform:scale(.985);}
+.sq-fixture-banner{margin:-6px 0 12px;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.12);font-size:11px;letter-spacing:.04em;color:var(--r-t2);text-align:center;}
+.sq-preview{position:fixed;z-index:860;left:0;top:0;width:min(340px,calc(100vw - 24px));max-width:calc(100vw - 24px - env(safe-area-inset-left) - env(safe-area-inset-right));padding:16px 16px 12px;border-radius:20px;background:rgba(16,16,18,.94);color:var(--r-t1,#f5f5f7);box-shadow:0 18px 44px rgba(0,0,0,.5),inset 0 0 0 .5px rgba(255,255,255,.2);text-align:left;opacity:0;transform:translate3d(0,8px,0) scale(.96);transform-origin:50% 0;transition:transform .28s cubic-bezier(.22,1,.36,1),opacity .2s ease;pointer-events:none;overflow:auto;-webkit-overflow-scrolling:touch;}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .sq-preview{background:rgba(22,22,24,.9);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);}
+}
+.sq-preview.above{transform:translate3d(0,-8px,0) scale(.96);transform-origin:50% 100%;}
+.sq-preview.open{opacity:1;transform:translate3d(0,0,0) scale(1);}
+.sq-preview.kb{pointer-events:auto;}
+.sq-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.sq-title{font-size:16px;font-weight:600;line-height:1.35;letter-spacing:-.01em;}
+.sq-badge{flex:none;max-width:42%;margin-top:1px;padding:3px 8px;border-radius:999px;box-shadow:inset 0 0 0 .5px rgba(255,255,255,.16);font-size:11px;line-height:1.3;color:var(--r-t2,#a1a1a6);text-align:center;}
+.sq-badge.miss{color:var(--r-t3,#6e6e73);}
+.sq-meta{margin-top:6px;font-size:12px;line-height:1.4;color:var(--r-t3,#6e6e73);}
+.sq-meta .known{color:var(--r-t2,#a1a1a6);}
+.sq-line{display:flex;gap:10px;align-items:flex-start;padding:9px 0;}
+.sq-line + .sq-line{box-shadow:inset 0 .5px 0 rgba(255,255,255,.08);}
+.sq-ico{flex:none;width:14px;height:14px;margin-top:2px;color:var(--r-t3,#6e6e73);}
+.sq-line b{display:block;font-size:14px;font-weight:500;color:var(--r-t1,#f5f5f7);}
+.sq-line span{display:block;margin-top:2px;font-size:12px;line-height:1.45;color:var(--r-t2,#a1a1a6);word-break:break-word;}
+.sq-line span.miss{color:var(--r-t3,#6e6e73);}
+.sq-go,.sq-close{display:block;width:100%;margin-top:8px;height:36px;border:0;border-radius:999px;background:rgba(255,255,255,.08);color:var(--r-t1,#f5f5f7);font:inherit;font-size:13px;cursor:pointer;}
+.sq-close{background:transparent;color:var(--r-t3,#6e6e73);height:32px;}
+.sq-hint{margin-top:2px;text-align:center;font-size:11px;letter-spacing:.04em;color:var(--r-t3,#6e6e73);}
+@media (prefers-reduced-motion:reduce){.sq-preview{transition:none!important;}}
+
 /* ===== 知识点 week switch variants ===== */
 .kp-body{perspective:none;overflow:hidden;}
 .kp-body .kp-ghost{display:none;}
@@ -4596,7 +4656,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       if (ok && input) input.value = '';
     });
   }
-  var APP_VERSION = '2026-11-01-compclean';
+  var APP_VERSION = '2026-11-07-holdpreview';
   var MOODLE_URL = 'https://moodle.telt.unsw.edu.au/course';
   var COURSE_FAMILY_COLOR = {
     math: 'var(--math-color)',
@@ -9161,6 +9221,101 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       + '</div>';
   }
 
+  function sqStripName(name) {
+    return String(name || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  }
+  function sqMatchItem(d, courseId) {
+    var cfg = (courseId && typeof gtConfig === 'function') ? gtConfig(courseId) : null;
+    var items = (cfg && cfg.items) || [];
+    if (d.gtId) {
+      for (var i = 0; i < items.length; i++) if (items[i].id === d.gtId) return { cfg: cfg, item: items[i] };
+    }
+    if (d.quizNo || d.compWeek || d.mobiusWeek) return { cfg: cfg, item: null };
+    var name = sqStripName(d.name).toLowerCase();
+    var hits = items.filter(function(it) {
+      var label = String(it.label || '').trim().toLowerCase();
+      return label.length > 2 && name.indexOf(label) !== -1;
+    });
+    return { cfg: cfg, item: hits.length === 1 ? hits[0] : null };
+  }
+  function sqRequirement(item) {
+    if (!item || !item.note || !String(item.note).trim()) return { state: 'none', text: '' };
+    var note = String(item.note).trim();
+    if (/brief pending|date pending|weight unpublished|待发布|未发布/i.test(note)) return { state: 'unpublished', text: '' };
+    return { state: 'text', text: note };
+  }
+  function sqGrade(d) {
+    var data = {};
+    try { data = gtLoad() || {}; } catch (e) { data = {}; }
+    var st = null;
+    if (d.gtId && data[d.gtId]) st = data[d.gtId];
+    else if (d.quizNo && data['p1160_q' + d.quizNo]) st = data['p1160_q' + d.quizNo];
+    if (!st) return { state: 'unpublished', text: '' };
+    if (st.s != null && String(st.s) !== '' && st.m != null && String(st.m) !== '' && isFinite(+st.s) && isFinite(+st.m) && +st.m > 0) {
+      return { state: 'score', text: String(st.s) + '/' + String(st.m) };
+    }
+    if (st.missed) return { state: 'missed', text: '' };
+    if (st.done) return { state: 'submitted', text: '' };
+    return { state: 'unpublished', text: '' };
+  }
+  function schedulePreviewPayload(d) {
+    d = d || {};
+    var courseId = '';
+    try { courseId = deadlineCourse(d) || ''; } catch (e) { courseId = d.course || ''; }
+    var course = null;
+    try { course = courseById(courseId); } catch (e2) { course = null; }
+    var matched = sqMatchItem(d, courseId);
+    var req = sqRequirement(matched.item);
+    var weight = '';
+    var tag = String(d.tag || '').trim();
+    if (/^\d+(?:\.\d+)?%$/.test(tag)) { weight = tag; tag = ''; }
+    else if (matched.item && typeof matched.item.w === 'number' && matched.item.w > 0 && matched.cfg && matched.cfg.type !== 'threshold' && matched.cfg.type !== 'competency') {
+      weight = String(matched.item.w) + '%';
+    }
+    var when = '';
+    if (d.date) {
+      var dt = new Date(d.date);
+      if (!isNaN(dt.getTime())) {
+        try { when = dashFormatDate(d.date); } catch (e3) { when = ''; }
+      }
+    }
+    var grade = sqGrade(d);
+    return {
+      name: sqStripName(d.name),
+      course: course && course.code ? course.code : '',
+      courseId: courseId,
+      when: when,
+      weight: weight,
+      tag: tag,
+      requirement: req.text,
+      requirementState: req.state,
+      loc: d.loc ? String(d.loc) : '',
+      gradeState: grade.state,
+      gradeText: grade.text,
+      action: d.link ? 'link' : (courseId ? 'course' : '')
+    };
+  }
+  window.schedulePreviewPayload = schedulePreviewPayload;
+
+  function iueFixtureQueueHtml() {
+    var fixtures = [
+      { name:'【测试】已发布作业', course:'TEST', courseId:'', when:'测试日期 2099-01-01', weight:'10%', tag:'', requirement:'测试用任务说明，不是真实作业', requirementState:'text', loc:'', gradeState:'unpublished', gradeText:'', action:'fixture' },
+      { name:'【测试】未发布项', course:'', courseId:'', when:'', weight:'', tag:'', requirement:'', requirementState:'unpublished', loc:'', gradeState:'unpublished', gradeText:'', action:'fixture' },
+      { name:'【测试】暂无详情项', course:'TEST', courseId:'', when:'测试日期 2099-02-02', weight:'', tag:'Lab', requirement:'', requirementState:'none', loc:'', gradeState:'unpublished', gradeText:'', action:'fixture' }
+    ];
+    return fixtures.map(function(p, i) {
+      return '<div class="dash-queue-row" role="button" tabindex="0" data-fixture="1" data-tap="0" aria-keyshortcuts="Alt+Enter" aria-label="'+htmlAttr(p.name + '。测试数据。轻点打开。长按预览详情，或按 Alt+Enter')+'" data-sq="'+htmlAttr(JSON.stringify(p))+'" onclick="iueFixtureTap(this)">'
+        +'<div class="dash-queue-dot"></div>'
+        +'<div><div class="dash-queue-title">'+escapeHtml(p.name)+'</div><div class="dash-queue-sub">'+escapeHtml((p.when || '截止时间未发布') + ' · ' + (p.course || '暂无课程'))+'</div></div>'
+        +'<div class="dash-queue-time">'+String(i + 1)+'<span>测试</span></div></div>';
+    }).join('');
+  }
+  window.iueFixtureTap = function(el) {
+    if (!el) return;
+    el.setAttribute('data-tap', String((+el.getAttribute('data-tap') || 0) + 1));
+    if (typeof showToast === 'function') showToast('测试：已轻点，未跳转');
+  };
+
   var v2QueueHtml = '';
   var v2WeekStripHtml = '';
   function renderTimetablePage() {
@@ -9171,9 +9326,18 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var now = new Date();
     var wd = ['周日','周一','周二','周三','周四','周五','周六'][now.getDay()];
     var grid = renderDashboardTimetable(lane);
+    var queue = v2QueueHtml;
+    var banner = '';
+    if (window.IUE_ISOLATED_FIXTURE === 'schedule-preview') {
+      queue = iueFixtureQueueHtml();
+      banner = '<div class="sq-fixture-banner" role="status">测试数据 · 未连接同步 · 不是真实日程</div><pre id="sq-selfcheck" hidden></pre>';
+    }
     host.innerHTML = v2WeekStripHtml
-      + '<div class="v2-tt-queue"><div class="v2-section-title">最近日程</div><div class="dash-queue">'+(v2QueueHtml || '<div class="v2-tt-empty">未来两周没有未完成考核。</div>')+'</div></div>'
+      + '<div class="v2-tt-queue">'+banner+'<div class="v2-section-title">最近日程</div><div class="dash-queue">'+(queue || '<div class="v2-tt-empty">未来两周没有未完成考核。</div>')+'</div></div>'
       + grid;
+    if (window.IUE_ISOLATED_FIXTURE === 'schedule-preview' && window.sqRunSelfCheck) {
+      try { window.sqRunSelfCheck(); } catch (e) {}
+    }
   }
   window.addEventListener('resize', function(){ var a=document.querySelector('.course-section.active'); if (a && a.id==='sec-timetable') renderTimetablePage(); });
   // timetable swipe: grid swipes day (crosses week edges), week strip swipes week
@@ -9319,7 +9483,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
       var unit = left.unit.indexOf('天') > -1 ? '天' : '小时';
       var hot = d.diff <= DASH_WARNING_MS;
       var action = d.link ? 'openExternal(\''+d.link+'\')' : 'showCourse(\''+course+'\')';
-      return '<div class="dash-queue-row '+(hot?'dash-hot':'')+'"'+dashUrgencyStyle(d.diff)+' onclick="'+action+'">'
+      var payload = { name: sqStripName(d.name) };
+      try { payload = schedulePreviewPayload(d); } catch (e) {}
+      var label = (payload.name || '日程') + '。轻点打开。长按预览详情，或按 Alt+Enter';
+      return '<div class="dash-queue-row '+(hot?'dash-hot':'')+'"'+dashUrgencyStyle(d.diff)+' role="button" tabindex="0" aria-keyshortcuts="Alt+Enter" aria-label="'+htmlAttr(label)+'" data-sq="'+htmlAttr(JSON.stringify(payload))+'" onclick="'+action+'">'
         +'<div class="dash-queue-dot" style="background:'+d.color+'"></div>'
         +'<div><div class="dash-queue-title">'+d.name+'</div><div class="dash-queue-sub">'+dashFormatDate(d.date)+' · '+dashCourseName(course)+'</div></div>'
         +'<div class="dash-queue-time">'+left.num+'<span>'+unit+'</span></div>'
@@ -9589,7 +9756,10 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     if (input) input.value = syncReadableId(url);
   }
 
+  function iueSyncBlocked() { return !!window.IUE_ISOLATED_FIXTURE; }
+
   function cloudCreate() {
+    if (iueSyncBlocked()) { cloudSetStatus('测试环境不连接同步。'); return; }
     cloudSetStatus('正在创建云同步...');
     fetch('https://api.restful-api.dev/objects', {
       method:'POST',
@@ -9611,6 +9781,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function cloudPushNow(silent) {
+    if (iueSyncBlocked()) return Promise.resolve();
     var input = document.getElementById('sync-url');
     var url = syncEndpoint((input && input.value) || cloudActiveUrl());
     if (!url) { cloudSetStatus('先创建或填写 Sync ID。'); return; }
@@ -9635,6 +9806,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function cloudPullNow(silent) {
+    if (iueSyncBlocked()) return Promise.resolve();
     var input = document.getElementById('sync-url');
     var url = syncEndpoint((input && input.value) || cloudActiveUrl());
     if (!url) { cloudSetStatus('先填写 Sync ID。'); return; }
@@ -9706,6 +9878,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function scheduleCloudPush() {
+    if (iueSyncBlocked()) return;
     var url = cloudActiveUrl();
     if (!url) return;
     clearTimeout(cloudPushTimer);
@@ -9717,6 +9890,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function startCloudAutoSync() {
+    if (iueSyncBlocked()) return;
     var url = cloudActiveUrl();
     if (!url) return;
     rememberSyncUrl(url);
@@ -9741,6 +9915,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   }
 
   function startAppUpdateWatcher() {
+    if (iueSyncBlocked()) return;
     if (location.protocol === 'file:') return;
     var checking = false;
     var lastCheck = 0;
@@ -9810,6 +9985,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     lockAppZoom();
     makeNativeLinksOpenInPlace();
     initProfileWidgets();
+    if (window.IUE_ISOLATED_FIXTURE) return;
     startCloudAutoSync();
     startAppUpdateWatcher();
   }, 0);
@@ -10103,7 +10279,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var line = document.getElementById('vp-line'), fill = line.firstChild, py = null, px0 = 0, pull = 0, lock = null, busy = false;
   document.addEventListener('touchstart', function(e){
     var sec = activeSection();
-    if (busy || !sec || sec.scrollTop > 0 || e.touches.length !== 1 || (e.target.closest && e.target.closest('.gt1-sheet, .vq-menu, #profile-panel, input, textarea'))) { py = null; return; }
+    if (busy || !sec || sec.scrollTop > 0 || e.touches.length !== 1 || (e.target.closest && e.target.closest('.gt1-sheet, .vq-menu, #sq-preview, #profile-panel, input, textarea'))) { py = null; return; }
     py = e.touches[0].clientY; px0 = e.touches[0].clientX; pull = 0; lock = null;
   }, { passive: true });
   document.addEventListener('touchmove', function(e){
@@ -10168,9 +10344,17 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
     var pvEl = document.getElementById('fx4-pv');
     if (pvEl && !pvEl.hidden) { menu.style.top = (pvEl.offsetTop + pvEl.offsetHeight + 10) + 'px'; menu.style.bottom = 'auto'; menu.style.width = pvEl.offsetWidth + 'px'; }
   }
+  function lpTarget(node) {
+    if (!node || !node.closest) return null;
+    var row = node.closest('.cd-card, .v2-alert-row');
+    if (row) return row;
+    var q = node.closest('.dash-queue-row');
+    if (q && !q.closest('.v2-tt-queue')) return q;
+    return null;
+  }
   var lpRow = null;
   document.addEventListener('touchstart', function(e){
-    var row = e.target.closest && e.target.closest('.dash-queue-row, .cd-card, .v2-alert-row'); if (!row || e.touches.length !== 1) return;
+    var row = lpTarget(e.target); if (!row || e.touches.length !== 1) return;
     lpStart = [e.touches[0].clientX, e.touches[0].clientY]; lpRow = row; row.classList.add('vq-press');
     lpTimer = setTimeout(function(){
       lpTimer = null; row.classList.remove('vq-press');
@@ -10182,7 +10366,7 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   document.addEventListener('touchmove', function(e){ if (lpStart && (Math.abs(e.touches[0].clientX - lpStart[0]) > 8 || Math.abs(e.touches[0].clientY - lpStart[1]) > 8)) cancelLp(); }, { passive: true });
   document.addEventListener('touchend', function(){ cancelLp(); lpStart = null; });
   document.addEventListener('click', function(e){ if (suppress) { suppress = false; e.preventDefault(); e.stopPropagation(); } }, true);
-  document.addEventListener('contextmenu', function(e){ if (e.target.closest && e.target.closest('.dash-queue-row, .cd-card, .v2-alert-row')) e.preventDefault(); });
+  document.addEventListener('contextmenu', function(e){ if (lpTarget(e.target)) e.preventDefault(); });
 
   /* ---- course page large header collapses into top bar ---- */
   function onScroll(sec){
@@ -10929,6 +11113,280 @@ a[</span><span class="maple-var">50</span><span class="maple-fixed">];</span></p
   var _nc = window.ncRender;
   window.ncRender = function(host){ var r = _nc.apply(this, arguments); try { if (host) deco(host); } catch(x) { console.error(x); } return r; };
   try { renderDashboard(); } catch(x) {}
+})();
+</script>
+<script>
+(function(){
+  /* 最近日程: hold shows an anchored frosted preview; release dismisses. Tap stays the original action. */
+  var HOLD_MS = 480, MOVE_PX = 10;
+  var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var pv = document.createElement('div');
+  pv.id = 'sq-preview';
+  pv.className = 'sq-preview';
+  pv.setAttribute('role', 'dialog');
+  pv.setAttribute('aria-modal', 'false');
+  pv.setAttribute('aria-labelledby', 'sq-title');
+  pv.hidden = true;
+  pv.innerHTML = '<div class="sq-head"><div class="sq-title" id="sq-title"></div><div class="sq-badge"></div></div><div class="sq-meta"></div><div class="sq-rows"></div><div class="sq-hint"></div>';
+  document.body.appendChild(pv);
+  var hold = null, keyHold = null, mode = '', anchorRow = null, suppress = false, hideTimer = 0;
+  var DOT = '<svg class="sq-ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';
+  var CHEV = '<svg class="sq-ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 11 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  function rowFrom(node){ return node && node.closest ? node.closest('.v2-tt-queue .dash-queue-row') : null; }
+  function readPayload(row){
+    try { return JSON.parse(row.getAttribute('data-sq') || ''); } catch (e) { return null; }
+  }
+  function armSuppress(){
+    suppress = true;
+    setTimeout(function(){ suppress = false; }, 500);
+  }
+  function cancelHold(){
+    if (!hold) return;
+    clearTimeout(hold.timer);
+    if (hold.row) hold.row.classList.remove('sq-arm');
+    hold = null;
+  }
+  function dismiss(returnFocus){
+    var row = anchorRow;
+    cancelHold();
+    mode = '';
+    anchorRow = null;
+    document.body.removeAttribute('data-sq-open');
+    pv.classList.remove('open', 'kb');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(function(){ if (!pv.classList.contains('open')) pv.hidden = true; }, RM ? 0 : 260);
+    if (returnFocus && row && row.focus) row.focus();
+  }
+  function line(icon, title, value, miss){
+    return '<div class="sq-line">'+icon+'<div><b>'+escapeHtml(title)+'</b><span'+(miss ? ' class="miss"' : '')+'>'+escapeHtml(value)+'</span></div></div>';
+  }
+  function fill(payload, kind){
+    var badge = payload.weight || payload.tag || '未发布';
+    var when = payload.when || '截止时间未发布';
+    var course = payload.course || '暂无详情';
+    var req, reqMiss;
+    if (payload.requirementState === 'text' && payload.requirement) { req = payload.requirement; reqMiss = false; }
+    else if (payload.requirementState === 'unpublished') { req = '未发布'; reqMiss = true; }
+    else { req = '暂无详情'; reqMiss = true; }
+    var grade, gradeMiss;
+    if (payload.gradeState === 'score' && payload.gradeText) { grade = payload.gradeText; gradeMiss = false; }
+    else if (payload.gradeState === 'submitted') { grade = '已提交，分数未发布'; gradeMiss = true; }
+    else if (payload.gradeState === 'missed') { grade = '未得分'; gradeMiss = true; }
+    else { grade = '未发布'; gradeMiss = true; }
+    pv.querySelector('.sq-title').textContent = payload.name || '日程';
+    var badgeEl = pv.querySelector('.sq-badge');
+    badgeEl.textContent = badge;
+    badgeEl.classList.toggle('miss', !(payload.weight || payload.tag));
+    pv.querySelector('.sq-meta').innerHTML = '<span class="'+(payload.when ? 'known' : '')+'">'+escapeHtml(when)+'</span> · <span class="'+(payload.course ? 'known' : '')+'">'+escapeHtml(course)+'</span>';
+    var actions = '';
+    if (kind === 'keyboard') actions = '<button type="button" class="sq-go">打开课程页</button><button type="button" class="sq-close">关闭预览</button>';
+    pv.querySelector('.sq-rows').innerHTML = line(DOT, '任务要求', req, reqMiss)
+      + line(DOT, '比重', payload.weight || '未发布', !payload.weight)
+      + line(DOT, '地点', payload.loc || '暂无详情', !payload.loc)
+      + line(DOT, '成绩', grade, gradeMiss)
+      + line(CHEV, '打开课程页', course, !payload.course)
+      + actions;
+    pv.querySelector('.sq-hint').textContent = kind === 'keyboard' ? 'Esc 关闭' : '松手收起预览';
+    var go = pv.querySelector('.sq-go');
+    if (go) go.addEventListener('click', function(){ var row = anchorRow; dismiss(false); if (row) row.click(); });
+    var closeBtn = pv.querySelector('.sq-close');
+    if (closeBtn) closeBtn.addEventListener('click', function(){ dismiss(true); });
+  }
+  function safePad(){
+    var probe = document.getElementById('sq-safe-probe');
+    if (!probe) {
+      probe = document.createElement('div');
+      probe.id = 'sq-safe-probe';
+      probe.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(probe);
+    }
+    probe.style.cssText = 'position:fixed;left:0;top:0;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);';
+    var c = getComputedStyle(probe);
+    return { t: parseFloat(c.paddingTop) || 0, r: parseFloat(c.paddingRight) || 0, b: parseFloat(c.paddingBottom) || 0, l: parseFloat(c.paddingLeft) || 0 };
+  }
+  function place(row){
+    var margin = 12, safe = safePad(), vw = window.innerWidth, vh = window.innerHeight;
+    var tab = document.querySelector('.tab-bar');
+    var header = document.querySelector('header');
+    var limitL = margin + safe.l;
+    var limitR = vw - margin - safe.r;
+    var limitT = Math.max(margin + safe.t, header ? header.getBoundingClientRect().bottom + 8 : margin);
+    var limitB = Math.min(vh - margin - safe.b, tab ? tab.getBoundingClientRect().top - 8 : vh - margin);
+    if (limitB < limitT + 80) limitB = Math.min(vh - margin, limitT + 80);
+    var pw = Math.max(180, Math.min(340, limitR - limitL));
+    pv.style.width = pw + 'px';
+    pv.style.maxHeight = Math.max(120, limitB - limitT) + 'px';
+    var ph = pv.offsetHeight;
+    var rect = row.getBoundingClientRect();
+    var left = Math.max(limitL, Math.min(rect.left + rect.width / 2 - pw / 2, limitR - pw));
+    var below = rect.bottom + 8;
+    var above = rect.top - 8 - ph;
+    var isAbove = !(below + ph <= limitB) && above >= limitT;
+    var top = isAbove ? above : below;
+    if (top < limitT) top = limitT;
+    if (top + ph > limitB) top = Math.max(limitT, limitB - ph);
+    pv.style.left = Math.round(left) + 'px';
+    pv.style.top = Math.round(top) + 'px';
+    pv.classList.toggle('above', isAbove);
+  }
+  function openPreview(row, kind){
+    var payload = readPayload(row);
+    if (!payload || !payload.name) return false;
+    anchorRow = row;
+    mode = kind;
+    fill(payload, kind);
+    pv.hidden = false;
+    pv.classList.toggle('kb', kind === 'keyboard');
+    place(row);
+    document.body.setAttribute('data-sq-open', kind);
+    if (RM) pv.classList.add('open');
+    else requestAnimationFrame(function(){ pv.classList.add('open'); });
+    if (kind === 'keyboard') {
+      var btn = pv.querySelector('.sq-go') || pv.querySelector('.sq-close');
+      if (btn) btn.focus();
+    }
+    return true;
+  }
+  document.addEventListener('pointerdown', function(e){
+    if (e.button) return;
+    var row = rowFrom(e.target);
+    if (!row) return;
+    if (mode === 'keyboard') dismiss(false);
+    cancelHold();
+    var sec = row.closest('.course-section');
+    hold = { row: row, x: e.clientX, y: e.clientY, id: e.pointerId, scroll: sec ? sec.scrollTop : 0, opened: false, timer: null };
+    row.classList.add('sq-arm');
+    hold.timer = setTimeout(function(){
+      if (!hold || hold.row !== row) return;
+      var sec2 = row.closest('.course-section');
+      if (sec2 && Math.abs(sec2.scrollTop - hold.scroll) > 2) { cancelHold(); return; }
+      hold.opened = true;
+      if (openPreview(row, 'pointer') && window.iueHaptic) iueHaptic();
+    }, HOLD_MS);
+  }, { passive: true });
+  document.addEventListener('pointermove', function(e){
+    if (!hold || e.pointerId !== hold.id) return;
+    if (Math.abs(e.clientX - hold.x) < MOVE_PX && Math.abs(e.clientY - hold.y) < MOVE_PX) return;
+    if (hold.opened || mode === 'pointer') { armSuppress(); dismiss(false); }
+    else cancelHold();
+  }, { passive: true });
+  function endPointer(e, cancel){
+    if (!hold || (e && e.pointerId !== hold.id)) return;
+    var opened = hold.opened || mode === 'pointer';
+    if (opened) { armSuppress(); dismiss(false); }
+    else cancelHold();
+    if (cancel && opened) armSuppress();
+  }
+  document.addEventListener('pointerup', function(e){ endPointer(e, false); }, { passive: true });
+  document.addEventListener('pointercancel', function(e){ endPointer(e, true); }, { passive: true });
+  document.addEventListener('touchcancel', function(){
+    if (hold && (hold.opened || mode === 'pointer')) { armSuppress(); dismiss(false); }
+    else cancelHold();
+  }, { passive: true });
+  document.addEventListener('scroll', function(e){
+    if (hold && !hold.opened) {
+      var sec = hold.row && hold.row.closest('.course-section');
+      if (sec && (e.target === sec || (e.target.contains && e.target.contains(sec))) && Math.abs(sec.scrollTop - hold.scroll) > 2) cancelHold();
+      return;
+    }
+    if (mode === 'pointer') { armSuppress(); dismiss(false); return; }
+    if (mode === 'keyboard' && anchorRow && anchorRow.isConnected) place(anchorRow);
+  }, true);
+  window.addEventListener('resize', function(){ if ((mode === 'keyboard' || mode === 'pointer') && anchorRow && anchorRow.isConnected) place(anchorRow); });
+  window.addEventListener('blur', function(){ if (mode === 'pointer' || (hold && hold.opened)) { armSuppress(); dismiss(false); } else cancelHold(); });
+  document.addEventListener('click', function(e){
+    if (suppress) { suppress = false; e.preventDefault(); e.stopPropagation(); return; }
+    if (mode === 'keyboard' && pv.classList.contains('open') && !pv.contains(e.target)) dismiss(false);
+  }, true);
+  document.addEventListener('contextmenu', function(e){
+    if (!rowFrom(e.target)) return;
+    e.preventDefault();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && (mode === 'keyboard' || mode === 'keyhold' || mode === 'pointer')) { e.preventDefault(); dismiss(true); return; }
+    var row = rowFrom(e.target);
+    if (!row) return;
+    if (e.key === 'Enter' && e.altKey) {
+      e.preventDefault();
+      if (keyHold) { clearTimeout(keyHold.timer); keyHold = null; }
+      openPreview(row, 'keyboard');
+      return;
+    }
+    if (e.altKey || e.metaKey || e.ctrlKey || e.repeat) return;
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    keyHold = { row: row, key: e.key, opened: false, timer: setTimeout(function(){
+      if (!keyHold || keyHold.row !== row) return;
+      keyHold.opened = true;
+      openPreview(row, 'keyhold');
+    }, HOLD_MS) };
+  });
+  document.addEventListener('keyup', function(e){
+    if (!keyHold || e.key !== keyHold.key) return;
+    var opened = keyHold.opened, row = keyHold.row;
+    clearTimeout(keyHold.timer);
+    keyHold = null;
+    if (opened) { dismiss(true); return; }
+    if (row) row.click();
+  });
+  window.sqRunSelfCheck = function(){
+    var host = document.getElementById('sq-selfcheck');
+    var cases = [];
+    function add(name, ok, detail){ cases.push({ name: name, ok: !!ok, detail: detail == null ? '' : String(detail) }); }
+    var payload = window.schedulePreviewPayload;
+    var list = (typeof deadlines !== 'undefined' && deadlines) || [];
+    var a2 = null, lab = null, i;
+    for (i = 0; i < list.length; i++) {
+      if (!a2 && /Assignment 2/.test(list[i].name || '')) a2 = list[i];
+      if (!lab && /Lab Exam/.test(list[i].name || '')) lab = list[i];
+    }
+    if (!payload || !a2) add('a2-present', false, 'missing');
+    else {
+      var p = payload(a2);
+      add('a2-weight', p.weight === '25%', p.weight);
+      add('a2-req', p.requirementState === 'unpublished' && !p.requirement, p.requirementState + ':' + p.requirement);
+      add('a2-grade', p.gradeState === 'unpublished' && !p.gradeText, p.gradeState + ':' + p.gradeText);
+      add('a2-when', !!p.when && p.when.indexOf('2099') < 0 && p.when.indexOf('测试') < 0, p.when);
+      add('a2-course', p.course === 'COMP1511', p.course);
+      add('a2-name', p.name.indexOf('CS Alchemy') !== -1, p.name);
+      add('a2-clean', JSON.stringify(p).indexOf('示例') < 0 && JSON.stringify(p).indexOf('示意') < 0, '');
+    }
+    if (!payload || !lab) add('lab-present', false, 'missing');
+    else {
+      var q = payload(lab);
+      add('lab-weight', q.weight === '' && q.tag === 'Lab Exam', q.weight + '/' + q.tag);
+      add('lab-loc', q.loc === 'wed17-alto lab', q.loc);
+      add('lab-req', q.requirementState === 'none' && !q.requirement, q.requirementState);
+      add('lab-grade', q.gradeState === 'unpublished' && !q.gradeText, q.gradeText);
+      add('lab-when', !!q.when && q.when.indexOf('2099') < 0, q.when);
+    }
+    if (payload) {
+      var empty = payload({ name: '无日期项', course: 'comp1511' });
+      add('empty-when', empty.when === '', empty.when);
+      add('empty-weight', empty.weight === '', empty.weight);
+      add('empty-req', empty.requirementState === 'none', empty.requirementState);
+      add('empty-grade', empty.gradeState === 'unpublished' && !empty.gradeText, empty.gradeText);
+      var orig = window.gtLoad;
+      try {
+        window.gtLoad = function(){
+          var data = orig ? orig() : {};
+          var copy = {};
+          Object.keys(data).forEach(function(k){ copy[k] = data[k]; });
+          copy.__sq_test_score = { s: '3', m: '4' };
+          return copy;
+        };
+        var scored = payload({ name: '记分项', course: 'comp1511', gtId: '__sq_test_score', date: '2026-12-01T12:00:00+11:00', tag: 'Quiz' });
+        add('score-exact', scored.gradeState === 'score' && scored.gradeText === '3/4', scored.gradeText);
+        add('score-clean', JSON.stringify(scored).indexOf('示例') < 0, '');
+      } finally { window.gtLoad = orig; }
+    }
+    var out = { ok: cases.every(function(c){ return c.ok; }), cases: cases };
+    if (host) host.textContent = JSON.stringify(out);
+    return out;
+  };
+  if (window.IUE_ISOLATED_FIXTURE === 'schedule-preview') {
+    try { showCourse('timetable'); } catch (e) {}
+  }
 })();
 </script>
 </body>
